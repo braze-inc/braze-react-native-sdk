@@ -8,10 +8,13 @@ Effective marketing automation is an essential part of successfully scaling and 
 
 ### iOS
 1.  Install the Appboy iOS SDK into your iOS project.  See instructions for Cocoapods and manual integration at https://documentation.appboy.com/iOS/.  See notes below for further information.
-2. `rnpm install react-native-appboy-sdk@latest --save`
+2. `npm install react-native-appboy-sdk@latest --save`
+3. `rnpm link`
 
 __Note:__ - if you do a Cocoapods integration for the first time, you need to add `#(inherited)` to the `Other linker flags` configuration in your app.
+
 __Note:__ - if you do a manual integration, our library expects the AppboyKit folder to be under the root of the ios project directory.
+
 __Note:__ - We've also inserted the token `APPBOY_LIBRARY_SEARCH_PATH` in the header search path, so that folks who find the default paths insufficient and care replace that token can do so.  If there are any standard search paths that you think would be universally applicable, please leave an issue on the repo or a pull request and we'll update it.
 
 #### iOS without rnpm
