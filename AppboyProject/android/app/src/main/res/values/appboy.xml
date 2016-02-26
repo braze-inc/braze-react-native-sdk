@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- General configuration -->
+  <!-- The API key is not shown to the user and thus we don't require that it be translated. -->
+  <string translatable="false" name="com_appboy_api_key">112c7859-2dff-4b38-ae3f-4869fa085e0b</string>
+
+  <!-- Push Notification configuration -->
+  <bool name="com_appboy_push_gcm_messaging_registration_enabled">true</bool>
+  <string translatable="false" name="com_appboy_push_gcm_sender_id">901477453852</string>
+
+  <!-- Fresco Library Usage -->
+  <!-- When set to false, the UI code will not use views from Fresco library. By default, this setting
+    is false. -->
+  <bool name="com_appboy_enable_fresco_library_use">true</bool>
+</resources>
