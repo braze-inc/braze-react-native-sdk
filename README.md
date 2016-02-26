@@ -11,7 +11,7 @@ Effective marketing automation is an essential part of successfully scaling and 
 2. `npm install react-native-appboy-sdk@latest --save`
 3. `rnpm link`
 
-__Note:__ - if you do a Cocoapods integration for the first time, you need to add `#(inherited)` to the `Other linker flags` configuration in your app.
+__Note:__ - if you do a Cocoapods integration for the first time, you need to add `$(inherited)` to the `Other linker flags` configuration in your app.
 
 __Note:__ - if you do a manual integration, our library expects the AppboyKit folder to be under the root of the ios project directory.
 
