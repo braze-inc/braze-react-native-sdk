@@ -1,3 +1,6 @@
+## 0.3.0
+- Renames Android module to conform to rnpm standard.
+
 ## 0.2.0
 - Refactors Android module to have the source directly under the `android` folder.
 

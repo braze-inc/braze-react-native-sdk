@@ -45,8 +45,8 @@ const ReactAppboy = require('react-native-appboy-sdk');
 // file: android/settings.gradle
 ...
 
-include ':appboy-react-bridge'
-project(':appboy-react-bridge').projectDir = new File(settingsDir, '../node_modules/react-native-appboy-sdk/android')
+include ':react-native-android-sdk'
+project(':react-native-android-sdk').projectDir = new File(settingsDir, '../node_modules/react-native-appboy-sdk/android')
 ```
 ```gradle
 // file: android/build.gradle
@@ -65,7 +65,7 @@ allprojects {
 
 dependencies {
     ...
-    compile project(':appboy-react-bridge')
+    compile project(':react-native-appboy-sdk')
 }
 ```
 

@@ -1,5 +1,5 @@
 rootProject.name = 'AppboyProject'
 
 include ':app'
-include ':appboy-react-bridge', ':app'
-project(':appboy-react-bridge').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-appboy-sdk/android')
+include ':react-native-appboy-sdk', ':app'
+project(':react-native-appboy-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-appboy-sdk/android')
