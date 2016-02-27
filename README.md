@@ -36,6 +36,18 @@ const ReactAppboy = require('react-native-appboy-sdk');
 ### Android
 1. `npm install react-native-appboy-sdk@latest --save`
 2. `rnpm link`
+3. Add the Appboy repository to your project:
+```gradle
+// file: android/build.gradle
+...
+
+allprojects {
+  repositories {
+    ...
+    maven { url "http://appboy.github.io/appboy-android-sdk/sdk" }
+  }
+}
+```
 
 #### Android without rnpm
 1. `npm install react-native-appboy-sdk@latest --save`
