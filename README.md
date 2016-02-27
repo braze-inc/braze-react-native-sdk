@@ -11,11 +11,10 @@ Effective marketing automation is an essential part of successfully scaling and 
 2. `npm install react-native-appboy-sdk@latest --save`
 3. `rnpm link`
 
-__Note:__ - if you do a Cocoapods integration for the first time, you need to add `$(inherited)` to the `Other linker flags` configuration in your app.
-
-__Note:__ - if you do a manual integration, our library expects the AppboyKit folder to be under the root of the ios project directory.
-
-__Note:__ - We've also inserted the token `APPBOY_LIBRARY_SEARCH_PATH` in the header search path, so that folks who find the default paths insufficient and care replace that token can do so.  If there are any standard search paths that you think would be universally applicable, please leave an issue on the repo or a pull request and we'll update it.
+##### Notes:
+- If you do a Cocoapods integration for the first time, you need to add `$(inherited)` to the `Other linker flags` configuration in your app.
+- If you do a manual integration, our library expects the AppboyKit folder to be under the root of the ios project directory.
+- We've also inserted the token `APPBOY_LIBRARY_SEARCH_PATH` in the header search path, so that folks who find the default paths insufficient and care replace that token can do so.  If there are any standard search paths that you think would be universally applicable, please leave an issue on the repo or a pull request and we'll update it.
 
 #### iOS without rnpm
 rpnm will automatically link the node package to your project.  If you decide not to use it, follow these steps.
@@ -36,13 +35,18 @@ const ReactAppboy = require('react-native-appboy-sdk');
 
 ### Android
 1. `npm install react-native-appboy-sdk@latest --save`
+2. `rnpm link`
+
+#### Android without rnpm
+1. `npm install react-native-appboy-sdk@latest --save`
+2. Link the project by adding the following:
 
 ```gradle
 // file: android/settings.gradle
 ...
 
 include ':appboy-react-bridge'
-project(':appboy-react-bridge').projectDir = new File(settingsDir, '../node_modules/react-native-appboy-sdk/android/appboy-react-bridge')
+project(':appboy-react-bridge').projectDir = new File(settingsDir, '../node_modules/react-native-appboy-sdk/android')
 ```
 ```gradle
 // file: android/build.gradle
@@ -65,9 +69,11 @@ dependencies {
 }
 ```
 
-2.  Follow the directions at https://documentation.appboy.com/ to finish your integration. 
-3.  When you need to make Appboy calls from javascript, use the following declaration to import the javascript module:
+#### Android completing the integration
+1.  Follow the directions at https://documentation.appboy.com/ to finish your integration. 
+2.  When you need to make Appboy calls from javascript, use the following declaration to import the javascript module:
 
 ```
 const ReactAppboy = require('react-native-appboy-sdk');
 ```
+
