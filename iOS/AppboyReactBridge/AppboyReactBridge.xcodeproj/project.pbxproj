@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4DB659B1D8C973800EFA6B6 /* AppboyReactUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D4DB659A1D8C973800EFA6B6 /* AppboyReactUtils.m */; };
 		E3D0A75E1C668BB90027828A /* AppboyReactBridge.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D0A75D1C668BB90027828A /* AppboyReactBridge.h */; };
 		E3D0A7601C668BB90027828A /* AppboyReactBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D0A75F1C668BB90027828A /* AppboyReactBridge.m */; };
 /* End PBXBuildFile section */
@@ -25,6 +26,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D4DB65991D8C973800EFA6B6 /* AppboyReactUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppboyReactUtils.h; sourceTree = "<group>"; };
+		D4DB659A1D8C973800EFA6B6 /* AppboyReactUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppboyReactUtils.m; sourceTree = "<group>"; };
 		E3D0A75A1C668BB90027828A /* libAppboyReactBridge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppboyReactBridge.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D0A75D1C668BB90027828A /* AppboyReactBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppboyReactBridge.h; sourceTree = "<group>"; };
 		E3D0A75F1C668BB90027828A /* AppboyReactBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppboyReactBridge.m; sourceTree = "<group>"; };
@@ -62,6 +65,8 @@
 			children = (
 				E3D0A75D1C668BB90027828A /* AppboyReactBridge.h */,
 				E3D0A75F1C668BB90027828A /* AppboyReactBridge.m */,
+				D4DB65991D8C973800EFA6B6 /* AppboyReactUtils.h */,
+				D4DB659A1D8C973800EFA6B6 /* AppboyReactUtils.m */,
 			);
 			path = AppboyReactBridge;
 			sourceTree = "<group>";
@@ -122,6 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4DB659B1D8C973800EFA6B6 /* AppboyReactUtils.m in Sources */,
 				E3D0A7601C668BB90027828A /* AppboyReactBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,7 +171,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -202,7 +208,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

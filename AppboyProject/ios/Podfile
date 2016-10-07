@@ -1,1 +1,4 @@
-pod 'Appboy-iOS-SDK'
+
+target 'AppboyProject' do 
+  pod 'Appboy-iOS-SDK'
+end

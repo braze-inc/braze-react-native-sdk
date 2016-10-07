@@ -20,11 +20,12 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		1DA5D9E2AA7F49CA60EC2670 /* libPods-AppboyProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ECEFC4BC79A5D45D47A89D4 /* libPods-AppboyProject.a */; };
+		7D5B300ECB3A4CF691D5583A /* libAppboyReactBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D4AEF94E4C4F97B933C154 /* libAppboyReactBridge.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		B12F8F47477087D8753A79BE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C6C42EBC65368551414ED8 /* libPods.a */; };
-		E3D0A7151C6675ED0027828A /* ABKReactBridgeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D0A7141C6675ED0027828A /* ABKReactBridgeTest.m */; };
-		E3D0A7781C668CFE0027828A /* libAppboyReactBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D0A76B1C668BD00027828A /* libAppboyReactBridge.a */; };
+		D4019E771D8A354400846FA6 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4019E761D8A354400846FA6 /* UserNotifications.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,9 +106,9 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		E3D0A76A1C668BD00027828A /* PBXContainerItemProxy */ = {
+		D48C6D1B1D8A28D200E8A9D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = E3D0A7661C668BD00027828A /* AppboyReactBridge.xcodeproj */;
+			containerPortal = 2984E68720884F9D90152271 /* AppboyReactBridge.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = E3D0A75A1C668BB90027828A;
 			remoteInfo = AppboyReactBridge;
@@ -124,7 +125,6 @@
 		00E356EE1AD99517003FC87E /* AppboyProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppboyProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* AppboyProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppboyProjectTests.m; sourceTree = "<group>"; };
-		075D35F998776457EBB108CE /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AppboyProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppboyProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,13 +135,20 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AppboyProject/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AppboyProject/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		76C6C42EBC65368551414ED8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2984E68720884F9D90152271 /* AppboyReactBridge.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppboyReactBridge.xcodeproj; path = "../node_modules/react-native-appboy-sdk/iOS/AppboyReactBridge/AppboyReactBridge.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
-		7B9ADEEED13F2DC01C3C4973 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		7ECEFC4BC79A5D45D47A89D4 /* libPods-AppboyProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppboyProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		D43518111D822335001F8197 /* AppboyProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AppboyProject.entitlements; path = AppboyProject/AppboyProject.entitlements; sourceTree = "<group>"; };
+		E21FD3253E3B26792BB515DB /* Pods-AppboyProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppboyProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject.release.xcconfig"; sourceTree = "<group>"; };
 		E3D0A7131C6675ED0027828A /* ABKReactBridgeTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ABKReactBridgeTest.h; path = AppboyProject/ABKReactBridgeTest.h; sourceTree = "<group>"; };
 		E3D0A7141C6675ED0027828A /* ABKReactBridgeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ABKReactBridgeTest.m; path = AppboyProject/ABKReactBridgeTest.m; sourceTree = "<group>"; };
 		E3D0A7661C668BD00027828A /* AppboyReactBridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AppboyReactBridge.xcodeproj; path = ../../iOS/AppboyReactBridge/AppboyReactBridge.xcodeproj; sourceTree = "<group>"; };
+		89AF20DA22F2FB68F8B3B394 /* Pods-AppboyProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppboyProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject.debug.xcconfig"; sourceTree = "<group>"; };
+		AF8878D90BC4A6E3BAF2FDDA /* Pods-AppboyProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppboyProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject.release.xcconfig"; sourceTree = "<group>"; };
+		C1D4AEF94E4C4F97B933C154 /* libAppboyReactBridge.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppboyReactBridge.a; sourceTree = "<group>"; };
+		D4019E761D8A354400846FA6 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		D426E1191D8A1BA1000AE162 /* AppboyProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AppboyProject.entitlements; path = AppboyProject/AppboyProject.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +156,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4019E771D8A354400846FA6 /* UserNotifications.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -166,8 +175,8 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				E3D0A7781C668CFE0027828A /* libAppboyReactBridge.a in Frameworks */,
-				B12F8F47477087D8753A79BE /* libPods.a in Frameworks */,
+				1DA5D9E2AA7F49CA60EC2670 /* libPods-AppboyProject.a in Frameworks */,
+				7D5B300ECB3A4CF691D5583A /* libAppboyReactBridge.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +259,7 @@
 		13B07FAE1A68108700A75B9A /* AppboyProject */ = {
 			isa = PBXGroup;
 			children = (
+				D426E1191D8A1BA1000AE162 /* AppboyProject.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -257,8 +267,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				E3D0A7131C6675ED0027828A /* ABKReactBridgeTest.h */,
-				E3D0A7141C6675ED0027828A /* ABKReactBridgeTest.m */,
 			);
 			name = AppboyProject;
 			sourceTree = "<group>";
@@ -271,10 +279,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		584D1B49863EB46E0BCA69D7 /* Frameworks */ = {
+		3248FC2E1DBB174C0EC1770B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				76C6C42EBC65368551414ED8 /* libPods.a */,
+				D4019E761D8A354400846FA6 /* UserNotifications.framework */,
+				7ECEFC4BC79A5D45D47A89D4 /* libPods-AppboyProject.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -290,7 +299,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				E3D0A7661C668BD00027828A /* AppboyReactBridge.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -301,6 +309,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
+				2984E68720884F9D90152271 /* AppboyReactBridge.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -320,8 +329,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AppboyProjectTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
-				C3FD105F924D150662132845 /* Pods */,
-				584D1B49863EB46E0BCA69D7 /* Frameworks */,
+				E73349AAB4AC7801A8CC9224 /* Pods */,
+				3248FC2E1DBB174C0EC1770B /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -336,21 +345,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C3FD105F924D150662132845 /* Pods */ = {
+		D48C6D181D8A28D200E8A9D8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				075D35F998776457EBB108CE /* Pods.debug.xcconfig */,
-				7B9ADEEED13F2DC01C3C4973 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		E3D0A7671C668BD00027828A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E3D0A76B1C668BD00027828A /* libAppboyReactBridge.a */,
+				D48C6D1C1D8A28D200E8A9D8 /* libAppboyReactBridge.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E73349AAB4AC7801A8CC9224 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				89AF20DA22F2FB68F8B3B394 /* Pods-AppboyProject.debug.xcconfig */,
+				AF8878D90BC4A6E3BAF2FDDA /* Pods-AppboyProject.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -378,13 +387,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AppboyProject" */;
 			buildPhases = (
-				13CD1B56ADC8A6F004BF5D4E /* Check Pods Manifest.lock */,
+				9D446A5F1782E915B9AEBBF1 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				CDD4A9243BB74869836ABD31 /* Embed Pods Frameworks */,
-				C68288D869D146C9AD5DA46D /* Copy Pods Resources */,
+				A23C2291CE03B1B39602EA70 /* [CP] Embed Pods Frameworks */,
+				59FE1BD0D9D18651C9F10C6B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -401,12 +410,21 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 5GLZKGNWQ3;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -423,8 +441,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = E3D0A7671C668BD00027828A /* Products */;
-					ProjectRef = E3D0A7661C668BD00027828A /* AppboyReactBridge.xcodeproj */;
+					ProductGroup = D48C6D181D8A28D200E8A9D8 /* Products */;
+					ProjectRef = 2984E68720884F9D90152271 /* AppboyReactBridge.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -546,11 +564,11 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E3D0A76B1C668BD00027828A /* libAppboyReactBridge.a */ = {
+		D48C6D1C1D8A28D200E8A9D8 /* libAppboyReactBridge.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAppboyReactBridge.a;
-			remoteRef = E3D0A76A1C668BD00027828A /* PBXContainerItemProxy */;
+			remoteRef = D48C6D1B1D8A28D200E8A9D8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -589,14 +607,29 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
 		};
-		13CD1B56ADC8A6F004BF5D4E /* Check Pods Manifest.lock */ = {
+		59FE1BD0D9D18651C9F10C6B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9D446A5F1782E915B9AEBBF1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -604,34 +637,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		C68288D869D146C9AD5DA46D /* Copy Pods Resources */ = {
+		A23C2291CE03B1B39602EA70 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CDD4A9243BB74869836ABD31 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -649,7 +667,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3D0A7151C6675ED0027828A /* ABKReactBridgeTest.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -682,10 +699,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -693,7 +706,13 @@
 				INFOPLIST_FILE = AppboyProjectTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppboyProject.app/AppboyProject";
 			};
 			name = Debug;
@@ -703,64 +722,78 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = AppboyProjectTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppboyProject.app/AppboyProject";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 075D35F998776457EBB108CE /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 89AF20DA22F2FB68F8B3B394 /* Pods-AppboyProject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppboyProject/AppboyProject.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../node_modules/react-native/Libraries/**",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-appboy-sdk/iOS/AppboyReactBridge/AppboyReactBridge",
 				);
 				INFOPLIST_FILE = AppboyProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/AppboyKit",
-				);
 				OTHER_LDFLAGS = (
-					"-ObjC",
 					"$(inherited)",
+					"-ObjC",
+					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.appboy.helloreact;
 				PRODUCT_NAME = AppboyProject;
+				PROVISIONING_PROFILE = "ce7fcee4-9587-44d5-87ec-ca5381589a5d";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.appboy.helloreact";
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B9ADEEED13F2DC01C3C4973 /* Pods.release.xcconfig */;
+			baseConfigurationReference = AF8878D90BC4A6E3BAF2FDDA /* Pods-AppboyProject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppboyProject/AppboyProject.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Appboy Inc. (5GLZKGNWQ3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Appboy Inc. (5GLZKGNWQ3)";
+				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../node_modules/react-native/Libraries/**",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-appboy-sdk/iOS/AppboyReactBridge/AppboyReactBridge",
 				);
 				INFOPLIST_FILE = AppboyProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/AppboyKit",
-				);
 				OTHER_LDFLAGS = (
-					"-ObjC",
 					"$(inherited)",
+					"-ObjC",
+					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.appboy.helloreact;
 				PRODUCT_NAME = AppboyProject;
+				PROVISIONING_PROFILE = "7b0a29d5-45f0-46bc-887f-dab1022629a4";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.appboy.helloreact";
 			};
 			name = Release;
 		};
@@ -781,7 +814,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -802,10 +836,12 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-appboy-sdk/iOS/AppboyReactBridge/AppboyReactBridge",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -827,7 +863,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -842,9 +879,11 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-appboy-sdk/iOS/AppboyReactBridge/AppboyReactBridge",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

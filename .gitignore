@@ -32,5 +32,9 @@ node_modules
 # CocoaPods
 Pods
 
+#fastlane
+AppboyProject/ios/fastlane/README.md
+AppboyProject/ios/fastlane/report.xml
+
 # Emacs
 *~
