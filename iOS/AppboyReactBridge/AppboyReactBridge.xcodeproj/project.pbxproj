@@ -229,6 +229,7 @@
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/AppboyKit/headers/AppboyKitLibrary",
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../../../ios/AppboyKit/Headers/AppboyKitLibrary",
+					"$(SRCROOT)/../../../../ios/AppboyKit/Headers/AppboyKitLibrary",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -251,6 +252,7 @@
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/AppboyKit/headers/AppboyKitLibrary",
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../../../ios/AppboyKit/Headers/AppboyKitLibrary",
+					"$(SRCROOT)/../../../../ios/AppboyKit/Headers/AppboyKitLibrary",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
