@@ -229,8 +229,12 @@
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/AppboyKit/headers/AppboyKitLibrary",
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../../../ios/AppboyKit/Headers/AppboyKitLibrary",
+					"$(SRCROOT)/../../../../ios/AppboyKit/Headers/AppboyKitLibrary",
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../../../ios/AppboyKit",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -251,8 +255,12 @@
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/AppboyKit/headers/AppboyKitLibrary",
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../../../ios/AppboyKit/Headers/AppboyKitLibrary",
+					"$(SRCROOT)/../../../../ios/AppboyKit/Headers/AppboyKitLibrary",
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../../../ios/AppboyKit",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
