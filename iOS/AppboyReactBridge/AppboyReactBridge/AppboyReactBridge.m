@@ -151,9 +151,10 @@ RCT_EXPORT_METHOD(setDoubleCustomUserAttribute:(NSString *)key andValue:(double)
   [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setCustomAttributeWithKey:key andDoubleValue:value])];
 }
 
-RCT_EXPORT_METHOD(setDateCustomUserAttribute:(NSString *)key andValue:(NSDate *)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setDateCustomUserAttribute:(NSString *)key andValue:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].user setCustomAttributeWithKey:AndDateValue: =  %@", key);
-  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setCustomAttributeWithKey:key andDateValue:value])];
+  NSDate *date = [NSDate dateWithTimeIntervalSince1970:value];
+  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setCustomAttributeWithKey:key andDateValue:date])];
 }
 
 RCT_EXPORT_METHOD(setIntCustomUserAttribute:(NSString *)key andValue:(int)value callback:(RCTResponseSenderBlock)callback) {
