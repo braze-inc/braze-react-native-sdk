@@ -8,9 +8,9 @@
  */
 
 #import "AppDelegate.h"
-#import "RCTLinkingManager.h"
-#import "RCTBundleURLProvider.h"
-#import "RCTRootView.h"
+#import <React/RCTLinkingManager.h>
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
 #import "AppboyKit.h"
 #import "AppboyReactUtils.h"
 
@@ -30,7 +30,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-
+  
   // Register for user notifications
   if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];

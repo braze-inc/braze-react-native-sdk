@@ -1,7 +1,15 @@
+## 1.2.0
+
+##### Breaking
+- Updates the native iOS bridge to be compatible with React Native [v0.40.0](https://github.com/facebook/react-native/releases/tag/v0.40.0).
+
+##### Changed
+- Updates the AppboyProject sample project to React Native v0.41.1.
+
 ## 1.1.0
 
 ##### Breaking
-- **Update Required** — Fixes a bug in the [iOS bridge](https://github.com/Appboy/appboy-react-sdk/blob/master/iOS/AppboyReactBridge/AppboyReactBridge/AppboyReactBridge.m) where custom attribute dates were converted incorrectly, causing incorrect date data to be sent to Appboy. As a result of the fix, `setDateCustomUserAttribute()` in the iOS Appboy React bridge may now only be called with a double. 
+- **Update Required** — Fixes a bug in the [iOS bridge](https://github.com/Appboy/appboy-react-sdk/blob/master/iOS/AppboyReactBridge/AppboyReactBridge/AppboyReactBridge.m) where custom attribute dates were converted incorrectly, causing incorrect date data to be sent to Appboy. As a result of the fix, `setDateCustomUserAttribute()` in the iOS Appboy React bridge may now only be called with a double.
   - Note: The default Javascript Appboy interface has not changed, so for most integrations this just requires updating the SDK, unless you were manually calling our iOS bridge outside of our recommended integration.
   - See https://github.com/Appboy/appboy-react-sdk/issues/7
 

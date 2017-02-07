@@ -1,5 +1,5 @@
 PODS:
-  - Appboy-iOS-SDK (2.24.2):
+  - Appboy-iOS-SDK (2.25.0):
     - SDWebImage (~> 3.7)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
@@ -9,9 +9,9 @@ DEPENDENCIES:
   - Appboy-iOS-SDK
 
 SPEC CHECKSUMS:
-  Appboy-iOS-SDK: c9fdf98edb3a61e0418a0bb941011a8d50f5b811
+  Appboy-iOS-SDK: 720819acf77bcb7bdad658d26c064278a39639d9
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
 PODFILE CHECKSUM: 4a8044a2dc577ba6222e659d250842e0517dbda0
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

@@ -1,6 +1,6 @@
 #import "AppboyReactBridge.h"
-#import "RCTLog.h"
-#import "RCTConvert.h"
+#import <React/RCTLog.h>
+#import <React/RCTConvert.h>
 #import "AppboyKit.h"
 #import "ABKUser.h"
 #import "AppboyReactUtils.h"

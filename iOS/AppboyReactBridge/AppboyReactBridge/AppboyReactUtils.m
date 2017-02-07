@@ -1,5 +1,5 @@
 #import "AppboyReactUtils.h"
-#import "RCTLog.h"
+#import <React/RCTLog.h>
 
 @implementation AppboyReactUtils
 
