@@ -209,11 +209,29 @@ RCT_EXPORT_METHOD(setFacebookData:(nullable NSDictionary *)facebookUserDictionar
     [Appboy sharedInstance].user.facebookUser = facebookUser;
 }
 
-RCT_EXPORT_METHOD(launchNewsFeed) {
+RCT_EXPORT_METHOD(launchNewsFeed:(nullable NSDictionary *)launchOptions) {
   RCTLogInfo(@"launchNewsFeed called");
   ABKFeedViewControllerModalContext *feedModal = [[ABKFeedViewControllerModalContext alloc] init];
   feedModal.navigationItem.title = @"News";
   // TODO, revisit how to get view controller
+  if (launchOptions) {
+    NSNumber * minimumCardMarginForiPhone = launchOptions[@"minimumCardMarginForiPhone"];
+    if (minimumCardMarginForiPhone && [minimumCardMarginForiPhone isKindOfClass:[NSNumber class]]) {
+      feedModal.minimumCardMarginForiPhone = minimumCardMarginForiPhone.floatValue;
+    }
+    NSNumber * minimumCardMarginForiPad = launchOptions[@"minimumCardMarginForiPad"];
+    if (minimumCardMarginForiPad && [minimumCardMarginForiPad isKindOfClass:[NSNumber class]]) {
+      feedModal.minimumCardMarginForiPad = minimumCardMarginForiPad.floatValue;
+    }
+    NSNumber * cardWidthForiPhone = launchOptions[@"cardWidthForiPhone"];
+    if (cardWidthForiPhone && [cardWidthForiPhone isKindOfClass:[NSNumber class]]) {
+      feedModal.cardWidthForiPhone = cardWidthForiPhone.floatValue;
+    }
+    NSNumber * cardWidthForiPad = launchOptions[@"cardWidthForiPad"];
+    if (cardWidthForiPad && [cardWidthForiPad isKindOfClass:[NSNumber class]]) {
+      feedModal.cardWidthForiPad = cardWidthForiPad.floatValue;
+    }
+  }
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
   UIViewController *mainViewController = keyWindow.rootViewController;
   [mainViewController presentViewController:feedModal animated:YES completion:nil];

@@ -366,8 +366,8 @@ var ReactAppboy = {
   /**
   * Launches the News Feed UI element.
   */
-  launchNewsFeed: function() {
-    AppboyReactBridge.launchNewsFeed();
+  launchNewsFeed: function(launchOptions) {
+    AppboyReactBridge.launchNewsFeed(launchOptions);
   },
 
   /**
