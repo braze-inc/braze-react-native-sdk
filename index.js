@@ -365,9 +365,10 @@ var ReactAppboy = {
   // News Feed
   /**
   * Launches the News Feed UI element.
+  * @param {object} launchOptions - An optional dictionary of News Feed launch options. See NewsFeedLaunchOptions for supported keys.
   */
-  launchNewsFeed: function() {
-    AppboyReactBridge.launchNewsFeed();
+  launchNewsFeed: function(launchOptions) {
+    AppboyReactBridge.launchNewsFeed(launchOptions);
   },
 
   /**
@@ -419,6 +420,13 @@ var ReactAppboy = {
   Genders: {
     'MALE': 'm',
     'FEMALE': 'f'
+  },
+
+  NewsFeedLaunchOptions: {
+    'CARD_WIDTH_FOR_IPHONE': 'cardWidthForiPhone',
+    'CARD_WIDTH_FOR_IPAD': 'cardWidthForiPad',
+    'MINIMUM_CARD_MARGIN_FOR_IPHONE': 'minimumCardMarginForiPhone',
+    'MINIMUM_CARD_MARGIN_FOR_IPAD': 'minimumCardMarginForiPad'
   }
 };
 

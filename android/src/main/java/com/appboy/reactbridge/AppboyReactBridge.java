@@ -341,7 +341,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void launchNewsFeed() {
+  public void launchNewsFeed(ReadableMap launchOptions) {
     Intent intent = new Intent(getCurrentActivity(), AppboyFeedActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     this.getReactApplicationContext().startActivity(intent);
