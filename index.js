@@ -371,6 +371,12 @@ var ReactAppboy = {
     AppboyReactBridge.launchNewsFeed(launchOptions);
   },
 
+
+  // Refresh news feed
+  requestFeedRefresh: function() {
+    AppboyReactBridge.requestFeedRefresh();
+  },
+
   /**
   * Returns the current number of News Feed cards for the given category.
   * @param {CardCategory} category - Card category. Use ReactAppboy.CardCategory.ALL to get the total card count.
