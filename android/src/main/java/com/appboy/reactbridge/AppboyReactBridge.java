@@ -347,6 +347,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     this.getReactApplicationContext().startActivity(intent);
   }
 
+  @ReactMethod
+  public void requestFeedRefresh() {
+    final Appboy mAppboy = Appboy.getInstance(getReactApplicationContext());
+    mAppboy.requestFeedRefresh();
+  }
+
   private CardCategory getCardCategoryFromString(String categoryString) {
     CardCategory cardCategory = null;
     for (CardCategory category : CardCategory.values()) {
