@@ -67,6 +67,17 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       AppboyLogger.w(TAG, "Warning: AppboyReactBridge callback was null.");
     }
   }
+  
+  @ReactMethod
+  public void setSDKFlavor() {
+    // Dummy method required for the iOS SDK flavor implementation; see AppboyReactBridge.setSDKFlavor()
+    // in index.js. The Android bridge sets the REACT SDK flavor via an appboy.xml parameter.
+  }
+    
+  @ReactMethod
+  public void requestImmediateDataFlush() {
+    Appboy.getInstance(getReactApplicationContext()).requestImmediateDataFlush();
+  }
 
   @ReactMethod
   public void changeUser(String userName) {
@@ -349,8 +360,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void requestFeedRefresh() {
-    final Appboy mAppboy = Appboy.getInstance(getReactApplicationContext());
-    mAppboy.requestFeedRefresh();
+    Appboy.getInstance(getReactApplicationContext()).requestFeedRefresh();
   }
 
   private CardCategory getCardCategoryFromString(String categoryString) {

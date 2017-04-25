@@ -6,7 +6,8 @@ import {
   View,
   TouchableHighlight,
   Linking,
-  Alert
+  Alert,
+  TextInput
 } from 'react-native';
 
 const ReactAppboy = require('react-native-appboy-sdk');
@@ -14,8 +15,9 @@ const ReactAppboy = require('react-native-appboy-sdk');
 class AppboyProject extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { userIdText : 'theAppboyTestUser' };
     this._updateCardCount = this._updateCardCount.bind(this);
+    this._changeUserPress = this._changeUserPress.bind(this);
   }
 
   componentDidMount() {
@@ -82,10 +84,20 @@ class AppboyProject extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableHighlight
-          onPress={this._changeUserPress}>
-          <Text>Change User</Text>
-        </TouchableHighlight>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+          <TouchableHighlight
+            onPress={this._changeUserPress}>
+            <Text>Click to Set User ID:</Text>
+          </TouchableHighlight>
+          <TextInput
+            style={{height: 40, width: 150, borderColor: 'gray', borderWidth: .5, paddingLeft: 5, marginLeft: 5, fontSize: 14 }}
+            onChangeText={(userIdText) => this.setState({userIdText})}
+            value={this.state.userIdText}
+            />
+        </View>
         <TouchableHighlight
           onPress={this._logCustomEventPress}>
           <Text>Log Custom Event</Text>
@@ -105,10 +117,6 @@ class AppboyProject extends Component {
         <TouchableHighlight
           onPress={this._logUserPropertiesPress}>
           <Text>Set User Properties</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress={this._launchNewsFeedPress}>
-          <Text>Launch News Feed</Text>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={this._launchFeedbackPress}>
@@ -138,14 +146,26 @@ class AppboyProject extends Component {
           onPress={this._setFacebookData}>
           <Text>Set Facebook Data</Text>
         </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._launchNewsFeedPress}>
+          <Text>Launch News Feed</Text>
+        </TouchableHighlight>
         <TouchableHighlight onPress={this._updateCardCount}>
           <Text>Unread Cards (Click to Refresh): {this.state.unreadCardCount} / {this.state.cardCount}</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._requestFeedRefresh}>
+          <Text>Request Feed Refresh</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._requestImmediateDataFlush}>
+          <Text>Request Immediate Data Flush</Text>
         </TouchableHighlight>
       </View>
     );
   }
   _changeUserPress(event) {
-    ReactAppboy.changeUser('theAppboyTestUser');
+    ReactAppboy.changeUser(this.state.userIdText);
   }
   _logCustomEventPress(event) {
     ReactAppboy.logCustomEvent('reactCustomEvent', {'p1': 'p2'});
@@ -237,6 +257,14 @@ class AppboyProject extends Component {
       }
     ];
     ReactAppboy.setFacebookData(profile, 500, likes);
+  }
+
+  _requestFeedRefresh(event) {
+    ReactAppboy.requestFeedRefresh();
+  }
+
+  _requestImmediateDataFlush(event) {
+    ReactAppboy.requestImmediateDataFlush();
   }
 }
 

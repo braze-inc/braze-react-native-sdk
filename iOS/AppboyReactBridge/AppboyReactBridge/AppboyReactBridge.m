@@ -36,6 +36,10 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
   }
 }
 
+RCT_EXPORT_METHOD(setSDKFlavor) {
+  [Appboy sharedInstance].sdkFlavor = REACT;
+}
+
 // Returns the deep link from the push dictionary in application:didFinishLaunchingWithOptions: launchOptions, if one exists
 // For more context see getInitialURL() in index.js
 RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
@@ -258,7 +262,7 @@ RCT_EXPORT_METHOD(launchNewsFeed:(nullable NSDictionary *)launchOptions) {
 RCT_EXPORT_METHOD(requestFeedRefresh) {
   [[Appboy sharedInstance] requestFeedRefresh];
 }
-
+  
 RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
   ABKCardCategory cardCategory = [self getCardCategoryForString:category];
   if (cardCategory == 0) {
@@ -283,6 +287,11 @@ RCT_EXPORT_METHOD(launchFeedback) {
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
   UIViewController *mainViewController = keyWindow.rootViewController;
   [mainViewController presentViewController:feedbackModal animated:YES completion:nil];
+}
+
+RCT_EXPORT_METHOD(requestImmediateDataFlush) {
+  RCTLogInfo(@"requestImmediateDataFlush called");
+  [[Appboy sharedInstance] flushDataAndProcessRequestQueue];
 }
 
 RCT_EXPORT_MODULE();

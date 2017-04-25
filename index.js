@@ -1,4 +1,5 @@
 const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
+AppboyReactBridge.setSDKFlavor();
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -371,8 +372,9 @@ var ReactAppboy = {
     AppboyReactBridge.launchNewsFeed(launchOptions);
   },
 
-
-  // Refresh news feed
+  /**
+   * Requests a News Feed refresh.
+   */
   requestFeedRefresh: function() {
     AppboyReactBridge.requestFeedRefresh();
   },
@@ -405,6 +407,14 @@ var ReactAppboy = {
   */
   launchFeedback: function() {
     AppboyReactBridge.launchFeedback();
+  },
+
+  // Flush Controls
+  /**
+  * Requests an immediate flush of any data waiting to be sent to Appboy's servers.
+  */
+  requestImmediateDataFlush: function() {
+    AppboyReactBridge.requestImmediateDataFlush();
   },
 
   // Enums
