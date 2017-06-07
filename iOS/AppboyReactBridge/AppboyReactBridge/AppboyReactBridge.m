@@ -56,6 +56,12 @@ RCT_EXPORT_METHOD(changeUser:(NSString *)userId)
   [[Appboy sharedInstance] changeUser:userId];
 }
 
+RCT_EXPORT_METHOD(registerPushToken:(NSString *)token)
+{
+  RCTLogInfo(@"[Appboy sharedInstance] registerPushToken with value %@", token);
+  [[Appboy sharedInstance] registerPushToken:token];
+}
+
 RCT_EXPORT_METHOD(submitFeedback:(NSString *)replyToEmail message:(NSString *)message isReportingABug:(BOOL)isReportingABug callback:(RCTResponseSenderBlock)callback)
 {
   RCTLogInfo(@"[Appboy sharedInstance] submitFeedback with values %@ %@ %@", replyToEmail, message, isReportingABug ? @"true" : @"false");
