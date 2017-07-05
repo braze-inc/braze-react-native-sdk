@@ -4,5 +4,5 @@ target 'AppboyProject' do
   pod 'Appboy-iOS-SDK'
 
   # if you want to integrate through Cocoapods instead of manual linking
-  pod 'react-native-appboy-sdk', :path => '../node_modules/react-native-appboy-sdk'
+  # pod 'react-native-appboy-sdk', :path => '../node_modules/react-native-appboy-sdk'
 end
