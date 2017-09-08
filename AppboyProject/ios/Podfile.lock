@@ -1,11 +1,13 @@
 PODS:
-  - Appboy-iOS-SDK (2.29.0):
-    - Appboy-iOS-SDK/UI (= 2.29.0)
-  - Appboy-iOS-SDK/UI (2.29.0):
+  - Appboy-iOS-SDK (3.0.1):
+    - Appboy-iOS-SDK/UI (= 3.0.1)
+  - Appboy-iOS-SDK/Core (3.0.1)
+  - Appboy-iOS-SDK/UI (3.0.1):
+    - Appboy-iOS-SDK/Core
     - SDWebImage/GIF (~> 4.0)
   - FLAnimatedImage (1.0.12)
-  - SDWebImage/Core (4.0.0)
-  - SDWebImage/GIF (4.0.0):
+  - SDWebImage/Core (4.1.0)
+  - SDWebImage/GIF (4.1.0):
     - FLAnimatedImage (~> 1.0)
     - SDWebImage/Core
 
@@ -13,10 +15,10 @@ DEPENDENCIES:
   - Appboy-iOS-SDK
 
 SPEC CHECKSUMS:
-  Appboy-iOS-SDK: 4c415ccf7e22e131326a9bcb89c840f87f6fdd2f
+  Appboy-iOS-SDK: 48825353e29e731b8d55b7927b26f49be32f4c1d
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
 
-PODFILE CHECKSUM: 2f9e055aff739205d78aff436edf9dc0a9a94678
+PODFILE CHECKSUM: 1f57b0b94313a298608387f36d9743aa0be0d96e
 
 COCOAPODS: 1.2.1
