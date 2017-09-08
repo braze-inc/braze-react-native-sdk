@@ -3,18 +3,18 @@ target 'AppboyProject' do
 
   # if you want to integrate through Cocoapods instead of manual linking use this:
   # it already comes with a dependency on `Appboy-iOS-SDK` so you're all set
-  pod 'react-native-appboy-sdk', :path => '../node_modules/react-native-appboy-sdk'
-
-  pod 'React', :path => '../node_modules/react-native', :subspecs => [
-    'Core',
-    'RCTText',
-    'RCTAnimation',
-    'RCTImage',
-    'RCTNetwork',
-    'RCTVibration'
-  ]
+  #
+  # pod 'react-native-appboy-sdk', :path => '../node_modules/react-native-appboy-sdk'
+  # pod 'React', :path => '../node_modules/react-native', :subspecs => [
+  #   'Core',
+  #   'RCTText',
+  #   'RCTAnimation',
+  #   'RCTImage',
+  #   'RCTNetwork',
+  #   'RCTVibration'
+  # ]
 
   # Otherwise you still need to depend on the iOS SDK here
-  # pod 'Appboy-iOS-SDK'
+  pod 'Appboy-iOS-SDK'
 
 end

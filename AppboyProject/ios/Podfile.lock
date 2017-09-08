@@ -6,53 +6,19 @@ PODS:
     - Appboy-iOS-SDK/Core
     - SDWebImage/GIF (~> 4.0)
   - FLAnimatedImage (1.0.12)
-  - react-native-appboy-sdk (1.3.0):
-    - Appboy-iOS-SDK (~> 3.0)
-  - React/Core (0.41.2):
-    - React/cxxreact
-    - React/yoga
-  - React/cxxreact (0.41.2):
-    - React/jschelpers
-  - React/jschelpers (0.41.2)
-  - React/RCTAnimation (0.41.2):
-    - React/Core
-  - React/RCTImage (0.41.2):
-    - React/Core
-    - React/RCTNetwork
-  - React/RCTNetwork (0.41.2):
-    - React/Core
-  - React/RCTText (0.41.2):
-    - React/Core
-  - React/RCTVibration (0.41.2):
-    - React/Core
-  - React/yoga (0.41.2)
   - SDWebImage/Core (4.1.0)
   - SDWebImage/GIF (4.1.0):
     - FLAnimatedImage (~> 1.0)
     - SDWebImage/Core
 
 DEPENDENCIES:
-  - react-native-appboy-sdk (from `../node_modules/react-native-appboy-sdk`)
-  - React/Core (from `../node_modules/react-native`)
-  - React/RCTAnimation (from `../node_modules/react-native`)
-  - React/RCTImage (from `../node_modules/react-native`)
-  - React/RCTNetwork (from `../node_modules/react-native`)
-  - React/RCTText (from `../node_modules/react-native`)
-  - React/RCTVibration (from `../node_modules/react-native`)
-
-EXTERNAL SOURCES:
-  React:
-    :path: "../node_modules/react-native"
-  react-native-appboy-sdk:
-    :path: "../node_modules/react-native-appboy-sdk"
+  - Appboy-iOS-SDK
 
 SPEC CHECKSUMS:
   Appboy-iOS-SDK: 48825353e29e731b8d55b7927b26f49be32f4c1d
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  React: 2b10c07d947dea71c144a33764e9162ed81e3825
-  react-native-appboy-sdk: 53856979ebc470678cbeaa52b21e542e766a6f4e
   SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
 
-PODFILE CHECKSUM: 59f510b8302c62daa26f2c9001cef23e0530d1a2
+PODFILE CHECKSUM: 1f57b0b94313a298608387f36d9743aa0be0d96e
 
 COCOAPODS: 1.2.1
