@@ -19,4 +19,5 @@ Pod::Spec.new do |s|
   s.source_files   = 'iOS/**/*.{h,m}'
 
   s.dependency 'Appboy-iOS-SDK', '~> 3.0'
+  s.dependency 'React'
 end
