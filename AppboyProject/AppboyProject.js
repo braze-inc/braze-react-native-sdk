@@ -15,9 +15,13 @@ const ReactAppboy = require('react-native-appboy-sdk');
 class AppboyProject extends Component {
   constructor(props) {
     super(props);
-    this.state = { userIdText : 'theAppboyTestUser' };
+    this.state = {
+      userIdText : 'theAppboyTestUser',
+      customEventText : ''
+    };
     this._updateCardCount = this._updateCardCount.bind(this);
     this._changeUserPress = this._changeUserPress.bind(this);
+    this._logCustomEventPress = this._logCustomEventPress.bind(this);
   }
 
   componentDidMount() {
@@ -84,24 +88,26 @@ class AppboyProject extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}>
-          <TouchableHighlight
-            onPress={this._changeUserPress}>
-            <Text>Click to Set User ID:</Text>
-          </TouchableHighlight>
+        <View style={styles.row}>
           <TextInput
-            style={{height: 40, width: 150, borderColor: 'gray', borderWidth: .5, paddingLeft: 5, marginLeft: 5, fontSize: 14 }}
+            style={styles.textInput}
             onChangeText={(userIdText) => this.setState({userIdText})}
             value={this.state.userIdText}
             />
+          <TouchableHighlight
+            onPress={this._changeUserPress}>
+            <Text>Set User ID</Text>
+          </TouchableHighlight>
         </View>
-        <TouchableHighlight
-          onPress={this._logCustomEventPress}>
-          <Text>Log Custom Event</Text>
-        </TouchableHighlight>
+        <View style={styles.row}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={(customEventText) => this.setState({customEventText})}/>
+          <TouchableHighlight
+            onPress={this._logCustomEventPress}>
+            <Text>Log Custom Event</Text>
+          </TouchableHighlight>
+        </View>
         <TouchableHighlight
           onPress={this._logPurchasePress}>
           <Text>Log Purchase</Text>
@@ -168,7 +174,7 @@ class AppboyProject extends Component {
     ReactAppboy.changeUser(this.state.userIdText);
   }
   _logCustomEventPress(event) {
-    ReactAppboy.logCustomEvent('reactCustomEvent', {'p1': 'p2'});
+    ReactAppboy.logCustomEvent(this.state.customEventText, {'p1': 'p2'});
   }
   _logPurchasePress(event) {
     ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'pp1': 'pp2'});
@@ -275,15 +281,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF'
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
+  textInput: {
+    height: 40,
+    width: 150,
+    borderColor: 'gray',
+    borderWidth: .5,
+    paddingLeft: 5,
+    marginLeft: 5,
+    fontSize: 14
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 });
 

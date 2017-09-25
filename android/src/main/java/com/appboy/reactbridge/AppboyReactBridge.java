@@ -83,7 +83,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   public void changeUser(String userName) {
     Appboy.getInstance(getReactApplicationContext()).changeUser(userName);
   }
-
+  
   @ReactMethod
   public void registerPushToken(String token) {
     Appboy.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);

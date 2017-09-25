@@ -10,7 +10,15 @@ See our Technical Documentation for instructions on integrating Appboy into your
 - [iOS Documentation](https://www.appboy.com/documentation/React_Native/iOS/)
 - [Android Documentation](https://www.appboy.com/documentation/React_Native/Android_and_FireOS/)
 
+
+## Components
+
+- `AppboyProject` - Contains the AppboyProject sample app with integration examples for the React Native bridge. This sample app integrates the iOS bridge via manual linking, and the iOS SDK via Cocoapods.
+- `HelloReact` - Contains the HelloReact sample app, which integrates the iOS bridge using Cocoapods via a local Podspec.
+
 ## Running the Sample App
+
+The following commands apply to both sample projects and use the `AppboyProject` directory as an example.
 
 ```
 cd AppboyProject/

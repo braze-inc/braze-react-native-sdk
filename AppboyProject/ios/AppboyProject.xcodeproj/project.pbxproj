@@ -25,6 +25,7 @@
 		2AE4EFB676549D844CA0B9B4 /* libPods-AppboyProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DFD935D6278AAAC335301E0 /* libPods-AppboyProject.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		BE56382007784229BEF63385 /* libAppboyReactBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF0E22934149F0B621BCEE /* libAppboyReactBridge.a */; };
 		D430696D1E451D8C00C99F54 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D430696C1E451D8C00C99F54 /* UserNotifications.framework */; };
 /* End PBXBuildFile section */
@@ -219,12 +220,54 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
+			remoteInfo = RCTBlob;
+		};
 		D4257D461E45019D00950C7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FAB0F530E1394DEA8303C23F /* AppboyReactBridge.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = E3D0A75A1C668BB90027828A;
 			remoteInfo = AppboyReactBridge;
+		};
+		D450BB011F68983400609DBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ADD01A681E09402E00F6D226;
+			remoteInfo = "RCTBlob-tvOS";
+		};
+		D4B2E6111F7321720042E6A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 139D7ECE1E25DB7D00323FB7;
+			remoteInfo = "third-party";
+		};
+		D4B2E6131F7321720042E6A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D383D3C1EBD27B6005632C8;
+			remoteInfo = "third-party-tvOS";
+		};
+		D4B2E6151F7321720042E6A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 139D7E881E25C6D100323FB7;
+			remoteInfo = "double-conversion";
+		};
+		D4B2E6171F7321720042E6A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
+			remoteInfo = "double-conversion-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -255,6 +298,7 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		91DF0E22934149F0B621BCEE /* libAppboyReactBridge.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppboyReactBridge.a; sourceTree = "<group>"; };
 		98ED305B5470E82B22643768 /* Pods-AppboyProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppboyProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject.release.xcconfig"; sourceTree = "<group>"; };
+		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		D42CF8871E452121008D896C /* AppboyProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AppboyProject.entitlements; path = AppboyProject/AppboyProject.entitlements; sourceTree = "<group>"; };
 		D430696C1E451D8C00C99F54 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		FAB0F530E1394DEA8303C23F /* AppboyReactBridge.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppboyReactBridge.xcodeproj; path = "../node_modules/react-native-appboy-sdk/iOS/AppboyReactBridge/AppboyReactBridge.xcodeproj"; sourceTree = "<group>"; };
@@ -274,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D430696D1E451D8C00C99F54 /* UserNotifications.framework in Frameworks */,
+				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -410,6 +455,10 @@
 				3DAD3EAB1DF850E9000B6D8A /* libcxxreact.a */,
 				3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */,
 				3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */,
+				D4B2E6121F7321720042E6A9 /* libthird-party.a */,
+				D4B2E6141F7321720042E6A9 /* libthird-party.a */,
+				D4B2E6161F7321720042E6A9 /* libdouble-conversion.a */,
+				D4B2E6181F7321720042E6A9 /* libdouble-conversion.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -427,7 +476,7 @@
 			isa = PBXGroup;
 			children = (
 				5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */,
-				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation-tvOS.a */,
+				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -447,6 +496,7 @@
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
+				ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
 				00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */,
 				78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */,
@@ -478,16 +528,27 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				C3CF1144A5349C5EFAAC803A /* Pods */,
 				2A8A139366DF82E60F113BB1 /* Frameworks */,
+				D450BAFA1F68983400609DBA /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
 			tabWidth = 2;
+			usesTabs = 0;
 		};
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* AppboyProject.app */,
 				00E356EE1AD99517003FC87E /* AppboyProjectTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ADBDB9201DFEBF0600ED6528 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
+				D450BB021F68983400609DBA /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -507,6 +568,14 @@
 				D4257D471E45019D00950C7B /* libAppboyReactBridge.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D450BAFA1F68983400609DBA /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				91DF0E22934149F0B621BCEE /* libAppboyReactBridge.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -633,6 +702,10 @@
 				{
 					ProductGroup = 5E91572E1DD0AC6500FF2AA8 /* Products */;
 					ProjectRef = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
+				},
+				{
+					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
+					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -836,10 +909,10 @@
 			remoteRef = 5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5E9157351DD0AC6500FF2AA8 /* libRCTAnimation-tvOS.a */ = {
+		5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libRCTAnimation-tvOS.a";
+			path = libRCTAnimation.a;
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -857,11 +930,53 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTBlob.a;
+			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D4257D471E45019D00950C7B /* libAppboyReactBridge.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAppboyReactBridge.a;
 			remoteRef = D4257D461E45019D00950C7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D450BB021F68983400609DBA /* libRCTBlob-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTBlob-tvOS.a";
+			remoteRef = D450BB011F68983400609DBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4B2E6121F7321720042E6A9 /* libthird-party.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libthird-party.a";
+			remoteRef = D4B2E6111F7321720042E6A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4B2E6141F7321720042E6A9 /* libthird-party.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libthird-party.a";
+			remoteRef = D4B2E6131F7321720042E6A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4B2E6161F7321720042E6A9 /* libdouble-conversion.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libdouble-conversion.a";
+			remoteRef = D4B2E6151F7321720042E6A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4B2E6181F7321720042E6A9 /* libdouble-conversion.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libdouble-conversion.a";
+			remoteRef = D4B2E6171F7321720042E6A9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -912,7 +1027,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
 		419B69807777E354DC7945CB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -920,13 +1035,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AppboyProject-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5023267F6F486A63BC767021 /* [CP] Copy Pods Resources */ = {
@@ -935,9 +1053,90 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-resources.sh",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyKit/Appboy.bundle",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ABKModalFeedbackViewController.xib",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ABKNavigationFeedbackViewController.xib",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ar.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/Base.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/da.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/de.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/en.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/es-419.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/es-MX.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/es.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/et.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/fi.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/fil.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/fr.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/he.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/hi.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/id.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/images/checkmark-bg.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/images/checkmark-bg@2x.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/images/checkmark.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/images/checkmark@2x.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/it.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ja.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/km.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ko.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/lo.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ms.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/my.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/nb.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/nl.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/pl.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/pt-PT.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/pt.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ru.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/sv.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/th.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/vi.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-Hans.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-Hant.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-HK.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-TW.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh.lproj/AppboyFeedbackLocalizable.strings",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ar.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/Base.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/da.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/de.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/en.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/es-419.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/es-MX.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/es.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/et.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/fi.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/fil.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/fr.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/he.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/hi.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/id.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/it.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ja.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/km.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ko.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/lo.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ms.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/my.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/nb.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/nl.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/pl.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/pt-PT.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/pt.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ru.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/sv.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/th.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/vi.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-Hans.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-Hant.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-HK.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-TW.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh.lproj",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1096,7 +1295,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.appboy.helloreact;
 				PRODUCT_NAME = AppboyProject;
-				PROVISIONING_PROFILE = "e10228af-92a6-4a64-bc4c-7beba72ccc71";
+				PROVISIONING_PROFILE = "f49bbdaa-5dcd-4f27-bb89-457ff9a5b06d";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.appboy.helloreact";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

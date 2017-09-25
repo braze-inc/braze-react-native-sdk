@@ -1,3 +1,17 @@
+## 1.4.0
+
+##### Breaking
+- Updates the native iOS bridge to use [Appboy iOS SDK 2.31.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/2.31.0) or later.
+- Updates the native Android bridge to use [Appboy Android SDK 2.1.4](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#214).
+
+##### Added
+
+- Adds `ReactAppboy.registerPushToken()` for registering push tokens with Appboy.
+  - See https://github.com/Appboy/appboy-react-sdk/pull/13. Thanks @dcvz!
+- Adds the local `react-native-appboy-sdk` Podspec for integrating the React Native iOS bridge via Cocoapods.
+  - See the new `HelloReact` sample app for an integration example.
+  - See https://github.com/Appboy/appboy-react-sdk/pull/15. Thanks @pietropizzi!
+
 ## 1.3.0
 
 ##### Breaking

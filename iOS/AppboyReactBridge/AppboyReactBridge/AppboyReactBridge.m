@@ -4,6 +4,7 @@
 #import "AppboyKit.h"
 #import "ABKUser.h"
 #import "AppboyReactUtils.h"
+#import "ABKModalFeedbackViewController.h"
 
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
@@ -289,7 +290,7 @@ RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:
 
 RCT_EXPORT_METHOD(launchFeedback) {
   RCTLogInfo(@"launchFeedback called");
-  ABKFeedbackViewControllerModalContext *feedbackModal = [[ABKFeedbackViewControllerModalContext alloc] init];
+  ABKModalFeedbackViewController *feedbackModal = [[ABKModalFeedbackViewController alloc] init];
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
   UIViewController *mainViewController = keyWindow.rootViewController;
   [mainViewController presentViewController:feedbackModal animated:YES completion:nil];
