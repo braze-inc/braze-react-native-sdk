@@ -1,4 +1,4 @@
-<!--- ![Braze Logo](https://github.com/Appboy/appboy-react-sdk/blob/master/braze-logo.png) -->
+![Braze Logo](https://github.com/Appboy/appboy-react-sdk/blob/master/braze-logo.png)
 
 # Braze React SDK
 
