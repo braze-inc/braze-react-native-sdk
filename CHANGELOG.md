@@ -1,3 +1,9 @@
+## 1.4.1
+
+##### Added
+- Added support for apps that use use_frameworks in Podfile.
+  - See https://github.com/Appboy/appboy-react-sdk/commit/6db78a5bbeb31457f8a1dcf988a3265d8db9a437 and https://github.com/Appboy/appboy-react-sdk/issues/29. Thanks @jimmy-devine and @sljuka.
+
 ## 1.4.0
 
 ##### Breaking
