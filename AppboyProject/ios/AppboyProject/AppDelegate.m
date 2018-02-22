@@ -51,7 +51,7 @@
       UIRemoteNotificationTypeSound)];
   }
   
-  [Appboy startWithApiKey:@"80bc1ed4-a2b4-4372-a715-7b3695175f9f"
+  [Appboy startWithApiKey:@"d0555d14-3491-4141-a9f0-ffb83e3c2a2f"
             inApplication:application
         withLaunchOptions:launchOptions];
   

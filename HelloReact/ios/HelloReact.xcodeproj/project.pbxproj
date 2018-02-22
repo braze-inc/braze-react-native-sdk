@@ -957,7 +957,6 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-HelloReact/Pods-HelloReact-resources.sh",
-				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyKit/Appboy.bundle",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ABKModalFeedbackViewController.xib",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ABKNavigationFeedbackViewController.xib",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/ar.lproj/AppboyFeedbackLocalizable.strings",
@@ -1036,6 +1035,18 @@
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-HK.lproj",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh-TW.lproj",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKFeedbackViewController/Feedback_Resources/zh.lproj",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/ABKInAppMessageFullViewController.xib",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/ABKInAppMessageHTMLFullViewController.xib",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/ABKInAppMessageModalViewController.xib",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/ABKInAppMessageSlideupViewController.xib",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/arrow.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/arrow@2x.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/com_appboy_inapp_close_icon.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/com_appboy_inapp_close_icon@2x.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/com_appboy_inapp_close_icon@3x.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/FontAwesome.otf",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/InAppMessage/Resources/SlideupArrow.png",
+				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyKit/Appboy.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
