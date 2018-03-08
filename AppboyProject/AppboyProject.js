@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableHighlight,
+  Picker,
   Linking,
   Alert,
   TextInput
@@ -17,11 +18,13 @@ class AppboyProject extends Component {
     super(props);
     this.state = {
       userIdText : 'theAppboyTestUser',
-      customEventText : ''
+      customEventText : '',
+      subscriptionState : 's'
     };
     this._updateCardCount = this._updateCardCount.bind(this);
     this._changeUserPress = this._changeUserPress.bind(this);
     this._logCustomEventPress = this._logCustomEventPress.bind(this);
+    this._setSubscriptionStatePress = this._setSubscriptionStatePress.bind(this);
   }
 
   componentDidMount() {
@@ -124,6 +127,20 @@ class AppboyProject extends Component {
           onPress={this._logUserPropertiesPress}>
           <Text>Set User Properties</Text>
         </TouchableHighlight>
+        <View style={styles.row}>
+          <Picker
+            style={styles.picker}
+            selectedValue={this.state.subscriptionState}
+            onValueChange={(value) => this.setState({subscriptionState: value})}>
+            <Picker.Item label='Subscribed' value='s' />
+            <Picker.Item label='Unsubscribed' value='u' />
+            <Picker.Item label='Opted-in' value='o' />
+          </Picker>
+          <TouchableHighlight
+            onPress={this._setSubscriptionStatePress}>
+            <Text>Set Subscription State</Text>
+          </TouchableHighlight>
+        </View>
         <TouchableHighlight
           onPress={this._launchFeedbackPress}>
           <Text>Launch Feedback</Text>
@@ -176,6 +193,19 @@ class AppboyProject extends Component {
   _logCustomEventPress(event) {
     ReactAppboy.logCustomEvent(this.state.customEventText, {'p1': 'p2'});
   }
+  _setSubscriptionStatePress(event) {
+    console.log('Received request to change subscription state for email and push to ' + this.state.subscriptionState);
+    if (this.state.subscriptionState == 'o') {
+      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.OPTED_IN);
+      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.OPTED_IN);
+    } else if (this.state.subscriptionState == 'u') {
+      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
+      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
+    } else if (this.state.subscriptionState == 's') {
+      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+    }
+  }
   _logPurchasePress(event) {
     ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'pp1': 'pp2'});
   }
@@ -205,7 +235,7 @@ class AppboyProject extends Component {
       }
     });
     ReactAppboy.setPhoneNumber('9085555555');
-    ReactAppboy.setAvatarImageUrl('https://raw.githubusercontent.com/Appboy/appboy-android-sdk/master/Appboy_Logo_400x100.png');
+    ReactAppboy.setAvatarImageUrl('https://raw.githubusercontent.com/Appboy/appboy-react-sdk/master/braze-logo.png');
     ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
     ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
   }
@@ -293,6 +323,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  picker: {
+    width: 200,
   }
 });
 

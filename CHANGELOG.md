@@ -1,3 +1,8 @@
+## 1.5.1
+
+##### Fixed
+- Fixed a bug that caused opted-in subscription states to not be reflected on the user profile.
+
 ## 1.5.0
 
 ##### Breaking

@@ -437,7 +437,7 @@ var ReactAppboy = {
   },
 
   NotificationSubscriptionTypes: {
-    'OPTED_IN': 'opted_in',
+    'OPTED_IN': 'optedin',
     'SUBSCRIBED': 'subscribed',
     'UNSUBSCRIBED': 'unsubscribed'
   },
