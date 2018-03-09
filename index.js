@@ -1,5 +1,4 @@
 const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
-AppboyReactBridge.setSDKFlavor();
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -91,6 +90,7 @@ var ReactAppboy = {
   * @param {string} userId - A unique identifier for this user.
   */
   changeUser: function(userId) {
+    AppboyReactBridge.setSDKFlavor();
     AppboyReactBridge.changeUser(userId);
   },
 
@@ -114,6 +114,7 @@ var ReactAppboy = {
   *      Values can be numeric, boolean, or strings 255 characters or shorter.
   */
   logCustomEvent: function(eventName, eventProperties) {
+    AppboyReactBridge.setSDKFlavor();
     AppboyReactBridge.logCustomEvent(eventName, eventProperties);
   },
 

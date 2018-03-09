@@ -1,3 +1,8 @@
+## 1.5.2
+
+##### Fixed
+- Fixed a race condition between SDK flavor reporting and sharedInstance initialization on iOS.
+
 ## 1.5.1
 
 ##### Fixed
