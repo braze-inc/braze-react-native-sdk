@@ -269,7 +269,19 @@ RCT_EXPORT_METHOD(launchNewsFeed:(nullable NSDictionary *)launchOptions) {
 RCT_EXPORT_METHOD(requestFeedRefresh) {
   [[Appboy sharedInstance] requestFeedRefresh];
 }
-  
+
+RCT_EXPORT_METHOD(wipeData) {
+  [Appboy wipeDataAndDisableForAppRun];
+}
+
+RCT_EXPORT_METHOD(disableSDK) {
+  [Appboy disableSDK];
+}
+
+RCT_EXPORT_METHOD(enableSDK) {
+  [Appboy requestEnableSDKOnNextAppRun];
+}
+
 RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
   ABKCardCategory cardCategory = [self getCardCategoryForString:category];
   if (cardCategory == 0) {

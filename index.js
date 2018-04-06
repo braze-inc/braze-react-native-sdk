@@ -427,6 +427,29 @@ var ReactAppboy = {
     AppboyReactBridge.requestImmediateDataFlush();
   },
 
+  // Data Controls
+  /**
+  * Wipes Data on the Braze SDK. On iOS, the SDK will be disabled for the rest of the app run.
+  */
+  wipeData: function() {
+    AppboyReactBridge.wipeData();
+  },
+
+  /**
+  * Disables the Braze SDK immediately.
+  */
+  disableSDK: function() {
+    AppboyReactBridge.disableSDK();
+  },
+
+  /**
+  * Enables the Braze SDK after a previous call to disableSDK().
+  * On iOS, the SDK will be enabled only after a subsequent call to startWithApiKey().
+  */
+  enableSDK: function() {
+    AppboyReactBridge.enableSDK();
+  },
+
   // Enums
   CardCategory: {
     'ADVERTISING': 'advertising',

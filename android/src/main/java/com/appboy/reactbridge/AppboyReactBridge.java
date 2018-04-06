@@ -391,7 +391,6 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     // Register FeedUpdatedEvent subscriber
     IEventSubscriber<FeedUpdatedEvent> feedUpdatedSubscriber = null;
     boolean requestingFeedUpdateFromCache = false;
-    final Appboy mAppboy = Appboy.getInstance(getReactApplicationContext());
 
     if (cardCountTag.equals(CARD_COUNT_TAG)) {
       // getCardCount
@@ -410,7 +409,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
             }
           }
           // Remove this listener from the feed subscriber map and from Appboy
-          mAppboy.removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
           mFeedSubscriberMap.remove(callback);
         }
       };
@@ -432,7 +431,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
             }
           }
           // Remove this listener from the feed subscriber map and from Appboy
-          mAppboy.removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
           mFeedSubscriberMap.remove(callback);
         }
       };
@@ -442,8 +441,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     if (requestingFeedUpdateFromCache) {
       // Put the subscriber into a map so we can remove it later from future subscriptions
       mFeedSubscriberMap.put(callback, feedUpdatedSubscriber);
-      mAppboy.subscribeToFeedUpdates(feedUpdatedSubscriber);
-      mAppboy.requestFeedRefreshFromCache();
+      Appboy.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
+      Appboy.getInstance(getReactApplicationContext()).requestFeedRefreshFromCache();
     }
   }
 
@@ -460,6 +459,21 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void launchFeedback() {
     Log.i(TAG, "Launch feedback actions are not currently supported on Android. Doing nothing.");
+  }
+
+  @ReactMethod
+  public void wipeData() {
+    Appboy.wipeData(getReactApplicationContext());
+  }
+
+  @ReactMethod
+  public void disableSDK() {
+    Appboy.disableSdk(getReactApplicationContext());
+  }
+
+  @ReactMethod
+  public void enableSDK() {
+    Appboy.enableSdk(getReactApplicationContext());
   }
 
   private Month parseMonth(int monthInt) {

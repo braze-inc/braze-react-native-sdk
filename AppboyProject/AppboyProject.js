@@ -184,6 +184,18 @@ class AppboyProject extends Component {
           onPress={this._requestImmediateDataFlush}>
           <Text>Request Immediate Data Flush</Text>
         </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._wipeData}>
+          <Text>Wipe Data</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._disableSDK}>
+          <Text>Disable SDK</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._enableSDK}>
+          <Text>Enable SDK</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -301,6 +313,18 @@ class AppboyProject extends Component {
 
   _requestImmediateDataFlush(event) {
     ReactAppboy.requestImmediateDataFlush();
+  }
+
+  _wipeData(event) {
+    ReactAppboy.wipeData();
+  }
+
+  _disableSDK(event) {
+    ReactAppboy.disableSDK();
+  }
+
+  _enableSDK(event) {
+    ReactAppboy.enableSDK();
   }
 }
 

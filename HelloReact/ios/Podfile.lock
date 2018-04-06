@@ -1,21 +1,21 @@
 PODS:
-  - Appboy-iOS-SDK (3.3.2):
-    - Appboy-iOS-SDK/UI (= 3.3.2)
-  - Appboy-iOS-SDK/Core (3.3.2)
-  - Appboy-iOS-SDK/Feedback (3.3.2):
+  - Appboy-iOS-SDK (3.3.3):
+    - Appboy-iOS-SDK/UI (= 3.3.3)
+  - Appboy-iOS-SDK/Core (3.3.3)
+  - Appboy-iOS-SDK/Feedback (3.3.3):
     - Appboy-iOS-SDK/Core
-  - Appboy-iOS-SDK/InAppMessage (3.3.2):
+  - Appboy-iOS-SDK/InAppMessage (3.3.3):
     - Appboy-iOS-SDK/Core
     - SDWebImage/GIF (~> 4.0)
-  - Appboy-iOS-SDK/UI (3.3.2):
+  - Appboy-iOS-SDK/UI (3.3.3):
     - Appboy-iOS-SDK/Core
     - Appboy-iOS-SDK/Feedback
     - Appboy-iOS-SDK/InAppMessage
   - FLAnimatedImage (1.0.12)
   - React (0.53.3):
     - React/Core (= 0.53.3)
-  - react-native-appboy-sdk (1.4.0):
-    - Appboy-iOS-SDK (~> 3.0)
+  - react-native-appboy-sdk (1.5.2):
+    - Appboy-iOS-SDK (~> 3.3.3)
     - React
   - React/Core (0.53.3):
     - yoga (= 0.53.3.React)
@@ -33,8 +33,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - SDWebImage/Core (4.3.0)
-  - SDWebImage/GIF (4.3.0):
+  - SDWebImage/Core (4.3.3)
+  - SDWebImage/GIF (4.3.3):
     - FLAnimatedImage (~> 1.0)
     - SDWebImage/Core
   - yoga (0.53.3.React)
@@ -57,13 +57,13 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native/ReactCommon/yoga
 
 SPEC CHECKSUMS:
-  Appboy-iOS-SDK: edd999ec1622a72b8ab5f5cabcc2887dd1ca18f3
+  Appboy-iOS-SDK: e0114384b8025253456b8d4222c757b60f08c223
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  React: fd20e9486c9d994fb6e40d6e67dbd29c7709889c
-  react-native-appboy-sdk: 9eff45df27ad1726518f19a9ab71a9c9ea343a12
-  SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
-  yoga: c7c8e64dbc2552b1ceac0b491ff03f5e5128b501
+  React: af66244a7d630be2aef03b4ddfe3570e4eff39fc
+  react-native-appboy-sdk: 8838ae4baf86f01a5bdb6f6044bfb3f73095a26b
+  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  yoga: 55da126afc384965b96bff46652464373b330add
 
 PODFILE CHECKSUM: 83ab0c1e4052d87bd06d28280828f7138834ef5c
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0
