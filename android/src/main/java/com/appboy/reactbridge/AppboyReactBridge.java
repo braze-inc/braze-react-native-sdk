@@ -42,9 +42,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private final Object mCallbackWasCalledMapLock = new Object();
   private Map<Callback, IEventSubscriber<FeedUpdatedEvent>> mFeedSubscriberMap = new ConcurrentHashMap<Callback, IEventSubscriber<FeedUpdatedEvent>>();
   private Map<Callback, Boolean> mCallbackWasCalledMap = new ConcurrentHashMap<Callback, Boolean>();
+  private ReactApplicationContext reactContext;
 
   public AppboyReactBridge(ReactApplicationContext reactContext) {
     super(reactContext);
+    this.reactContext = reactContext;
   }
 
   @Override
@@ -66,6 +68,19 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     } else {
       AppboyLogger.w(TAG, "Warning: AppboyReactBridge callback was null.");
     }
+  }
+  @ReactMethod
+  public void getInitialUrl(Callback callback) {
+    if( reactContext != null ) {
+      if( reactContext.getCurrentActivity() != null ) {
+        if( reactContext.getCurrentActivity().getIntent() != null ) {
+          String deeplink = reactContext.getCurrentActivity().getIntent().getStringExtra("url");
+          callback.invoke(null, deeplink);
+        }
+      }
+    }
+    // Dummy method required for the iOS SDK flavor implementation; see AppboyReactBridge.setSDKFlavor()
+    // in index.js. The Android bridge sets the REACT SDK flavor via an appboy.xml parameter.
   }
   
   @ReactMethod
