@@ -20,6 +20,10 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
   return dispatch_get_main_queue();
 }
 
++ (BOOL)requiresMainQueueSetup {
+  return YES;
+}
+
 - (NSDictionary *)constantsToExport
 {
   return @{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed),@"optedin":@(ABKOptedIn)};
