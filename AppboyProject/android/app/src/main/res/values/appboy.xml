@@ -5,9 +5,8 @@
   <string translatable="false" name="com_appboy_api_key">8220f3a6-2e82-4737-a83a-aab39eb1bcef</string>
   <string translatable="false" name="com_appboy_server_target">STAGING</string>
 
-  <!-- Push Notification configuration -->
-  <bool name="com_appboy_push_gcm_messaging_registration_enabled">true</bool>
-  <string translatable="false" name="com_appboy_push_gcm_sender_id">901477453852</string>
+  <bool translatable="false" name="com_appboy_firebase_cloud_messaging_registration_enabled">true</bool>
+  <string translatable="false" name="com_appboy_firebase_cloud_messaging_sender_id">901477453852</string>
 
   <!-- Fresco Library Usage -->
   <!-- When set to false, the UI code will not use views from Fresco library. By default, this setting

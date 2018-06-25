@@ -1,10 +1,12 @@
 {
   "name": "react-native-appboy-sdk",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Braze SDK for React Native.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "./node_modules/.bin/eslint index.js */**.js",
+    "lint-fix": "./node_modules/.bin/eslint --fix index.js */**.js",
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -37,10 +39,19 @@
     "eslint-plugin-promise": "^2.0.1",
     "eslint-plugin-react": "^6.2.0",
     "eslint-plugin-standard": "^2.0.0",
-    "i": "^0.3.5"
+    "i": "^0.3.5",
+    "jest": "^22.4.3",
+    "react": "^16.3.2",
+    "react-native": "^0.55.4"
   },
-  "scripts": {
-    "lint": "./node_modules/.bin/eslint index.js */**.js",
-    "lint-fix": "./node_modules/.bin/eslint --fix index.js */**.js"
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/AppboyProject/",
+      "<rootDir>/HelloReact/"
+    ],
+    "testMatch": [
+      "<rootDir>/__tests__/**/*.js?(x)"
+    ],
+    "preset": "react-native"
   }
 }

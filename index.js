@@ -227,7 +227,7 @@ var ReactAppboy = {
 
   /**
   * Sets the gender of the user.
-  * @param {Genders} gender - Limited to m or f
+  * @param {Genders} gender - Options: f = female, m = male, n = N/A, o = other, p = prefer not to say, u = unknown
   * @param {function(error, result)} callback - A callback that receives the function call result.
   */
   setGender: function(gender, callback) {
@@ -376,10 +376,9 @@ var ReactAppboy = {
   // News Feed
   /**
   * Launches the News Feed UI element.
-  * @param {object} launchOptions - An optional dictionary of News Feed launch options. See NewsFeedLaunchOptions for supported keys.
   */
-  launchNewsFeed: function(launchOptions) {
-    AppboyReactBridge.launchNewsFeed(launchOptions);
+  launchNewsFeed: function() {
+    AppboyReactBridge.launchNewsFeed();
   },
 
   /**
@@ -467,8 +466,12 @@ var ReactAppboy = {
   },
 
   Genders: {
+    'FEMALE': 'f',
     'MALE': 'm',
-    'FEMALE': 'f'
+    'NOT_APPLICABLE': 'n',
+    'OTHER': 'o',
+    'PREFER_NOT_TO_SAY': 'p',
+    'UNKNOWN': 'u'
   },
 
   NewsFeedLaunchOptions: {

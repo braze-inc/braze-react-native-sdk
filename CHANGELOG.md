@@ -1,7 +1,23 @@
+## 1.7.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.5.1](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.5.1).
+- Updated the native Android bridge to [Appboy Android SDK 2.4.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#240).
+
+##### Added
+- Added `Other`, `Unknown`, `Not Applicable`, and `Prefer not to Say` options for user gender.
+- Updated the `AppboyProject` sample app to use FCM instead of GCM.
+- Added toasts to provide feedback for user actions in the `AppboyProject` sample app.
+- Implemented `requiresMainQueueSetup` in `AppboyReactBridge.m` to prevent warnings in React Native 0.49+.
+  - See https://github.com/Appboy/appboy-react-sdk/pull/39. Thanks @danieldecsi!
+
+##### Changed
+- Passing launch options into `launchNewsFeed` is now a no-op.
+
 ## 1.6.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.3.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.3.3) or later.
+- Updated the native iOS bridge to [Braze iOS SDK 3.3.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.3.3).
 - Updated the native Android bridge to [Braze Android SDK 2.2.5](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#225).
 
 ##### Added

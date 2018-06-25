@@ -1,12 +1,3 @@
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
 #import "AppDelegate.h"
 #import <React/RCTLinkingManager.h>
 #import <React/RCTBundleURLProvider.h>
@@ -19,18 +10,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
-  
+
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"AppboyProject"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
-  
+
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-  
+
   // Register for user notifications
   if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
@@ -50,13 +41,13 @@
       UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
   }
-  
+
   [Appboy startWithApiKey:@"d0555d14-3491-4141-a9f0-ffb83e3c2a2f"
             inApplication:application
         withLaunchOptions:launchOptions];
-  
+
   [[AppboyReactUtils sharedInstance] populateInitialUrlFromLaunchOptions:launchOptions];
-  
+
   return YES;
 }
 

@@ -5,6 +5,7 @@
 #import "ABKUser.h"
 #import "AppboyReactUtils.h"
 #import "ABKModalFeedbackViewController.h"
+#import "ABKNewsFeedViewController.h"
 
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
@@ -122,10 +123,18 @@ RCT_EXPORT_METHOD(setHomeCity:(NSString *)homeCity) {
 
 RCT_EXPORT_METHOD(setGender:(NSString *)gender callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].gender =  %@", gender);
-  if ([[gender capitalizedString] hasPrefix:@"M"]) {
-    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderMale])];
-  } else if ([[gender capitalizedString] hasPrefix:@"F"]) {
+  if ([[gender capitalizedString] hasPrefix:@"F"]) {
     [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderFemale])];
+  } else if ([[gender capitalizedString] hasPrefix:@"M"]) {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderMale])];
+  } else if ([[gender capitalizedString] hasPrefix:@"N"]) {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderNotApplicable])];
+  } else if ([[gender capitalizedString] hasPrefix:@"O"]) {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderOther])];
+  } else if ([[gender capitalizedString] hasPrefix:@"P"]) {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderPreferNotToSay])];
+  } else if ([[gender capitalizedString] hasPrefix:@"U"]) {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user setGender:ABKUserGenderUnknown])];
   } else {
     [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid input %@. Gender not set.", gender] andResult:nil];
   }
@@ -224,29 +233,10 @@ RCT_EXPORT_METHOD(setFacebookData:(nullable NSDictionary *)facebookUserDictionar
     [Appboy sharedInstance].user.facebookUser = facebookUser;
 }
 
-RCT_EXPORT_METHOD(launchNewsFeed:(nullable NSDictionary *)launchOptions) {
+RCT_EXPORT_METHOD(launchNewsFeed) {
   RCTLogInfo(@"launchNewsFeed called");
-  ABKFeedViewControllerModalContext *feedModal = [[ABKFeedViewControllerModalContext alloc] init];
+  ABKNewsFeedViewController *feedModal = [[ABKNewsFeedViewController alloc] init];
   feedModal.navigationItem.title = @"News";
-  // TODO, revisit how to get view controller
-  if (launchOptions) {
-    NSNumber * minimumCardMarginForiPhone = launchOptions[@"minimumCardMarginForiPhone"];
-    if (minimumCardMarginForiPhone && [minimumCardMarginForiPhone isKindOfClass:[NSNumber class]]) {
-      feedModal.minimumCardMarginForiPhone = minimumCardMarginForiPhone.floatValue;
-    }
-    NSNumber * minimumCardMarginForiPad = launchOptions[@"minimumCardMarginForiPad"];
-    if (minimumCardMarginForiPad && [minimumCardMarginForiPad isKindOfClass:[NSNumber class]]) {
-      feedModal.minimumCardMarginForiPad = minimumCardMarginForiPad.floatValue;
-    }
-    NSNumber * cardWidthForiPhone = launchOptions[@"cardWidthForiPhone"];
-    if (cardWidthForiPhone && [cardWidthForiPhone isKindOfClass:[NSNumber class]]) {
-      feedModal.cardWidthForiPhone = cardWidthForiPhone.floatValue;
-    }
-    NSNumber * cardWidthForiPad = launchOptions[@"cardWidthForiPad"];
-    if (cardWidthForiPad && [cardWidthForiPad isKindOfClass:[NSNumber class]]) {
-      feedModal.cardWidthForiPad = cardWidthForiPad.floatValue;
-    }
-  }
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
   UIViewController *mainViewController = keyWindow.rootViewController;
   [mainViewController presentViewController:feedModal animated:YES completion:nil];

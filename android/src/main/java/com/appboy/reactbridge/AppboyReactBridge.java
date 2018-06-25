@@ -221,10 +221,18 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     if (gender == null) {
       reportResultWithCallback(callback, "Input Gender was null. Gender not set.", null);
       return;
-    } else if (gender.toUpperCase().startsWith("M")) {
-      genderEnum = Gender.MALE;
     } else if (gender.toUpperCase().startsWith("F")) {
       genderEnum = Gender.FEMALE;
+    } else if (gender.toUpperCase().startsWith("M")) {
+      genderEnum = Gender.MALE;
+    } else if (gender.toUpperCase().startsWith("N")) {
+      genderEnum = Gender.NOT_APPLICABLE;
+    } else if (gender.toUpperCase().startsWith("O")) {
+      genderEnum = Gender.OTHER;
+    } else if (gender.toUpperCase().startsWith("P")) {
+      genderEnum = Gender.PREFER_NOT_TO_SAY;
+    } else if (gender.toUpperCase().startsWith("U")) {
+      genderEnum = Gender.UNKNOWN;
     } else {
       reportResultWithCallback(callback, "Invalid input " + gender + ". Gender not set.", null);
       return;

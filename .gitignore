@@ -11,6 +11,13 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
+xcshareddata/
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
 
 # Xcode, Gradle
 build/
@@ -20,11 +27,19 @@ build/
 .gradle
 local.properties
 *.iml
+android/bin/
+.project
+.settings
+AppboyProject/android/app/bin/
+HelloReact/android/app/bin/
 
 # Node
 node_modules
+package-lock.json
 *.log
 .nvm
+npm-debug.log
+yarn-error.log
 
 # OS X
 .DS_Store
@@ -38,3 +53,11 @@ AppboyProject/ios/fastlane/report.xml
 
 # Emacs
 *~
+
+#jest
+coverage/
+
+#BUCK
+buck-out/
+\.buckd/
+*.keystore
