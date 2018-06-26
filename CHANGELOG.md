@@ -1,3 +1,8 @@
+## 1.7.1
+
+##### Fixed
+- Updated the podspec to point to Braze iOS SDK version 3.5.1.
+
 ## 1.7.0
 
 ##### Breaking
