@@ -1,15 +1,12 @@
 package com.appboyproject;
 
-import com.appboy.AppboyLifecycleCallbackListener;
-import com.appboy.support.AppboyLogger;
-
 import android.app.Application;
 import android.util.Log;
 
+import com.appboy.AppboyLifecycleCallbackListener;
 import com.appboy.reactbridge.AppboyReactPackage;
-
+import com.appboy.support.AppboyLogger;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -43,6 +40,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener());
-    AppboyLogger.LogLevel = Log.VERBOSE;
+    AppboyLogger.setLogLevel(Log.VERBOSE);
   }
 }

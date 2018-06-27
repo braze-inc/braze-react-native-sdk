@@ -4,10 +4,13 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   TouchableHighlight,
+  Picker,
   Linking,
   Alert,
-  TextInput
+  TextInput,
+  Platform
 } from 'react-native';
 
 const ReactAppboy = require('react-native-appboy-sdk');
@@ -15,9 +18,34 @@ const ReactAppboy = require('react-native-appboy-sdk');
 class AppboyProject extends Component {
   constructor(props) {
     super(props);
-    this.state = { userIdText : 'theAppboyTestUser' };
+    this.state = {
+      userIdText : 'theAppboyTestUser',
+      customEventText : '',
+      subscriptionState : 's',
+      gender : 'm',
+      message: 'Success',
+      toastVisible: 0
+    };
     this._updateCardCount = this._updateCardCount.bind(this);
     this._changeUserPress = this._changeUserPress.bind(this);
+    this._logCustomEventPress = this._logCustomEventPress.bind(this);
+    this._setSubscriptionStatePress = this._setSubscriptionStatePress.bind(this);
+    this._logPurchasePress = this._logPurchasePress.bind(this);
+    this._submitFeedbackPress = this._submitFeedbackPress.bind(this);
+    this._logCustomAttributePress = this._logCustomAttributePress.bind(this);
+    this._logUserPropertiesPress = this._logUserPropertiesPress.bind(this);
+    this._unsetCustomUserAttributePress = this._unsetCustomUserAttributePress.bind(this);
+    this._addToCustomAttributeArrayPress = this._addToCustomAttributeArrayPress.bind(this);
+    this._removeFromCustomAttributeArrayPress = this._removeFromCustomAttributeArrayPress.bind(this);
+    this._incrementCustomAttributePress = this._incrementCustomAttributePress.bind(this);
+    this._setTwitterData = this._setTwitterData.bind(this);
+    this._setFacebookData = this._setFacebookData.bind(this);
+    this._requestFeedRefresh = this._requestFeedRefresh.bind(this);
+    this._requestImmediateDataFlush = this._requestImmediateDataFlush.bind(this);
+    this._wipeData = this._wipeData.bind(this);
+    this._disableSDK = this._disableSDK.bind(this);
+    this._enableSDK = this._enableSDK.bind(this);
+    this._setGenderPress = this._setGenderPress.bind(this);
   }
 
   componentDidMount() {
@@ -83,25 +111,36 @@ class AppboyProject extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}>
-          <TouchableHighlight
-            onPress={this._changeUserPress}>
-            <Text>Click to Set User ID:</Text>
-          </TouchableHighlight>
+      <ScrollView 
+        contentContainerStyle={styles.container}
+        stickyHeaderIndices={[0]}>
+        <View
+          style={[styles.toastView, {opacity: this.state.toastVisible}]}>
+          <Text
+            style={styles.toastText}>
+            {this.state.message}
+          </Text>
+        </View>
+        <View style={styles.row}>
           <TextInput
-            style={{height: 40, width: 150, borderColor: 'gray', borderWidth: .5, paddingLeft: 5, marginLeft: 5, fontSize: 14 }}
+            style={styles.textInput}
             onChangeText={(userIdText) => this.setState({userIdText})}
             value={this.state.userIdText}
             />
+          <TouchableHighlight
+            onPress={this._changeUserPress}>
+            <Text>Set User ID</Text>
+          </TouchableHighlight>
         </View>
-        <TouchableHighlight
-          onPress={this._logCustomEventPress}>
-          <Text>Log Custom Event</Text>
-        </TouchableHighlight>
+        <View style={styles.row}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={(customEventText) => this.setState({customEventText})}/>
+          <TouchableHighlight
+            onPress={this._logCustomEventPress}>
+            <Text>Log Custom Event</Text>
+          </TouchableHighlight>
+        </View>
         <TouchableHighlight
           onPress={this._logPurchasePress}>
           <Text>Log Purchase</Text>
@@ -118,10 +157,45 @@ class AppboyProject extends Component {
           onPress={this._logUserPropertiesPress}>
           <Text>Set User Properties</Text>
         </TouchableHighlight>
+        <View style={styles.row}>
+          <Picker
+            style={styles.picker}
+            itemStyle={{fontSize: 16}}
+            selectedValue={this.state.subscriptionState}
+            onValueChange={(value) => this.setState({subscriptionState: value})}>
+            <Picker.Item label='Subscribed' value='s' />
+            <Picker.Item label='Unsubscribed' value='u' />
+            <Picker.Item label='Opted-in' value='o' />
+          </Picker>
+          <TouchableHighlight
+            onPress={this._setSubscriptionStatePress}>
+            <Text>Set Subscription State</Text>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.row}>
+          <Picker
+            style={styles.picker}
+            itemStyle={{fontSize: 16}}
+            selectedValue={this.state.gender}
+            onValueChange={(value) => this.setState({gender: value})}>
+            <Picker.Item label='Female' value='f' />
+            <Picker.Item label='Male' value='m' />
+            <Picker.Item label='Not Applicable' value='n' />
+            <Picker.Item label='Other' value='o' />
+            <Picker.Item label='Prefer Not to Say' value='p' />
+            <Picker.Item label='Unknown' value='u' />
+          </Picker>
+          <TouchableHighlight
+            onPress={this._setGenderPress}>
+            <Text>Set Gender</Text>
+          </TouchableHighlight>
+        </View>
+        { Platform.OS === 'ios' ?
         <TouchableHighlight
           onPress={this._launchFeedbackPress}>
           <Text>Launch Feedback</Text>
         </TouchableHighlight>
+        : false }
         <TouchableHighlight
           onPress={this._unsetCustomUserAttributePress}>
           <Text>Unset Custom User Attributes</Text>
@@ -161,20 +235,84 @@ class AppboyProject extends Component {
           onPress={this._requestImmediateDataFlush}>
           <Text>Request Immediate Data Flush</Text>
         </TouchableHighlight>
-      </View>
+        <TouchableHighlight
+          onPress={this._wipeData}>
+          <Text>Wipe Data</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._disableSDK}>
+          <Text>Disable SDK</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._enableSDK}>
+          <Text>Enable SDK</Text>
+        </TouchableHighlight>
+        </ScrollView>
     );
+  }
+  _showToast(message) {
+    this.setState({ message: message });
+    this.setState({toastVisible: 1}, this._hideToast);
+  }
+  _hideToast() {
+    setTimeout(() => {
+      this.setState({ message: 'Success' });
+      this.setState({toastVisible: 0});
+    }, 1000)
   }
   _changeUserPress(event) {
     ReactAppboy.changeUser(this.state.userIdText);
+    this._showToast('User changed to: ' + this.state.userIdText);
   }
   _logCustomEventPress(event) {
-    ReactAppboy.logCustomEvent('reactCustomEvent', {'p1': 'p2'});
+    ReactAppboy.logCustomEvent(this.state.customEventText, {'p1': 'p2'});
+    this._showToast('Event logged: ' + this.state.customEventText);
+  }
+  _setSubscriptionStatePress(event) {
+    console.log('Received request to change subscription state for email and push to ' + this.state.subscriptionState);
+    if (this.state.subscriptionState == 'o') {
+      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.OPTED_IN);
+      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.OPTED_IN);
+      this._showToast('User opted in to Email & Push');
+    } else if (this.state.subscriptionState == 'u') {
+      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
+      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
+      this._showToast('User unsubscribed from Email & Push');
+    } else if (this.state.subscriptionState == 's') {
+      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+      this._showToast('User subscribed to Email & Push');
+    }
+  }
+  _setGenderPress(event) {
+    console.log('Received request to change gender to ' + this.state.gender);
+    if (this.state.gender == 'f') {
+      ReactAppboy.setGender(ReactAppboy.Genders.FEMALE)
+      this._showToast('User gender set to "female"');
+    } else if (this.state.gender == 'm') {
+      ReactAppboy.setGender(ReactAppboy.Genders.MALE)
+      this._showToast('User gender set to "male"');
+    }  else if (this.state.gender == 'n') {
+      ReactAppboy.setGender(ReactAppboy.Genders.NOT_APPLICABLE)
+      this._showToast('User gender set to "not applicable"');
+    } else if (this.state.gender == 'o') {
+      ReactAppboy.setGender(ReactAppboy.Genders.OTHER)
+      this._showToast('User gender set to "other"');
+    } else if (this.state.gender == 'p') {
+      ReactAppboy.setGender(ReactAppboy.Genders.PREFER_NOT_TO_SAY)
+      this._showToast('User gender set to "prefer not to say"');
+    } else if (this.state.gender == 'u') {
+      ReactAppboy.setGender(ReactAppboy.Genders.UNKNOWN)
+      this._showToast('User gender set to "unknown"');
+    }
   }
   _logPurchasePress(event) {
     ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'pp1': 'pp2'});
+    this._showToast('Purchase logged');
   }
   _submitFeedbackPress(event) {
     ReactAppboy.submitFeedback('test@test.com', 'great app asdf', true);
+    this._showToast('Feedback submitted');
   }
   _logCustomAttributePress(event) {
     ReactAppboy.setCustomUserAttribute('sk', 'sv');
@@ -183,6 +321,7 @@ class AppboyProject extends Component {
     ReactAppboy.setCustomUserAttribute('booleanattr', true);
     ReactAppboy.setCustomUserAttribute('dateattr', new Date());
     ReactAppboy.setCustomUserAttribute('arrayattr', ['a', 'b']);
+    this._showToast('Custom attributes set');
   }
   _logUserPropertiesPress(event) {
     ReactAppboy.setFirstName('Brian');
@@ -199,9 +338,10 @@ class AppboyProject extends Component {
       }
     });
     ReactAppboy.setPhoneNumber('9085555555');
-    ReactAppboy.setAvatarImageUrl('https://raw.githubusercontent.com/Appboy/appboy-android-sdk/master/Appboy_Logo_400x100.png');
+    ReactAppboy.setAvatarImageUrl('https://raw.githubusercontent.com/Appboy/appboy-react-sdk/master/braze-logo.png');
     ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
     ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+    this._showToast('User properties set');
   }
   _launchNewsFeedPress(event) {
     ReactAppboy.launchNewsFeed();
@@ -211,20 +351,25 @@ class AppboyProject extends Component {
   }
   _unsetCustomUserAttributePress(event) {
     ReactAppboy.unsetCustomUserAttribute('sk');
+    this._showToast('Custom attribute unset');
   }
   _addToCustomAttributeArrayPress(event) {
     ReactAppboy.addToCustomUserAttributeArray('myArray', 'arrayValue1');
     ReactAppboy.addToCustomUserAttributeArray('myArray', 'arrayValue2');
+    this._showToast('Added to custom attribute array');
   }
   _removeFromCustomAttributeArrayPress(event) {
     ReactAppboy.removeFromCustomUserAttributeArray('myArray', 'arrayValue1');
+    this._showToast('Removed from custom attribute array');
   }
   _incrementCustomAttributePress(event) {
     ReactAppboy.incrementCustomUserAttribute('intattr', 5);
+    this._showToast('Attribute incremented');
   }
   _setTwitterData(event) {
     ReactAppboy.setTwitterData(6253282, 'billmag', 'Bill', 'Adventurer', 700, 200, 1000,
         'https://si0.twimg.com/profile_images/2685532587/fa47382ad67a0135acc62d4c6b49dbdc_bigger.jpeg');
+    this._showToast('Twitter data set');
   }
   _setFacebookData(event) {
     var profile = {
@@ -257,33 +402,75 @@ class AppboyProject extends Component {
       }
     ];
     ReactAppboy.setFacebookData(profile, 500, likes);
+    this._showToast('Facebook data set');
   }
 
   _requestFeedRefresh(event) {
     ReactAppboy.requestFeedRefresh();
+    this._showToast('Feed refreshed');
   }
 
   _requestImmediateDataFlush(event) {
     ReactAppboy.requestImmediateDataFlush();
+    this._showToast('Data flushed');
+  }
+
+  _wipeData(event) {
+    ReactAppboy.wipeData();
+    this._showToast('Data wiped');
+  }
+
+  _disableSDK(event) {
+    ReactAppboy.disableSDK();
+    this._showToast('SDK disabled');
+  }
+
+  _enableSDK(event) {
+    ReactAppboy.enableSDK();
+    this._showToast('SDK enabled');
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#F5FCFF',
+    paddingTop: 100,
+    paddingBottom: 100
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
+  textInput: {
+    height: 40,
+    width: 150,
+    borderColor: 'gray',
+    borderWidth: .5,
+    paddingLeft: 5,
+    marginLeft: 5,
+    fontSize: 14
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  picker: {
+    width: 200
+  },
+  toastView: {
+    display: "flex",
+    height: 80,
+    backgroundColor: "green",
+    position: "absolute",
+    left: 0,
+    top: 0,
+    right: 0,
+    alignItems: "center",
+    flexDirection: 'row'
+  },
+  toastText: {
+    marginLeft: 10,
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold'
   }
 });
 

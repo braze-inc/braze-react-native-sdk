@@ -1,5 +1,4 @@
 const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
-AppboyReactBridge.setSDKFlavor();
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -91,6 +90,7 @@ var ReactAppboy = {
   * @param {string} userId - A unique identifier for this user.
   */
   changeUser: function(userId) {
+    AppboyReactBridge.setSDKFlavor();
     AppboyReactBridge.changeUser(userId);
   },
 
@@ -114,6 +114,7 @@ var ReactAppboy = {
   *      Values can be numeric, boolean, or strings 255 characters or shorter.
   */
   logCustomEvent: function(eventName, eventProperties) {
+    AppboyReactBridge.setSDKFlavor();
     AppboyReactBridge.logCustomEvent(eventName, eventProperties);
   },
 
@@ -226,7 +227,7 @@ var ReactAppboy = {
 
   /**
   * Sets the gender of the user.
-  * @param {Genders} gender - Limited to m or f
+  * @param {Genders} gender - Options: f = female, m = male, n = N/A, o = other, p = prefer not to say, u = unknown
   * @param {function(error, result)} callback - A callback that receives the function call result.
   */
   setGender: function(gender, callback) {
@@ -375,10 +376,9 @@ var ReactAppboy = {
   // News Feed
   /**
   * Launches the News Feed UI element.
-  * @param {object} launchOptions - An optional dictionary of News Feed launch options. See NewsFeedLaunchOptions for supported keys.
   */
-  launchNewsFeed: function(launchOptions) {
-    AppboyReactBridge.launchNewsFeed(launchOptions);
+  launchNewsFeed: function() {
+    AppboyReactBridge.launchNewsFeed();
   },
 
   /**
@@ -426,6 +426,29 @@ var ReactAppboy = {
     AppboyReactBridge.requestImmediateDataFlush();
   },
 
+  // Data Controls
+  /**
+  * Wipes Data on the Braze SDK. On iOS, the SDK will be disabled for the rest of the app run.
+  */
+  wipeData: function() {
+    AppboyReactBridge.wipeData();
+  },
+
+  /**
+  * Disables the Braze SDK immediately.
+  */
+  disableSDK: function() {
+    AppboyReactBridge.disableSDK();
+  },
+
+  /**
+  * Enables the Braze SDK after a previous call to disableSDK().
+  * On iOS, the SDK will be enabled only after a subsequent call to startWithApiKey().
+  */
+  enableSDK: function() {
+    AppboyReactBridge.enableSDK();
+  },
+
   // Enums
   CardCategory: {
     'ADVERTISING': 'advertising',
@@ -437,14 +460,18 @@ var ReactAppboy = {
   },
 
   NotificationSubscriptionTypes: {
-    'OPTED_IN': 'opted_in',
+    'OPTED_IN': 'optedin',
     'SUBSCRIBED': 'subscribed',
     'UNSUBSCRIBED': 'unsubscribed'
   },
 
   Genders: {
+    'FEMALE': 'f',
     'MALE': 'm',
-    'FEMALE': 'f'
+    'NOT_APPLICABLE': 'n',
+    'OTHER': 'o',
+    'PREFER_NOT_TO_SAY': 'p',
+    'UNKNOWN': 'u'
   },
 
   NewsFeedLaunchOptions: {
