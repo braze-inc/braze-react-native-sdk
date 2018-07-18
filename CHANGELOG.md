@@ -1,3 +1,8 @@
+## 1.7.2
+
+##### Fixed
+- Fixed an issue introduced in `1.7.0` where calling `launchNewsFeed()` would cause crashes in the Android bridge.
+
 ## 1.7.1
 
 ##### Fixed
@@ -17,7 +22,7 @@
   - See https://github.com/Appboy/appboy-react-sdk/pull/39. Thanks @danieldecsi!
 
 ##### Changed
-- Passing launch options into `launchNewsFeed` is now a no-op.
+- Passing launch options into `launchNewsFeed()` is now a no-op.
 
 ## 1.6.0
 
