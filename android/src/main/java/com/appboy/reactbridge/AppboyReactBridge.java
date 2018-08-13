@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.appboy.Appboy;
+import com.appboy.services.AppboyLocationService;
 import com.appboy.enums.Gender;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
@@ -67,13 +68,13 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       AppboyLogger.w(TAG, "Warning: AppboyReactBridge callback was null.");
     }
   }
-  
+
   @ReactMethod
   public void setSDKFlavor() {
     // Dummy method required for the iOS SDK flavor implementation; see AppboyReactBridge.setSDKFlavor()
     // in index.js. The Android bridge sets the REACT SDK flavor via an appboy.xml parameter.
   }
-    
+
   @ReactMethod
   public void requestImmediateDataFlush() {
     Appboy.getInstance(getReactApplicationContext()).requestImmediateDataFlush();
@@ -83,7 +84,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   public void changeUser(String userName) {
     Appboy.getInstance(getReactApplicationContext()).changeUser(userName);
   }
-  
+
   @ReactMethod
   public void registerPushToken(String token) {
     Appboy.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);
@@ -482,6 +483,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void enableSDK() {
     Appboy.enableSdk(getReactApplicationContext());
+  }
+
+  @ReactMethod
+  public void requestLocationInitialization() {
+    AppboyLocationService.requestInitialization(getReactApplicationContext());
   }
 
   private Month parseMonth(int monthInt) {

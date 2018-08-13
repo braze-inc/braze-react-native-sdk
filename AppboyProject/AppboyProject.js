@@ -45,6 +45,7 @@ class AppboyProject extends Component {
     this._wipeData = this._wipeData.bind(this);
     this._disableSDK = this._disableSDK.bind(this);
     this._enableSDK = this._enableSDK.bind(this);
+    this._requestLocationInitialization = this._requestLocationInitialization.bind(this);
     this._setGenderPress = this._setGenderPress.bind(this);
   }
 
@@ -111,7 +112,7 @@ class AppboyProject extends Component {
 
   render() {
     return (
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.container}
         stickyHeaderIndices={[0]}>
         <View
@@ -247,6 +248,12 @@ class AppboyProject extends Component {
           onPress={this._enableSDK}>
           <Text>Enable SDK</Text>
         </TouchableHighlight>
+        { Platform.OS === 'android' ?
+        <TouchableHighlight
+          onPress={this._requestLocationInitialization}>
+          <Text>Request Location Initialization</Text>
+        </TouchableHighlight>
+        : false }
         </ScrollView>
     );
   }
@@ -428,6 +435,13 @@ class AppboyProject extends Component {
   _enableSDK(event) {
     ReactAppboy.enableSDK();
     this._showToast('SDK enabled');
+  }
+
+  // Note that this should normally be called only once
+  // location permissions are granted by end user
+  _requestLocationInitialization(event) {
+    ReactAppboy.requestLocationInitialization();
+    this._showToast('Init Requested');
   }
 }
 

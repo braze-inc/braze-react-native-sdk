@@ -449,6 +449,15 @@ var ReactAppboy = {
     AppboyReactBridge.enableSDK();
   },
 
+  /**
+  * Call this method once a user grants location permissions on Android
+  * to initialize Braze location features. Calling this method is a no-op on
+  * iOS.
+  */
+  requestLocationInitialization: function() {
+    AppboyReactBridge.requestLocationInitialization();
+  },
+
   // Enums
   CardCategory: {
     'ADVERTISING': 'advertising',

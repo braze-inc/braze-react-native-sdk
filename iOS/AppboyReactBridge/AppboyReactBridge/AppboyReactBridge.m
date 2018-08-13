@@ -276,6 +276,10 @@ RCT_EXPORT_METHOD(enableSDK) {
   [Appboy requestEnableSDKOnNextAppRun];
 }
 
+RCT_EXPORT_METHOD(requestLocationInitialization) {
+  RCTLogInfo(@"Warning: This is an Android only feature.");
+}
+
 RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
   ABKCardCategory cardCategory = [self getCardCategoryForString:category];
   if (cardCategory == 0) {

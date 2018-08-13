@@ -1,3 +1,8 @@
+## 1.7.3
+
+##### Added
+- Added `requestLocationInitialization()` to the `Appboy` interface. Calling this method is the equivalent of calling `AppboyLocationService.requestInitialization()` on the native Braze Android SDK. The method is a no-op on iOS.
+
 ## 1.7.2
 
 ##### Fixed
