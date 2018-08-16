@@ -311,5 +311,25 @@ RCT_EXPORT_METHOD(requestImmediateDataFlush) {
   [[Appboy sharedInstance] flushDataAndProcessRequestQueue];
 }
 
+RCT_EXPORT_METHOD(testSlideUpModal) {
+  RCTLogInfo(@"testSlideUpModal called");
+  ABKInAppMessageSlideup *customInAppMessage = [[ABKInAppMessageSlideup alloc] init];
+  customInAppMessage.message = @"HEY ERIC YOU ARE MY HERO";
+  customInAppMessage.duration = 10;
+  customInAppMessage.extras = @{@"key" : @"value"};
+  //  [[Appboy sharedInstance].inAppMessageController.delegate = self;
+  [[Appboy sharedInstance].inAppMessageController addInAppMessage:customInAppMessage];
+  RCTLogInfo(@"inAppMessageController inAppMessagesRemainingOnStack: =  %ld",
+             [[Appboy sharedInstance].inAppMessageController inAppMessagesRemainingOnStack]);
+  [[Appboy sharedInstance].inAppMessageController displayNextInAppMessageWithDelegate:nil];
+}
+
+RCT_EXPORT_METHOD(displayNextInAppMessage) {
+  RCTLogInfo(@"displayNextInAppMessage called");
+  RCTLogInfo(@"inAppMessageController inAppMessagesRemainingOnStack: =  %ld",
+             [[Appboy sharedInstance].inAppMessageController inAppMessagesRemainingOnStack]);
+  [[Appboy sharedInstance].inAppMessageController displayNextInAppMessageWithDelegate:nil];
+}
+
 RCT_EXPORT_MODULE();
 @end

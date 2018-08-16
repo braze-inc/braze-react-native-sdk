@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.appboy.Appboy;
+import com.appboy.models.InAppMessageSlideup;
 import com.appboy.services.AppboyLocationService;
+import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.appboy.enums.Gender;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
@@ -93,6 +95,26 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void logCustomEvent(String eventName, ReadableMap eventProperties) {
     Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
+  }
+
+  @ReactMethod
+  public void logCustomEvent(String eventName, ReadableMap eventProperties) {
+    Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
+  }
+
+  @ReactMethod
+  public void testSlideUpModal() {
+    InAppMessageSlideup inAppMessage = new InAppMessageSlideup();
+    inAppMessage.setMessage("Hi Eric, you are my hero!");
+    inAppMessage.setIcon("\uf091");
+    inAppMessage.setSlideFrom(SlideFrom.BOTTOM);
+    AppboyInAppMessageManager.getInstance().addInAppMessage(inAppMessage);
+    AppboyInAppMessageManager.getInstance().requestDisplayInAppMessage();
+  }
+
+  @ReactMethod
+  public void displayNextInAppMessage() {
+    AppboyInAppMessageManager.getInstance().requestDisplayInAppMessage();
   }
 
   private AppboyProperties populateEventPropertiesFromReadableMap(ReadableMap eventProperties) {
