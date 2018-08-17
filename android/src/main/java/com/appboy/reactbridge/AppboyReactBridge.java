@@ -106,8 +106,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   public void testSlideUpModal() {
     InAppMessageSlideup inAppMessage = new InAppMessageSlideup();
     inAppMessage.setMessage("Hi Eric, you are my hero!");
-    inAppMessage.setIcon("\uf091");
-    inAppMessage.setSlideFrom(SlideFrom.BOTTOM);
+    // inAppMessage.setIcon("\uf091");
+    // inAppMessage.setSlideFrom(SlideFrom.BOTTOM);
     AppboyInAppMessageManager.getInstance().addInAppMessage(inAppMessage);
     AppboyInAppMessageManager.getInstance().requestDisplayInAppMessage();
   }
