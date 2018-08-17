@@ -98,11 +98,6 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void logCustomEvent(String eventName, ReadableMap eventProperties) {
-    Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
-  }
-
-  @ReactMethod
   public void testSlideUpModal() {
     InAppMessageSlideup inAppMessage = new InAppMessageSlideup();
     inAppMessage.setMessage("Hi Eric, you are my hero!");
