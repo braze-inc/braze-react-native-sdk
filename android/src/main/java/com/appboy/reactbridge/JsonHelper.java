@@ -4,13 +4,15 @@ import java.util.Iterator;
 
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 public class JsonHelper {
-  private static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
+  public static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
       WritableMap map = new WritableNativeMap();
 
       Iterator<String> iterator = jsonObject.keys();
@@ -36,9 +38,10 @@ public class JsonHelper {
       return map;
   }
 
-  private static WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
+  public static WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
       WritableArray array = new WritableNativeArray();
-      for (Object value : jsonArray) {
+      for (int i = 0; i < jsonArray.length(); i++) {
+          Object value = jsonArray.get(i);
           if (value instanceof JSONObject) {
               array.pushMap(convertJsonToMap((JSONObject) value));
           } else if (value instanceof  JSONArray) {
