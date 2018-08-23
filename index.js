@@ -1,4 +1,5 @@
-const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
+import { NativeEventEmitter, NativeModules } from 'react-native';
+const { AppboyReactBridge } = NativeModules;
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -31,6 +32,8 @@ function callFunctionWithCallback(methodName, argsArray, callback) {
 
   methodName.apply(this, argsArray);
 }
+
+const feedUpdatedEmitter = new NativeEventEmitter(AppboyReactBridge);
 
 var ReactAppboy = {
   /**
@@ -386,6 +389,10 @@ var ReactAppboy = {
    */
   requestFeedRefresh: function() {
     AppboyReactBridge.requestFeedRefresh();
+  },
+
+  subscribeToFeedRefresh: function(listener) {
+    return feedUpdatedEmitter.addListener('FeedUpdated', listener);
   },
 
   /**

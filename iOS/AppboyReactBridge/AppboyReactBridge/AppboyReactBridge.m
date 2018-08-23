@@ -19,6 +19,9 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
 @end
 
 @implementation AppboyReactBridge
+{
+    BOOL hasListeners;
+}
 
 - (dispatch_queue_t)methodQueue
 {
@@ -33,6 +36,21 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
 {
   return @{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed),@"optedin":@(ABKOptedIn)};
 };
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"FeedUpdated"];
+}
+
+- (void)startObserving {
+    hasListeners = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedUpdated:) name:ABKFeedUpdatedNotification object:nil];
+}
+
+- (void)stopObserving {
+    hasListeners = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ABKFeedUpdatedNotification object:nil];
+}
 
 - (void)reportResultWithCallback:(RCTResponseSenderBlock)callback andError:(NSString *)error andResult:(id)result {
   if (callback != nil) {
@@ -266,6 +284,13 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
 
 RCT_EXPORT_METHOD(requestFeedRefresh) {
   [[Appboy sharedInstance] requestFeedRefresh];
+}
+
+- (void)feedUpdated:(NSNotification *)notification {
+    BOOL updateIsSuccessful = [notification.userInfo[ABKFeedUpdatedIsSuccessfulKey] boolValue];
+    if (hasListeners) {
+        [self sendEventWithName:@"FeedUpdated" body:@{@"updateSuccessful": updateIsSuccessful}];
+    }
 }
 
 RCT_EXPORT_METHOD(wipeData) {
