@@ -1,4 +1,4 @@
-import { DeviceEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, DeviceEventEmitter, NativeModules, Platform } from 'react-native';
 const { AppboyReactBridge } = NativeModules;
 
 /**
@@ -32,6 +32,8 @@ function callFunctionWithCallback(methodName, argsArray, callback) {
 
   methodName.apply(this, argsArray);
 }
+
+const feedUpdatedEmitter = new NativeEventEmitter(AppboyReactBridge);
 
 var ReactAppboy = {
   /**
@@ -395,7 +397,11 @@ var ReactAppboy = {
    * @returns {EmitterSubscription} A subscription object. Be sure to call `remove()` when your component unmounts.
    */
   subscribeToFeedRefresh: function(listener) {
-    return DeviceEventEmitter.addListener('FeedUpdated', listener);
+    if (Platform.OS === 'ios'){
+      return feedUpdatedEmitter.addListener('FeedUpdated', listener);
+    } else {
+      return DeviceEventEmitter.addListener('FeedUpdated', listener);
+    }
   },
 
   /**
