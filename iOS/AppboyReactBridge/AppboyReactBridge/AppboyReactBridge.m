@@ -305,21 +305,12 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     } else {
         NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
         NSMutableArray *translated = [NSMutableArray arrayWithCapacity: [cards count]];
+        NSError *error;
         for (ABKCard *card in cards) {
-            NSDictionary *mappedCard = [NSDictionary dictionaryWithObjectsAndKeys:
-                card.idString, @"idString",
-                card.viewed, @"viewed",
-                card.created, @"created",
-                card.updated, @"updated",
-                card.expiresAt, @"expiresAt",
-                card.extras, @"extras",
-                card.urlString, @"urlString",
-                card.openUrlInWebView, @"openUrlInWebView",
-                nil
-            ];
+            NSDictionary *mappedCard = [NSJSONSerialization JSONObjectWithData: [card serializeToData] options: 0 error: &error];
             [translated addObject: mappedCard];
         }
-        [self reportResultWithCallback:callback andError:nil andResult:translated];
+        [self reportResultWithCallback:callback andError:error andResult:translated];
     }
 }
 
