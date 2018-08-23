@@ -470,7 +470,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     if (cards != null) {
       final WritableArray cardArray = new WritableNativeArray();
       for (Card card : cards) {
-        cardArray.pushMap(JsonHelper.convertJsonToMap(card.forJsonPut()));
+        try {
+          cardArray.pushMap(JsonHelper.convertJsonToMap(card.forJsonPut()));
+        } catch (JSONException e) {
+          Log.w("Unable to convert card to JSON", e);
+        }
       }
       reportResultWithCallback(callback, null, cardArray);
     }
