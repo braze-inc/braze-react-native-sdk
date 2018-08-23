@@ -445,7 +445,7 @@ var ReactAppboy = {
    * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
    */
   getAllCards: function(callback) {
-    this.getCardsInCategories(CardCategory.ALL, callback);
+    ReactAppboy.getCardsInCategories(ReactAppboy.CardCategory.ALL, callback);
   },
 
   /**
