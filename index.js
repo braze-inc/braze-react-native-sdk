@@ -332,6 +332,10 @@ var ReactAppboy = {
     callFunctionWithCallback(AppboyReactBridge.unsetCustomUserAttribute, [key], callback);
   },
 
+  saySomething: function(callback) {
+    callFunctionWithCallback(AppboyReactBridge.saySomething, callback);
+  },
+
   /**
    * Sets user Twitter data.
    *
@@ -408,6 +412,18 @@ var ReactAppboy = {
   */
   getUnreadCardCountForCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getUnreadCardCountForCategories, [category], callback);
+  },
+
+  /**
+  * This method will find the cards of given categories and return them.
+  * When the given categories don't exist in any card, this method will return an empty array.
+  * @param {CardCategory} category - Card category. Use ReactAppboy.CardCategory.ALL to get the total unread card count.
+  * @param {function(error, result)} callback - A callback that receives the function call result.
+  * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
+  * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  */
+  getCardsInCategories: function(category, callback) {
+    callFunctionWithCallback(AppboyReactBridge.getCardsInCategories, [category], callback);
   },
 
   // Feedback
