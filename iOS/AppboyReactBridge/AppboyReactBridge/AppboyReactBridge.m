@@ -320,7 +320,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     }
 }
 
-RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
+- findCardWithId:(NSString *)cardId andInvoke:(SEL) selector {
     if (self.loadedCards == nil) {
         [self reportResultWithCallback: callback andError:@"No cards have been loaded" andResult:nil];
     } else {
@@ -331,10 +331,18 @@ RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSend
             [self reportResultWithCallback: callback andError:[NSString stringWithFormat:@"No card found with ID %@", cardId] andResult:nil];
         } else {
             ABKCard *card = self.loadedCards[foundIndex];
-            [card logCardImpression];
+            [self performSelector:selector onObject:card];
             [self reportResultWithCallback:callback andError:nil andResult:cardId];
         }
     }
+}
+
+RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
+    [self findCardWithId:cardId andInvoke:@selector(logCardImpression)];
+}
+
+RCT_EXPORT_METHOD(logCardClicked:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
+    [self findCardWithId:cardId andInvoke:@selector(logCardClicked)];
 }
 
 RCT_EXPORT_METHOD(launchFeedback) {
