@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license        = package['license']
   s.author         = package['author']
   s.homepage       = package['homepage']
-  s.source         = { :git => 'git+https://github.com/Appboy/appboy-react-sdk.git', :tag => s.version }
+  s.source         = { :git => 'git+https://github.com/quietfoundation/appboy-react-sdk.git', :tag => s.version }
 
   s.requires_arc   = true
   s.platform       = :ios, '8.0'

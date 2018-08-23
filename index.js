@@ -1,4 +1,5 @@
-const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
+import { NativeEventEmitter, DeviceEventEmitter, NativeModules, Platform } from 'react-native';
+const { AppboyReactBridge } = NativeModules;
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -31,6 +32,8 @@ function callFunctionWithCallback(methodName, argsArray, callback) {
 
   methodName.apply(this, argsArray);
 }
+
+const feedUpdatedEmitter = new NativeEventEmitter(AppboyReactBridge);
 
 var ReactAppboy = {
   /**
@@ -389,11 +392,25 @@ var ReactAppboy = {
   },
 
   /**
+   * Add an event listener that responds to the news feed being refreshed by a call to `requestFeedRefresh()`
+   * @param listener {function({updateSuccessful})} The function to respond to feed refreshes
+   * @returns {EmitterSubscription} A subscription object. Be sure to call `remove()` when your component unmounts.
+   */
+  subscribeToFeedRefresh: function(listener) {
+    if (Platform.OS === 'ios'){
+      return feedUpdatedEmitter.addListener('FeedUpdated', listener);
+    } else {
+      return DeviceEventEmitter.addListener('FeedUpdated', listener);
+    }
+  },
+
+  /**
   * Returns the current number of News Feed cards for the given category.
   * @param {CardCategory} category - Card category. Use ReactAppboy.CardCategory.ALL to get the total card count.
   * @param {function(error, result)} callback - A callback that receives the function call result.
   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
   */
   getCardCountForCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getCardCountForCategories, [category], callback);
@@ -405,9 +422,56 @@ var ReactAppboy = {
   * @param {function(error, result)} callback - A callback that receives the function call result.
   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
   */
   getUnreadCardCountForCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getUnreadCardCountForCategories, [category], callback);
+  },
+
+  /**
+  * This method will find the cards of given categories and return them.
+  * When the given categories don't exist in any card, this method will return an empty array.
+  * @param {CardCategory} category - Card category. Use ReactAppboy.CardCategory.ALL to get the total unread card count.
+  * @param {function(error, result)} callback - A callback that receives the function call result.
+  * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
+  * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
+  */
+  getCardsInCategories: function(category, callback) {
+    callFunctionWithCallback(AppboyReactBridge.getCardsInCategories, [category], callback);
+  },
+
+  /**
+   * This method will find all News Feed cards and return them.
+   * @param {function(error, result)} callback - A callback that receives the function call result.
+   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
+   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+   * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
+   */
+  getAllCards: function(callback) {
+    ReactAppboy.getCardsInCategories(ReactAppboy.CardCategory.ALL, callback);
+  },
+
+  /**
+   * Programmatically log a card as having been seen by a user. Will fail if no card with the supplied ID can be found
+   * in local data.
+   * @param {string} cardId The ID of the card for which to log an impression
+   * @param {function(error, result)} callback A callback that receives the function call result. The result parameter
+   * will be the ID of the logged card on success.
+   */
+  logCardImpression: function(cardId, callback) {
+    callFunctionWithCallback(AppboyReactBridge.logCardImpression, [cardId], callback);
+  },
+
+  /**
+   * Programmatically log a card as having been clicked by a user. Will fail if no card with the supplied ID can be found
+   * in local data.
+   * @param {string} cardId The ID of the card for which to log a click
+   * @param {function(error, result)} callback A callback that receives the function call result. The result parameter
+   * will be the ID of the logged card on success.
+   */
+  logCardClicked: function(cardId, callback) {
+      callFunctionWithCallback(AppboyReactBridge.logCardClicked, [cardId], callback);
   },
 
   // Feedback

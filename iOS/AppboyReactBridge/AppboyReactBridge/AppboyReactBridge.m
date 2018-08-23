@@ -14,7 +14,14 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                    integerValue);
 @end
 
+@interface AppboyReactBridge ()
+@property (nonatomic, retain) NSArray *loadedCards;
+@end
+
 @implementation AppboyReactBridge
+{
+    BOOL hasListeners;
+}
 
 - (dispatch_queue_t)methodQueue
 {
@@ -29,6 +36,21 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
 {
   return @{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed),@"optedin":@(ABKOptedIn)};
 };
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"FeedUpdated"];
+}
+
+- (void)startObserving {
+    hasListeners = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(feedUpdated:) name:ABKFeedUpdatedNotification object:nil];
+}
+
+- (void)stopObserving {
+    hasListeners = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ABKFeedUpdatedNotification object:nil];
+}
 
 - (void)reportResultWithCallback:(RCTResponseSenderBlock)callback andError:(NSString *)error andResult:(id)result {
   if (callback != nil) {
@@ -264,6 +286,13 @@ RCT_EXPORT_METHOD(requestFeedRefresh) {
   [[Appboy sharedInstance] requestFeedRefresh];
 }
 
+- (void)feedUpdated:(NSNotification *)notification {
+    BOOL updateIsSuccessful = [notification.userInfo[ABKFeedUpdatedIsSuccessfulKey] boolValue];
+    if (hasListeners) {
+        [self sendEventWithName:@"FeedUpdated" body:@{@"updateSuccessful": @(updateIsSuccessful)}];
+    }
+}
+
 RCT_EXPORT_METHOD(wipeData) {
   [Appboy wipeDataAndDisableForAppRun];
 }
@@ -296,6 +325,55 @@ RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:
   } else {
     [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].feedController unreadCardCountForCategories:cardCategory])];
   }
+}
+
+RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
+    ABKCardCategory cardCategory = [self getCardCategoryForString:category];
+    if (cardCategory == 0) {
+        [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve cards.", category] andResult:nil];
+    } else {
+        NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
+        self.loadedCards = [NSArray arrayWithArray: cards];
+        NSMutableArray *translated = [NSMutableArray arrayWithCapacity: [cards count]];
+        NSError *error;
+        for (ABKCard *card in cards) {
+            NSDictionary *mappedCard = [NSJSONSerialization JSONObjectWithData: [card serializeToData] options: 0 error: &error];
+            [translated addObject: mappedCard];
+        }
+        NSString *errorText = nil;
+        if (error != nil) {
+            errorText = [error description];
+        }
+        [self reportResultWithCallback:callback andError:errorText andResult:translated];
+    }
+}
+
+- (void)findCardWithId:(NSString *)cardId andInvoke:(SEL) selector withCallback:(RCTResponseSenderBlock)callback {
+    if (self.loadedCards == nil) {
+        [self reportResultWithCallback: callback andError:@"No cards have been loaded" andResult:nil];
+    } else {
+        NSUInteger foundIndex = [self.loadedCards indexOfObjectPassingTest: ^ (ABKCard *card, NSUInteger idx, BOOL *stop) {
+            return [cardId isEqualToString: card.idString];
+        }];
+        if (foundIndex == NSNotFound) {
+            [self reportResultWithCallback: callback andError:[NSString stringWithFormat:@"No card found with ID %@", cardId] andResult:nil];
+        } else {
+            ABKCard *card = self.loadedCards[foundIndex];
+            // Explicitly mark selector as void for ARC
+            IMP imp = [card methodForSelector: selector];
+            void (*func)(id, SEL) = (void *)imp;
+            func(card, selector);
+            [self reportResultWithCallback:callback andError:nil andResult:cardId];
+        }
+    }
+}
+
+RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
+    [self findCardWithId:cardId andInvoke:@selector(logCardImpression) withCallback:callback];
+}
+
+RCT_EXPORT_METHOD(logCardClicked:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
+    [self findCardWithId:cardId andInvoke:@selector(logCardClicked) withCallback:callback];
 }
 
 RCT_EXPORT_METHOD(launchFeedback) {
