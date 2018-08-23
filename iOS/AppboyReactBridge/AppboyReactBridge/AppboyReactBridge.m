@@ -304,7 +304,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
         [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve cards.", category] andResult:nil];
     } else {
         NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
-        NSMutableArray *translated = [[NSMutableArray alloc] init: [cards count]];
+        NSMutableArray *translated = [NSMutableArray arrayWithCapacity: [cards count]];
         for (ABKCard *card in cards) {
             NSDictionary *mappedCard = [NSDictionary dictionaryWithObjectsAndKeys:
                 card.idString, @"idString",
@@ -314,9 +314,10 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
                 card.expiresAt, @"expiresAt",
                 card.extras, @"extras",
                 card.urlString, @"urlString",
-                card.openUrlInWebView, @"openUrlInWebView"
+                card.openUrlInWebView, @"openUrlInWebView",
+                nil
             ];
-            [trasnlated addObject: mappedCard];
+            [translated addObject: mappedCard];
         }
         [self reportResultWithCallback:callback andError:nil andResult:translated];
     }
