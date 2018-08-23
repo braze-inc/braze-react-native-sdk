@@ -320,7 +320,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     }
 }
 
-- findCardWithId:(NSString *)cardId andInvoke:(SEL) selector withCallback:(RCTResponseSenderBlock)callback {
+- (void)findCardWithId:(NSString *)cardId andInvoke:(SEL) selector withCallback:(RCTResponseSenderBlock)callback {
     if (self.loadedCards == nil) {
         [self reportResultWithCallback: callback andError:@"No cards have been loaded" andResult:nil];
     } else {
