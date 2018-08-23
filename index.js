@@ -424,7 +424,7 @@ var ReactAppboy = {
 
   logCardImpression: function(cardId, callback) {
     callFunctionWithCallback(AppboyReactBridge.logCardImpression, [cardId], callback);
-  }
+  },
 
   // Feedback
   /**
