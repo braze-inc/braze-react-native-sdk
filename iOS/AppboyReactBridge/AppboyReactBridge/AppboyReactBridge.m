@@ -15,7 +15,7 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
 @end
 
 @interface AppboyReactBridge ()
-@property (nonatomic, retain) NSMutableArray *loadedCards;
+@property (nonatomic, retain) NSArray *loadedCards;
 @end
 
 @implementation AppboyReactBridge
@@ -308,7 +308,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
         [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve cards.", category] andResult:nil];
     } else {
         NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
-        self.loadedCards = [NSMutableArray arrayWithArray: cards];
+        self.loadedCards = [NSArray arrayWithArray: cards];
         RCTLogInfo(@"Cards are %@", self.loadedCards);
         NSMutableArray *translated = [NSMutableArray arrayWithCapacity: [cards count]];
         NSError *error;
@@ -317,6 +317,23 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
             [translated addObject: mappedCard];
         }
         [self reportResultWithCallback:callback andError:error andResult:translated];
+    }
+}
+
+RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
+    if (self.loadedCards == nil) {
+        [self reportResultWithCallback: callback andError:@"No cards have been loaded" andResult:nil];
+    } else {
+        NSUInteger foundIndex = [self.loadedCards indexOfObjectPassingTest: ^ (ABKCard *card, NSUInteger idx, BOOL *stop) {
+            return [cardId isEqualToString: card.idString];
+        }];
+        if (foundIndex == NSNotFound) {
+            [self reportResultWithCallback: callback andError:[NSString stringWithFormat:@"No card found with ID %@", cardId] andResult:nil];
+        } else {
+            ABKCard *card = self.loadedCards[foundIndex];
+            [card logCardImpression];
+            [self reportResultWithCallback: callback andError:nil andResult:nil];
+        }
     }
 }
 
