@@ -406,6 +406,7 @@ var ReactAppboy = {
   * @param {function(error, result)} callback - A callback that receives the function call result.
   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
   */
   getCardCountForCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getCardCountForCategories, [category], callback);
@@ -417,6 +418,7 @@ var ReactAppboy = {
   * @param {function(error, result)} callback - A callback that receives the function call result.
   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
   */
   getUnreadCardCountForCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getUnreadCardCountForCategories, [category], callback);
@@ -429,9 +431,21 @@ var ReactAppboy = {
   * @param {function(error, result)} callback - A callback that receives the function call result.
   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+  * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
   */
   getCardsInCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getCardsInCategories, [category], callback);
+  },
+
+  /**
+   * This method will find all News Feed cards and return them.
+   * @param {function(error, result)} callback - A callback that receives the function call result.
+   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
+   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
+   * Be sure to call `subscribeToFeedRefresh` and `requestFeedRefresh` to receive accurate results.
+   */
+  getAllCards: function(callback) {
+    this.getCardsInCategories(CardCategory.ALL, callback);
   },
 
   /**
