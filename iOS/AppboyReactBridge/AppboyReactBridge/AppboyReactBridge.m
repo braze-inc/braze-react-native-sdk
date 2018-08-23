@@ -320,7 +320,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     }
 }
 
-- findCardWithId:(NSString *)cardId andInvoke:(SEL) selector {
+- findCardWithId:(NSString *)cardId andInvoke:(SEL) selector withCallback:(RCTResponseSenderBlock)callback {
     if (self.loadedCards == nil) {
         [self reportResultWithCallback: callback andError:@"No cards have been loaded" andResult:nil];
     } else {
@@ -331,7 +331,10 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
             [self reportResultWithCallback: callback andError:[NSString stringWithFormat:@"No card found with ID %@", cardId] andResult:nil];
         } else {
             ABKCard *card = self.loadedCards[foundIndex];
-            [card performSelector: selector];
+            // Explicitly mark selector as void for ARC
+            IMP imp = [card methodForSelector: selector];
+            void (*func)(id, SEL) = (void *)imp;
+            func(card, selector);
             [self reportResultWithCallback:callback andError:nil andResult:cardId];
         }
     }
