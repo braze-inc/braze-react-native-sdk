@@ -11,6 +11,7 @@ import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.enums.CardCategory;
 import com.appboy.events.FeedUpdatedEvent;
 import com.appboy.events.IEventSubscriber;
+import com.appboy.models.cards.Card;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.models.outgoing.FacebookUser;
 import com.appboy.models.outgoing.TwitterUser;
@@ -26,6 +27,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.Callback;
 
 import org.json.JSONObject;
@@ -52,7 +55,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   public AppboyReactBridge(ReactApplicationContext reactContext) {
     super(reactContext);
-    feedUpdatedSubscriber = new IEventSubscriber<>() {
+    feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
       @Override
       public void trigger(final FeedUpdatedEvent event) {
         lastFeedEvent = event;
@@ -60,7 +63,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         params.putBoolean("updateSuccessful", true);
         sendEvent("FeedUpdated", params);
       }
-    }
+    };
     Appboy.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
   }
 
@@ -85,7 +88,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     }
   }
 
-  private void sendEvent(String eventName, @Nullable WritableMap params) {
+  private void sendEvent(String eventName, WritableMap params) {
     getReactApplicationContext()
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
       .emit(eventName, params);
@@ -416,11 +419,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Feed has not been loaded.", null);
     } else {
       if (ALL_CATEGORIES.equals(category)) {
-        reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount());
+        reportResultWithCallback(callback, null, lastFeedEvent.getCardCount());
       } else {
         final CardCategory cardCategory = getCardCategoryFromString(category);
         if (cardCategory != null) {
-          reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount(cardCategory));
+          reportResultWithCallback(callback, null, lastFeedEvent.getCardCount(cardCategory));
         } else {
           reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve card count", null);
         }
@@ -434,11 +437,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Feed has not been loaded.", null);
     } else {
       if (ALL_CATEGORIES.equals(category)) {
-        reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount());
+        reportResultWithCallback(callback, null, lastFeedEvent.getUnreadCardCount());
       } else {
         final CardCategory cardCategory = getCardCategoryFromString(category);
         if (cardCategory != null) {
-          reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount(cardCategory));
+          reportResultWithCallback(callback, null, lastFeedEvent.getUnreadCardCount(cardCategory));
         } else {
           reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve unread card count", null);
         }
@@ -448,19 +451,28 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getCardsInCategories(String category, Callback callback) {
+    List<Card> cards = null;
     if (lastFeedEvent == null) {
       reportResultWithCallback(callback, "Feed has not been loaded.", null);
     } else {
       if (ALL_CATEGORIES.equals(category)) {
-        reportResultWithCallback(callback, null, feedUpdatedEvent.getFeedCards());
+        cards = lastFeedEvent.getFeedCards();
       } else {
         final CardCategory cardCategory = getCardCategoryFromString(category);
         if (cardCategory != null) {
-          reportResultWithCallback(callback, null, feedUpdatedEvent.getFeedCards(cardCategory));
+          cards = lastFeedEvent.getFeedCards(cardCategory);
         } else {
           reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve unread card count", null);
         }
       }
+    }
+
+    if (cards != null) {
+      final WritableArray cardArray = new WritableNativeArray();
+      for (Card card : cards) {
+        cardArray.pushMap(JsonHelper.convertJsonToMap(card.forJsonPut()));
+      }
+      reportResultWithCallback(callback, null, cardArray);
     }
   }
 
@@ -471,16 +483,14 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     } else if (cardId == null) {
       reportResultWithCallback(callback, "cardId cannot be null", null);
     } else {
-      final Optional<Card> foundCard = lastFeedEvent.getFeedCards();
-        .stream()
-        .filter(card -> cardId.equals(card.getId()))
-        .findFirst();
-      if (foundCard.isPresent()) {
-        foundCard.get().logImpression();
-        reportResultWithCallback(callback, null, cardId);
-      } else {
-        reportResultWithCallback(callback, "No card found with ID " + cardId, null);
+      for (Card card : lastFeedEvent.getFeedCards()) {
+        if (cardId.equals(card.getId())) {
+          card.logImpression();
+          reportResultWithCallback(callback, null, cardId);
+          return;
+        }
       }
+      reportResultWithCallback(callback, "No card found with ID " + cardId, null);
     }
   }
 
@@ -491,16 +501,14 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     } else if (cardId == null) {
       reportResultWithCallback(callback, "cardId cannot be null", null);
     } else {
-      final Optional<Card> foundCard = lastFeedEvent.getFeedCards();
-        .stream()
-        .filter(card -> cardId.equals(card.getId()))
-        .findFirst();
-      if (foundCard.isPresent()) {
-        foundCard.get().logClick();
-        reportResultWithCallback(callback, null, cardId);
-      } else {
-        reportResultWithCallback(callback, "No card found with ID " + cardId, null);
+      for (Card card : lastFeedEvent.getFeedCards()) {
+        if (cardId.equals(card.getId())) {
+          card.logClick();
+          reportResultWithCallback(callback, null, cardId);
+          return;
+        }
       }
+      reportResultWithCallback(callback, "No card found with ID " + cardId, null);
     }
   }
 
