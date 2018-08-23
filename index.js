@@ -333,7 +333,7 @@ var ReactAppboy = {
   },
 
   saySomething: function(callback) {
-    callFunctionWithCallback(AppboyReactBridge.saySomething, callback);
+    callFunctionWithCallback(AppboyReactBridge.saySomething, [], callback);
   },
 
   /**
