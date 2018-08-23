@@ -391,6 +391,11 @@ var ReactAppboy = {
     AppboyReactBridge.requestFeedRefresh();
   },
 
+  /**
+   * Add an event listener that responds to the news feed being refreshed by a call to `requestFeedRefresh()`
+   * @param listener {function({updateSuccessful})} The function to respond to feed refreshes
+   * @returns {EmitterSubscription} A subscription object. Be sure to call `remove()` when your component unmounts.
+   */
   subscribeToFeedRefresh: function(listener) {
     return feedUpdatedEmitter.addListener('FeedUpdated', listener);
   },
@@ -429,10 +434,24 @@ var ReactAppboy = {
     callFunctionWithCallback(AppboyReactBridge.getCardsInCategories, [category], callback);
   },
 
+  /**
+   * Programmatically log a card as having been seen by a user. Will fail if no card with the supplied ID can be found
+   * in local data.
+   * @param {string} cardId The ID of the card for which to log an impression
+   * @param {function(error, result)} callback A callback that receives the function call result. The result parameter
+   * will be the ID of the logged card on success.
+   */
   logCardImpression: function(cardId, callback) {
     callFunctionWithCallback(AppboyReactBridge.logCardImpression, [cardId], callback);
   },
 
+  /**
+   * Programmatically log a card as having been clicked by a user. Will fail if no card with the supplied ID can be found
+   * in local data.
+   * @param {string} cardId The ID of the card for which to log a click
+   * @param {function(error, result)} callback A callback that receives the function call result. The result parameter
+   * will be the ID of the logged card on success.
+   */
   logCardClicked: function(cardId, callback) {
       callFunctionWithCallback(AppboyReactBridge.logCardClicked, [cardId], callback);
   },
