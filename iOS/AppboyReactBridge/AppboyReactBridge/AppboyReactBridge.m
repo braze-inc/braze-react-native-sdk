@@ -303,7 +303,22 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     if (cardCategory == 0) {
         [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve cards.", category] andResult:nil];
     } else {
-        [self reportResultWithCallback:callback andError:nil andResult:[[Appboy sharedInstance].feedController getCardsInCategories:cardCategory]];
+        NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
+        NSMutableArray *translated = [[NSMutableArray alloc] init: [cards count]];
+        for (ABKCard *card in cards) {
+            NSDictionary *mappedCard = [NSDictionary dictionaryWithObjectsAndKeys:
+                card.idString, @"idString",
+                card.viewed, @"viewed",
+                card.created, @"created",
+                card.updated, @"updated",
+                card.expiresAt, @"expiresAt",
+                card.extras, @"extras",
+                card.urlString, @"urlString",
+                card.openUrlInWebView, @"openUrlInWebView"
+            ];
+            [trasnlated addObject: mappedCard];
+        }
+        [self reportResultWithCallback:callback andError:nil andResult:translated];
     }
 }
 
