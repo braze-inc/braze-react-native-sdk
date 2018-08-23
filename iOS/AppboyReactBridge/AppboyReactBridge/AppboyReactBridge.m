@@ -298,11 +298,6 @@ RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:
   }
 }
 
-RCT_EXPORT_METHOD(saySomething:(RCTResponseSenderBlock)callback) {
-    [self reportResultWithCallback:callback andError:nil andResult:@"hello"];
-}
-
-/*
 RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
     ABKCardCategory cardCategory = [self getCardCategoryForString:category];
     if (cardCategory == 0) {
@@ -311,7 +306,6 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
         [self reportResultWithCallback:callback andError:nil andResult:[[Appboy sharedInstance].feedController getCardsInCategories:cardCategory]];
     }
 }
-*/
 
 RCT_EXPORT_METHOD(launchFeedback) {
   RCTLogInfo(@"launchFeedback called");

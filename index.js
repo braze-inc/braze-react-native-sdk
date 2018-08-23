@@ -332,10 +332,6 @@ var ReactAppboy = {
     callFunctionWithCallback(AppboyReactBridge.unsetCustomUserAttribute, [key], callback);
   },
 
-  saySomething: function(callback) {
-    callFunctionWithCallback(AppboyReactBridge.saySomething, [], callback);
-  },
-
   /**
    * Sets user Twitter data.
    *
