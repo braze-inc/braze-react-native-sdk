@@ -16,6 +16,8 @@ import com.appboy.models.outgoing.FacebookUser;
 import com.appboy.models.outgoing.TwitterUser;
 import com.appboy.support.AppboyLogger;
 import com.appboy.ui.activities.AppboyFeedActivity;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -23,6 +25,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Callback;
 
 import org.json.JSONObject;
@@ -40,12 +43,25 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private static final String UNREAD_CARD_COUNT_TAG = "unread card count";
   private static final String DURATION_SHORT_KEY = "SHORT";
   private static final String DURATION_LONG_KEY = "LONG";
+  private static final String ALL_CATEGORIES = "all";
   private final Object mCallbackWasCalledMapLock = new Object();
   private Map<Callback, IEventSubscriber<FeedUpdatedEvent>> mFeedSubscriberMap = new ConcurrentHashMap<Callback, IEventSubscriber<FeedUpdatedEvent>>();
   private Map<Callback, Boolean> mCallbackWasCalledMap = new ConcurrentHashMap<Callback, Boolean>();
+  private FeedUpdatedEvent lastFeedEvent;
+  private IEventSubscriber<FeedUpdatedEvent> feedUpdatedSubscriber;
 
   public AppboyReactBridge(ReactApplicationContext reactContext) {
     super(reactContext);
+    feedUpdatedSubscriber = new IEventSubscriber<>() {
+      @Override
+      public void trigger(final FeedUpdatedEvent event) {
+        lastFeedEvent = event;
+        final WritableMap params = Arguments.createMap();
+        params.putBoolean("updateSuccessful", true);
+        sendEvent("FeedUpdated", params);
+      }
+    }
+    Appboy.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
   }
 
   @Override
@@ -67,6 +83,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     } else {
       AppboyLogger.w(TAG, "Warning: AppboyReactBridge callback was null.");
     }
+  }
+
+  private void sendEvent(String eventName, @Nullable WritableMap params) {
+    getReactApplicationContext()
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+      .emit(eventName, params);
   }
 
   @ReactMethod
@@ -388,81 +410,98 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     return cardCategory;
   }
 
-  // Registers a short-lived FeedUpdatedEvent subscriber, requests a feed refresh from cache, and and returns the requested card count in the callback
-  private void getCardCountForTag(final String category, final Callback callback, String cardCountTag) {
-    final CardCategory cardCategory = getCardCategoryFromString(category);
-    // Note that Android does not have a CardCategory.ALL enum, while iOS does
-    if (category == null || (cardCategory == null && !category.equals("all"))) {
-      reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve" + cardCountTag, null);
-      return;
-    }
-
-    // Register FeedUpdatedEvent subscriber
-    IEventSubscriber<FeedUpdatedEvent> feedUpdatedSubscriber = null;
-    boolean requestingFeedUpdateFromCache = false;
-
-    if (cardCountTag.equals(CARD_COUNT_TAG)) {
-      // getCardCount
-      feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
-        @Override
-        public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
-          // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
-          synchronized (mCallbackWasCalledMapLock) {
-            if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
-              mCallbackWasCalledMap.put(callback, new Boolean(true));
-              if (category.equals("all")) {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount());
-              } else {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount(cardCategory));
-              }
-            }
-          }
-          // Remove this listener from the feed subscriber map and from Appboy
-          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
-          mFeedSubscriberMap.remove(callback);
-        }
-      };
-      requestingFeedUpdateFromCache = true;
-    } else if (cardCountTag.equals(UNREAD_CARD_COUNT_TAG)) {
-      // getUnreadCardCount
-      feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
-        @Override
-        public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
-          // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
-          synchronized (mCallbackWasCalledMapLock) {
-            if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback)!= null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
-              mCallbackWasCalledMap.put(callback, new Boolean(true));
-              if (category.equals("all")) {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount());
-              } else {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount(cardCategory));
-              }
-            }
-          }
-          // Remove this listener from the feed subscriber map and from Appboy
-          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
-          mFeedSubscriberMap.remove(callback);
-        }
-      };
-      requestingFeedUpdateFromCache = true;
-    }
-
-    if (requestingFeedUpdateFromCache) {
-      // Put the subscriber into a map so we can remove it later from future subscriptions
-      mFeedSubscriberMap.put(callback, feedUpdatedSubscriber);
-      Appboy.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
-      Appboy.getInstance(getReactApplicationContext()).requestFeedRefreshFromCache();
-    }
-  }
-
   @ReactMethod
   public void getCardCountForCategories(String category, Callback callback) {
-    getCardCountForTag(category, callback, CARD_COUNT_TAG);
+    if (lastFeedEvent == null) {
+      reportResultWithCallback(callback, "Feed has not been loaded.", null);
+    } else {
+      if (ALL_CATEGORIES.equals(category)) {
+        reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount());
+      } else {
+        final CardCategory cardCategory = getCardCategoryFromString(category);
+        if (cardCategory != null) {
+          reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount(cardCategory));
+        } else {
+          reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve card count", null);
+        }
+      }
+    }
   }
 
   @ReactMethod
   public void getUnreadCardCountForCategories(String category, Callback callback) {
-    getCardCountForTag(category, callback, UNREAD_CARD_COUNT_TAG);
+    if (lastFeedEvent == null) {
+      reportResultWithCallback(callback, "Feed has not been loaded.", null);
+    } else {
+      if (ALL_CATEGORIES.equals(category)) {
+        reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount());
+      } else {
+        final CardCategory cardCategory = getCardCategoryFromString(category);
+        if (cardCategory != null) {
+          reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount(cardCategory));
+        } else {
+          reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve unread card count", null);
+        }
+      }
+    }
+  }
+
+  @ReactMethod
+  public void getCardsInCategories(String category, Callback callback) {
+    if (lastFeedEvent == null) {
+      reportResultWithCallback(callback, "Feed has not been loaded.", null);
+    } else {
+      if (ALL_CATEGORIES.equals(category)) {
+        reportResultWithCallback(callback, null, feedUpdatedEvent.getFeedCards());
+      } else {
+        final CardCategory cardCategory = getCardCategoryFromString(category);
+        if (cardCategory != null) {
+          reportResultWithCallback(callback, null, feedUpdatedEvent.getFeedCards(cardCategory));
+        } else {
+          reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve unread card count", null);
+        }
+      }
+    }
+  }
+
+  @ReactMethod
+  public void logCardImpression(String cardId, Callback callback) {
+    if (lastFeedEvent == null) {
+      reportResultWithCallback(callback, "Feed has not been loaded.", null);
+    } else if (cardId == null) {
+      reportResultWithCallback(callback, "cardId cannot be null", null);
+    } else {
+      final Optional<Card> foundCard = lastFeedEvent.getFeedCards();
+        .stream()
+        .filter(card -> cardId.equals(card.getId()))
+        .findFirst();
+      if (foundCard.isPresent()) {
+        foundCard.get().logImpression();
+        reportResultWithCallback(callback, null, cardId);
+      } else {
+        reportResultWithCallback(callback, "No card found with ID " + cardId, null);
+      }
+    }
+  }
+
+  @ReactMethod
+  public void logCardClicked(String cardId, Callback callback) {
+    if (lastFeedEvent == null) {
+      reportResultWithCallback(callback, "Feed has not been loaded.", null);
+    } else if (cardId == null) {
+      reportResultWithCallback(callback, "cardId cannot be null", null);
+    } else {
+      final Optional<Card> foundCard = lastFeedEvent.getFeedCards();
+        .stream()
+        .filter(card -> cardId.equals(card.getId()))
+        .findFirst();
+      if (foundCard.isPresent()) {
+        foundCard.get().logClick();
+        reportResultWithCallback(callback, null, cardId);
+      } else {
+        reportResultWithCallback(callback, "No card found with ID " + cardId, null);
+      }
+    }
   }
 
   @ReactMethod
