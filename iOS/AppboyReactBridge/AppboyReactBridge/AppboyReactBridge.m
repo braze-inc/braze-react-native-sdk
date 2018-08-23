@@ -334,7 +334,6 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     } else {
         NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
         self.loadedCards = [NSArray arrayWithArray: cards];
-        RCTLogInfo(@"Cards are %@", self.loadedCards);
         NSMutableArray *translated = [NSMutableArray arrayWithCapacity: [cards count]];
         NSError *error;
         for (ABKCard *card in cards) {
