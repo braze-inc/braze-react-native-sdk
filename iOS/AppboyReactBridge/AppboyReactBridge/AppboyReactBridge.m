@@ -332,7 +332,7 @@ RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSend
         } else {
             ABKCard *card = self.loadedCards[foundIndex];
             [card logCardImpression];
-            [self reportResultWithCallback: callback andError:nil andResult:nil];
+            [self reportResultWithCallback:callback andError:nil andResult:cardId];
         }
     }
 }
