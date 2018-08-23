@@ -33,8 +33,6 @@ function callFunctionWithCallback(methodName, argsArray, callback) {
   methodName.apply(this, argsArray);
 }
 
-const feedUpdatedEmitter = new NativeEventEmitter(AppboyReactBridge);
-
 var ReactAppboy = {
   /**
   * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
