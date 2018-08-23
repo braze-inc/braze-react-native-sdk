@@ -1,4 +1,4 @@
-import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+import { NativeEventEmitter, DeviceEventEmitter, NativeModules, Platform } from 'react-native';
 const { AppboyReactBridge } = NativeModules;
 
 /**
