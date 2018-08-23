@@ -422,6 +422,10 @@ var ReactAppboy = {
     callFunctionWithCallback(AppboyReactBridge.getCardsInCategories, [category], callback);
   },
 
+  logCardImpression: function(cardId, callback) {
+    callFunctionWithCallback(AppboyReactBridge.logCardImpression, [cardId], callback);
+  }
+
   // Feedback
   /**
   * Launches the Feedback UI element.  Not currently supported on Android.
