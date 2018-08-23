@@ -289,7 +289,7 @@ RCT_EXPORT_METHOD(requestFeedRefresh) {
 - (void)feedUpdated:(NSNotification *)notification {
     BOOL updateIsSuccessful = [notification.userInfo[ABKFeedUpdatedIsSuccessfulKey] boolValue];
     if (hasListeners) {
-        [self sendEventWithName:@"FeedUpdated" body:@{@"updateSuccessful": updateIsSuccessful}];
+        [self sendEventWithName:@"FeedUpdated" body:@{@"updateSuccessful": @(updateIsSuccessful)}];
     }
 }
 
@@ -341,7 +341,11 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
             NSDictionary *mappedCard = [NSJSONSerialization JSONObjectWithData: [card serializeToData] options: 0 error: &error];
             [translated addObject: mappedCard];
         }
-        [self reportResultWithCallback:callback andError:error andResult:translated];
+        NSString *errorText = nil;
+        if (error != nil) {
+            errorText = [error description];
+        }
+        [self reportResultWithCallback:callback andError:errorText andResult:translated];
     }
 }
 
