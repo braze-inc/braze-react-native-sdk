@@ -307,7 +307,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
     if (cardCategory == 0) {
         [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve cards.", category] andResult:nil];
     } else {
-        [self reportResultWithCallback:callback andError:nil andResult@([[Appboy sharedInstance].feedController getCardsInCategories:cardCategory])];
+        [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].feedController getCardsInCategories:cardCategory])];
     }
 }
 
