@@ -14,6 +14,10 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                    integerValue);
 @end
 
+@interface AppboyReactBridge ()
+@property (nonatomic, retain) NSMutableArray *loadedCards;
+@end
+
 @implementation AppboyReactBridge
 
 - (dispatch_queue_t)methodQueue
@@ -304,6 +308,8 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
         [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve cards.", category] andResult:nil];
     } else {
         NSArray *cards = [[Appboy sharedInstance].feedController getCardsInCategories:cardCategory];
+        RCTLogInfo(@"Cards are %@", cards);
+        self.loadedCards = [NSMutableArray arrayWithArray: cards];
         NSMutableArray *translated = [NSMutableArray arrayWithCapacity: [cards count]];
         NSError *error;
         for (ABKCard *card in cards) {
