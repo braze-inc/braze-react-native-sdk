@@ -331,7 +331,7 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
             [self reportResultWithCallback: callback andError:[NSString stringWithFormat:@"No card found with ID %@", cardId] andResult:nil];
         } else {
             ABKCard *card = self.loadedCards[foundIndex];
-            [self performSelector:selector onObject:card];
+            [card performSelector: selector];
             [self reportResultWithCallback:callback andError:nil andResult:cardId];
         }
     }
