@@ -341,11 +341,11 @@ RCT_EXPORT_METHOD(getCardsInCategories:(NSString *)category callback:(RCTRespons
 }
 
 RCT_EXPORT_METHOD(logCardImpression:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
-    [self findCardWithId:cardId andInvoke:@selector(logCardImpression)];
+    [self findCardWithId:cardId andInvoke:@selector(logCardImpression) withCallback:callback];
 }
 
 RCT_EXPORT_METHOD(logCardClicked:(NSString *)cardId callback:(RCTResponseSenderBlock)callback) {
-    [self findCardWithId:cardId andInvoke:@selector(logCardClicked)];
+    [self findCardWithId:cardId andInvoke:@selector(logCardClicked) withCallback:callback];
 }
 
 RCT_EXPORT_METHOD(launchFeedback) {
