@@ -46,6 +46,7 @@ class AppboyProject extends Component {
     this._disableSDK = this._disableSDK.bind(this);
     this._enableSDK = this._enableSDK.bind(this);
     this._requestLocationInitialization = this._requestLocationInitialization.bind(this);
+    this._setLocationCustomAttribute = this._setLocationCustomAttribute.bind(this);
     this._setGenderPress = this._setGenderPress.bind(this);
   }
 
@@ -254,6 +255,10 @@ class AppboyProject extends Component {
           <Text>Request Location Initialization</Text>
         </TouchableHighlight>
         : false }
+        <TouchableHighlight
+          onPress={this._setLocationCustomAttribute}>
+          <Text>Set Custom Location Attribute</Text>
+        </TouchableHighlight>
         </ScrollView>
     );
   }
@@ -442,6 +447,11 @@ class AppboyProject extends Component {
   _requestLocationInitialization(event) {
     ReactAppboy.requestLocationInitialization();
     this._showToast('Init Requested');
+  }
+
+  _setLocationCustomAttribute(event) {
+    ReactAppboy.setLocationCustomAttribute("work", 40.7128, 74.0060);
+    this._showToast('Location Set');
   }
 }
 

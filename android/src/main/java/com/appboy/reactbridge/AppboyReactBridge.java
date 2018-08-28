@@ -490,6 +490,13 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     AppboyLocationService.requestInitialization(getReactApplicationContext());
   }
 
+  @ReactMethod
+  public void setLocationCustomAttribute(String key, Double latitude, Double longitude, Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLocationCustomAttribute(key, latitude, longitude);
+    // Always return true as Android doesn't support getting a result from setLocationCustomAttribute().
+    reportResultWithCallback(callback, null, true);
+  }
+
   private Month parseMonth(int monthInt) {
     switch (monthInt) {
       case 1:

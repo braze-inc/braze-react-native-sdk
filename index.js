@@ -458,6 +458,18 @@ var ReactAppboy = {
     AppboyReactBridge.requestLocationInitialization();
   },
 
+  /**
+  * Sets a custom location attribute for the user.
+  * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
+  * a $, and can only contain alphanumeric characters and punctuation.
+  * @param {double} latitude - Location latitude.
+  * @param {double} longitude - Location longitude.
+  * @param {function(error, result)} callback - A callback that receives the function call result.
+  */
+  setLocationCustomAttribute: function(key, latitude, longitude, callback) {
+    callFunctionWithCallback(AppboyReactBridge.setLocationCustomAttribute, [key, latitude, longitude], callback);
+  },
+
   // Enums
   CardCategory: {
     'ADVERTISING': 'advertising',

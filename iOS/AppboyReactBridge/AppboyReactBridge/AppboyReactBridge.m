@@ -311,5 +311,10 @@ RCT_EXPORT_METHOD(requestImmediateDataFlush) {
   [[Appboy sharedInstance] flushDataAndProcessRequestQueue];
 }
 
+RCT_EXPORT_METHOD(setLocationCustomAttribute:(NSString *)key latitude:(double)latitude longitude:(double)longitude callback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"[Appboy sharedInstance].user setLocationCustomAttribute:latitude:longitude:: =  %@", key);
+  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addLocationCustomAttributeWithKey:key latitude:latitude longitude:longitude])];
+}
+
 RCT_EXPORT_MODULE();
 @end

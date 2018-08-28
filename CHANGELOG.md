@@ -1,3 +1,12 @@
+## 1.8.0
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 2.7.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#270).
+- Updated the native iOS bridge to [Braze iOS SDK 3.8.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.8.3).
+
+##### Added
+- Added `setLocationCustomAttribute()` to the `Appboy` interface to allow setting of custom location attributes.
+
 ## 1.7.3
 
 ##### Added
