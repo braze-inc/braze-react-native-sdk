@@ -1,19 +1,19 @@
 PODS:
-  - Appboy-iOS-SDK (3.8.3):
-    - Appboy-iOS-SDK/UI (= 3.8.3)
-  - Appboy-iOS-SDK/ContentCards (3.8.3):
+  - Appboy-iOS-SDK (3.8.4):
+    - Appboy-iOS-SDK/UI (= 3.8.4)
+  - Appboy-iOS-SDK/ContentCards (3.8.4):
     - Appboy-iOS-SDK/Core
     - SDWebImage/GIF (~> 4.0)
-  - Appboy-iOS-SDK/Core (3.8.3)
-  - Appboy-iOS-SDK/Feedback (3.8.3):
+  - Appboy-iOS-SDK/Core (3.8.4)
+  - Appboy-iOS-SDK/Feedback (3.8.4):
     - Appboy-iOS-SDK/Core
-  - Appboy-iOS-SDK/InAppMessage (3.8.3):
-    - Appboy-iOS-SDK/Core
-    - SDWebImage/GIF (~> 4.0)
-  - Appboy-iOS-SDK/NewsFeed (3.8.3):
+  - Appboy-iOS-SDK/InAppMessage (3.8.4):
     - Appboy-iOS-SDK/Core
     - SDWebImage/GIF (~> 4.0)
-  - Appboy-iOS-SDK/UI (3.8.3):
+  - Appboy-iOS-SDK/NewsFeed (3.8.4):
+    - Appboy-iOS-SDK/Core
+    - SDWebImage/GIF (~> 4.0)
+  - Appboy-iOS-SDK/UI (3.8.4):
     - Appboy-iOS-SDK/ContentCards
     - Appboy-iOS-SDK/Core
     - Appboy-iOS-SDK/Feedback
@@ -26,7 +26,7 @@ PODS:
     - SDWebImage/Core
 
 DEPENDENCIES:
-  - Appboy-iOS-SDK (= 3.8.3)
+  - Appboy-iOS-SDK (= 3.8.4)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -35,10 +35,10 @@ SPEC REPOS:
     - SDWebImage
 
 SPEC CHECKSUMS:
-  Appboy-iOS-SDK: 31c93205199035a41172e988f514c47312b673c6
+  Appboy-iOS-SDK: e05ccccf69108e354cc7002d0f92deac0db4ac6e
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
 
-PODFILE CHECKSUM: 49b33d39cf0d599a2a531e82107b48599765e57c
+PODFILE CHECKSUM: 84259bc5a48cbbd2ba84cdfc559a80c7215e3706
 
 COCOAPODS: 1.5.3
