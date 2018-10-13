@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
-  compile 'com.appboy:android-sdk-ui:2.4.0'
+  // compile 'com.appboy:android-sdk-ui:2.4.0'
+  compile 'com.appboy:android-sdk-ui:2.7.+'
   compile 'com.facebook.react:react-native:0.19.+'
 }

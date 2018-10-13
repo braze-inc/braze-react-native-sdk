@@ -1,9 +1,11 @@
 package com.appboy.reactbridge;
 
+import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
 
 import com.appboy.Appboy;
+import com.appboy.AppboyLifecycleCallbackListener;
 import com.appboy.models.InAppMessageSlideup;
 import com.appboy.services.AppboyLocationService;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
@@ -46,8 +48,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private Map<Callback, IEventSubscriber<FeedUpdatedEvent>> mFeedSubscriberMap = new ConcurrentHashMap<Callback, IEventSubscriber<FeedUpdatedEvent>>();
   private Map<Callback, Boolean> mCallbackWasCalledMap = new ConcurrentHashMap<Callback, Boolean>();
 
-  public AppboyReactBridge(ReactApplicationContext reactContext) {
+  public AppboyReactBridge(Application application, ReactApplicationContext reactContext) {
     super(reactContext);
+
+    AppboyLogger.setLogLevel(Log.VERBOSE);
+    application.registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener());
   }
 
   @Override
