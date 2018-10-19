@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C6587017217A5717006D1AC5 /* Appboy.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Appboy.bundle; sourceTree = "<group>"; };
 		D4DB65991D8C973800EFA6B6 /* AppboyReactUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppboyReactUtils.h; sourceTree = "<group>"; };
 		D4DB659A1D8C973800EFA6B6 /* AppboyReactUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppboyReactUtils.m; sourceTree = "<group>"; };
 		E3D0A75A1C668BB90027828A /* libAppboyReactBridge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppboyReactBridge.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +68,7 @@
 				E3D0A75F1C668BB90027828A /* AppboyReactBridge.m */,
 				D4DB65991D8C973800EFA6B6 /* AppboyReactUtils.h */,
 				D4DB659A1D8C973800EFA6B6 /* AppboyReactUtils.m */,
+				C6587017217A5717006D1AC5 /* Appboy.bundle */,
 			);
 			path = AppboyReactBridge;
 			sourceTree = "<group>";
