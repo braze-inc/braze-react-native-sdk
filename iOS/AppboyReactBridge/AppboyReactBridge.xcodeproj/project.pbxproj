@@ -220,12 +220,14 @@
 		E3D0A7641C668BB90027828A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "../../../ios/Frameworks/Appboy-3.8.1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					APPBOY_LIBRARY_SEARCH_PATH,
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/**",
 					"$(SRCROOT)/../../../react-native/React/**",
+					"$(SRCROOT)/../../../../ios/Frameworks/Appboy-3.8.1/Appboy_iOS_SDK.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -240,12 +242,14 @@
 		E3D0A7651C668BB90027828A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "../../../ios/Frameworks/Appboy-3.8.1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					APPBOY_LIBRARY_SEARCH_PATH,
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/**",
 					"$(SRCROOT)/../../../react-native/React/**",
+					"$(SRCROOT)/../../../../ios/Frameworks/Appboy-3.8.1/Appboy_iOS_SDK.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
