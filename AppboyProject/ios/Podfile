@@ -1,4 +1,4 @@
 target 'AppboyProject' do
   platform :ios, '8.0'
-  pod 'Appboy-iOS-SDK', '3.8.4'
+  pod 'Appboy-iOS-SDK', '3.11.0'
 end

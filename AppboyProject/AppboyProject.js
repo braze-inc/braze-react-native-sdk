@@ -19,18 +19,20 @@ class AppboyProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userIdText : 'theAppboyTestUser',
+      userIdText : '',
       customEventText : '',
       subscriptionState : 's',
       gender : 'm',
       message: 'Success',
       toastVisible: 0
     };
+    this._getInstallTrackingId = this._getInstallTrackingId.bind(this);
     this._updateCardCount = this._updateCardCount.bind(this);
     this._changeUserPress = this._changeUserPress.bind(this);
     this._logCustomEventPress = this._logCustomEventPress.bind(this);
     this._setSubscriptionStatePress = this._setSubscriptionStatePress.bind(this);
     this._logPurchasePress = this._logPurchasePress.bind(this);
+    this._setLanguagePress = this._setLanguagePress.bind(this);
     this._submitFeedbackPress = this._submitFeedbackPress.bind(this);
     this._logCustomAttributePress = this._logCustomAttributePress.bind(this);
     this._logUserPropertiesPress = this._logUserPropertiesPress.bind(this);
@@ -48,6 +50,9 @@ class AppboyProject extends Component {
     this._requestLocationInitialization = this._requestLocationInitialization.bind(this);
     this._setLocationCustomAttribute = this._setLocationCustomAttribute.bind(this);
     this._setGenderPress = this._setGenderPress.bind(this);
+    this._requestContentCardsRefresh = this._requestContentCardsRefresh.bind(this);
+    this._hideCurrentInAppMessage = this._hideCurrentInAppMessage.bind(this);
+    this._setAttributionData = this._setAttributionData.bind(this);
   }
 
   componentDidMount() {
@@ -143,6 +148,15 @@ class AppboyProject extends Component {
             <Text>Log Custom Event</Text>
           </TouchableHighlight>
         </View>
+        <View style={styles.row}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={(languageText) => this.setState({languageText})}/>
+          <TouchableHighlight
+            onPress={this._setLanguagePress}>
+            <Text>Set Language</Text>
+          </TouchableHighlight>
+        </View>
         <TouchableHighlight
           onPress={this._logPurchasePress}>
           <Text>Log Purchase</Text>
@@ -158,6 +172,10 @@ class AppboyProject extends Component {
         <TouchableHighlight
           onPress={this._logUserPropertiesPress}>
           <Text>Set User Properties</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._hideCurrentInAppMessage}>
+          <Text>Dismiss In App Message</Text>
         </TouchableHighlight>
         <View style={styles.row}>
           <Picker
@@ -234,6 +252,10 @@ class AppboyProject extends Component {
           <Text>Request Feed Refresh</Text>
         </TouchableHighlight>
         <TouchableHighlight
+          onPress={this._requestContentCardsRefresh}>
+          <Text>Request Content Cards Refresh</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
           onPress={this._requestImmediateDataFlush}>
           <Text>Request Immediate Data Flush</Text>
         </TouchableHighlight>
@@ -259,6 +281,14 @@ class AppboyProject extends Component {
           onPress={this._setLocationCustomAttribute}>
           <Text>Set Custom Location Attribute</Text>
         </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._setAttributionData}>
+          <Text>Set Attribution Data</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._getInstallTrackingId}>
+          <Text>Get Install Tracking ID</Text>
+        </TouchableHighlight>
         </ScrollView>
     );
   }
@@ -279,6 +309,10 @@ class AppboyProject extends Component {
   _logCustomEventPress(event) {
     ReactAppboy.logCustomEvent(this.state.customEventText, {'p1': 'p2'});
     this._showToast('Event logged: ' + this.state.customEventText);
+  }
+  _setLanguagePress(event) {
+    ReactAppboy.setLanguage(this.state.languageText);
+    this._showToast('Language changed to: ' + this.state.languageText);
   }
   _setSubscriptionStatePress(event) {
     console.log('Received request to change subscription state for email and push to ' + this.state.subscriptionState);
@@ -452,6 +486,35 @@ class AppboyProject extends Component {
   _setLocationCustomAttribute(event) {
     ReactAppboy.setLocationCustomAttribute("work", 40.7128, 74.0060);
     this._showToast('Location Set');
+  }
+
+  _requestContentCardsRefresh(event) {
+    ReactAppboy.requestContentCardsRefresh();
+    this._showToast('Content Cards Refreshed');
+  }
+
+  _hideCurrentInAppMessage(event) {
+    ReactAppboy.hideCurrentInAppMessage();
+    this._showToast('Message dismissed');
+  }
+
+  _setAttributionData(event) {
+    var network = "fakeblock";
+    var campaign = "everyone";
+    var adGroup = "adgroup1";
+    var creative = "bigBanner";
+    ReactAppboy.setAttributionData(network, campaign, adGroup, creative);
+    this._showToast('Attribution Data Set');
+  }
+
+  _getInstallTrackingId(event) {
+    ReactAppboy.getInstallTrackingId((err, res) => {
+      if (err) {
+        console.log('Error is ' + err);
+      } else {
+        this._showToast('Install tracking ID: ' + res);
+      }
+    });
   }
 }
 

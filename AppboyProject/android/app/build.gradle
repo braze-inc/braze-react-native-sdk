@@ -91,7 +91,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.appboyproject"
@@ -133,11 +133,11 @@ android {
 }
 
 dependencies {
-    compile "com.google.firebase:firebase-messaging:15.0.0"
-    compile project(':react-native-appboy-sdk')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:27.1.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.google.firebase:firebase-messaging:17.3.4"
+    implementation project(':react-native-appboy-sdk')
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:appcompat-v7:27.1.1"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
 }
 
 apply plugin: 'com.google.gms.google-services'

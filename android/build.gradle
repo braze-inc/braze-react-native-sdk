@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion "26.0.0"
+  buildToolsVersion "28.0.3"
 
   defaultConfig {
     minSdkVersion 16
@@ -13,6 +13,6 @@ android {
 }
 
 dependencies {
-  compile 'com.appboy:android-sdk-ui:2.7.0'
-  compile 'com.facebook.react:react-native:0.19.+'
+  api 'com.appboy:android-sdk-ui:3.0.1'
+  api 'com.facebook.react:react-native:+'
 }

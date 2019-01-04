@@ -35,7 +35,6 @@ HelloReact/android/app/bin/
 
 # Node
 node_modules
-package-lock.json
 *.log
 .nvm
 npm-debug.log

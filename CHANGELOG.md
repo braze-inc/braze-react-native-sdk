@@ -1,3 +1,22 @@
+## 1.9.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.11.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.11.0).
+- Updated the native Android bridge to [Braze Android SDK 3.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#301).
+- Updated the Android wrapper to use `api` and `implementation` syntax in it's `build.gradle` instead of `compile`. As part of this work, the Android Gradle plugin version was updated to `3.2.1`.
+
+##### Added
+- Added `setUserAttributionData()` to the `Appboy` interface to allow setting the attribution data for the current user.
+- Added `getInstallTrackingId()` to the `Appboy` interface to allow getting the install tracking id. This method is equivalent to calling `Appboy.getInstallTrackingId()` on Android and returns the IDFV on iOS.
+- Added `setLanguage()` to the `Appboy` interface to allow setting a language for the current user.
+- Added `hideCurrentInAppMessage()` to the `Appboy` interface to allow hiding of the currently displayed in-app message.
+
+##### Fixed
+- Fixed an issue where the Android wrapper would include an older version of React Native in test APK builds.
+
+##### Changed
+- Updated our sample projects to use React Native `0.56`.
+
 ## 1.8.1
 
 ##### Changed

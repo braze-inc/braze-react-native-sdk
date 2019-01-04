@@ -56,6 +56,10 @@ RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
   }
 }
 
+RCT_EXPORT_METHOD(getInstallTrackingId:(RCTResponseSenderBlock)callback) {
+  [self reportResultWithCallback:callback andError:nil andResult:[[Appboy sharedInstance] getDeviceId]];
+}
+
 RCT_EXPORT_METHOD(changeUser:(NSString *)userId)
 {
   RCTLogInfo(@"[Appboy sharedInstance] changeUser with value %@", userId);
@@ -138,6 +142,11 @@ RCT_EXPORT_METHOD(setGender:(NSString *)gender callback:(RCTResponseSenderBlock)
   } else {
     [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid input %@. Gender not set.", gender] andResult:nil];
   }
+}
+
+RCT_EXPORT_METHOD(setLanguage:(NSString *)language) {
+  RCTLogInfo(@"[Appboy sharedInstance].user.language =  %@", language);
+  [Appboy sharedInstance].user.language = language;
 }
 
 RCT_EXPORT_METHOD(setPhoneNumber:(NSString *)phone) {
@@ -233,6 +242,16 @@ RCT_EXPORT_METHOD(setFacebookData:(nullable NSDictionary *)facebookUserDictionar
     [Appboy sharedInstance].user.facebookUser = facebookUser;
 }
 
+RCT_EXPORT_METHOD(setAttributionData:(NSString *)network withCampaign:(NSString *)campaign withAdGroup:(NSString *)adGroup withCreative:(NSString *)creative) {
+    RCTLogInfo(@"[Appboy sharedInstance].user setAttributionData");
+    ABKAttributionData *attributionData = [[ABKAttributionData alloc]
+                                         initWithNetwork:network
+                                         campaign:campaign
+                                         adGroup:adGroup
+                                         creative:creative];
+    [[Appboy sharedInstance].user setAttributionData:attributionData];
+}
+
 RCT_EXPORT_METHOD(launchNewsFeed) {
   RCTLogInfo(@"launchNewsFeed called");
   ABKNewsFeedViewController *feedModal = [[ABKNewsFeedViewController alloc] init];
@@ -314,6 +333,16 @@ RCT_EXPORT_METHOD(requestImmediateDataFlush) {
 RCT_EXPORT_METHOD(setLocationCustomAttribute:(NSString *)key latitude:(double)latitude longitude:(double)longitude callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].user setLocationCustomAttribute:latitude:longitude:: =  %@", key);
   [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addLocationCustomAttributeWithKey:key latitude:latitude longitude:longitude])];
+}
+
+RCT_EXPORT_METHOD(requestContentCardsRefresh) {
+  RCTLogInfo(@"requestContentCardsRefresh called");
+  [[Appboy sharedInstance] requestContentCardsRefresh];
+}
+
+RCT_EXPORT_METHOD(hideCurrentInAppMessage) {
+  RCTLogInfo(@"hideCurrentInAppMessage called");
+  [[Appboy sharedInstance].inAppMessageController.inAppMessageUIController hideCurrentInAppMessage:YES];
 }
 
 RCT_EXPORT_MODULE();

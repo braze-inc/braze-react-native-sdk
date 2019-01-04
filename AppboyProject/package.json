@@ -6,8 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react": "16.2.0",
-    "react-native": "^0.53.0",
+    "react": "16.4.1",
+    "react-native": "^0.56.0",
     "react-native-appboy-sdk": "file:../"
   }
 }

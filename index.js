@@ -57,6 +57,15 @@ var ReactAppboy = {
   },
 
   /**
+  * Returns a unique device ID for install tracking. This method is equivalent to calling
+  * Appboy.getInstallTrackingId() on Android and returns the IDFV on iOS.
+  * @param {function(error, result)} callback - A callback that receives the function call result.
+  */
+  getInstallTrackingId: function(callback) {
+    callFunctionWithCallback(AppboyReactBridge.getInstallTrackingId, [], callback);
+  },
+
+  /**
   * When a user first uses Appboy on a device they are considered "anonymous". Use this method to identify a user
   *    with a unique ID, which enables the following:
   *
@@ -235,6 +244,14 @@ var ReactAppboy = {
   },
 
   /**
+  * Sets the language for the user.
+  * @param {string} language - Should be valid ISO 639-1 language code.
+  */
+ setLanguage: function(language) {
+  AppboyReactBridge.setLanguage(language);
+},
+
+  /**
   * Sets the country for the user.
   * @param {string} country - Limited to 255 characters in length.
   */
@@ -373,6 +390,18 @@ var ReactAppboy = {
     }
   },
 
+  /**
+   * Sets user attribution data.
+   *
+   * @param {string} network - The attribution network
+   * @param {string} campaign - The attribution campaign
+   * @param {string} adGroup - The attribution adGroup
+   * @param {string} creative - The attribution creative
+   */
+  setAttributionData: function(network, campaign, adGroup, creative) {
+    AppboyReactBridge.setAttributionData(network, campaign, adGroup, creative);
+  },
+
   // News Feed
   /**
   * Launches the News Feed UI element.
@@ -468,6 +497,22 @@ var ReactAppboy = {
   */
   setLocationCustomAttribute: function(key, latitude, longitude, callback) {
     callFunctionWithCallback(AppboyReactBridge.setLocationCustomAttribute, [key, latitude, longitude], callback);
+  },
+
+  // Refresh Content Cards
+  /**
+  * Requests a refresh of the content cards from Appboy's servers.
+  */
+  requestContentCardsRefresh: function() {
+    AppboyReactBridge.requestContentCardsRefresh();
+  },
+
+  // Dismiss In App Message
+  /**
+  * Dismisses the currently displayed in app message.
+  */
+  hideCurrentInAppMessage: function() {
+    AppboyReactBridge.hideCurrentInAppMessage();
   },
 
   // Enums
