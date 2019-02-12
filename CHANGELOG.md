@@ -3,6 +3,9 @@
 ##### Added
 - Added `addAlias(aliasName, aliasLabel)` to the `Appboy` interface to allow aliasing users.
 
+##### Changed
+- Updated `build.gradle` to use `project.ext` config if exists.
+
 ## 1.9.0
 
 ##### Breaking
