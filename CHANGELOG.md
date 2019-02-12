@@ -1,3 +1,8 @@
+## 1.10.0
+
+##### Added
+- Added `addAlias(aliasName, aliasLabel)` to the `Appboy` interface to allow aliasing users.
+
 ## 1.9.0
 
 ##### Breaking
