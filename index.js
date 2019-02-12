@@ -266,9 +266,9 @@ var ReactAppboy = {
   * Sets the language for the user.
   * @param {string} language - Should be valid ISO 639-1 language code.
   */
- setLanguage: function(language) {
-  AppboyReactBridge.setLanguage(language);
-},
+  setLanguage: function(language) {
+    AppboyReactBridge.setLanguage(language);
+  },
 
   /**
   * Sets the country for the user.
