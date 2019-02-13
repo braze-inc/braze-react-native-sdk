@@ -66,6 +66,12 @@ RCT_EXPORT_METHOD(changeUser:(NSString *)userId)
   [[Appboy sharedInstance] changeUser:userId];
 }
 
+RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabel)
+{
+  RCTLogInfo(@"[Appboy sharedInstance].user addAlias with values %@ %@", aliasName, aliasLabel);
+  [[Appboy sharedInstance].user addAlias:aliasName withLabel:aliasLabel];
+}
+
 RCT_EXPORT_METHOD(registerPushToken:(NSString *)token)
 {
   RCTLogInfo(@"[Appboy sharedInstance] registerPushToken with value %@", token);

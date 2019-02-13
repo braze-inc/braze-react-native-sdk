@@ -104,6 +104,25 @@ var ReactAppboy = {
   },
 
   /**
+   * An alias serves as an alternative unique user identifier. Use aliases to identify users along different
+   *    dimensions than your core user ID:
+   *       * Set a consistent identifier for analytics that will follow a given user both before and after they have
+   *         logged in to a mobile app or website.
+   *       * Add the identifiers used by a third party vendor to your Braze users in order to more easily reconcile
+   *         your data externally.
+   *
+   * Note: Each alias consists of two parts: a name for the identifier itself, and a label indicating the type of
+   *    alias. Users can have multiple aliases with different labels, but only one name per label.
+   *
+   * @param {string} aliasName - An identifier for alias name.
+   * @param {string} aliasLabel - An identifier for alias label.
+   */
+  addAlias: function(aliasName, aliasLabel) {
+    AppboyReactBridge.setSDKFlavor();
+    AppboyReactBridge.addAlias(aliasName, aliasLabel);
+  },
+
+  /**
   * This method posts a token to Appboy's servers to associate the token with the current device.
   *
   * @param {string} token - The device's push token.
@@ -247,9 +266,9 @@ var ReactAppboy = {
   * Sets the language for the user.
   * @param {string} language - Should be valid ISO 639-1 language code.
   */
- setLanguage: function(language) {
-  AppboyReactBridge.setLanguage(language);
-},
+  setLanguage: function(language) {
+    AppboyReactBridge.setLanguage(language);
+  },
 
   /**
   * Sets the country for the user.

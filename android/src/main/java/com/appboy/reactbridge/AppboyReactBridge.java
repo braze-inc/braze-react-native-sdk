@@ -88,6 +88,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void addAlias(String aliasName, String aliasLabel) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().addAlias(aliasName, aliasLabel);
+  }
+
+  @ReactMethod
   public void registerPushToken(String token) {
     Appboy.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);
   }
@@ -508,7 +513,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   public void requestContentCardsRefresh() {
     Appboy.getInstance(getReactApplicationContext()).requestContentCardsRefresh(false);
   }
-  
+
   @ReactMethod
   public void hideCurrentInAppMessage() {
     AppboyInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
@@ -519,7 +524,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     AttributionData attributionData = new AttributionData(network, campaign, adGroup, creative);
     Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setAttributionData(attributionData);
   }
-  
+
   @ReactMethod
   public void getInstallTrackingId(Callback callback) {
     reportResultWithCallback(callback, null, Appboy.getInstance(getReactApplicationContext()).getInstallTrackingId());

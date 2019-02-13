@@ -1,3 +1,15 @@
+## 1.10.0
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 3.1.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#310).
+
+##### Added
+- Added `addAlias(aliasName, aliasLabel)` to the `Appboy` interface to allow aliasing users.
+  - Thanks @alexmbp!
+
+##### Changed
+- Updated `build.gradle` to use `project.ext` config if available.
+
 ## 1.9.0
 
 ##### Breaking

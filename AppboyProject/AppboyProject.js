@@ -387,6 +387,7 @@ class AppboyProject extends Component {
     ReactAppboy.setAvatarImageUrl('https://raw.githubusercontent.com/Appboy/appboy-react-sdk/master/braze-logo.png');
     ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
     ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+    ReactAppboy.addAlias('arrayattr', 'alias-label-1');
     this._showToast('User properties set');
   }
   _launchNewsFeedPress(event) {
