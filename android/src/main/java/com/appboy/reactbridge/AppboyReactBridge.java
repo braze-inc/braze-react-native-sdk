@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.lang.Integer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -120,11 +121,22 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
             try {
               properties.addProperty(key, eventProperties.getInt(key));
             } catch (Exception e2) {
-              AppboyLogger.e(TAG, "Could not parse ReadableType.Number from ReadableMap");
+              AppboyLogger.e(TAG, "Could not parse ReadableType.Number from ReadableMap for key: " + key);
             }
           }
+        } else if (readableType == ReadableType.Map) {
+          try {
+            if (eventProperties.getMap(key).getString("type").equals("UNIX_timestamp")) {
+              double unixTimestamp = eventProperties.getMap(key).getDouble("value");
+              properties.addProperty(key, new Date((long)unixTimestamp));
+            } else {
+              AppboyLogger.e(TAG, "Unsupported ReadableMap type received for key: " + key);
+            }
+          } catch (Exception e) {
+            AppboyLogger.e(TAG, "Could not determine type from ReadableMap for key: " + key);
+          }
         } else {
-          AppboyLogger.e(TAG, "Could not map ReadableType to an AppboyProperty value");
+          AppboyLogger.e(TAG, "Could not map ReadableType to an AppboyProperty value for key: " + key);
         }
       }
     }

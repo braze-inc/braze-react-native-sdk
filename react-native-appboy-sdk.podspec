@@ -13,11 +13,11 @@ Pod::Spec.new do |s|
   s.source         = { :git => 'git+https://github.com/Appboy/appboy-react-sdk.git', :tag => s.version }
 
   s.requires_arc   = true
-  s.platform       = :ios, '8.0'
+  s.platform       = :ios, '9.0'
 
   s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js'
   s.source_files   = 'iOS/**/*.{h,m}'
 
-  s.dependency 'Appboy-iOS-SDK', '~> 3.11.0'
+  s.dependency 'Appboy-iOS-SDK', '~> 3.14.0'
   s.dependency 'React'
 end

@@ -139,10 +139,19 @@ var ReactAppboy = {
   *      and can only contain alphanumeric characters and punctuation.
   * @param {object} [eventProperties] - Hash of properties for this event. Keys are limited to 255
   *      characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
-  *      Values can be numeric, boolean, or strings 255 characters or shorter.
+  *      Values can be numeric, boolean, Date, or strings 255 characters or shorter.
   */
   logCustomEvent: function(eventName, eventProperties) {
     AppboyReactBridge.setSDKFlavor();
+    for (var key in eventProperties) {
+      if (eventProperties[key] instanceof Date){
+        var dateProp = eventProperties[key];
+        eventProperties[key] = {
+          type: "UNIX_timestamp",
+          value: dateProp.valueOf()
+        }
+      }
+    }
     AppboyReactBridge.logCustomEvent(eventName, eventProperties);
   },
 
@@ -168,9 +177,18 @@ var ReactAppboy = {
   *      and at most 100.
   * @param {object} [purchaseProperties] - Hash of properties for this purchase. Keys are limited to 255
   *      characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
-  *      Values can be numeric, boolean, or strings 255 characters or shorter.
+  *      Values can be numeric, boolean, Date, or strings 255 characters or shorter.
   */
   logPurchase: function(productId, price, currencyCode, quantity, purchaseProperties) {
+    for (var key in purchaseProperties) {
+      if (purchaseProperties[key] instanceof Date){
+        var dateProp = purchaseProperties[key];
+        purchaseProperties[key] = {
+          type: "UNIX_timestamp",
+          value: dateProp.valueOf()
+        }
+      }
+    }
     AppboyReactBridge.logPurchase(productId, price, currencyCode, quantity, purchaseProperties);
   },
 

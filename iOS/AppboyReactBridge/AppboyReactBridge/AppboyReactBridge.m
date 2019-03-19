@@ -86,7 +86,23 @@ RCT_EXPORT_METHOD(submitFeedback:(NSString *)replyToEmail message:(NSString *)me
 
 RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable NSDictionary *)properties) {
   RCTLogInfo(@"[Appboy sharedInstance] logCustomEvent with eventName %@", eventName);
-  [[Appboy sharedInstance] logCustomEvent:eventName withProperties:properties];
+  NSMutableDictionary *transformedProperties = [properties mutableCopy];
+  for (NSString* key in properties) {
+    if ([properties[key] isKindOfClass:[NSDictionary class]]) {
+      NSDictionary* value = properties[key];
+      NSString* type = value[@"type"];
+      if ([type isEqualToString:@"UNIX_timestamp"]) {
+        double timestamp = [value[@"value"] doubleValue];
+        NSDate* nativeDate = [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
+        [transformedProperties setObject:nativeDate forKey:key];
+      } else {
+        [transformedProperties removeObjectForKey:key];
+        RCTLogInfo(@"[Appboy sharedInstance] logCustomEvent property not supported %@", type);
+      }
+    }
+  }
+
+  [[Appboy sharedInstance] logCustomEvent:eventName withProperties:transformedProperties];
 }
 
 RCT_EXPORT_METHOD(logPurchase:(NSString *)productIdentifier atPrice:(NSString *)price inCurrency:(NSString *)currencyCode withQuantity:(NSUInteger)quantity andProperties:(nullable NSDictionary *)properties) {

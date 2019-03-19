@@ -19,12 +19,11 @@
       android:theme="@style/AppTheme">
       <activity android:name="com.appboy.ui.activities.AppboyFeedActivity" android:theme="@android:style/Theme" />
       <activity android:name="com.appboy.ui.AppboyWebViewActivity" android:theme="@android:style/Theme" />
-      <receiver android:name="com.appboy.AppboyFcmReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
+      <service android:name="com.appboy.AppboyFirebaseMessagingService">
         <intent-filter>
-          <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-          <category android:name="com.appboyproject" />
+          <action android:name="com.google.firebase.MESSAGING_EVENT" />
         </intent-filter>
-      </receiver>
+      </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

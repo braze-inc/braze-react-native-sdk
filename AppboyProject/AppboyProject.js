@@ -307,7 +307,8 @@ class AppboyProject extends Component {
     this._showToast('User changed to: ' + this.state.userIdText);
   }
   _logCustomEventPress(event) {
-    ReactAppboy.logCustomEvent(this.state.customEventText, {'p1': 'p2'});
+    var testDate = new Date();
+    ReactAppboy.logCustomEvent(this.state.customEventText, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate});
     this._showToast('Event logged: ' + this.state.customEventText);
   }
   _setLanguagePress(event) {
@@ -353,7 +354,8 @@ class AppboyProject extends Component {
     }
   }
   _logPurchasePress(event) {
-    ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'pp1': 'pp2'});
+    var testDate = new Date();
+    ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate});
     this._showToast('Purchase logged');
   }
   _submitFeedbackPress(event) {
