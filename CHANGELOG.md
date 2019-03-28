@@ -1,3 +1,10 @@
+## 1.11.1
+
+##### Added
+- Added Typescript definitions for the `Appboy` interface.
+  - Thanks @ahanriat and @josin for your contributions! See https://github.com/Appboy/appboy-react-sdk/pull/57 and https://github.com/Appboy/appboy-react-sdk/pull/38.
+  - Note that certain less-used parts of the API were excluded. Please file an issue if you would like specific method(s) added.
+
 ## 1.11.0
 
 ##### Breaking
