@@ -16,6 +16,7 @@ import com.appboy.models.outgoing.FacebookUser;
 import com.appboy.models.outgoing.TwitterUser;
 import com.appboy.services.AppboyLocationService;
 import com.appboy.support.AppboyLogger;
+import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -393,6 +394,13 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void launchNewsFeed() {
     Intent intent = new Intent(getCurrentActivity(), AppboyFeedActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    this.getReactApplicationContext().startActivity(intent);
+  }
+
+  @ReactMethod
+  public void launchContentCards() {
+    Intent intent = new Intent(getCurrentActivity(), AppboyContentCardsActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     this.getReactApplicationContext().startActivity(intent);
   }

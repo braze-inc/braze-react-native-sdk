@@ -1,3 +1,11 @@
+## 1.12.0
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 3.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#330).
+
+##### Added
+- Added `ReactAppboy.launchContentCards()` for launching the content cards UI.
+
 ## 1.11.1
 
 ##### Added

@@ -6,6 +6,7 @@
 #import "AppboyReactUtils.h"
 #import "ABKModalFeedbackViewController.h"
 #import "ABKNewsFeedViewController.h"
+#import "ABKContentCardsViewController.h"
 
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
@@ -281,6 +282,15 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
   UIViewController *mainViewController = keyWindow.rootViewController;
   [mainViewController presentViewController:feedModal animated:YES completion:nil];
+}
+
+RCT_EXPORT_METHOD(launchContentCards) {
+  RCTLogInfo(@"launchContentCards called");
+  ABKContentCardsViewController *contentCardsModal = [[ABKContentCardsViewController alloc] init];
+  contentCardsModal.navigationItem.title = @"Content Cards";
+  UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+  UIViewController *mainViewController = keyWindow.rootViewController;
+  [mainViewController presentViewController:contentCardsModal animated:YES completion:nil];
 }
 
 - (ABKCardCategory)getCardCategoryForString:(NSString *)category {

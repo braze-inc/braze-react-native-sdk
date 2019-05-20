@@ -252,6 +252,10 @@ class AppboyProject extends Component {
           <Text>Request Feed Refresh</Text>
         </TouchableHighlight>
         <TouchableHighlight
+          onPress={this._launchContentCardsPress}>
+          <Text>Launch Content Cards</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
           onPress={this._requestContentCardsRefresh}>
           <Text>Request Content Cards Refresh</Text>
         </TouchableHighlight>
@@ -394,6 +398,9 @@ class AppboyProject extends Component {
   }
   _launchNewsFeedPress(event) {
     ReactAppboy.launchNewsFeed();
+  }
+  _launchContentCardsPress(event) {
+    ReactAppboy.launchContentCards();
   }
   _launchFeedbackPress(event) {
     ReactAppboy.launchFeedback();

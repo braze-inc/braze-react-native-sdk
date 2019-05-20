@@ -447,6 +447,14 @@ var ReactAppboy = {
     AppboyReactBridge.launchNewsFeed();
   },
 
+  // Content Cards
+  /**
+  * Launches the Content Cards UI element.
+  */
+  launchContentCards: function() {
+    AppboyReactBridge.launchContentCards();
+  },
+
   /**
    * Requests a News Feed refresh.
    */
