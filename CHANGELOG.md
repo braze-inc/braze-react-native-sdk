@@ -1,3 +1,10 @@
+## 1.13.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.15.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.15.0).
+  - This release of the iOS SDK added support for SDWebImage version 5.0.
+  - Note that upgrading to SDWebImage 5.0 also removed the FLAnimatedImage transitive dependency.
+
 ## 1.12.0
 
 ##### Breaking
