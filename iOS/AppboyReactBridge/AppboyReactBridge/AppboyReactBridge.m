@@ -8,6 +8,8 @@
 #import "ABKNewsFeedViewController.h"
 #import "ABKContentCardsViewController.h"
 
+static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
+
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                    (@{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed),@"optedin":@(ABKOptedIn)}),
@@ -15,10 +17,12 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                    integerValue);
 @end
 
-@implementation AppboyReactBridge
 
-- (dispatch_queue_t)methodQueue
-{
+@implementation AppboyReactBridge {
+  bool hasListeners;
+}
+
+- (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
 }
 
@@ -26,9 +30,27 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
   return YES;
 }
 
-- (NSDictionary *)constantsToExport
-{
-  return @{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed),@"optedin":@(ABKOptedIn)};
+- (void)startObserving {
+  hasListeners = YES;
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(handleContentCardsUpdated:)
+                                               name:ABKContentCardsProcessedNotification
+                                             object:nil];
+}
+
+- (void)stopObserving {
+  hasListeners = NO;
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (NSArray<NSString *> *)supportedEvents {
+  return @[
+    kContentCardsUpdatedEvent
+  ];
+}
+
+- (NSDictionary *)constantsToExport {
+  return @{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed), @"optedin":@(ABKOptedIn)};
 };
 
 - (void)reportResultWithCallback:(RCTResponseSenderBlock)callback andError:(NSString *)error andResult:(id)result {
@@ -61,26 +83,22 @@ RCT_EXPORT_METHOD(getInstallTrackingId:(RCTResponseSenderBlock)callback) {
   [self reportResultWithCallback:callback andError:nil andResult:[[Appboy sharedInstance] getDeviceId]];
 }
 
-RCT_EXPORT_METHOD(changeUser:(NSString *)userId)
-{
+RCT_EXPORT_METHOD(changeUser:(NSString *)userId) {
   RCTLogInfo(@"[Appboy sharedInstance] changeUser with value %@", userId);
   [[Appboy sharedInstance] changeUser:userId];
 }
 
-RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabel)
-{
+RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabel) {
   RCTLogInfo(@"[Appboy sharedInstance].user addAlias with values %@ %@", aliasName, aliasLabel);
   [[Appboy sharedInstance].user addAlias:aliasName withLabel:aliasLabel];
 }
 
-RCT_EXPORT_METHOD(registerPushToken:(NSString *)token)
-{
+RCT_EXPORT_METHOD(registerPushToken:(NSString *)token) {
   RCTLogInfo(@"[Appboy sharedInstance] registerPushToken with value %@", token);
   [[Appboy sharedInstance] registerPushToken:token];
 }
 
-RCT_EXPORT_METHOD(submitFeedback:(NSString *)replyToEmail message:(NSString *)message isReportingABug:(BOOL)isReportingABug callback:(RCTResponseSenderBlock)callback)
-{
+RCT_EXPORT_METHOD(submitFeedback:(NSString *)replyToEmail message:(NSString *)message isReportingABug:(BOOL)isReportingABug callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance] submitFeedback with values %@ %@ %@", replyToEmail, message, isReportingABug ? @"true" : @"false");
   [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance] submitFeedback:replyToEmail message:message isReportingABug:isReportingABug])];
 }
@@ -284,6 +302,41 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   [mainViewController presentViewController:feedModal animated:YES completion:nil];
 }
 
+
+#pragma mark - Content Cards
+
+- (void)handleContentCardsUpdated:(NSNotification *)notification {
+  BOOL updateIsSuccessful = [notification.userInfo[ABKContentCardsProcessedIsSuccessfulKey] boolValue];
+  if (hasListeners) {
+    RCTLogInfo(@"contentCardsUpdated sent to the bridge");
+    [self sendEventWithName:kContentCardsUpdatedEvent body:@(updateIsSuccessful)];
+  }
+}
+
+- (NSArray *)getMappedContentCards {
+  NSArray<ABKContentCard *> *cards = [[Appboy sharedInstance].contentCardsController getContentCards];
+
+  NSMutableArray *mappedCards = [NSMutableArray arrayWithCapacity:[cards count]];
+  [cards enumerateObjectsUsingBlock:^(id card, NSUInteger idx, BOOL *stop) {
+    [mappedCards addObject:RCTFormatContentCard(card)];
+  }];
+
+  return mappedCards;
+}
+
+- (nullable ABKContentCard *)getContentCardById:(NSString *)idString {
+  NSArray<ABKContentCard *> *cards = [[Appboy sharedInstance].contentCardsController getContentCards];
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"idString == %@", idString];
+  NSArray *filteredArray = [cards filteredArrayUsingPredicate:predicate];
+
+  if ([filteredArray count]) {
+    // TODO: is it fair check? Braze should not provide cards with duplicated idString
+    return filteredArray[0];
+  }
+
+  return nil;
+}
+
 RCT_EXPORT_METHOD(launchContentCards) {
   RCTLogInfo(@"launchContentCards called");
   ABKContentCardsViewController *contentCardsModal = [[ABKContentCardsViewController alloc] init];
@@ -292,6 +345,93 @@ RCT_EXPORT_METHOD(launchContentCards) {
   UIViewController *mainViewController = keyWindow.rootViewController;
   [mainViewController presentViewController:contentCardsModal animated:YES completion:nil];
 }
+
+RCT_EXPORT_METHOD(requestContentCardsRefresh) {
+  RCTLogInfo(@"requestContentCardsRefresh called");
+  [[Appboy sharedInstance] requestContentCardsRefresh];
+}
+
+RCT_REMAP_METHOD(getContentCards, getContentCardsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getContentCards called");
+  resolve([self getMappedContentCards]);
+}
+
+RCT_EXPORT_METHOD(logContentCardClicked:(NSString *)idString) {
+  ABKContentCard * cardToClick = [self getContentCardById:idString];
+  RCTLogInfo(@"logContentCardClicked with idString %@", idString);
+  if (cardToClick) {
+    [cardToClick logContentCardClicked];
+  }
+}
+
+RCT_EXPORT_METHOD(logContentCardDismissed:(NSString *)idString) {
+  ABKContentCard * cardToClick = [self getContentCardById:idString];
+  RCTLogInfo(@"logContentCardDismissed with idString %@", idString);
+  if (cardToClick) {
+    [cardToClick logContentCardDismissed];
+  }
+}
+
+RCT_EXPORT_METHOD(logContentCardImpression:(NSString *)idString) {
+  ABKContentCard * cardToClick = [self getContentCardById:idString];
+  RCTLogInfo(@"logContentCardImpression with idString %@", idString);
+  if (cardToClick) {
+    [cardToClick logContentCardImpression];
+  }
+}
+
+RCT_EXPORT_METHOD(logContentCardsDisplayed) {
+  RCTLogInfo(@"logContentCardsDisplayed called");
+  [[Appboy sharedInstance] logContentCardsDisplayed];
+}
+
+static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
+  NSMutableDictionary *formattedContentCardData = [NSMutableDictionary dictionary];
+
+  formattedContentCardData[@"id"] = card.idString;
+  formattedContentCardData[@"created"] = @(card.created);
+  formattedContentCardData[@"expiresAt"] = @(card.expiresAt);
+  formattedContentCardData[@"viewed"] = @(card.viewed);
+  formattedContentCardData[@"clicked"] = @(card.clicked);
+  formattedContentCardData[@"pinned"] = @(card.pinned);
+  formattedContentCardData[@"dismissed"] = @(card.dismissed);
+  formattedContentCardData[@"dismissible"] = @(card.dismissible);
+  formattedContentCardData[@"url"] = RCTNullIfNil(card.urlString);
+  formattedContentCardData[@"openURLInWebView"] = @(card.openUrlInWebView);
+
+  formattedContentCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
+
+  if ([card isKindOfClass:[ABKCaptionedImageContentCard class]]) {
+    ABKCaptionedImageContentCard *captionedCard = (ABKCaptionedImageContentCard *)card;
+    formattedContentCardData[@"image"] = captionedCard.image;
+    formattedContentCardData[@"imageAspectRatio"] = @(captionedCard.imageAspectRatio);
+    formattedContentCardData[@"title"] = captionedCard.title;
+    formattedContentCardData[@"cardDescription"] = captionedCard.cardDescription;
+    formattedContentCardData[@"domain"] = RCTNullIfNil(captionedCard.domain);
+    formattedContentCardData[@"type"] = @"Captioned";
+  }
+
+  if ([card isKindOfClass:[ABKBannerContentCard class]]) {
+    ABKBannerContentCard *bannerCard = (ABKBannerContentCard *)card;
+    formattedContentCardData[@"image"] = bannerCard.image;
+    formattedContentCardData[@"imageAspectRatio"] = @(bannerCard.imageAspectRatio);
+    formattedContentCardData[@"type"] = @"Banner";
+  }
+
+  if ([card isKindOfClass:[ABKClassicContentCard class]]) {
+    ABKClassicContentCard *classicCard = (ABKClassicContentCard *)card;
+    formattedContentCardData[@"image"] = RCTNullIfNil(classicCard.image);
+    formattedContentCardData[@"title"] = classicCard.title;
+    formattedContentCardData[@"cardDescription"] = classicCard.cardDescription;
+    formattedContentCardData[@"domain"] = RCTNullIfNil(classicCard.domain);
+    formattedContentCardData[@"type"] = @"Classic";
+  }
+
+  return formattedContentCardData;
+}
+
+
+#pragma mark - News Feed
 
 - (ABKCardCategory)getCardCategoryForString:(NSString *)category {
   ABKCardCategory cardCategory = 0;
@@ -309,6 +449,24 @@ RCT_EXPORT_METHOD(launchContentCards) {
     cardCategory = ABKCardCategoryAll;
   }
   return cardCategory;
+}
+
+RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
+  ABKCardCategory cardCategory = [self getCardCategoryForString:category];
+  if (cardCategory == 0) {
+    [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve card count.", category] andResult:nil];
+  } else {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].feedController cardCountForCategories:cardCategory])];
+  }
+}
+
+RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
+  ABKCardCategory cardCategory = [self getCardCategoryForString:category];
+  if (cardCategory == 0) {
+    [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve unread card count.", category] andResult:nil];
+  } else {
+    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].feedController unreadCardCountForCategories:cardCategory])];
+  }
 }
 
 RCT_EXPORT_METHOD(requestFeedRefresh) {
@@ -331,24 +489,6 @@ RCT_EXPORT_METHOD(requestLocationInitialization) {
   RCTLogInfo(@"Warning: This is an Android only feature.");
 }
 
-RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
-  ABKCardCategory cardCategory = [self getCardCategoryForString:category];
-  if (cardCategory == 0) {
-    [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve card count.", category] andResult:nil];
-  } else {
-    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].feedController cardCountForCategories:cardCategory])];
-  }
-}
-
-RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
-  ABKCardCategory cardCategory = [self getCardCategoryForString:category];
-  if (cardCategory == 0) {
-    [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid card category %@, could not retrieve unread card count.", category] andResult:nil];
-  } else {
-    [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].feedController unreadCardCountForCategories:cardCategory])];
-  }
-}
-
 RCT_EXPORT_METHOD(launchFeedback) {
   RCTLogInfo(@"launchFeedback called");
   ABKModalFeedbackViewController *feedbackModal = [[ABKModalFeedbackViewController alloc] init];
@@ -365,11 +505,6 @@ RCT_EXPORT_METHOD(requestImmediateDataFlush) {
 RCT_EXPORT_METHOD(setLocationCustomAttribute:(NSString *)key latitude:(double)latitude longitude:(double)longitude callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].user setLocationCustomAttribute:latitude:longitude:: =  %@", key);
   [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addLocationCustomAttributeWithKey:key latitude:latitude longitude:longitude])];
-}
-
-RCT_EXPORT_METHOD(requestContentCardsRefresh) {
-  RCTLogInfo(@"requestContentCardsRefresh called");
-  [[Appboy sharedInstance] requestContentCardsRefresh];
 }
 
 RCT_EXPORT_METHOD(hideCurrentInAppMessage) {
