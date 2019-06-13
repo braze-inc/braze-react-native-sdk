@@ -1,4 +1,12 @@
 const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
+const Platform = require('react-native').Platform;
+const NativeEventEmitter = require('react-native').NativeEventEmitter;
+const DeviceEventEmitter = require('react-native').DeviceEventEmitter;
+
+const AppBoyEventEmitter = Platform.select({
+  ios: new NativeEventEmitter(AppboyReactBridge),
+  android: DeviceEventEmitter
+});
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -447,14 +455,6 @@ var ReactAppboy = {
     AppboyReactBridge.launchNewsFeed();
   },
 
-  // Content Cards
-  /**
-  * Launches the Content Cards UI element.
-  */
-  launchContentCards: function() {
-    AppboyReactBridge.launchContentCards();
-  },
-
   /**
    * Requests a News Feed refresh.
    */
@@ -544,7 +544,14 @@ var ReactAppboy = {
     callFunctionWithCallback(AppboyReactBridge.setLocationCustomAttribute, [key, latitude, longitude], callback);
   },
 
-  // Refresh Content Cards
+  // region - Content Cards -
+  /**
+   * Launches the Content Cards UI element.
+   */
+  launchContentCards: function() {
+    AppboyReactBridge.launchContentCards();
+  },
+
   /**
   * Requests a refresh of the content cards from Appboy's servers.
   */
@@ -552,15 +559,78 @@ var ReactAppboy = {
     AppboyReactBridge.requestContentCardsRefresh();
   },
 
-  // Dismiss In App Message
+  /**
+   * Returns a content cards array
+   * @returns {Promise<ContentCard[]>}
+   */
+  getContentCards: async function() {
+    return AppboyReactBridge.getContentCards();
+  },
+
+  /**
+   * Manually log a click to Braze for a particular card.
+   * The SDK will only log a card click when the card has the url property with a valid value.
+   * @param {string} id
+   */
+  logContentCardClicked: function(id) {
+    AppboyReactBridge.logContentCardClicked(id);
+  },
+
+  /**
+   * Manually log a dismissal to Braze for a particular card.
+   * @param {string} id
+   */
+  logContentCardDismissed: function(id) {
+    AppboyReactBridge.logContentCardDismissed(id);
+  },
+
+  /**
+   * Manually log an impression to Braze for a particular card.
+   * @param {string} id
+   */
+  logContentCardImpression: function(id) {
+    AppboyReactBridge.logContentCardImpression(id);
+  },
+
+  /**
+   * When displaying the Content Cards in your own user interface,
+   * you can manually record Content Cards impressions via the method logContentCardsDisplayed;
+   */
+  logContentCardsDisplayed: function() {
+    AppboyReactBridge.logContentCardsDisplayed();
+  },
+  // endregion
+
+  // region - In App Messages -
   /**
   * Dismisses the currently displayed in app message.
   */
   hideCurrentInAppMessage: function() {
     AppboyReactBridge.hideCurrentInAppMessage();
   },
+  // endregion
 
-  // Enums
+  // region - Events -
+  /**
+   * Subscribes to the specific SDK event
+   * @param {AppBoyEvents} event
+   * @param {function} subscriber
+   */
+  addListener: function(event, subscriber) {
+    AppBoyEventEmitter.addListener(event, subscriber);
+  },
+
+  /**
+   * Removes subscriptions for the specific SDK event and subscriber
+   * @param {AppBoyEvents} event
+   * @param {function} subscriber
+   */
+  removeSubscription: function(event, subscriber) {
+    AppBoyEventEmitter.removeSubscription(event, subscriber);
+  },
+  // endregion
+
+  // region - Enums -
   CardCategory: {
     'ADVERTISING': 'advertising',
     'ANNOUNCEMENTS': 'announcements',
@@ -568,6 +638,16 @@ var ReactAppboy = {
     'SOCIAL': 'social',
     'NO_CATEGORY': 'no_category',
     'ALL': 'all'
+  },
+
+  ContentCardTypes: {
+    'CLASSIC': 'Classic',
+    'BANNER': 'Banner',
+    'CAPTIONED': 'Captioned'
+  },
+
+  AppBoyEvents: {
+    'CONTENT_CARDS_UPDATED': 'contentCardsUpdated'
   },
 
   NotificationSubscriptionTypes: {
@@ -591,6 +671,7 @@ var ReactAppboy = {
     'MINIMUM_CARD_MARGIN_FOR_IPHONE': 'minimumCardMarginForiPhone',
     'MINIMUM_CARD_MARGIN_FOR_IPAD': 'minimumCardMarginForiPad'
   }
+  // endregion
 };
 
 module.exports = ReactAppboy;
