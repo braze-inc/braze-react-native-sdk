@@ -152,12 +152,12 @@ var ReactAppboy = {
   logCustomEvent: function(eventName, eventProperties) {
     AppboyReactBridge.setSDKFlavor();
     for (var key in eventProperties) {
-      if (eventProperties[key] instanceof Date){
+      if (eventProperties[key] instanceof Date) {
         var dateProp = eventProperties[key];
         eventProperties[key] = {
-          type: "UNIX_timestamp",
+          type: 'UNIX_timestamp',
           value: dateProp.valueOf()
-        }
+        };
       }
     }
     AppboyReactBridge.logCustomEvent(eventName, eventProperties);
@@ -189,12 +189,12 @@ var ReactAppboy = {
   */
   logPurchase: function(productId, price, currencyCode, quantity, purchaseProperties) {
     for (var key in purchaseProperties) {
-      if (purchaseProperties[key] instanceof Date){
+      if (purchaseProperties[key] instanceof Date) {
         var dateProp = purchaseProperties[key];
         purchaseProperties[key] = {
-          type: "UNIX_timestamp",
+          type: 'UNIX_timestamp',
           value: dateProp.valueOf()
-        }
+        };
       }
     }
     AppboyReactBridge.logPurchase(productId, price, currencyCode, quantity, purchaseProperties);
