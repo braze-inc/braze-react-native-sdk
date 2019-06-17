@@ -3,7 +3,7 @@ const Platform = require('react-native').Platform;
 const NativeEventEmitter = require('react-native').NativeEventEmitter;
 const DeviceEventEmitter = require('react-native').DeviceEventEmitter;
 
-const AppBoyEventEmitter = Platform.select({
+const AppboyEventEmitter = Platform.select({
   ios: new NativeEventEmitter(AppboyReactBridge),
   android: DeviceEventEmitter
 });
@@ -613,20 +613,20 @@ var ReactAppboy = {
   // region - Events -
   /**
    * Subscribes to the specific SDK event
-   * @param {AppBoyEvents} event
+   * @param {AppboyEvents} event
    * @param {function} subscriber
    */
   addListener: function(event, subscriber) {
-    AppBoyEventEmitter.addListener(event, subscriber);
+    AppboyEventEmitter.addListener(event, subscriber);
   },
 
   /**
    * Removes subscriptions for the specific SDK event and subscriber
-   * @param {AppBoyEvents} event
+   * @param {AppboyEvents} event
    * @param {function} subscriber
    */
   removeSubscription: function(event, subscriber) {
-    AppBoyEventEmitter.removeSubscription(event, subscriber);
+    AppboyEventEmitter.removeSubscription(event, subscriber);
   },
   // endregion
 
@@ -646,7 +646,7 @@ var ReactAppboy = {
     'CAPTIONED': 'Captioned'
   },
 
-  AppBoyEvents: {
+  AppboyEvents: {
     'CONTENT_CARDS_UPDATED': 'contentCardsUpdated'
   },
 
