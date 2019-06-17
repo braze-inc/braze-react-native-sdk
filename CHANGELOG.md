@@ -1,3 +1,27 @@
+## vNext (Unreleased)
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 3.4.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#340).
+  - Please note the breaking push changes in release 3.1.1 regarding the AppboyFirebaseMessagingService before upgrading to this version.
+
+##### Added
+
+You can create your own Content Cards interface by using the following methods.
+You can create a completely custom view and subscribe for data updates.
+In the latter case, you would need to log all view events, dismissed events, and clicks manually.
+
+- Added `getContentCards` for getting content cards data.
+- Added `logContentCardsDisplayed` for manually logging all cards impressions.
+- Added `logContentCardClicked` for manually logging a click to Braze for a particular card.
+- Added `logContentCardImpression` for manually logging an impression to Braze for a particular card.
+- Added `logContentCardDismissed` for manually logging a dismissal to Braze for a particular card.
+- Added `addListener`, `removeListener` for subscribing to the events:
+  - `contentCardsUpdated` - content cards update succeed. You can use `getContentCards` to retrieve updated cards.
+
+##### Fixed
+- Added `addAlias` typescript definition.
+- Added `setLanguage` typescript definition.
+
 ## 1.13.0
 
 ##### Breaking
