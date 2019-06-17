@@ -309,7 +309,7 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   BOOL updateIsSuccessful = [notification.userInfo[ABKContentCardsProcessedIsSuccessfulKey] boolValue];
   if (hasListeners && updateIsSuccessful) {
     RCTLogInfo(@"contentCardsUpdated sent to the bridge");
-    [self sendEventWithName:kContentCardsUpdatedEvent body:kCFNull];
+    [self sendEventWithName:kContentCardsUpdatedEvent body:nil];
   }
 }
 
