@@ -307,9 +307,9 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
 
 - (void)handleContentCardsUpdated:(NSNotification *)notification {
   BOOL updateIsSuccessful = [notification.userInfo[ABKContentCardsProcessedIsSuccessfulKey] boolValue];
-  if (hasListeners) {
+  if (hasListeners && updateIsSuccessful) {
     RCTLogInfo(@"contentCardsUpdated sent to the bridge");
-    [self sendEventWithName:kContentCardsUpdatedEvent body:@(updateIsSuccessful)];
+    [self sendEventWithName:kContentCardsUpdatedEvent body:kCFNull];
   }
 }
 
