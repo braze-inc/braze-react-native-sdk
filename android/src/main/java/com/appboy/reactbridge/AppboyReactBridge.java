@@ -738,7 +738,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private void logContentCardDismissed(String id) {
     Card card = getCardById(id);
     if (card != null) {
-      card.card.setIsDismissed(true);
+      card.setIsDismissed(true);
     }
   }
 
