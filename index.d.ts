@@ -494,7 +494,7 @@ export const AppboyEvents : AppboyEvent;
  * @param {AppboyEvents} event
  * @param {function} subscriber
  */
-export function addListener(event: AppboyEvent, subscriber: Function);
+export function addListener(event: AppboyEvent[keyof AppboyEvent], subscriber: Function);
 
 /**
  * Removes subscriptions for the specific SDK event and subscriber
