@@ -12,6 +12,13 @@
 export function getInitialURL(callback: (deepLink: string) => void): void;
 
 /**
+ * Returns a unique device ID for install tracking. This method is equivalent to calling
+ * Appboy.getInstallTrackingId() on Android and returns the IDFV on iOS.
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function getInstallTrackingId(callback: Callback): void;
+
+/**
  * When a user first uses Appboy on a device they are considered "anonymous". Use this method to identify a user
  *    with a unique ID, which enables the following:
  *
@@ -47,6 +54,23 @@ export function getInitialURL(callback: (deepLink: string) => void): void;
 export function changeUser(userId: string): void;
 
 /**
+ * An alias serves as an alternative unique user identifier. Use aliases to identify users along different
+ *    dimensions than your core user ID:
+ *         logged in to a mobile app or website.
+ *       * Add the identifiers used by a third party vendor to your Braze users in order to more easily reconcile
+ *         your data externally.
+ *
+ * Note: Each alias consists of two parts: a name for the identifier itself, and a label indicating the type of
+ *    alias. Users can have multiple aliases with different labels, but only one name per label.
+ *
+ * @param {string} aliasName - An identifier for alias name.
+ * @param {string} aliasLabel - An identifier for alias label.
+ */
+export function addAlias(aliasName: string,
+  aliasLabel: string
+): void;
+
+/**
  * Sets the first name of the user.
  * @param {string} firstName - Limited to 255 characters in length.
  */
@@ -73,6 +97,12 @@ export function setGender(
   gender: GenderTypes[keyof GenderTypes],
   callback?: Callback
 ): void;
+
+/**
+ * Sets the language for the user.
+ * @param {string} language - Should be valid ISO 639-1 language code.
+ */
+export function setLanguage(language: string): void;
 
 /**
  * Sets the country for the user.
@@ -147,7 +177,7 @@ export function setEmailNotificationSubscriptionType(
  *      characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
  *      Values can be numeric, boolean, or strings 255 characters or shorter.
  */
-export function logCustomEvent(eventName: string, eventProperties: object): void;
+export function logCustomEvent(eventName: string, eventProperties?: object): void;
 
 /**
  * Reports that the current user made an in-app purchase. Useful for tracking and segmenting users.
@@ -168,7 +198,7 @@ export function logPurchase(
   price: string,
   currencyCode: string,
   quantity: number,
-  purchaseProperties: object
+  purchaseProperties?: object
 ): void;
 
 /**
@@ -300,11 +330,31 @@ export function setFacebookData(
 ): void;
 
 /**
+ * Sets user attribution data.
+ *
+ * @param {string} network - The attribution network
+ * @param {string} campaign - The attribution campaign
+ * @param {string} adGroup - The attribution adGroup
+ * @param {string} creative - The attribution creative
+ */
+export function setAttributionData(
+  network: string,
+  campaign: string,
+  adGroup: string,
+  creative: string
+): void;
+
+/**
  * Launches the News Feed UI element.
  * @param {object} launchOptions - An optional dictionary of News Feed launch options.
  * See NewsFeedLaunchOptions for supported keys.
  */
 export function launchNewsFeed(launchOptions: object): void;
+
+/**
+ * Launches the Content Cards UI element.
+ */
+export function launchContentCards(): void;
 
 /**
  * Returns the current number of News Feed cards for the given category.
@@ -346,6 +396,54 @@ export function launchFeedback(): void;
  * Requests an immediate flush of any data waiting to be sent to Appboy's servers.
  */
 export function requestImmediateDataFlush(): void;
+
+/**
+ * Wipes Data on the Braze SDK. On iOS, the SDK will be disabled for the rest of the app run.
+ */
+export function wipeData(): void;
+
+/**
+ * Disables the Braze SDK immediately.
+ */
+export function disableSDK(): void;
+
+/**
+ * Enables the Braze SDK after a previous call to disableSDK().
+ * On iOS, the SDK will be enabled only after a subsequent call to startWithApiKey().
+ */
+export function enableSDK(): void;
+
+/**
+ * Call this method once a user grants location permissions on Android
+ * to initialize Braze location features. Calling this method is a no-op on
+ * iOS.
+ */
+export function requestLocationInitialization(): void;
+
+/**
+ * Sets a custom location attribute for the user.
+ * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
+ * a $, and can only contain alphanumeric characters and punctuation.
+ * @param {number} latitude - Location latitude.
+ * @param {number} longitude - Location longitude.
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function setLocationCustomAttribute(
+  key: string,
+  latitude: number,
+  longitude: number,
+  callback?: Callback
+): void;
+
+/**
+ * Requests a refresh of the content cards from Appboy's servers.
+ */
+export function requestContentCardsRefresh(): void;
+
+/**
+ * Dismisses the currently displayed in app message.
+ */
+export function hideCurrentInAppMessage(): void;
 
 type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 

@@ -101,7 +101,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void logCustomEvent(String eventName, ReadableMap eventProperties) {
-    Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
+    if (eventProperties == null) {
+      Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName);
+    } else {
+      Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
+    }
   }
 
   private AppboyProperties populateEventPropertiesFromReadableMap(ReadableMap eventProperties) {
@@ -146,7 +150,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void logPurchase(String productIdentifier, String price, String currencyCode, int quantity, ReadableMap eventProperties) {
-    Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity, populateEventPropertiesFromReadableMap(eventProperties));
+    if (eventProperties == null) {
+      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity);
+    } else {
+      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity, populateEventPropertiesFromReadableMap(eventProperties));
+    }
   }
 
   @ReactMethod

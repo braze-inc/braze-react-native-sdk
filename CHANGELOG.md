@@ -1,3 +1,14 @@
+## 1.14.0
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 3.5.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#350).
+
+##### Fixed
+- Fixed an issue where logging custom events or purchases without event properties would cause crashes on Android, for example `logCustomEvent("event")`.
+
+##### Added
+- Added additional TypeScript definitions.
+
 ## 1.13.0
 
 ##### Breaking
