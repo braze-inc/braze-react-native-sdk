@@ -501,7 +501,7 @@ export function addListener(event: AppboyEvent[keyof AppboyEvent], subscriber: F
  * @param {AppboyEvents} event
  * @param {function} subscriber
  */
-export function removeSubscription(event: AppboyEvent, subscriber: Function);
+export function removeSubscription(event: AppboyEvent[keyof AppboyEvent], subscriber: Function);
 // endregion
 
 type Callback = (error: object, result: object) => void;
