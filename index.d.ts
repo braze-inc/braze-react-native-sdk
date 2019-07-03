@@ -1,6 +1,8 @@
 // Definitions by: ahanriat <https://github.com/ahanriat>
 // TypeScript Version: 3.0
 
+import { EmitterSubscription } from 'react-native';
+
 /**
  * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
  * support handling deep links embedded in push notifications. This is due to a race condition on startup between
@@ -494,14 +496,14 @@ export const AppboyEvents : AppboyEvent;
  * @param {AppboyEvents} event
  * @param {function} subscriber
  */
-export function addListener(event: AppboyEvent[keyof AppboyEvent], subscriber: Function);
+export function addListener(event: AppboyEvent[keyof AppboyEvent], subscriber: Function): EmitterSubscription;
 
 /**
  * Removes subscriptions for the specific SDK event and subscriber
  * @param {AppboyEvents} event
  * @param {function} subscriber
  */
-export function removeSubscription(event: AppboyEvent[keyof AppboyEvent], subscriber: Function);
+export function removeSubscription(event: AppboyEvent[keyof AppboyEvent], subscriber: Function): void;
 // endregion
 
 type Callback = (error: object, result: object) => void;

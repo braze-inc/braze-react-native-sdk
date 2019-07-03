@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/Appboy/appboy-react-sdk#readme",
   "devDependencies": {
+    "@types/react-native": "^0.57.65",
     "eslint": "^3.4.0",
     "eslint-config-standard": "^6.0.0",
     "eslint-config-standard-jsx": "^3.0.0",

@@ -617,7 +617,7 @@ var ReactAppboy = {
    * @param {function} subscriber
    */
   addListener: function(event, subscriber) {
-    AppboyEventEmitter.addListener(event, subscriber);
+    return AppboyEventEmitter.addListener(event, subscriber);
   },
 
   /**
