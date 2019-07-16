@@ -1,6 +1,5 @@
 package com.appboy.reactbridge;
 
-import android.app.Application;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
@@ -13,18 +12,12 @@ import java.util.List;
 
 public class AppboyReactPackage implements ReactPackage {
 
-  private final Application mApplication;
-
-  public AppboyReactPackage(Application application) {
-    mApplication = application;
-  }
-
   @Override
   public List<NativeModule> createNativeModules(
     ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new AppboyReactBridge(mApplication, reactContext));
+    modules.add(new AppboyReactBridge(reactContext));
     return modules;
   }
 

@@ -133,7 +133,7 @@ android {
 }
 
 dependencies {
-    def firebaseCoreVersion = project.hasProperty('firebaseCoreVersion') ? project.firebaseVersion : DEFAULT_FIREBASE_MESSAGING_VERSION
+    def firebaseCoreVersion = project.hasProperty('firebaseCoreVersion') ? project.firebaseCoreVersion : DEFAULT_FIREBASE_MESSAGING_VERSION
     def firebaseVersion = project.hasProperty('firebaseVersion') ? project.firebaseVersion : DEFAULT_FIREBASE_MESSAGING_VERSION
 
     // compile "com.google.firebase:firebase-messaging:15.0.0"

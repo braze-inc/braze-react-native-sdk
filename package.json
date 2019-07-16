@@ -1,8 +1,9 @@
 {
   "name": "react-native-appboy-sdk",
-  "version": "1.7.3",
+  "version": "1.14.0",
   "description": "Braze SDK for React Native.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint": "./node_modules/.bin/eslint index.js */**.js",
     "lint-fix": "./node_modules/.bin/eslint --fix index.js */**.js",
@@ -26,7 +27,7 @@
     "segmentation"
   ],
   "author": "Appboy",
-  "license": "MIT",
+  "license": "LICENSE.md",
   "bugs": {
     "url": "https://github.com/Appboy/appboy-react-sdk/issues"
   },
