@@ -682,8 +682,8 @@ var ReactAppboy = {
     AppboyReactBridge.hideCurrentInAppMessage()
   },
 
-  unviewedContentCardCount: function() {
-    AppboyReactBridge.unviewedContentCardCount()
+  unviewedContentCardCount: function(callback) {
+    AppboyReactBridge.unviewedContentCardCount(callback)
   },
 
   // Enums

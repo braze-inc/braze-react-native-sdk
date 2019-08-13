@@ -377,9 +377,12 @@ RCT_EXPORT_METHOD(hideCurrentInAppMessage) {
   [[Appboy sharedInstance].inAppMessageController.inAppMessageUIController hideCurrentInAppMessage:YES];
 }
 
-RCT_EXPORT_METHOD(unviewedContentCardCount) {
-  RCTLogInfo(@"unviewedContentCardCount called");
-  [[Appboy sharedInstance].contentCardsController unviewedContentCardCount];
+RCT_EXPORT_METHOD(unviewedContentCardCount:(RCTResponseSenderBlock)callback) {
+  NSInteger count = [[Appboy sharedInstance].contentCardsController unviewedContentCardCount];
+  RCTLogInfo(@"unviewedContentCardCount called %ld", (long)count);
+  NSNumber *unviewedContentCardCount = [NSNumber numberWithInteger:count];
+  RCTLogInfo(@"unviewedContentCardCount called %@", [unviewedContentCardCount stringValue]);
+  [self reportResultWithCallback:callback andError:nil andResult:unviewedContentCardCount];
 }
 
 RCT_EXPORT_MODULE();

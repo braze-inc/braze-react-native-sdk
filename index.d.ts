@@ -450,7 +450,7 @@ export function requestContentCardsRefresh(): void
  */
 export function hideCurrentInAppMessage(): void
 
-export function unviewedContentCardCount(): number
+export function unviewedContentCardCount(callback?: Callback): void
 
 type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
 
