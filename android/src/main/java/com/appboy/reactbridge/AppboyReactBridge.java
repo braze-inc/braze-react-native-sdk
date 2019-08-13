@@ -57,10 +57,14 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     return "AppboyReactBridge";
   }
 
-  // Note that for non-primitive or non-String arguments, Callbacks must be invoked with `Writable`
-  // components from the `com.facebook.react.bridge` package (e.g., `WritableArray` or `WritableMap`).
-  // Attempting to pass other types will result in a "Cannot convert argument of type class X" error.
-  // For reference: https://github.com/facebook/react-native/issues/3101#issuecomment-143954448
+  // Note that for non-primitive or non-String arguments, Callbacks must be
+  // invoked with `Writable`
+  // components from the `com.facebook.react.bridge` package (e.g.,
+  // `WritableArray` or `WritableMap`).
+  // Attempting to pass other types will result in a "Cannot convert argument of
+  // type class X" error.
+  // For reference:
+  // https://github.com/facebook/react-native/issues/3101#issuecomment-143954448
   private void reportResultWithCallback(Callback callback, String error, Object result) {
     if (callback != null) {
       if (error != null) {
@@ -75,8 +79,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setSDKFlavor() {
-    // Dummy method required for the iOS SDK flavor implementation; see AppboyReactBridge.setSDKFlavor()
-    // in index.js. The Android bridge sets the REACT SDK flavor via an appboy.xml parameter.
+    // Dummy method required for the iOS SDK flavor implementation; see
+    // AppboyReactBridge.setSDKFlavor()
+    // in index.js. The Android bridge sets the REACT SDK flavor via an appboy.xml
+    // parameter.
   }
 
   @ReactMethod
@@ -104,7 +110,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     if (eventProperties == null) {
       Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName);
     } else {
-      Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
+      Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName,
+          populateEventPropertiesFromReadableMap(eventProperties));
     }
   }
 
@@ -133,7 +140,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
           try {
             if (eventProperties.getMap(key).getString("type").equals("UNIX_timestamp")) {
               double unixTimestamp = eventProperties.getMap(key).getDouble("value");
-              properties.addProperty(key, new Date((long)unixTimestamp));
+              properties.addProperty(key, new Date((long) unixTimestamp));
             } else {
               AppboyLogger.e(TAG, "Unsupported ReadableMap type received for key: " + key);
             }
@@ -149,54 +156,64 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void logPurchase(String productIdentifier, String price, String currencyCode, int quantity, ReadableMap eventProperties) {
+  public void logPurchase(String productIdentifier, String price, String currencyCode, int quantity,
+      ReadableMap eventProperties) {
     if (eventProperties == null) {
-      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity);
+      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode,
+          new BigDecimal(price), quantity);
     } else {
-      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity, populateEventPropertiesFromReadableMap(eventProperties));
+      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode,
+          new BigDecimal(price), quantity, populateEventPropertiesFromReadableMap(eventProperties));
     }
   }
 
   @ReactMethod
   public void submitFeedback(String replyToEmail, String message, boolean isReportingABug, Callback callback) {
     Appboy.getInstance(getReactApplicationContext()).submitFeedback(replyToEmail, message, isReportingABug);
-    // Always return true as Android doesn't support getting a result from submitFeedback().
+    // Always return true as Android doesn't support getting a result from
+    // submitFeedback().
     reportResultWithCallback(callback, null, true);
   }
 
   @ReactMethod
   public void setStringCustomUserAttribute(String key, String value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key,
+        value);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void setBoolCustomUserAttribute(String key, Boolean value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key,
+        value);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void setIntCustomUserAttribute(String key, int value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key,
+        value);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void setDoubleCustomUserAttribute(String key, float value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key,
+        value);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void setDateCustomUserAttribute(String key, int timeStamp, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttributeToSecondsFromEpoch(key, timeStamp);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser()
+        .setCustomUserAttributeToSecondsFromEpoch(key, timeStamp);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void incrementCustomUserAttribute(String key, int incrementValue, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().incrementCustomUserAttribute(key, incrementValue);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().incrementCustomUserAttribute(key,
+        incrementValue);
     reportResultWithCallback(callback, null, result);
   }
 
@@ -213,19 +230,22 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     for (int i = 0; i < size; i++) {
       attributeArray[i] = value.getString(i);
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomAttributeArray(key, attributeArray);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomAttributeArray(key,
+        attributeArray);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void addToCustomAttributeArray(String key, String value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().addToCustomAttributeArray(key, value);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().addToCustomAttributeArray(key,
+        value);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
   public void removeFromCustomAttributeArray(String key, String value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().removeFromCustomAttributeArray(key, value);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser()
+        .removeFromCustomAttributeArray(key, value);
     reportResultWithCallback(callback, null, result);
   }
 
@@ -304,7 +324,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   public void setPushNotificationSubscriptionType(String subscriptionType, Callback callback) {
     NotificationSubscriptionType notificationSubscriptionType;
     if (subscriptionType == null) {
-      reportResultWithCallback(callback, "Input subscription type was null. Push notification subscription type not set.", null);
+      reportResultWithCallback(callback,
+          "Input subscription type was null. Push notification subscription type not set.", null);
       return;
     } else if (subscriptionType.equals("subscribed")) {
       notificationSubscriptionType = NotificationSubscriptionType.SUBSCRIBED;
@@ -313,10 +334,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     } else if (subscriptionType.equals("optedin")) {
       notificationSubscriptionType = NotificationSubscriptionType.OPTED_IN;
     } else {
-      reportResultWithCallback(callback, "Invalid subscription type " + subscriptionType + ". Push notification subscription type not set.", null);
+      reportResultWithCallback(callback,
+          "Invalid subscription type " + subscriptionType + ". Push notification subscription type not set.", null);
       return;
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setPushNotificationSubscriptionType(notificationSubscriptionType);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser()
+        .setPushNotificationSubscriptionType(notificationSubscriptionType);
     reportResultWithCallback(callback, null, result);
   }
 
@@ -324,7 +347,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   public void setEmailNotificationSubscriptionType(String subscriptionType, Callback callback) {
     NotificationSubscriptionType notificationSubscriptionType;
     if (subscriptionType == null) {
-      reportResultWithCallback(callback, "Input subscription type was null. Email notification subscription type not set.", null);
+      reportResultWithCallback(callback,
+          "Input subscription type was null. Email notification subscription type not set.", null);
       return;
     } else if (subscriptionType.equals("subscribed")) {
       notificationSubscriptionType = NotificationSubscriptionType.SUBSCRIBED;
@@ -333,16 +357,20 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     } else if (subscriptionType.equals("optedin")) {
       notificationSubscriptionType = NotificationSubscriptionType.OPTED_IN;
     } else {
-      reportResultWithCallback(callback, "Invalid subscription type " + subscriptionType + ". Email notification subscription type not set.", null);
+      reportResultWithCallback(callback,
+          "Invalid subscription type " + subscriptionType + ". Email notification subscription type not set.", null);
       return;
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setEmailNotificationSubscriptionType(notificationSubscriptionType);
+    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser()
+        .setEmailNotificationSubscriptionType(notificationSubscriptionType);
     reportResultWithCallback(callback, null, result);
   }
 
   @ReactMethod
-  public void setTwitterData(Integer id, String screenName, String name, String description, Integer followersCount, Integer friendsCount, Integer statusesCount, String profileImageUrl) {
-    TwitterUser twitterUser = new TwitterUser(id, screenName, name, description, followersCount, friendsCount, statusesCount, profileImageUrl);
+  public void setTwitterData(Integer id, String screenName, String name, String description, Integer followersCount,
+      Integer friendsCount, Integer statusesCount, String profileImageUrl) {
+    TwitterUser twitterUser = new TwitterUser(id, screenName, name, description, followersCount, friendsCount,
+        statusesCount, profileImageUrl);
     Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setTwitterData(twitterUser);
   }
 
@@ -394,8 +422,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         cityName = location.getString("name");
       }
     }
-    FacebookUser facebookUser = new FacebookUser(facebookId, firstName, lastName, email,
-            bio, cityName, genderEnum, numberOfFriends, likesList, birthday);
+    FacebookUser facebookUser = new FacebookUser(facebookId, firstName, lastName, email, bio, cityName, genderEnum,
+        numberOfFriends, likesList, birthday);
     Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setFacebookData(facebookUser);
   }
 
@@ -428,12 +456,14 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     return cardCategory;
   }
 
-  // Registers a short-lived FeedUpdatedEvent subscriber, requests a feed refresh from cache, and and returns the requested card count in the callback
+  // Registers a short-lived FeedUpdatedEvent subscriber, requests a feed refresh
+  // from cache, and and returns the requested card count in the callback
   private void getCardCountForTag(final String category, final Callback callback, String cardCountTag) {
     final CardCategory cardCategory = getCardCategoryFromString(category);
     // Note that Android does not have a CardCategory.ALL enum, while iOS does
     if (category == null || (cardCategory == null && !category.equals("all"))) {
-      reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve" + cardCountTag, null);
+      reportResultWithCallback(callback, "Invalid card category " + category + ", could not retrieve" + cardCountTag,
+          null);
       return;
     }
 
@@ -446,9 +476,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
         @Override
         public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
-          // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
+          // Callback blocks (error or result) may only be invoked once, else React Native
+          // throws an error.
           synchronized (mCallbackWasCalledMapLock) {
-            if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
+            if (mCallbackWasCalledMap.get(callback) == null
+                || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
               mCallbackWasCalledMap.put(callback, new Boolean(true));
               if (category.equals("all")) {
                 reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount());
@@ -458,7 +490,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
             }
           }
           // Remove this listener from the feed subscriber map and from Appboy
-          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback),
+              FeedUpdatedEvent.class);
           mFeedSubscriberMap.remove(callback);
         }
       };
@@ -468,9 +501,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
         @Override
         public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
-          // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
+          // Callback blocks (error or result) may only be invoked once, else React Native
+          // throws an error.
           synchronized (mCallbackWasCalledMapLock) {
-            if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback)!= null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
+            if (mCallbackWasCalledMap.get(callback) == null
+                || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
               mCallbackWasCalledMap.put(callback, new Boolean(true));
               if (category.equals("all")) {
                 reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount());
@@ -480,7 +515,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
             }
           }
           // Remove this listener from the feed subscriber map and from Appboy
-          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback),
+              FeedUpdatedEvent.class);
           mFeedSubscriberMap.remove(callback);
         }
       };
@@ -488,7 +524,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     }
 
     if (requestingFeedUpdateFromCache) {
-      // Put the subscriber into a map so we can remove it later from future subscriptions
+      // Put the subscriber into a map so we can remove it later from future
+      // subscriptions
       mFeedSubscriberMap.put(callback, feedUpdatedSubscriber);
       Appboy.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
       Appboy.getInstance(getReactApplicationContext()).requestFeedRefreshFromCache();
@@ -532,8 +569,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setLocationCustomAttribute(String key, Double latitude, Double longitude, Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLocationCustomAttribute(key, latitude, longitude);
-    // Always return true as Android doesn't support getting a result from setLocationCustomAttribute().
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLocationCustomAttribute(key, latitude,
+        longitude);
+    // Always return true as Android doesn't support getting a result from
+    // setLocationCustomAttribute().
     reportResultWithCallback(callback, null, true);
   }
 
@@ -545,6 +584,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void hideCurrentInAppMessage() {
     AppboyInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
+  }
+
+  @ReactMethod
+  public void unviewedContentCardCount() {
+    AppboyInAppMessageManager.getInstance().unviewedContentCardCount();
   }
 
   @ReactMethod
@@ -560,32 +604,32 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   private Month parseMonth(int monthInt) {
     switch (monthInt) {
-      case 1:
-        return Month.JANUARY;
-      case 2:
-        return Month.FEBRUARY;
-      case 3:
-        return Month.MARCH;
-      case 4:
-        return Month.APRIL;
-      case 5:
-        return Month.MAY;
-      case 6:
-        return Month.JUNE;
-      case 7:
-        return Month.JULY;
-      case 8:
-        return Month.AUGUST;
-      case 9:
-        return Month.SEPTEMBER;
-      case 10:
-        return Month.OCTOBER;
-      case 11:
-        return Month.NOVEMBER;
-      case 12:
-        return Month.DECEMBER;
-      default:
-        return null;
+    case 1:
+      return Month.JANUARY;
+    case 2:
+      return Month.FEBRUARY;
+    case 3:
+      return Month.MARCH;
+    case 4:
+      return Month.APRIL;
+    case 5:
+      return Month.MAY;
+    case 6:
+      return Month.JUNE;
+    case 7:
+      return Month.JULY;
+    case 8:
+      return Month.AUGUST;
+    case 9:
+      return Month.SEPTEMBER;
+    case 10:
+      return Month.OCTOBER;
+    case 11:
+      return Month.NOVEMBER;
+    case 12:
+      return Month.DECEMBER;
+    default:
+      return null;
     }
   }
 }

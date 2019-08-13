@@ -9,14 +9,14 @@
  * @param {function(string)} callback - A callback that retuns the deep link as a string. If there is no deep link,
  * returns null.
  */
-export function getInitialURL(callback: (deepLink: string) => void): void;
+export function getInitialURL(callback: (deepLink: string) => void): void
 
 /**
  * Returns a unique device ID for install tracking. This method is equivalent to calling
  * Appboy.getInstallTrackingId() on Android and returns the IDFV on iOS.
  * @param {function(error, result)} callback - A callback that receives the function call result.
  */
-export function getInstallTrackingId(callback: Callback): void;
+export function getInstallTrackingId(callback: Callback): void
 
 /**
  * When a user first uses Appboy on a device they are considered "anonymous". Use this method to identify a user
@@ -51,7 +51,7 @@ export function getInstallTrackingId(callback: Callback): void;
  *
  * @param {string} userId - A unique identifier for this user.
  */
-export function changeUser(userId: string): void;
+export function changeUser(userId: string): void
 
 /**
  * An alias serves as an alternative unique user identifier. Use aliases to identify users along different
@@ -66,27 +66,25 @@ export function changeUser(userId: string): void;
  * @param {string} aliasName - An identifier for alias name.
  * @param {string} aliasLabel - An identifier for alias label.
  */
-export function addAlias(aliasName: string,
-  aliasLabel: string
-): void;
+export function addAlias(aliasName: string, aliasLabel: string): void
 
 /**
  * Sets the first name of the user.
  * @param {string} firstName - Limited to 255 characters in length.
  */
-export function setFirstName(firstName: string): void;
+export function setFirstName(firstName: string): void
 
 /**
  * Sets the last name of the user.
  * @param {string} lastName - Limited to 255 characters in length.
  */
-export function setLastName(lastName: string): void;
+export function setLastName(lastName: string): void
 
 /**
  * Sets the email address of the user.
  * @param {string} email - Must pass RFC-5322 email address validation.
  */
-export function setEmail(email: string): void;
+export function setEmail(email: string): void
 
 /**
  * Sets the gender of the user.
@@ -96,39 +94,39 @@ export function setEmail(email: string): void;
 export function setGender(
   gender: GenderTypes[keyof GenderTypes],
   callback?: Callback
-): void;
+): void
 
 /**
  * Sets the language for the user.
  * @param {string} language - Should be valid ISO 639-1 language code.
  */
-export function setLanguage(language: string): void;
+export function setLanguage(language: string): void
 
 /**
  * Sets the country for the user.
  * @param {string} country - Limited to 255 characters in length.
  */
-export function setCountry(country: string): void;
+export function setCountry(country: string): void
 
 /**
  * Sets the home city for the user.
  * @param {string} homeCity - Limited to 255 characters in length.
  */
-export function setHomeCity(homeCity: string): void;
+export function setHomeCity(homeCity: string): void
 
 /**
  * Sets the phone number of the user.
  * @param {string} phoneNumber - A phone number is considered valid if it is no more than 255 characters in length and
  *    contains only numbers, whitespace, and the following special characters +.-()
  */
-export function setPhoneNumber(phoneNumber: string): void;
+export function setPhoneNumber(phoneNumber: string): void
 
 /**
  * Sets the url for the avatar image for the user, which will be displayed on the user profile and throughout
  * the Appboy dashboard.
  * @param {string} avatarImageUrl
  */
-export function setAvatarImageUrl(avatarImageUrl: string): void;
+export function setAvatarImageUrl(avatarImageUrl: string): void
 
 /**
  * Sets the date of birth of the user.
@@ -136,14 +134,18 @@ export function setAvatarImageUrl(avatarImageUrl: string): void;
  * @param {MonthsAsNumber} month - 1-12
  * @param {number} day
  */
-export function setDateOfBirth(year: number, month: MonthsAsNumber, day: number): void;
+export function setDateOfBirth(
+  year: number,
+  month: MonthsAsNumber,
+  day: number
+): void
 
 /**
  * This method posts a token to Appboy's servers to associate the token with the current device.
  *
  * @param {string} token - The device's push token.
  */
-export function registerPushToken(token: string): void;
+export function registerPushToken(token: string): void
 
 /**
  * Sets whether the user should be sent push campaigns.
@@ -154,7 +156,7 @@ export function registerPushToken(token: string): void;
 export function setPushNotificationSubscriptionType(
   notificationSubscriptionType: NotificationSubscriptionType[keyof NotificationSubscriptionType],
   callback?: Callback
-): void;
+): void
 
 /**
  * Sets whether the user should be sent email campaigns.
@@ -165,7 +167,7 @@ export function setPushNotificationSubscriptionType(
 export function setEmailNotificationSubscriptionType(
   notificationSubscriptionType: NotificationSubscriptionType[keyof NotificationSubscriptionType],
   callback?: Callback
-): void;
+): void
 
 /**
  * Reports that the current user performed a custom named event.
@@ -177,7 +179,10 @@ export function setEmailNotificationSubscriptionType(
  *      characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
  *      Values can be numeric, boolean, or strings 255 characters or shorter.
  */
-export function logCustomEvent(eventName: string, eventProperties?: object): void;
+export function logCustomEvent(
+  eventName: string,
+  eventProperties?: object
+): void
 
 /**
  * Reports that the current user made an in-app purchase. Useful for tracking and segmenting users.
@@ -199,7 +204,7 @@ export function logPurchase(
   currencyCode: string,
   quantity: number,
   purchaseProperties?: object
-): void;
+): void
 
 /**
  * Submits feedback to Appboy.
@@ -213,7 +218,7 @@ export function submitFeedback(
   feedback: string,
   isBug: boolean,
   callback?: Callback
-): void;
+): void
 
 /**
  * Sets a custom user attribute. This can be any key/value pair and is used to collect extra information about the
@@ -229,7 +234,7 @@ export function setCustomUserAttribute(
   key: string,
   value: any,
   callback?: Callback
-): void;
+): void
 
 /**
  * Adds a string to a custom atttribute string array, or creates that array if one doesn't exist.
@@ -243,7 +248,7 @@ export function addToCustomUserAttributeArray(
   key: string,
   value: string,
   callback?: Callback
-): void;
+): void
 
 /**
  * Removes a string from a custom attribute string array.
@@ -257,7 +262,7 @@ export function removeFromCustomUserAttributeArray(
   key: string,
   value: string,
   callback?: Callback
-): void;
+): void
 
 /**
  * Unsets a custom user attribute.
@@ -265,7 +270,7 @@ export function removeFromCustomUserAttributeArray(
  *    cannot begin with a $, and can only contain alphanumeric characters and punctuation.
  * @param {function(error, result)} callback - A callback that receives the export function call result.
  */
-export function unsetCustomUserAttribute(key: string, callback?: Callback): void;
+export function unsetCustomUserAttribute(key: string, callback?: Callback): void
 
 /**
  * Increment/decrement the value of a custom attribute. Only numeric custom attributes can be incremented. Attempts to
@@ -281,7 +286,7 @@ export function incrementCustomUserAttribute(
   key: string,
   value: any,
   callback?: Callback
-): void;
+): void
 
 /**
  * Sets user Twitter data.
@@ -304,7 +309,7 @@ export function setTwitterData(
   friendsCount: number,
   statusesCount: number,
   profileImageUrl: string
-): void;
+): void
 
 /**
  * Sets user Facebook data.
@@ -327,7 +332,7 @@ export function setFacebookData(
   facebookUserDictionary: object,
   numberOfFriends: number,
   likes: Array<any>
-): void;
+): void
 
 /**
  * Sets user attribution data.
@@ -342,19 +347,19 @@ export function setAttributionData(
   campaign: string,
   adGroup: string,
   creative: string
-): void;
+): void
 
 /**
  * Launches the News Feed UI element.
  * @param {object} launchOptions - An optional dictionary of News Feed launch options.
  * See NewsFeedLaunchOptions for supported keys.
  */
-export function launchNewsFeed(launchOptions: object): void;
+export function launchNewsFeed(launchOptions: object): void
 
 /**
  * Launches the Content Cards UI element.
  */
-export function launchContentCards(): void;
+export function launchContentCards(): void
 
 /**
  * Returns the current number of News Feed cards for the given category.
@@ -367,7 +372,7 @@ export function launchContentCards(): void;
 export function getCardCountForCategories(
   category: BrazeCardCategory[keyof BrazeCardCategory],
   callback: Callback
-): void;
+): void
 
 /**
  * Returns the number of unread News Feed cards for the given category.
@@ -380,45 +385,45 @@ export function getCardCountForCategories(
 export function getUnreadCardCountForCategories(
   category: BrazeCardCategory[keyof BrazeCardCategory],
   callback: Callback
-): void;
+): void
 
 /**
  * Requests a News Feed refresh.
  */
-export function requestFeedRefresh(): void;
+export function requestFeedRefresh(): void
 
 /**
  * Launches the Feedback UI element.  Not currently supported on Android.
  */
-export function launchFeedback(): void;
+export function launchFeedback(): void
 
 /**
  * Requests an immediate flush of any data waiting to be sent to Appboy's servers.
  */
-export function requestImmediateDataFlush(): void;
+export function requestImmediateDataFlush(): void
 
 /**
  * Wipes Data on the Braze SDK. On iOS, the SDK will be disabled for the rest of the app run.
  */
-export function wipeData(): void;
+export function wipeData(): void
 
 /**
  * Disables the Braze SDK immediately.
  */
-export function disableSDK(): void;
+export function disableSDK(): void
 
 /**
  * Enables the Braze SDK after a previous call to disableSDK().
  * On iOS, the SDK will be enabled only after a subsequent call to startWithApiKey().
  */
-export function enableSDK(): void;
+export function enableSDK(): void
 
 /**
  * Call this method once a user grants location permissions on Android
  * to initialize Braze location features. Calling this method is a no-op on
  * iOS.
  */
-export function requestLocationInitialization(): void;
+export function requestLocationInitialization(): void
 
 /**
  * Sets a custom location attribute for the user.
@@ -433,48 +438,50 @@ export function setLocationCustomAttribute(
   latitude: number,
   longitude: number,
   callback?: Callback
-): void;
+): void
 
 /**
  * Requests a refresh of the content cards from Appboy's servers.
  */
-export function requestContentCardsRefresh(): void;
+export function requestContentCardsRefresh(): void
 
 /**
  * Dismisses the currently displayed in app message.
  */
-export function hideCurrentInAppMessage(): void;
+export function hideCurrentInAppMessage(): void
 
-type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export function unviewedContentCardCount(): number
+
+type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
 
 interface BrazeCardCategory {
-  ADVERTISING: 'advertising';
-  ANNOUNCEMENTS: 'announcements';
-  NEWS: 'news';
-  SOCIAL: 'social';
-  NO_CATEGORY: 'no_category';
-  ALL: 'all';
+  ADVERTISING: 'advertising'
+  ANNOUNCEMENTS: 'announcements'
+  NEWS: 'news'
+  SOCIAL: 'social'
+  NO_CATEGORY: 'no_category'
+  ALL: 'all'
 }
-export const CardCategory: BrazeCardCategory;
+export const CardCategory: BrazeCardCategory
 
 interface GenderTypes {
-  MALE: 'm';
-  FEMALE: 'f';
-  NOT_APPLICABLE: 'n';
-  OTHER: 'o';
-  PREFER_NOT_TO_SAY: 'p';
-  UNKNOWN: 'u';
+  MALE: 'm'
+  FEMALE: 'f'
+  NOT_APPLICABLE: 'n'
+  OTHER: 'o'
+  PREFER_NOT_TO_SAY: 'p'
+  UNKNOWN: 'u'
 }
-export const Genders: GenderTypes;
+export const Genders: GenderTypes
 
 interface NotificationSubscriptionType {
-  OPTED_IN: 'optedin';
-  SUBSCRIBED: 'subscribed';
-  UNSUBSCRIBED: 'unsubscribed';
+  OPTED_IN: 'optedin'
+  SUBSCRIBED: 'subscribed'
+  UNSUBSCRIBED: 'unsubscribed'
 }
-export const NotificationSubscriptionTypes : NotificationSubscriptionType;
+export const NotificationSubscriptionTypes: NotificationSubscriptionType
 
-type Callback = (error: object, result: object) => void;
+type Callback = (error: object, result: object) => void
 
 type BrazeCurrencyCode =
   | 'AED'
@@ -647,4 +654,4 @@ type BrazeCurrencyCode =
   | 'ZAR'
   | 'ZMK'
   | 'ZMW'
-  | 'ZWL';
+  | 'ZWL'

@@ -377,5 +377,10 @@ RCT_EXPORT_METHOD(hideCurrentInAppMessage) {
   [[Appboy sharedInstance].inAppMessageController.inAppMessageUIController hideCurrentInAppMessage:YES];
 }
 
+RCT_EXPORT_METHOD(unviewedContentCardCount) {
+  RCTLogInfo(@"unviewedContentCardCount called");
+  [[Appboy sharedInstance].contentCardsController unviewedContentCardCount];
+}
+
 RCT_EXPORT_MODULE();
 @end
