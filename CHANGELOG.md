@@ -1,3 +1,9 @@
+## 1.15.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.17.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.17.0).
+- Removed the `NewsFeedLaunchOptions` enum. Using these arguments with `launchNewsFeed()` had been a no-op since version 1.7.0.
+
 ## 1.14.0
 
 ##### Breaking

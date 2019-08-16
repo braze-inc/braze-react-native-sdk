@@ -1,30 +1,30 @@
 PODS:
-  - Appboy-iOS-SDK (3.15.0):
-    - Appboy-iOS-SDK/UI (= 3.15.0)
-  - Appboy-iOS-SDK/ContentCards (3.15.0):
+  - Appboy-iOS-SDK (3.17.0):
+    - Appboy-iOS-SDK/UI (= 3.17.0)
+  - Appboy-iOS-SDK/ContentCards (3.17.0):
     - Appboy-iOS-SDK/Core
     - SDWebImage (~> 5.0)
-  - Appboy-iOS-SDK/Core (3.15.0)
-  - Appboy-iOS-SDK/Feedback (3.15.0):
+  - Appboy-iOS-SDK/Core (3.17.0)
+  - Appboy-iOS-SDK/Feedback (3.17.0):
     - Appboy-iOS-SDK/Core
-  - Appboy-iOS-SDK/InAppMessage (3.15.0):
-    - Appboy-iOS-SDK/Core
-    - SDWebImage (~> 5.0)
-  - Appboy-iOS-SDK/NewsFeed (3.15.0):
+  - Appboy-iOS-SDK/InAppMessage (3.17.0):
     - Appboy-iOS-SDK/Core
     - SDWebImage (~> 5.0)
-  - Appboy-iOS-SDK/UI (3.15.0):
+  - Appboy-iOS-SDK/NewsFeed (3.17.0):
+    - Appboy-iOS-SDK/Core
+    - SDWebImage (~> 5.0)
+  - Appboy-iOS-SDK/UI (3.17.0):
     - Appboy-iOS-SDK/ContentCards
     - Appboy-iOS-SDK/Core
     - Appboy-iOS-SDK/Feedback
     - Appboy-iOS-SDK/InAppMessage
     - Appboy-iOS-SDK/NewsFeed
-  - SDWebImage (5.0.4):
-    - SDWebImage/Core (= 5.0.4)
-  - SDWebImage/Core (5.0.4)
+  - SDWebImage (5.1.0):
+    - SDWebImage/Core (= 5.1.0)
+  - SDWebImage/Core (5.1.0)
 
 DEPENDENCIES:
-  - Appboy-iOS-SDK (= 3.15.0)
+  - Appboy-iOS-SDK (= 3.17.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -32,9 +32,9 @@ SPEC REPOS:
     - SDWebImage
 
 SPEC CHECKSUMS:
-  Appboy-iOS-SDK: 6d2ec19e51446eecfc03078926afd0fb889451e7
-  SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
+  Appboy-iOS-SDK: 37ea86ae60d35bf6e0536b02144e2bc0a2a58c67
+  SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
 
-PODFILE CHECKSUM: b62dd2243c2f0d2f04b8921a6b3fe15564995022
+PODFILE CHECKSUM: 9f42253642d2ae0242514cf0ed6b05ff95254676
 
 COCOAPODS: 1.6.1

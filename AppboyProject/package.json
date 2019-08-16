@@ -8,6 +8,6 @@
   "dependencies": {
     "react": "16.4.1",
     "react-native": "^0.56.0",
-    "react-native-appboy-sdk": "1.14.0"
+    "react-native-appboy-sdk": "file:../"
   }
 }

@@ -346,10 +346,8 @@ export function setAttributionData(
 
 /**
  * Launches the News Feed UI element.
- * @param {object} launchOptions - An optional dictionary of News Feed launch options.
- * See NewsFeedLaunchOptions for supported keys.
  */
-export function launchNewsFeed(launchOptions: object): void;
+export function launchNewsFeed(): void;
 
 /**
  * Launches the Content Cards UI element.

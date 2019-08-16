@@ -1151,7 +1151,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-resources.sh",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKContentCards/Resources/ABKContentCardsStoryboard.storyboard",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKContentCards/Resources/ar.lproj/AppboyContentCardsLocalizable.strings",
 				"${PODS_ROOT}/Appboy-iOS-SDK/AppboyUI/ABKContentCards/Resources/Base.lproj/AppboyContentCardsLocalizable.strings",
@@ -1497,7 +1497,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppboyProject/Pods-AppboyProject-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

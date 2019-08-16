@@ -583,13 +583,6 @@ var ReactAppboy = {
     'OTHER': 'o',
     'PREFER_NOT_TO_SAY': 'p',
     'UNKNOWN': 'u'
-  },
-
-  NewsFeedLaunchOptions: {
-    'CARD_WIDTH_FOR_IPHONE': 'cardWidthForiPhone',
-    'CARD_WIDTH_FOR_IPAD': 'cardWidthForiPad',
-    'MINIMUM_CARD_MARGIN_FOR_IPHONE': 'minimumCardMarginForiPhone',
-    'MINIMUM_CARD_MARGIN_FOR_IPAD': 'minimumCardMarginForiPad'
   }
 };
 
