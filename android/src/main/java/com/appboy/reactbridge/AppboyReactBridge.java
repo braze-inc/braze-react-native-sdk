@@ -588,7 +588,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void unviewedContentCardCount(Callback callback) {
-    reportResultWithCallback(callback, null, AppboyInAppMessageManager.getInstance().unviewedContentCardCount());
+    reportResultWithCallback(callback, null, Appboy.getInstance(context).getContentCardUnviewedCount());
   }
 
   @ReactMethod
