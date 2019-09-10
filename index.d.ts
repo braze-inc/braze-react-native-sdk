@@ -1,6 +1,8 @@
 // Definitions by: ahanriat <https://github.com/ahanriat>
 // TypeScript Version: 3.0
 
+import { EmitterSubscription } from 'react-native';
+
 /**
  * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
  * support handling deep links embedded in push notifications. This is due to a race condition on startup between
@@ -202,20 +204,6 @@ export function logPurchase(
 ): void;
 
 /**
- * Submits feedback to Appboy.
- * @param {string} email - The email of the user submitting feedback.
- * @param {string} feedback - The content of the user feedback.
- * @param {boolean} isBug - If the feedback is reporting a bug or not.
- * @param {function(error, result)} callback - A callback that receives the export function call result.
- */
-export function submitFeedback(
-  emailL: string,
-  feedback: string,
-  isBug: boolean,
-  callback?: Callback
-): void;
-
-/**
  * Sets a custom user attribute. This can be any key/value pair and is used to collect extra information about the
  *    user.
  * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
@@ -349,10 +337,89 @@ export function setAttributionData(
  */
 export function launchNewsFeed(): void;
 
+// Content Cards
+interface ContentCardType {
+  CLASSIC: 'Classic',
+  BANNER: 'Banner',
+  CAPTIONED: 'Captioned',
+}
+export const ContentCardTypes: ContentCardType;
+
+export interface ContentCard {
+  id: string;
+  created: number;
+  expiresAt: number;
+  type: ContentCardType;
+  viewed: boolean;
+  clicked: boolean;
+  pinned: boolean;
+  dismissed: boolean;
+  dismissible: boolean;
+  url?: string;
+  openURLInWebView: boolean;
+  extras: { [key: string]: string };
+}
+
+export interface ClassicContentCard extends ContentCard {
+  image?: string;
+  title: string;
+  cardDescription: string;
+  domain?: string;
+}
+
+export interface BannerContentCard extends ContentCard {
+  image: string;
+  imageAspectRatio: number;
+}
+
+export interface CaptionedContentCard extends ContentCard {
+  image: string;
+  imageAspectRatio: number;
+  title: string;
+  cardDescription: string;
+  domain?: string;
+}
+
 /**
  * Launches the Content Cards UI element.
  */
 export function launchContentCards(): void;
+
+/**
+ * Requests a refresh of the content cards from Appboy's servers.
+ */
+export function requestContentCardsRefresh(): void;
+
+/**
+ * Manually log a click to Braze for a particular card.
+ * The SDK will only log a card click when the card has the url property with a valid value.
+ * @param {string} id
+ */
+export function logContentCardClicked(id: string): void;
+
+/**
+ * Manually log a dismissal to Braze for a particular card.
+ * @param {string} id
+ */
+export function logContentCardDismissed(id: string): void;
+
+/**
+ * Manually log an impression to Braze for a particular card.
+ * @param {string} id
+ */
+export function logContentCardImpression(id: string): void;
+
+/**
+ * When displaying the Content Cards in your own user interface,
+ * you can manually record Content Cards impressions via the method logContentCardsDisplayed;
+ */
+export function logContentCardsDisplayed(): void;
+
+/**
+ * Returns a content cards array
+ * @returns {Promise<ContentCard[]>}
+ */
+export function getContentCards(): Promise<ContentCard[]>;
 
 /**
  * Returns the current number of News Feed cards for the given category.
@@ -384,11 +451,6 @@ export function getUnreadCardCountForCategories(
  * Requests a News Feed refresh.
  */
 export function requestFeedRefresh(): void;
-
-/**
- * Launches the Feedback UI element.  Not currently supported on Android.
- */
-export function launchFeedback(): void;
 
 /**
  * Requests an immediate flush of any data waiting to be sent to Appboy's servers.
@@ -434,11 +496,6 @@ export function setLocationCustomAttribute(
 ): void;
 
 /**
- * Requests a refresh of the content cards from Appboy's servers.
- */
-export function requestContentCardsRefresh(): void;
-
-/**
  * Dismisses the currently displayed in app message.
  */
 export function hideCurrentInAppMessage(): void;
@@ -471,6 +528,18 @@ interface NotificationSubscriptionType {
   UNSUBSCRIBED: 'unsubscribed';
 }
 export const NotificationSubscriptionTypes : NotificationSubscriptionType;
+
+interface AppboyEvent {
+  CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
+}
+export const Events : AppboyEvent;
+
+/**
+ * Subscribes to the specific SDK event
+ * @param {AppboyEvent} event
+ * @param {function} subscriber
+ */
+export function addListener(event: AppboyEvent[keyof AppboyEvent], subscriber: Function): EmitterSubscription;
 
 type Callback = (error: object, result: object) => void;
 

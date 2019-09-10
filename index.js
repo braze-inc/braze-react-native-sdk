@@ -1,4 +1,12 @@
 const AppboyReactBridge = require('react-native').NativeModules.AppboyReactBridge;
+const Platform = require('react-native').Platform;
+const NativeEventEmitter = require('react-native').NativeEventEmitter;
+const DeviceEventEmitter = require('react-native').DeviceEventEmitter;
+
+const AppboyEventEmitter = Platform.select({
+  ios: new NativeEventEmitter(AppboyReactBridge),
+  android: DeviceEventEmitter
+});
 
 /**
 * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
@@ -190,17 +198,6 @@ var ReactAppboy = {
       }
     }
     AppboyReactBridge.logPurchase(productId, price, currencyCode, quantity, purchaseProperties);
-  },
-
-  /**
-  * Submits feedback to Appboy.
-  * @param {string} email - The email of the user submitting feedback.
-  * @param {string} feedback - The content of the user feedback.
-  * @param {boolean} isBug - If the feedback is reporting a bug or not.
-  * @param {function(error, result)} callback - A callback that receives the function call result.
-  */
-  submitFeedback: function(email, feedback, isBug, callback) {
-    callFunctionWithCallback(AppboyReactBridge.submitFeedback, [email, feedback, isBug], callback);
   },
 
   // Appboy user methods
@@ -456,6 +453,47 @@ var ReactAppboy = {
   },
 
   /**
+   * Returns a content cards array
+   * @returns {Promise<ContentCard[]>}
+   */
+  getContentCards: function() {
+    return AppboyReactBridge.getContentCards();
+  },
+
+  /**
+   * Manually log a click to Braze for a particular card.
+   * The SDK will only log a card click when the card has the url property with a valid value.
+   * @param {string} id
+   */
+  logContentCardClicked: function(id) {
+    AppboyReactBridge.logContentCardClicked(id);
+  },
+
+  /**
+   * Manually log a dismissal to Braze for a particular card.
+   * @param {string} id
+   */
+  logContentCardDismissed: function(id) {
+    AppboyReactBridge.logContentCardDismissed(id);
+  },
+
+  /**
+   * Manually log an impression to Braze for a particular card.
+   * @param {string} id
+   */
+  logContentCardImpression: function(id) {
+    AppboyReactBridge.logContentCardImpression(id);
+  },
+
+  /**
+   * When displaying the Content Cards in your own user interface,
+   * you can manually record Content Cards impressions via the method logContentCardsDisplayed;
+   */
+  logContentCardsDisplayed: function() {
+    AppboyReactBridge.logContentCardsDisplayed();
+  },
+
+  /**
    * Requests a News Feed refresh.
    */
   requestFeedRefresh: function() {
@@ -482,14 +520,6 @@ var ReactAppboy = {
   */
   getUnreadCardCountForCategories: function(category, callback) {
     callFunctionWithCallback(AppboyReactBridge.getUnreadCardCountForCategories, [category], callback);
-  },
-
-  // Feedback
-  /**
-  * Launches the Feedback UI element.  Not currently supported on Android.
-  */
-  launchFeedback: function() {
-    AppboyReactBridge.launchFeedback();
   },
 
   // Flush Controls
@@ -560,6 +590,18 @@ var ReactAppboy = {
     AppboyReactBridge.hideCurrentInAppMessage();
   },
 
+  // Events
+  /**
+   * Subscribes to the specific SDK event.
+   * When you want to stop listening, call `.remove()` on the returned
+   * subscription.
+   * @param {Events} event
+   * @param {function} subscriber
+   */
+  addListener: function(event, subscriber) {
+    return AppboyEventEmitter.addListener(event, subscriber);
+  },
+
   // Enums
   CardCategory: {
     'ADVERTISING': 'advertising',
@@ -583,7 +625,17 @@ var ReactAppboy = {
     'OTHER': 'o',
     'PREFER_NOT_TO_SAY': 'p',
     'UNKNOWN': 'u'
-  }
+  },
+
+  ContentCardTypes: {
+    'CLASSIC': 'Classic',
+    'BANNER': 'Banner',
+    'CAPTIONED': 'Captioned'
+  },
+
+  Events: {
+    'CONTENT_CARDS_UPDATED': 'contentCardsUpdated'
+  },
 };
 
 module.exports = ReactAppboy;

@@ -1,3 +1,30 @@
+## 1.16.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.19.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.19.0).
+- Updated the native Android bridge to [Braze Android SDK 3.7.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#370).
+- Note: This Braze React SDK release updates to Braze Android SDK and Braze iOS SDK dependencies which no longer enable automatic Braze location collection by default. Please consult their respective changelogs for information on how to continue to enable automatic Braze location collection, as well as further information on breaking changes.
+- Removes the Feedback feature.
+  - `submitFeedback()` and `launchFeedback()` have been removed from the `Appboy` interface.
+
+##### Added
+- Added the ability to more easily create custom UIs for Content Cards from within the React Native layer by providing access to card data and analytics methods in Javascript.
+  - Added `ReactAppboy.getContentCards` for getting locally cached content cards data.
+    - To request a Content Cards update, use `ReactAppboy.requestContentCardsRefresh()`.
+  - Added `ReactAppboy.logContentCardsDisplayed` for manually logging an impression for the content card feed.
+  - Added `ReactAppboy.logContentCardClicked` for manually logging a click to Braze for a particular card.
+  - Added `ReactAppboy.logContentCardImpression` for manually logging an impression to Braze for a particular card.
+  - Added `ReactAppboy.logContentCardDismissed` for manually logging a dismissal to Braze for a particular card.
+  - Added `ReactAppboy.addListener` for subscribing to `ReactAppboy.Events.CONTENT_CARDS_UPDATED` events.
+    - After a successful update, use `getContentCards` to retrieve updated cards.
+    - ```
+      ReactAppboy.addListener(ReactAppboy.Events.CONTENT_CARDS_UPDATED, async function() {
+        let cards = await ReactAppboy.getContentCards();
+        console.log('Content Cards Updated.', cards);
+      })
+      ```
+  - See https://github.com/Appboy/appboy-react-sdk/pull/58. Thanks @alexmbp!
+
 ## 1.15.0
 
 ##### Breaking

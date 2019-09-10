@@ -33,7 +33,6 @@ class AppboyProject extends Component {
     this._setSubscriptionStatePress = this._setSubscriptionStatePress.bind(this);
     this._logPurchasePress = this._logPurchasePress.bind(this);
     this._setLanguagePress = this._setLanguagePress.bind(this);
-    this._submitFeedbackPress = this._submitFeedbackPress.bind(this);
     this._logCustomAttributePress = this._logCustomAttributePress.bind(this);
     this._logUserPropertiesPress = this._logUserPropertiesPress.bind(this);
     this._unsetCustomUserAttributePress = this._unsetCustomUserAttributePress.bind(this);
@@ -53,6 +52,7 @@ class AppboyProject extends Component {
     this._requestContentCardsRefresh = this._requestContentCardsRefresh.bind(this);
     this._hideCurrentInAppMessage = this._hideCurrentInAppMessage.bind(this);
     this._setAttributionData = this._setAttributionData.bind(this);
+    this._getContentCards = this._getContentCards.bind(this);
   }
 
   componentDidMount() {
@@ -81,6 +81,10 @@ class AppboyProject extends Component {
         that._handleOpenUrl({url});
       }
     });
+
+    ReactAppboy.addListener(ReactAppboy.Events.CONTENT_CARDS_UPDATED, function() {
+      console.log('Content Cards Updated.');
+    })
   }
 
   componentWillUnmount() {
@@ -162,10 +166,6 @@ class AppboyProject extends Component {
           <Text>Log Purchase</Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={this._submitFeedbackPress}>
-          <Text>Submit Feedback</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
           onPress={this._logCustomAttributePress}>
           <Text>Set Custom User Attributes</Text>
         </TouchableHighlight>
@@ -210,12 +210,6 @@ class AppboyProject extends Component {
             <Text>Set Gender</Text>
           </TouchableHighlight>
         </View>
-        { Platform.OS === 'ios' ?
-        <TouchableHighlight
-          onPress={this._launchFeedbackPress}>
-          <Text>Launch Feedback</Text>
-        </TouchableHighlight>
-        : false }
         <TouchableHighlight
           onPress={this._unsetCustomUserAttributePress}>
           <Text>Unset Custom User Attributes</Text>
@@ -293,6 +287,10 @@ class AppboyProject extends Component {
           onPress={this._getInstallTrackingId}>
           <Text>Get Install Tracking ID</Text>
         </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._getContentCards}>
+          <Text>Request Cached Content Cards</Text>
+        </TouchableHighlight>
         </ScrollView>
     );
   }
@@ -364,10 +362,6 @@ class AppboyProject extends Component {
     ReactAppboy.logPurchase('reactProductIdentifier' + 'NoProps', '1.2', 'USD', 2);
     this._showToast('Purchase logged');
   }
-  _submitFeedbackPress(event) {
-    ReactAppboy.submitFeedback('test@test.com', 'great app asdf', true);
-    this._showToast('Feedback submitted');
-  }
   _logCustomAttributePress(event) {
     ReactAppboy.setCustomUserAttribute('sk', 'sv');
     ReactAppboy.setCustomUserAttribute('doubleattr', 4.5);
@@ -403,9 +397,6 @@ class AppboyProject extends Component {
   }
   _launchContentCardsPress(event) {
     ReactAppboy.launchContentCards();
-  }
-  _launchFeedbackPress(event) {
-    ReactAppboy.launchFeedback();
   }
   _unsetCustomUserAttributePress(event) {
     ReactAppboy.unsetCustomUserAttribute('sk');
@@ -526,6 +517,26 @@ class AppboyProject extends Component {
       } else {
         this._showToast('Install tracking ID: ' + res);
       }
+    });
+  }
+
+  _getContentCards(event) {
+    ReactAppboy.getContentCards().then(function(result) {
+      if (result === undefined || result.length == 0) {
+        console.log('No cached Content Cards Found.');
+      } else {
+        console.log(result.length + ' cached Content Cards Found.');
+        for (var i = 0; i < result.length; i++) {
+          var cardId = result[i].id;
+          console.log('Got content card: ' + JSON.stringify(result[i]));
+          ReactAppboy.logContentCardClicked(cardId);
+          ReactAppboy.logContentCardImpression(cardId);
+          // ReactAppboy.logContentCardDismissed(cardId);
+        }
+        ReactAppboy.logContentCardsDisplayed(cardId);
+      }
+    }).catch(function () {
+      console.log("Content Cards Promise Rejected");
     });
   }
 }

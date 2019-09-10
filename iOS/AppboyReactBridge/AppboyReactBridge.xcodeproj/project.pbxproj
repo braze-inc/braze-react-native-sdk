@@ -224,6 +224,9 @@
 					"$(APPBOY_LIBRARY_SEARCH_PATH)",
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/**",
 					"$(SRCROOT)/../../../react-native/React/**",
+					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Appboy-iOS-SDK/**",
+					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/SDWebImage",
+					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Headers/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -244,6 +247,9 @@
 					"$(APPBOY_LIBRARY_SEARCH_PATH)",
 					"$(SRCROOT)/../../../../ios/Pods/Appboy-iOS-SDK/**",
 					"$(SRCROOT)/../../../react-native/React/**",
+					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Appboy-iOS-SDK/**",
+					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/SDWebImage",
+					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Headers/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
