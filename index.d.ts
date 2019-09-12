@@ -143,9 +143,11 @@ export function setDateOfBirth(year: number, month: MonthsAsNumber, day: number)
 /**
  * This method posts a token to Appboy's servers to associate the token with the current device.
  *
+ * No-op on iOS.
+ *
  * @param {string} token - The device's push token.
  */
-export function registerPushToken(token: string): void;
+export function registerAndroidPushToken(token: string): void;
 
 /**
  * Sets whether the user should be sent push campaigns.

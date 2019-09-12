@@ -95,10 +95,9 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabe
   [[Appboy sharedInstance].user addAlias:aliasName withLabel:aliasLabel];
 }
 
-RCT_EXPORT_METHOD(registerPushToken:(NSString *)token)
+RCT_EXPORT_METHOD(registerAndroidPushToken:(NSString *)token)
 {
-  RCTLogInfo(@"[Appboy sharedInstance] registerPushToken with value %@", token);
-  [[Appboy sharedInstance] registerPushToken:token];
+  RCTLogInfo(@"Warning: This is an Android only feature.");
 }
 
 RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable NSDictionary *)properties) {

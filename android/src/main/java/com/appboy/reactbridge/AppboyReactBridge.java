@@ -112,7 +112,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void registerPushToken(String token) {
+  public void registerAndroidPushToken(String token) {
     Appboy.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);
   }
 

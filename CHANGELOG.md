@@ -1,3 +1,18 @@
+## 1.17.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.20.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.20.0).
+- **Important:** Braze iOS SDK 3.20.0 contains updated push token registration methods. We recommend upgrading to these methods as soon as possible to ensure a smooth transition as devices upgrade to iOS 13. In `application:didRegisterForRemoteNotificationsWithDeviceToken:`, replace
+```
+[[Appboy sharedInstance] registerPushToken:
+                [NSString stringWithFormat:@"%@", deviceToken]];
+```
+with
+```
+[[Appboy sharedInstance] registerDeviceToken:deviceToken]];
+```
+- `ReactAppboy.registerPushToken()` was renamed to `ReactAppboy.registerAndroidPushToken()` and is now a no-op on iOS. On iOS, push tokens must now be registered through native methods.
+
 ## 1.16.0
 
 ##### Breaking

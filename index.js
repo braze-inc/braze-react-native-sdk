@@ -133,10 +133,12 @@ var ReactAppboy = {
   /**
   * This method posts a token to Appboy's servers to associate the token with the current device.
   *
+  * No-op on iOS.
+  *
   * @param {string} token - The device's push token.
   */
-  registerPushToken: function(token) {
-    AppboyReactBridge.registerPushToken(token);
+  registerAndroidPushToken: function(token) {
+    AppboyReactBridge.registerAndroidPushToken(token);
   },
 
   /**
