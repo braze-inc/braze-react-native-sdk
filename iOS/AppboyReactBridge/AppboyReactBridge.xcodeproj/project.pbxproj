@@ -110,6 +110,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = E3D0A7511C668BB90027828A;
@@ -218,6 +219,7 @@
 		E3D0A7641C668BB90027828A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../../../ios/Frameworks/Appboy";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -227,6 +229,7 @@
 					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Appboy-iOS-SDK/**",
 					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/SDWebImage",
 					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Headers/**",
+					"$(SRCROOT)/../../../../ios/Frameworks/Appboy/Appboy_iOS_SDK.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -241,6 +244,7 @@
 		E3D0A7651C668BB90027828A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../../../ios/Frameworks/Appboy";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -250,6 +254,7 @@
 					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Appboy-iOS-SDK/**",
 					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/SDWebImage",
 					"/Users/jared/git/react-sdk/AppboyProject/ios/Pods/Headers/**",
+					"$(SRCROOT)/../../../../ios/Frameworks/Appboy/Appboy_iOS_SDK.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
