@@ -15,7 +15,7 @@
 ```
 with
 ```
-[[Appboy sharedInstance] registerDeviceToken:deviceToken]];
+[[Appboy sharedInstance] registerDeviceToken:deviceToken];
 ```
 - `ReactAppboy.registerPushToken()` was renamed to `ReactAppboy.registerAndroidPushToken()` and is now a no-op on iOS. On iOS, push tokens must now be registered through native methods.
 
