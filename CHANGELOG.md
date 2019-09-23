@@ -1,3 +1,11 @@
+## 1.17.3
+
+##### Fixed
+- Added `SDWebImage` and `Headers` pod directories to the `AppboyReactBridge` project's Header Search Paths. Thanks @tomauty and @mlazari for your contributions! See https://github.com/Appboy/appboy-react-sdk/pull/70 and https://github.com/Appboy/appboy-react-sdk/pull/69.
+
+##### Changed
+- Updated the native Android bridge to [Braze Android SDK 3.7.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#371).
+
 ## 1.17.2
 
 **Important:** This patch updates the Braze iOS SDK Dependency from 3.20.1 to 3.20.2, which contains important bugfixes. Integrators should upgrade to this patch version. Please see the [Braze iOS SDK Changelog](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md) for more information.
