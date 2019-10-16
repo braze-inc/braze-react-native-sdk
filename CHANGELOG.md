@@ -1,3 +1,8 @@
+## 1.17.4
+
+##### Fixed
+- Removed a support library reference in `AppboyReactBridge.java` that caused Androidx compatibility issues.
+
 ## 1.17.3
 
 ##### Fixed

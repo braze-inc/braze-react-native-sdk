@@ -1,6 +1,6 @@
 {
   "name": "react-native-appboy-sdk",
-  "version": "1.17.3",
+  "version": "1.17.4",
   "description": "Braze SDK for React Native.",
   "main": "index.js",
   "types": "index.d.ts",

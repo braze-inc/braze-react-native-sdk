@@ -1,4 +1,4 @@
-<img src="https://github.com/Appboy/appboy-react-sdk/blob/master/braze-logo.png" width="300" title="Braze Logo" />
+<img src="https://raw.githubusercontent.com/Appboy/appboy-react-sdk/master/braze-logo.png" width="300" title="Braze Logo" />
 
 # Braze React SDK
 

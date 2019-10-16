@@ -1,7 +1,6 @@
 package com.appboy.reactbridge;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.appboy.Appboy;
@@ -587,7 +586,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     }
   }
 
-  private @Nullable Card getCardById(String id) {
+  private Card getCardById(String id) {
     for (Card card : mContentCards) {
       if (card.getId().equals(id)) {
         return card;
