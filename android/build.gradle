@@ -6,7 +6,7 @@ def safeExtGet(prop, fallback) {
 
 android {
   compileSdkVersion safeExtGet('compileSdkVersion', 26)
-  buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
+  buildToolsVersion safeExtGet('buildToolsVersion', '29.0.2')
 
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 16)
@@ -17,6 +17,6 @@ android {
 }
 
 dependencies {
-  api 'com.appboy:android-sdk-ui:3.7.1'
+  api 'com.appboy:android-sdk-ui:3.8.0'
   api 'com.facebook.react:react-native:+'
 }

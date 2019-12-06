@@ -465,13 +465,35 @@ class AppboyProject extends Component {
   }
 
   _wipeData(event) {
-    ReactAppboy.wipeData();
-    this._showToast('Data wiped');
+    Alert.alert(
+      'Wipe Data',
+      'Are you sure?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'OK', onPress: () => {
+            ReactAppboy.wipeData();
+            this._showToast('Data wiped');
+          }
+        }
+      ]
+    );
   }
 
   _disableSDK(event) {
-    ReactAppboy.disableSDK();
-    this._showToast('SDK disabled');
+    Alert.alert(
+      'Disable SDK',
+      'Are you sure?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'OK', onPress: () => {
+            ReactAppboy.disableSDK();
+            this._showToast('SDK disabled');
+          }
+        }
+      ]
+    );
   }
 
   _enableSDK(event) {

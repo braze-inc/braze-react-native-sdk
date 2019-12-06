@@ -1,3 +1,15 @@
+## 1.18.0
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 3.8.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#380).
+
+##### Fixed
+- Fixed an issue where `ReactContext.getJSModule()` could be called before the native module was initialized.
+  - Thanks @tszajna0!
+
+##### Changed
+- Updated the native iOS bridge to [Braze iOS SDK 3.20.4](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.20.4).
+
 ## 1.17.4
 
 ##### Fixed
