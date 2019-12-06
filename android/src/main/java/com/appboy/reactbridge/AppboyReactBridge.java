@@ -539,7 +539,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       public void trigger(ContentCardsUpdatedEvent event) {
         boolean updated = event.getLastUpdatedInSecondsFromEpoch() > mContentCardsUpdatedAt;
         if (updated) {
-          getReactApplicationContext()
+          ReactApplicationContext reactContext = getReactApplicationContext();
+          if (!reactContext.hasActiveCatalystInstance()) {
+            return;
+          }
+          reactContext
                   .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                   .emit(CONTENT_CARDS_UPDATED_EVENT_NAME, updated);
         }
