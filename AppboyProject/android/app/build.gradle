@@ -2,6 +2,11 @@ apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
 
+project.ext.react = [
+  entryFile: "index.android.js",
+  enableHermes: false
+]
+
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -132,12 +137,23 @@ android {
     }
 }
 
+def jscFlavor = 'org.webkit:android-jsc:+'
+def enableHermes = project.ext.react.get("enableHermes", false)
+
 dependencies {
     implementation "com.google.firebase:firebase-messaging:17.3.4"
     implementation project(':react-native-appboy-sdk')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:28.0.0"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    if (enableHermes) {
+        // For RN 0.60.x
+        def hermesPath = "../../node_modules/hermesvm/android/"
+        debugImplementation files(hermesPath + "hermes-debug.aar")
+        releaseImplementation files(hermesPath + "hermes-release.aar")
+    } else {
+        implementation jscFlavor
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

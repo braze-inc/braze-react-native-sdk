@@ -13,8 +13,8 @@ See our Technical Documentation for instructions on integrating Braze into your 
 
 ## Components
 
-- `AppboyProject` - Contains the AppboyProject sample app with integration examples for the React Native bridge. This sample app integrates the iOS bridge via manual linking, and the iOS SDK via Cocoapods.
-- `HelloReact` - Contains the HelloReact sample app, which integrates the iOS bridge using Cocoapods via a local Podspec.
+- `AppboyProject` - Contains the AppboyProject sample app with integration examples for the React Native bridge. This sample app integrates the iOS bridge via manual linking, and the iOS SDK via Cocoapods. It can
+also optionally integrate the iOS bridge using Cocoapods via a local Podspec.
 
 ## Running the Sample App
 

@@ -34,7 +34,7 @@
       options = options | UNAuthorizationOptionProvisional;
     }
     [center requestAuthorizationWithOptions:(options)
-                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                          completionHandler:^(BOOL granted, NSError *_Nullable error) {
                             NSLog(@"Permission granted.");
                             [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
                           }];
@@ -83,7 +83,7 @@
 
 // Universal links
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
- restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+ restorationHandler:(void (^)(NSArray *_Nullable))restorationHandler
 {
   return [RCTLinkingManager application:application
                    continueUserActivity:userActivity

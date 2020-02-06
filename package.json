@@ -1,6 +1,6 @@
 {
   "name": "react-native-appboy-sdk",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "description": "Braze SDK for React Native.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -47,8 +47,7 @@
   },
   "jest": {
     "modulePathIgnorePatterns": [
-      "<rootDir>/AppboyProject/",
-      "<rootDir>/HelloReact/"
+      "<rootDir>/AppboyProject/"
     ],
     "testMatch": [
       "<rootDir>/__tests__/**/*.js?(x)"

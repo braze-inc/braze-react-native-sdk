@@ -345,7 +345,7 @@ RCT_REMAP_METHOD(getContentCards, getContentCardsWithResolver:(RCTPromiseResolve
 }
 
 RCT_EXPORT_METHOD(logContentCardClicked:(NSString *)idString) {
-  ABKContentCard * cardToClick = [self getContentCardById:idString];
+  ABKContentCard *cardToClick = [self getContentCardById:idString];
   if (cardToClick) {
     RCTLogInfo(@"logContentCardClicked with id %@", idString);
     [cardToClick logContentCardClicked];
@@ -353,7 +353,7 @@ RCT_EXPORT_METHOD(logContentCardClicked:(NSString *)idString) {
 }
 
 RCT_EXPORT_METHOD(logContentCardDismissed:(NSString *)idString) {
-  ABKContentCard * cardToClick = [self getContentCardById:idString];
+  ABKContentCard *cardToClick = [self getContentCardById:idString];
   if (cardToClick) {
     RCTLogInfo(@"logContentCardDismissed with id %@", idString);
     [cardToClick logContentCardDismissed];
@@ -361,7 +361,7 @@ RCT_EXPORT_METHOD(logContentCardDismissed:(NSString *)idString) {
 }
 
 RCT_EXPORT_METHOD(logContentCardImpression:(NSString *)idString) {
-  ABKContentCard * cardToClick = [self getContentCardById:idString];
+  ABKContentCard *cardToClick = [self getContentCardById:idString];
   if (cardToClick) {
     RCTLogInfo(@"logContentCardImpression with id %@", idString);
     [cardToClick logContentCardImpression];

@@ -1,3 +1,9 @@
+## 1.19.0
+
+##### Breaking
+- Updated the native Android bridge to [Braze Android SDK 5.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#500).
+- Updated the native iOS bridge to [Braze iOS SDK 3.21.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.21.3).
+
 ## 1.18.0
 
 ##### Breaking
@@ -268,7 +274,6 @@ with
 - Added `ReactAppboy.registerPushToken()` for registering push tokens with Braze.
   - See https://github.com/Appboy/appboy-react-sdk/pull/13. Thanks @dcvz!
 - Added the local `react-native-appboy-sdk` Podspec for integrating the React Native iOS bridge via Cocoapods.
-  - See the new `HelloReact` sample app for an integration example.
   - See https://github.com/Appboy/appboy-react-sdk/pull/15. Thanks @pietropizzi!
 
 ## 1.3.0

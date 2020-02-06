@@ -31,7 +31,8 @@ android/bin/
 .project
 .settings
 AppboyProject/android/app/bin/
-HelloReact/android/app/bin/
+AppboyProject/android/app/.classpath
+!debug.keystore
 
 # Node
 node_modules
@@ -60,3 +61,6 @@ coverage/
 buck-out/
 \.buckd/
 *.keystore
+
+# VSCode
+.vscode/

@@ -458,7 +458,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     mappedCard.putBoolean("clicked", card.isClicked());
     mappedCard.putBoolean("pinned", card.getIsPinned());
     mappedCard.putBoolean("dismissed", card.isDismissed());
-    mappedCard.putBoolean("dismissible", card.getIsDismissible());
+    mappedCard.putBoolean("dismissible", card.getIsDismissibleByUser());
     mappedCard.putString("url", card.getUrl());
     mappedCard.putBoolean("openURLInWebView", card.getOpenUriInWebView());
 
