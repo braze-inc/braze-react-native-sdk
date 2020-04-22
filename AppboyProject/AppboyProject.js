@@ -47,6 +47,7 @@ class AppboyProject extends Component {
     this._disableSDK = this._disableSDK.bind(this);
     this._enableSDK = this._enableSDK.bind(this);
     this._requestLocationInitialization = this._requestLocationInitialization.bind(this);
+    this._requestGeofences = this._requestGeofences.bind(this);
     this._setLocationCustomAttribute = this._setLocationCustomAttribute.bind(this);
     this._setGenderPress = this._setGenderPress.bind(this);
     this._requestContentCardsRefresh = this._requestContentCardsRefresh.bind(this);
@@ -275,6 +276,10 @@ class AppboyProject extends Component {
           <Text>Request Location Initialization</Text>
         </TouchableHighlight>
         : false }
+        <TouchableHighlight
+          onPress={this._requestGeofences}>
+          <Text>Request Geofences</Text>
+        </TouchableHighlight>
         <TouchableHighlight
           onPress={this._setLocationCustomAttribute}>
           <Text>Set Custom Location Attribute</Text>
@@ -506,6 +511,13 @@ class AppboyProject extends Component {
   _requestLocationInitialization(event) {
     ReactAppboy.requestLocationInitialization();
     this._showToast('Init Requested');
+  }
+
+  // Note that this should normally be called only once per session
+  // Demo location is Baltimore
+  _requestGeofences(event) {
+    ReactAppboy.requestGeofences(39.29, -76.61);
+    this._showToast('Geofences Requested');
   }
 
   _setLocationCustomAttribute(event) {

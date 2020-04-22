@@ -708,6 +708,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void requestGeofences(Double latitude, Double longitude) {
+    Appboy.getInstance(getReactApplicationContext()).requestGeofences(latitude, longitude);
+  }
+
+  @ReactMethod
   public void setLocationCustomAttribute(String key, Double latitude, Double longitude, Callback callback) {
     Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLocationCustomAttribute(key, latitude, longitude);
     // Always return true as Android doesn't support getting a result from setLocationCustomAttribute().

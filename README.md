@@ -22,7 +22,7 @@ The following commands apply to both sample projects and use the `AppboyProject`
 
 ```
 cd AppboyProject/
-npm install
+yarn install
 ```
 
 ### iOS
@@ -42,3 +42,11 @@ From the `AppboyProject` directory:
 ```
 react-native run-android
 ```
+
+## Style
+- Generally we try to mimic the Braze Web SDK's Javascript interface where appropriate.
+- We use [eslint](http://eslint.org/) as our linter. From the root directory, run `npm run lint` to list errors or `npm run lint-fix` to automatically fix errors. To override the rules in the [`standard-react`](https://github.com/feross/eslint-config-standard-react) config, add `"rules"` in `.eslintrc.json`.
+
+## Testing
+- We use [jest](https://facebook.github.io/jest/) for testing the React SDK.
+- Run the tests and code coverage report using `npm test`

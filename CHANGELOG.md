@@ -1,3 +1,11 @@
+## 1.20.0
+
+##### ⚠ Breaking
+- Updated the native Android bridge to [Braze Android SDK 7.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#700).
+
+##### Added
+- Added `ReactAppboy.requestGeofences()` to request a Braze Geofences update for a manually provided GPS coordinate. Automatic Braze Geofence requests must be disabled to properly use this method.
+
 ## 1.19.0
 
 ##### Breaking

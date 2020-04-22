@@ -199,7 +199,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-appboy-sdk (1.19.0):
+  - react-native-appboy-sdk (1.20.0):
     - Appboy-iOS-SDK (~> 3.21.3)
     - React
   - React-RCTActionSheet (0.61.5):
@@ -243,6 +243,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - Appboy-iOS-SDK (= 3.21.3)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -274,7 +275,7 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Appboy-iOS-SDK
     - boost-for-react-native
     - SDWebImage
@@ -350,7 +351,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-appboy-sdk: 72d1f86efd6734e68b49a90ec06aff6c1421b0c0
+  react-native-appboy-sdk: c07a192dcc08f3e3c19203a2e0253ab32d36655a
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -364,6 +365,6 @@ SPEC CHECKSUMS:
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: be9f31f36175d3d762ad3f72521bc6356f05a9b1
+PODFILE CHECKSUM: ac245fcadc6d9d7a2f662945e62fccd1d450c5ba
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.9.1

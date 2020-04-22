@@ -565,6 +565,17 @@ var ReactAppboy = {
   },
 
   /**
+  * Call this method to request a Braze Geofences update for a manually provided
+  * GPS coordinate. Automatic Braze Geofence requests must be disabled to properly
+  * use this method. Calling this method is a no-op on iOS.
+  * @param {double} latitude - Location latitude.
+  * @param {double} longitude - Location longitude.
+  */
+  requestGeofences: function(latitude, longitude) {
+    AppboyReactBridge.requestGeofences(latitude, longitude);
+  },
+
+  /**
   * Sets a custom location attribute for the user.
   * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
   * a $, and can only contain alphanumeric characters and punctuation.
