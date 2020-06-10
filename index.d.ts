@@ -217,7 +217,7 @@ export function logPurchase(
  */
 export function setCustomUserAttribute(
   key: string,
-  value: number | boolean | string | string[],
+  value: number | boolean | string | string[] | Date | null,
   callback?: Callback
 ): void;
 
