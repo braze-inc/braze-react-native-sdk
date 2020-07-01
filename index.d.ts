@@ -340,12 +340,7 @@ export function setAttributionData(
 export function launchNewsFeed(): void;
 
 // Content Cards
-interface ContentCardType {
-  CLASSIC: 'Classic',
-  BANNER: 'Banner',
-  CAPTIONED: 'Captioned',
-}
-export const ContentCardTypes: ContentCardType;
+export type ContentCardType = 'Classic' | 'Banner' | 'Captioned'
 
 export interface ContentCard {
   id: string;
@@ -419,9 +414,9 @@ export function logContentCardsDisplayed(): void;
 
 /**
  * Returns a content cards array
- * @returns {Promise<ContentCard[]>}
+ * @returns {Promise<(ClassicContentCard | BannerContentCard | CaptionedContentCard)[]>}
  */
-export function getContentCards(): Promise<ContentCard[]>;
+export function getContentCards(): Promise<(ClassicContentCard | BannerContentCard | CaptionedContentCard)[]>;
 
 /**
  * Returns the current number of News Feed cards for the given category.
