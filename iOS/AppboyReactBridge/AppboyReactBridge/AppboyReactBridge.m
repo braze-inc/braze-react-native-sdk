@@ -330,6 +330,13 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   return nil;
 }
 
+- (void) getInAppMessageFromString:(NSString *)inAppMessageJSONString withInAppMessage:(ABKInAppMessage *)inAppMessage {
+  NSData *inAppMessageData = [inAppMessageJSONString dataUsingEncoding:NSUTF8StringEncoding];
+  NSError *e = nil;
+  id deserializedInAppMessageDict = [NSJSONSerialization JSONObjectWithData:inAppMessageData options:NSJSONReadingMutableContainers error:&e];
+  [inAppMessage setValuesForKeysWithDictionary:deserializedInAppMessageDict];
+}
+
 RCT_EXPORT_METHOD(launchContentCards) {
   RCTLogInfo(@"launchContentCards called");
   ABKContentCardsViewController *contentCardsModal = [[ABKContentCardsViewController alloc] init];
@@ -497,6 +504,27 @@ RCT_EXPORT_METHOD(requestContentCardsRefresh) {
 RCT_EXPORT_METHOD(hideCurrentInAppMessage) {
   RCTLogInfo(@"hideCurrentInAppMessage called");
   [[Appboy sharedInstance].inAppMessageController.inAppMessageUIController hideCurrentInAppMessage:YES];
+}
+
+RCT_EXPORT_METHOD(logInAppMessageClicked:(NSString *)inAppMessageString) {
+  RCTLogInfo(@"logInAppMessageClicked called with value %@", inAppMessageString);
+  ABKInAppMessage *inAppMessage = [[ABKInAppMessage alloc] init];
+  [self getInAppMessageFromString:inAppMessageString withInAppMessage:inAppMessage];
+  [inAppMessage logInAppMessageClicked];
+}
+
+RCT_EXPORT_METHOD(logInAppMessageImpression:(NSString *)inAppMessageString) {
+  RCTLogInfo(@"logInAppMessageImpression called with value %@", inAppMessageString);
+  ABKInAppMessage *inAppMessage = [[ABKInAppMessage alloc] init];
+  [self getInAppMessageFromString:inAppMessageString withInAppMessage:inAppMessage];
+  [inAppMessage logInAppMessageImpression];
+}
+
+RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  buttonId:(int)buttonId) {
+  RCTLogInfo(@"logInAppMessageButtonClicked called with value %@", inAppMessageString);
+  ABKInAppMessageImmersive *inAppMessageImmersive = [[ABKInAppMessageImmersive alloc] init];
+  [self getInAppMessageFromString:inAppMessageString withInAppMessage:inAppMessageImmersive];
+  [inAppMessageImmersive logInAppMessageClickedWithButtonID:buttonId];
 }
 
 RCT_EXPORT_MODULE();

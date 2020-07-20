@@ -603,6 +603,34 @@ var ReactAppboy = {
     AppboyReactBridge.hideCurrentInAppMessage();
   },
 
+  /**
+   * Logs a click for the provided in-app message data
+   * @param {BrazeInAppMessage} inAppMessage
+   */
+  logInAppMessageClicked: function(inAppMessage) {
+    const inAppMessageString = inAppMessage.toString();
+    AppboyReactBridge.logInAppMessageClicked(inAppMessageString);
+  },
+
+  /**
+   * Logs an impression for the provided in-app message data
+   * @param {BrazeInAppMessage} inAppMessage
+   */
+  logInAppMessageImpression: function(inAppMessage) {
+    const inAppMessageString = inAppMessage.toString();
+    AppboyReactBridge.logInAppMessageImpression(inAppMessageString);
+  },
+
+  /**
+   * Logs a button click for the provided in-app message button data
+   * @param {BrazeInAppMessage} inAppMessage
+   * @param {number} buttonId
+   */
+  logInAppMessageButtonClicked: function(inAppMessage, buttonId) {
+    const inAppMessageString = inAppMessage.toString();
+    AppboyReactBridge.logInAppMessageButtonClicked(inAppMessageString, buttonId);
+  },
+
   // Events
   /**
    * Subscribes to the specific SDK event.
@@ -613,6 +641,147 @@ var ReactAppboy = {
    */
   addListener: function(event, subscriber) {
     return AppboyEventEmitter.addListener(event, subscriber);
+  },
+
+  BrazeInAppMessage: class {
+    constructor(_data) {
+      this.inAppMessageJsonString = _data;
+      let inAppMessageJson = JSON.parse(this.inAppMessageJsonString);
+      let messageJson = inAppMessageJson["message"];
+      if (typeof messageJson === 'string') {
+        this.message = messageJson;
+      } else {
+        this.message = '';
+      }
+      let headerJson = inAppMessageJson["header"];
+      if (typeof headerJson === 'string') {
+        this.header = headerJson;
+      } else {
+        this.header = '';
+      }
+      let uriJson = inAppMessageJson["uri"];
+      if (typeof uriJson === 'string') {
+        this.uri = uriJson;
+      } else {
+        this.uri = '';
+      }
+      let imageUrlJson = inAppMessageJson["image_url"];
+      if (typeof imageUrlJson === 'string') {
+        this.imageUrl = imageUrlJson;
+      } else {
+        this.imageUrl = '';
+      }
+      let zippedAssetsUrlJson = inAppMessageJson["zipped_assets_url"];
+      if (typeof zippedAssetsUrlJson === 'string') {
+        this.zippedAssetsUrl = zippedAssetsUrlJson;
+      } else {
+        this.zippedAssetsUrl = '';
+      }
+      let useWebViewJson = inAppMessageJson["use_webview"];
+      if (typeof useWebViewJson === 'boolean') {
+        this.useWebView = useWebViewJson;
+      } else {
+        this.useWebView = false;
+      }
+      let durationJson = inAppMessageJson["duration"];
+      if (typeof durationJson === 'number') {
+        this.duration = durationJson;
+      } else {
+        this.duration = 5;
+      }
+      let clickActionJson = inAppMessageJson["click_action"];
+      this.clickAction = ReactAppboy.ClickAction['NONE'];
+      if (typeof clickActionJson === 'string') {
+        Object.values(ReactAppboy.ClickAction).forEach(action => {
+          if (action.toLowerCase().endsWith(clickActionJson
+            .toLowerCase())) {
+            this.clickAction = action;
+          }
+        });
+      }
+      let dismissTypeJson = inAppMessageJson["message_close"];
+      this.dismissType = ReactAppboy.DismissType['AUTO_DISMISS'];
+      if (typeof dismissTypeJson === 'string') {
+        Object.values(ReactAppboy.DismissType).forEach(type => {
+          if (type.toLowerCase().endsWith(dismissTypeJson
+            .toLowerCase())) {
+            this.dismissType = type;
+          }
+        });
+      }
+      let messageTypeJson = inAppMessageJson["type"];
+      this.messageType = ReactAppboy.MessageType['SLIDEUP'];
+      if (typeof messageTypeJson === 'string') {
+        Object.values(ReactAppboy.MessageType).forEach(type => {
+          if (type.toLowerCase().endsWith(messageTypeJson
+            .toLowerCase())) {
+            this.messageType = type;
+          }
+        });
+      }
+      let extrasJson = inAppMessageJson["extras"];
+      this.extras = {};
+      if (typeof extrasJson === 'object') {
+        Object.keys(extrasJson).forEach(key=> {
+          if (typeof extrasJson[key] === 'string') {
+            this.extras[key] = extrasJson[key];
+          }
+        });
+      }
+      this.buttons = [];
+      let buttonsJson = inAppMessageJson["btns"];
+      if (typeof buttonsJson === 'object' && Array.isArray(buttonsJson)) {
+        buttonsJson.forEach(buttonJson => {
+          this.buttons.push(new ReactAppboy.BrazeButton(buttonJson));
+        });
+      }
+    }
+    toString() {
+      return this.inAppMessageJsonString;
+    }
+  },
+
+  BrazeButton: class {
+    constructor(buttonJson) {
+      let textJson = buttonJson['text'];
+      if (typeof textJson === 'string') {
+        this.text = textJson;
+      } else {
+        this.text = '';
+      }
+      let uriJson = buttonJson['uri'];
+      if (typeof uriJson === 'string') {
+        this.uri = uriJson;
+      } else {
+        this.uri = '';
+      }
+      let useWebViewJson = buttonJson["use_webview"];
+      if (typeof useWebViewJson === 'boolean') {
+        this.useWebView = useWebViewJson;
+      } else {
+        this.useWebView = false;
+      }
+      let clickActionJson = buttonJson["click_action"];
+      this.clickAction = ReactAppboy.ClickAction['NONE'];
+      if (typeof clickActionJson === 'string') {
+        Object.values(ReactAppboy.ClickAction).forEach(action => {
+          if (action.toLowerCase().endsWith(clickActionJson
+            .toLowerCase())) {
+            this.clickAction = action;
+          }
+        });
+      }
+      let idJson = buttonJson["id"];
+      if (typeof idJson === 'number') {
+        this.id = idJson;
+      } else {
+        this.id = 0;
+      }
+    }
+    toString() {
+      return "BrazeButton text:" + this.text + " uri:" + this.uri + " clickAction:"
+          + this.clickAction.toString() + " useWebView:" + this.useWebView.toString();
+    }
   },
 
   // Enums
@@ -649,6 +818,24 @@ var ReactAppboy = {
   Events: {
     'CONTENT_CARDS_UPDATED': 'contentCardsUpdated'
   },
+
+  ClickAction: {
+    'NEWS_FEED': 'news_feed',
+    'URI': 'uri',
+    'NONE': 'none'
+  },
+
+  DismissType: {
+    'SWIPE': 'swipe',
+    'AUTO_DISMISS': 'auto_dismiss'
+  },
+
+  MessageType: {
+    'SLIDEUP': 'slideup',
+    'MODAL': 'modal',
+    'FULL': 'full',
+    'HTML_FULL': 'html_full'
+  }
 };
 
 module.exports = ReactAppboy;

@@ -217,7 +217,7 @@ export function logPurchase(
  */
 export function setCustomUserAttribute(
   key: string,
-  value: any,
+  value: number | boolean | string | string[] | Date | null,
   callback?: Callback
 ): void;
 
@@ -269,7 +269,7 @@ export function unsetCustomUserAttribute(key: string, callback?: Callback): void
  */
 export function incrementCustomUserAttribute(
   key: string,
-  value: any,
+  value: number,
   callback?: Callback
 ): void;
 
@@ -351,7 +351,7 @@ export interface ContentCard {
   id: string;
   created: number;
   expiresAt: number;
-  type: ContentCardType;
+  type: ContentCardType[keyof ContentCardType];
   viewed: boolean;
   clicked: boolean;
   pinned: boolean;
@@ -514,7 +514,82 @@ export function setLocationCustomAttribute(
  */
 export function hideCurrentInAppMessage(): void;
 
+/**
+ * Logs a click for the provided in-app message data
+ * @param {BrazeInAppMessage} inAppMessage
+ */
+export function logInAppMessageClicked(
+  inAppMessage: BrazeInAppMessage
+): void;
+
+/**
+ * Logs an impression for the provided in-app message data
+ * @param {BrazeInAppMessage} inAppMessage
+ */
+export function logInAppMessageImpression(
+  inAppMessage: BrazeInAppMessage
+): void;
+
+/**
+ * Logs a button click for the provided in-app message button data
+ * @param {BrazeInAppMessage} inAppMessage
+ * @param {number} buttonId
+ */
+export function logInAppMessageButtonClicked(
+  inAppMessage: BrazeInAppMessage,
+  buttonId: number
+): void;
+
+export class BrazeInAppMessage {
+  constructor(_data: string)
+  inAppMessageJsonString: string
+  message: string
+  header: string
+  uri: string
+  imageUrl: string
+  zippedAssetsUrl: string
+  useWebView: boolean
+  duration: number
+  clickAction: BrazeClickAction[keyof BrazeClickAction]
+  dismissType: BrazeDismissType[keyof BrazeDismissType]
+  messageType: BrazeMessageType[keyof BrazeMessageType]
+  extras: {[key: string]: string}
+  buttons: [BrazeButton]
+  toString(): string;
+}
+
+export class BrazeButton {
+  constructor(_data: string)
+  text: string
+  uri: string
+  useWebView: boolean
+  clickAction: BrazeClickAction[keyof BrazeClickAction]
+  id: number
+  toString(): string;
+}
+
 type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+interface BrazeClickAction {
+  'NEWS_FEED': 'news_feed',
+  'URI': 'uri',
+  'NONE': 'none'
+}
+export const ClickAction: BrazeClickAction;
+
+interface BrazeDismissType {
+  'SWIPE': 'swipe',
+  'AUTO_DISMISS': 'auto_dismiss'
+}
+export const DismissType: BrazeDismissType;
+
+interface BrazeMessageType {
+  'SLIDEUP': 'slideup',
+  'MODAL': 'modal',
+  'FULL': 'full',
+  'HTML_FULL': 'html_full'
+}
+export const MessageType: BrazeMessageType;
 
 interface BrazeCardCategory {
   ADVERTISING: 'advertising';

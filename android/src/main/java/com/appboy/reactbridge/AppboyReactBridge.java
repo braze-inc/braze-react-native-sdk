@@ -16,6 +16,9 @@ import com.appboy.models.cards.CaptionedImageCard;
 import com.appboy.models.cards.Card;
 import com.appboy.models.cards.ShortNewsCard;
 import com.appboy.models.cards.TextAnnouncementCard;
+import com.appboy.models.IInAppMessage;
+import com.appboy.models.IInAppMessageImmersive;
+import com.appboy.models.MessageButton;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.models.outgoing.AttributionData;
 import com.appboy.models.outgoing.FacebookUser;
@@ -722,6 +725,36 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void hideCurrentInAppMessage() {
     AppboyInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
+  }
+
+  @ReactMethod
+  public void logInAppMessageClicked(String inAppMessageString) {
+    IInAppMessage inAppMessage = Appboy.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
+    if (inAppMessage != null) {
+      inAppMessage.logClick();
+    }
+  }
+
+  @ReactMethod
+  public void logInAppMessageImpression(String inAppMessageString) {
+    IInAppMessage inAppMessage = Appboy.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
+    if (inAppMessage != null) {
+      inAppMessage.logImpression();
+    }
+  }
+
+  @ReactMethod
+  public void logInAppMessageButtonClicked(String inAppMessageString, Integer buttonId) {
+    IInAppMessage inAppMessage = Appboy.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
+    if (inAppMessage instanceof IInAppMessageImmersive) {
+      IInAppMessageImmersive inAppMessageImmersive = (IInAppMessageImmersive)inAppMessage;
+      for (MessageButton button : inAppMessageImmersive.getMessageButtons()) {
+        if (button.getId() == buttonId) {
+          inAppMessageImmersive.logButtonClick(button);
+          break;
+        }
+      }
+    }
   }
 
   @ReactMethod

@@ -20,28 +20,47 @@ also optionally integrate the iOS bridge using Cocoapods via a local Podspec.
 
 The following commands apply to both sample projects and use the `AppboyProject` directory as an example.
 
-```
+```zsh
 cd AppboyProject/
 yarn install
+
+# In a separate tab:
+cd AppboyProject/
+npx react-native start
 ```
 
 ### iOS
 Our sample app integrates the native Braze iOS SDK through [Cocoapods](https://guides.cocoapods.org/using/getting-started.html).
 
 From the `AppboyProject` directory:
-```
+```zsh
 sudo gem install cocoapods
 cd ios/
 pod install
 cd ../
-react-native run-ios
+npx react-native run-ios
 ```
 
 ### Android
 From the `AppboyProject` directory:
+```zsh
+npx react-native run-android
 ```
-react-native run-android
-```
+
+## In-App Messages
+### Integration
+
+Native in-app messages display automatically out of the box on Android and iOS.
+
+To get the in-app message data implement the `IInAppMessageManagerListener` delegate as described in our public documentation [for Android](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/in-app_messaging/customization/#setting-a-custom-manager-listener) and [for iOS](https://www.braze.com/docs/developer_guide/platform_integration_guides/ios/in-app_messaging/customization/). This data can then be received in the JavaScript layer and used to instantiate a `BrazeInAppMessage`. A sample implementation of this is contained in AppboyProject.
+
+### Disabling automatic display
+To disable automatic in-app message display for Android, your `beforeInAppMessageDisplayed` method implementation should return `InAppMessageOperation.DISCARD`.
+
+To disable automatic in-app message display for iOS, your `beforeInAppMessageDisplayed` delegate implementation should return `ABKInAppMessageDisplayChoice.discardInAppMessage`.
+
+### Analytics
+To log analytics using your `BrazeInAppMessage`, pass the instance into the `logInAppMessageClicked`, `logInAppMessageImpression`, and `logInAppMessageButtonClicked` (along with the button index) methods available on `ReactAppboy`.
 
 ## Style
 - Generally we try to mimic the Braze Web SDK's Javascript interface where appropriate.

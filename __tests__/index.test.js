@@ -67,13 +67,18 @@ jest.mock('NativeModules', () => {
       requestGeofences: jest.fn(),
       setLocationCustomAttribute: jest.fn(),
       requestContentCardsRefresh: jest.fn(),
-      hideCurrentInAppMessage: jest.fn()
+      hideCurrentInAppMessage: jest.fn(),
+      logInAppMessageClicked: jest.fn(),
+      logInAppMessageImpression: jest.fn(),
+      logInAppMessageButtonClicked: jest.fn()
     }
   };
 });
 
 console.log = jest.fn();
 testCallback = jest.fn();
+
+const testInAppMessageJson = `{\"message\":\"body body\",\"type\":\"MODAL\",\"text_align_message\":\"CENTER\",\"click_action\":\"NONE\",\"message_close\":\"SWIPE\",\"extras\":{\"test\":\"123\",\"foo\":\"bar\"},\"header\":\"hello\",\"text_align_header\":\"CENTER\",\"image_url\":\"https:\\/\\/cdn-staging.braze.com\\/appboy\\/communication\\/marketing\\/slide_up\\/slide_up_message_parameters\\/images\\/5ba53198bf5cea446b153b77\\/0af410cf267a4686ac6cac571bd2be4da4c8e63c\\/original.jpg?1572663749\",\"image_style\":\"TOP\",\"btns\":[{\"id\":0,\"text\":\"button 1\",\"click_action\":\"URI\",\"uri\":\"https:\\/\\/www.google.com\",\"use_webview\":true,\"bg_color\":4294967295,\"text_color\":4279990479,\"border_color\":4279990479},{\"id\":1,\"text\":\"button 2\",\"click_action\":\"NONE\",\"bg_color\":4279990479,\"text_color\":4294967295,\"border_color\":4279990479}],\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\"}`;
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -462,4 +467,124 @@ test('it adds a listener', () => {
   ReactAppboy.addListener(testEvent, testFunction);
   nativeEmitter.emit(testEvent);
   expect(counter).toBe(1);
+});
+
+it('instantiates a BrazeInAppMessage object', () => {
+  const testMessageBody = "some message body";
+  const testMessageType = 'MODAL';
+  const testUri = "https:\\/\\/www.sometesturi.com";
+  const testImageUrl = "https:\\/\\/www.sometestimageuri.com";
+  const testZippedAssetsUrl = "https:\\/\\/www.sometestzippedassets.com";
+  const testUseWebView = true;
+  const testDuration = 42;
+  const testExtras = '{\"test\":\"123\",\"foo\":\"bar\"}';
+  const testClickAction = 'URI';
+  const testDismissType = 'SWIPE';
+  const testHeader = "some header";
+  const testButton0 = '{\"id\":0,\"text\":\"button 1\",\"click_action\":\"URI\",\"uri\":\"https:\\/\\/www.google.com\",\"use_webview\":true,\"bg_color\":4294967295,\"text_color\":4279990479,\"border_color\":4279990479}';
+  const testButton1 = '{\"id\":1,\"text\":\"button 2\",\"click_action\":\"NONE\",\"bg_color\":4279990479,\"text_color\":4294967295,\"border_color\":4279990479}';
+  const testButtonString = `[${testButton0}, ${testButton1}]`;
+  const testButtons = [];
+  testButtons.push(new ReactAppboy.BrazeButton(JSON.parse(testButton0)));
+  testButtons.push(new ReactAppboy.BrazeButton(JSON.parse(testButton1)));
+  const testJson = `{\"message\":\"${testMessageBody}\",\"type\":\"${testMessageType}\",\"text_align_message\":\"CENTER\",\"click_action\":\"${testClickAction}\",\"message_close\":\"SWIPE\",\"extras\":${testExtras},\"header\":\"${testHeader}\",\"text_align_header\":\"CENTER\",\"image_url\":\"${testImageUrl}\",\"image_style\":\"TOP\",\"btns\":${testButtonString},\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\",\"uri\":\"${testUri}\",\"zipped_assets_url\":\"${testZippedAssetsUrl}\",\"duration\":${testDuration},\"message_close\":\"${testDismissType}\",\"use_webview\":${testUseWebView}}`
+  const inAppMessage = new ReactAppboy.BrazeInAppMessage(testJson);
+  expect(inAppMessage.message).toBe(testMessageBody);
+  expect(inAppMessage.messageType).toBe(testMessageType.toLowerCase());
+  expect(inAppMessage.uri).toBe(JSON.parse(`"${testUri}"`));
+  expect(inAppMessage.useWebView).toBe(testUseWebView);
+  expect(inAppMessage.zippedAssetsUrl).toBe(JSON.parse(`"${testZippedAssetsUrl}"`));
+  expect(inAppMessage.duration).toBe(testDuration);
+  expect(inAppMessage.extras).toEqual(JSON.parse(testExtras));
+  expect(inAppMessage.clickAction).toBe(testClickAction.toLowerCase());
+  expect(inAppMessage.dismissType).toBe(testDismissType.toLowerCase());
+  expect(inAppMessage.imageUrl).toBe(JSON.parse(`"${testImageUrl}"`));
+  expect(inAppMessage.header).toBe(testHeader);
+  expect(inAppMessage.inAppMessageJsonString).toBe(testJson);
+  expect(inAppMessage.buttons).toEqual(testButtons);
+});
+
+it('instantiates a BrazeInAppMessage object with the desired defaults', () => {
+  const defaultMessageBody = '';
+  const defaultMessageType = 'SLIDEUP';
+  const defaultUri = '';
+  const defaultImageUrl = '';
+  const defaultZippedAssetsUrl = '';
+  const defaultUseWebView = false;
+  const defaultDuration = 5;
+  const defaultExtras = {};
+  const defaultClickAction = 'NONE';
+  const defaultDismissType = 'AUTO_DISMISS';
+  const defaultHeader = '';
+  const defaultButtons = [];
+  const testJson = `{}`;
+  const inAppMessage = new ReactAppboy.BrazeInAppMessage(testJson);
+  expect(inAppMessage.message).toBe(defaultMessageBody);
+  expect(inAppMessage.messageType).toBe(defaultMessageType.toLowerCase());
+  expect(inAppMessage.uri).toBe(defaultUri);
+  expect(inAppMessage.useWebView).toBe(defaultUseWebView);
+  expect(inAppMessage.zippedAssetsUrl).toBe(defaultZippedAssetsUrl);
+  expect(inAppMessage.duration).toBe(defaultDuration);
+  expect(inAppMessage.extras).toEqual(defaultExtras);
+  expect(inAppMessage.clickAction).toBe(defaultClickAction.toLowerCase());
+  expect(inAppMessage.dismissType).toBe(defaultDismissType.toLowerCase());
+  expect(inAppMessage.imageUrl).toBe(defaultImageUrl);
+  expect(inAppMessage.header).toBe(defaultHeader);
+  expect(inAppMessage.inAppMessageJsonString).toBe(testJson);
+  expect(inAppMessage.buttons).toEqual(defaultButtons);
+});
+
+it('returns the original JSON when calling BrazeInAppMessage.toString()', () => {
+  const inAppMessage = new ReactAppboy.BrazeInAppMessage(testInAppMessageJson);
+  expect(inAppMessage.toString()).toBe(testInAppMessageJson);
+});
+
+test('it calls AppboyReactBridge.logInAppMessageClicked', () => {
+  const inAppMessage = new ReactAppboy.BrazeInAppMessage(testInAppMessageJson);
+  ReactAppboy.logInAppMessageClicked(inAppMessage);
+  expect(NativeModules.AppboyReactBridge.logInAppMessageClicked).toBeCalledWith(testInAppMessageJson);
+});
+
+test('it calls AppboyReactBridge.logInAppMessageImpression', () => {
+  const inAppMessage = new ReactAppboy.BrazeInAppMessage(testInAppMessageJson);
+  ReactAppboy.logInAppMessageImpression(inAppMessage);
+  expect(NativeModules.AppboyReactBridge.logInAppMessageImpression).toBeCalledWith(testInAppMessageJson);
+});
+
+test('it calls AppboyReactBridge.logInAppMessageButtonClicked', () => {
+  const inAppMessage = new ReactAppboy.BrazeInAppMessage(testInAppMessageJson);
+  const testId = 23;
+  ReactAppboy.logInAppMessageButtonClicked(inAppMessage, testId);
+  expect(NativeModules.AppboyReactBridge.logInAppMessageButtonClicked).toBeCalledWith(testInAppMessageJson, testId);
+});
+
+it('instantiates a BrazeButton object', () => {
+  const testId = 53;
+  const testClickAction = 'URI';
+  const testText = 'some text';
+  const testUri = "https:\\/\\/www.sometesturi.com";
+  const testUseWebView = true;
+  const testButtonJson = `{\"id\":${testId},\"text\":\"${testText}\",\"click_action\":\"${testClickAction}\",\"uri\":\"${testUri}\",\"use_webview\":${testUseWebView},\"bg_color\":4294967295,\"text_color\":4279990479,\"border_color\":4279990479}`;
+  const button = new ReactAppboy.BrazeButton(JSON.parse(testButtonJson));
+  expect(button.id).toBe(testId);
+  expect(button.clickAction).toBe(testClickAction.toLowerCase());
+  expect(button.text).toBe(testText);
+  expect(button.uri).toBe(JSON.parse(`"${testUri}"`));
+  expect(button.useWebView).toBe(testUseWebView);
+  expect(button.toString()).toBe("BrazeButton text:" + button.text + " uri:" + button.uri + " clickAction:"
+  + button.clickAction.toString() + " useWebView:" + button.useWebView.toString());
+});
+
+it('instantiates a BrazeButton object with the desired defaults', () => {
+  const defaultUri = '';
+  const defaultText= '';
+  const defaultUseWebView = false;
+  const defaultClickAction = 'NONE';
+  const defaultId = 0;
+  const inAppMessage = new ReactAppboy.BrazeButton(`{}`);
+  expect(inAppMessage.uri).toBe(defaultUri);
+  expect(inAppMessage.useWebView).toBe(defaultUseWebView);
+  expect(inAppMessage.text).toBe(defaultText);
+  expect(inAppMessage.clickAction).toBe(defaultClickAction.toLowerCase());
+  expect(inAppMessage.id).toBe(defaultId);
 });

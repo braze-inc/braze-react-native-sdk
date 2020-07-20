@@ -10,7 +10,8 @@ import {
   Linking,
   Alert,
   TextInput,
-  Platform
+  Platform,
+  DeviceEventEmitter
 } from 'react-native';
 
 const ReactAppboy = require('react-native-appboy-sdk');
@@ -85,6 +86,15 @@ class AppboyProject extends Component {
 
     ReactAppboy.addListener(ReactAppboy.Events.CONTENT_CARDS_UPDATED, function() {
       console.log('Content Cards Updated.');
+    })
+
+    this._listener = DeviceEventEmitter.addListener("inAppMessageReceived", function(event) {
+      let inAppMessage = new ReactAppboy.BrazeInAppMessage(event.inAppMessage);
+      ReactAppboy.logInAppMessageClicked(inAppMessage);
+      ReactAppboy.logInAppMessageImpression(inAppMessage);
+      ReactAppboy.logInAppMessageButtonClicked(inAppMessage, 0);
+      that._showToast('inAppMessage received in the React layer');
+      console.log(inAppMessage);
     })
   }
 

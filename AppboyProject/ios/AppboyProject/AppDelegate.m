@@ -2,10 +2,14 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTBridge.h>
+#import <React/RCTEventDispatcher.h>
 #import "AppboyKit.h"
 #import "AppboyReactUtils.h"
 
 @implementation AppDelegate
+
+@synthesize bridge;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -16,6 +20,7 @@
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
 
+  self.bridge = rootView.bridge;
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
@@ -23,7 +28,8 @@
   [self.window makeKeyAndVisible];
   [Appboy startWithApiKey:@"d0555d14-3491-4141-a9f0-ffb83e3c2a2f"
             inApplication:application
-        withLaunchOptions:launchOptions];
+        withLaunchOptions:launchOptions
+        withAppboyOptions:@{ ABKInAppMessageControllerDelegateKey : self }];
 
   // Register for user notifications
   if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
@@ -51,6 +57,9 @@
   }
 
   [[AppboyReactUtils sharedInstance] populateInitialUrlFromLaunchOptions:launchOptions];
+
+  // In-App Messaging
+  [Appboy sharedInstance].inAppMessageController.delegate = self;
 
   return YES;
 }
@@ -90,4 +99,19 @@
                      restorationHandler:restorationHandler];
 }
 
+// In-app messaging
+- (ABKInAppMessageDisplayChoice) beforeInAppMessageDisplayed:(ABKInAppMessage *)inAppMessage {
+  NSLog(@"Received IAM from Braze in beforeInAppMessageDisplayed delegate.");
+  NSData *inAppMessageData = [inAppMessage serializeToData];
+  NSString *inAppMessageString = [[NSString alloc] initWithData:inAppMessageData encoding:NSUTF8StringEncoding];
+  NSDictionary *arguments = @{
+    @"inAppMessage" : inAppMessageString
+  };
+  [self.bridge.eventDispatcher
+             sendDeviceEventWithName:@"inAppMessageReceived"
+             body:arguments];
+  // Note: return ABKDiscardInAppMessage if you would like
+  // to prevent the Braze SDK from displaying the message natively.
+  return ABKDisplayInAppMessageNow;
+}
 @end
