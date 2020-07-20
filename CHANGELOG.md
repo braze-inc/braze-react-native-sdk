@@ -1,12 +1,11 @@
 ## 1.21.0
 
-##### Added
-- Added support for working with in-app messages in the JavaScript layer. In-App Messages can be instantiated using the `BrazeInAppMessage` class. The resulting object can be passed into the analytics methods: `logInAppMessageClicked`, `logInAppMessageImpression`, and `logInAppMessageButtonClicked` (along with the button index). See the README for additional implementation details or the `AppboyProject` sample app for an integration example.
-- Added `ReactAppboy.requestGeofences()` to request a Braze Geofences update for a manually provided GPS coordinate. Automatic Braze Geofence requests must be disabled to properly use this method.
-
 ##### ⚠ Breaking
 - Updated the native Android bridge to [Braze Android SDK 8.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#801).
 - Updated the native iOS bridge to [Braze iOS SDK 3.26.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.26.0).
+
+##### Added
+- Added support for working with in-app messages in the JavaScript layer. In-App Messages can be instantiated using the `BrazeInAppMessage` class. The resulting object can be passed into the analytics methods: `logInAppMessageClicked`, `logInAppMessageImpression`, and `logInAppMessageButtonClicked` (along with the button index). See the README for additional implementation details or the `AppboyProject` sample app for an integration example.
 
 ##### Changed
 - Improved Typescript definitions for `setCustomUserAttribute` and `incrementCustomUserAttribute`.
