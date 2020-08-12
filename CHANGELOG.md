@@ -1,3 +1,9 @@
+## 1.22.0
+
+##### Changed
+- Updated the native Android bridge to [Braze Android SDK 8.1.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#810), which contains support for Android 11.
+- Updated the native iOS bridge to [Braze iOS SDK 3.26.1](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.26.1), which contains preliminary support for iOS 14.
+
 ## 1.21.0
 
 ##### ⚠ Breaking

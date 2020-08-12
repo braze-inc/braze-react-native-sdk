@@ -17,6 +17,6 @@ android {
 }
 
 dependencies {
-  api 'com.appboy:android-sdk-ui:8.0.1'
+  api 'com.appboy:android-sdk-ui:8.1.0'
   api 'com.facebook.react:react-native:+'
 }

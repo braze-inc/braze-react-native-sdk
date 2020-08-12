@@ -2,7 +2,7 @@ platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'AppboyProject' do
-  pod 'Appboy-iOS-SDK', '3.26.0'
+  pod 'Appboy-iOS-SDK', '3.26.1'
 
   # If you want to integrate through Cocoapods instead of manual linking use this:
   # It already comes with a dependency on `Appboy-iOS-SDK` so you're all set. Remember to
