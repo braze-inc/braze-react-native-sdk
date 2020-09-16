@@ -1,3 +1,8 @@
+## 1.23.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.27.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3270). This release adds support for iOS 14 and requires XCode 12. Please read the Braze iOS SDK changelog for details.
+
 ## 1.22.0
 
 ##### Changed
