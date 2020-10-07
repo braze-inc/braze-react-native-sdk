@@ -1,24 +1,27 @@
 package com.appboy.reactbridge;
 
 import android.content.Intent;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.appboy.Appboy;
+import com.appboy.AppboyUser;
+import com.appboy.enums.CardCategory;
 import com.appboy.enums.Gender;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
-import com.appboy.enums.CardCategory;
 import com.appboy.events.ContentCardsUpdatedEvent;
 import com.appboy.events.FeedUpdatedEvent;
 import com.appboy.events.IEventSubscriber;
+import com.appboy.events.SimpleValueCallback;
+import com.appboy.models.IInAppMessage;
+import com.appboy.models.IInAppMessageImmersive;
+import com.appboy.models.MessageButton;
 import com.appboy.models.cards.BannerImageCard;
 import com.appboy.models.cards.CaptionedImageCard;
 import com.appboy.models.cards.Card;
 import com.appboy.models.cards.ShortNewsCard;
 import com.appboy.models.cards.TextAnnouncementCard;
-import com.appboy.models.IInAppMessage;
-import com.appboy.models.IInAppMessageImmersive;
-import com.appboy.models.MessageButton;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.models.outgoing.AttributionData;
 import com.appboy.models.outgoing.FacebookUser;
@@ -29,6 +32,7 @@ import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -37,14 +41,12 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.json.JSONObject;
 
-import java.lang.Integer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,18 +55,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AppboyReactBridge extends ReactContextBaseJavaModule {
-  private static final String TAG = String.format("Appboy.%s", AppboyReactBridge.class.getName());
+  private static final String TAG = AppboyLogger.getAppboyLogTag(AppboyReactBridge.class);
   private static final String CARD_COUNT_TAG = "card count";
   private static final String UNREAD_CARD_COUNT_TAG = "unread card count";
-  private static final String DURATION_SHORT_KEY = "SHORT";
-  private static final String DURATION_LONG_KEY = "LONG";
   private static final String CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated";
+
   private final Object mCallbackWasCalledMapLock = new Object();
-  private IEventSubscriber<ContentCardsUpdatedEvent> mContentCardsUpdatedSubscriber;
   private final List<Card> mContentCards = new ArrayList<>();
+  private final Map<Callback, IEventSubscriber<FeedUpdatedEvent>> mFeedSubscriberMap = new ConcurrentHashMap<>();
+  private final Map<Callback, Boolean> mCallbackWasCalledMap = new ConcurrentHashMap<>();
   private long mContentCardsUpdatedAt = 0;
-  private Map<Callback, IEventSubscriber<FeedUpdatedEvent>> mFeedSubscriberMap = new ConcurrentHashMap<Callback, IEventSubscriber<FeedUpdatedEvent>>();
-  private Map<Callback, Boolean> mCallbackWasCalledMap = new ConcurrentHashMap<Callback, Boolean>();
+  private IEventSubscriber<ContentCardsUpdatedEvent> mContentCardsUpdatedSubscriber;
 
   public AppboyReactBridge(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -109,8 +110,13 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void addAlias(String aliasName, String aliasLabel) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().addAlias(aliasName, aliasLabel);
+  public void addAlias(final String aliasName, final String aliasLabel) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.addAlias(aliasName, aliasLabel);
+      }
+    });
   }
 
   @ReactMethod
@@ -130,38 +136,46 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private AppboyProperties populateEventPropertiesFromReadableMap(ReadableMap eventProperties) {
     AppboyProperties properties = new AppboyProperties();
     ReadableMapKeySetIterator keySetIterator = eventProperties.keySetIterator();
-    if (eventProperties != JSONObject.NULL) {
-      while (keySetIterator.hasNextKey()) {
-        String key = keySetIterator.nextKey();
-        ReadableType readableType = eventProperties.getType(key);
-        if (readableType == ReadableType.String) {
+    if (eventProperties == JSONObject.NULL) {
+      return properties;
+    }
+
+    while (keySetIterator.hasNextKey()) {
+      String key = keySetIterator.nextKey();
+      ReadableType readableType = eventProperties.getType(key);
+      switch (readableType) {
+        case String:
           properties.addProperty(key, eventProperties.getString(key));
-        } else if (readableType == ReadableType.Boolean) {
+          break;
+        case Boolean:
           properties.addProperty(key, eventProperties.getBoolean(key));
-        } else if (readableType == ReadableType.Number) {
+          break;
+        case Number:
           try {
             properties.addProperty(key, eventProperties.getDouble(key));
           } catch (Exception e) {
             try {
               properties.addProperty(key, eventProperties.getInt(key));
             } catch (Exception e2) {
-              AppboyLogger.e(TAG, "Could not parse ReadableType.Number from ReadableMap for key: " + key);
+              AppboyLogger.e(TAG, "Could not parse ReadableType.Number from ReadableMap for key: " + key, e2);
             }
           }
-        } else if (readableType == ReadableType.Map) {
+          break;
+        case Map:
           try {
             if (eventProperties.getMap(key).getString("type").equals("UNIX_timestamp")) {
               double unixTimestamp = eventProperties.getMap(key).getDouble("value");
-              properties.addProperty(key, new Date((long)unixTimestamp));
+              properties.addProperty(key, new Date((long) unixTimestamp));
             } else {
-              AppboyLogger.e(TAG, "Unsupported ReadableMap type received for key: " + key);
+              AppboyLogger.w(TAG, "Unsupported ReadableMap type received for key: " + key);
             }
           } catch (Exception e) {
-            AppboyLogger.e(TAG, "Could not determine type from ReadableMap for key: " + key);
+            AppboyLogger.e(TAG, "Could not determine type from ReadableMap for key: " + key, e);
           }
-        } else {
-          AppboyLogger.e(TAG, "Could not map ReadableType to an AppboyProperty value for key: " + key);
-        }
+          break;
+        default:
+          AppboyLogger.w(TAG, "Could not map ReadableType to an AppboyProperty value for key: " + key);
+          break;
       }
     }
     return properties;
@@ -177,88 +191,153 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setStringCustomUserAttribute(String key, String value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
-    reportResultWithCallback(callback, null, result);
+  public void setStringCustomUserAttribute(final String key, final String value, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setCustomUserAttribute(key, value);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setBoolCustomUserAttribute(String key, Boolean value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
-    reportResultWithCallback(callback, null, result);
+  public void setBoolCustomUserAttribute(final String key, final Boolean value, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setCustomUserAttribute(key, value);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setIntCustomUserAttribute(String key, int value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
-    reportResultWithCallback(callback, null, result);
+  public void setIntCustomUserAttribute(final String key, final int value, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setCustomUserAttribute(key, value);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setDoubleCustomUserAttribute(String key, float value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttribute(key, value);
-    reportResultWithCallback(callback, null, result);
+  public void setDoubleCustomUserAttribute(final String key, final float value, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setCustomUserAttribute(key, value);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setDateCustomUserAttribute(String key, int timeStamp, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomUserAttributeToSecondsFromEpoch(key, timeStamp);
-    reportResultWithCallback(callback, null, result);
+  public void setDateCustomUserAttribute(final String key, final int timeStamp, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setCustomUserAttributeToSecondsFromEpoch(key, timeStamp);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void incrementCustomUserAttribute(String key, int incrementValue, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().incrementCustomUserAttribute(key, incrementValue);
-    reportResultWithCallback(callback, null, result);
+  public void incrementCustomUserAttribute(final String key, final int incrementValue, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.incrementCustomUserAttribute(key, incrementValue);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void unsetCustomUserAttribute(String key, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().unsetCustomUserAttribute(key);
-    reportResultWithCallback(callback, null, result);
+  public void unsetCustomUserAttribute(final String key, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.unsetCustomUserAttribute(key);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setCustomUserAttributeArray(String key, ReadableArray value, Callback callback) {
+  public void setCustomUserAttributeArray(final String key, ReadableArray value, final Callback callback) {
     int size = value.size();
-    String[] attributeArray = new String[size];
+    final String[] attributeArray = new String[size];
     for (int i = 0; i < size; i++) {
       attributeArray[i] = value.getString(i);
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCustomAttributeArray(key, attributeArray);
-    reportResultWithCallback(callback, null, result);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setCustomAttributeArray(key, attributeArray);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void addToCustomAttributeArray(String key, String value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().addToCustomAttributeArray(key, value);
-    reportResultWithCallback(callback, null, result);
+  public void addToCustomAttributeArray(final String key, final String value, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.addToCustomAttributeArray(key, value);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void removeFromCustomAttributeArray(String key, String value, Callback callback) {
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().removeFromCustomAttributeArray(key, value);
-    reportResultWithCallback(callback, null, result);
+  public void removeFromCustomAttributeArray(final String key, final String value, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.removeFromCustomAttributeArray(key, value);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setFirstName(String firstName) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setFirstName(firstName);
+  public void setFirstName(final String firstName) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setFirstName(firstName);
+      }
+    });
   }
 
   @ReactMethod
-  public void setLastName(String lastName) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLastName(lastName);
+  public void setLastName(final String lastName) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setLastName(lastName);
+      }
+    });
   }
 
   @ReactMethod
-  public void setEmail(String email) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setEmail(email);
+  public void setEmail(final String email) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setEmail(email);
+      }
+    });
   }
 
   @ReactMethod
-  public void setGender(String gender, Callback callback) {
-    Gender genderEnum;
+  public void setGender(String gender, final Callback callback) {
+    final Gender genderEnum;
     if (gender == null) {
       reportResultWithCallback(callback, "Input Gender was null. Gender not set.", null);
       return;
@@ -278,43 +357,78 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Invalid input " + gender + ". Gender not set.", null);
       return;
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setGender(genderEnum);
-    reportResultWithCallback(callback, null, result);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setGender(genderEnum);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setDateOfBirth(int year, int month, int day) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setDateOfBirth(year, parseMonth(month), day);
+  public void setDateOfBirth(final int year, final int month, final int day) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setDateOfBirth(year, parseMonth(month), day);
+      }
+    });
   }
 
   @ReactMethod
-  public void setCountry(String country) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setCountry(country);
+  public void setCountry(final String country) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setCountry(country);
+      }
+    });
   }
 
   @ReactMethod
-  public void setHomeCity(String homeCity) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setHomeCity(homeCity);
+  public void setHomeCity(final String homeCity) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setHomeCity(homeCity);
+      }
+    });
   }
 
   @ReactMethod
-  public void setPhoneNumber(String phoneNumber) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setPhoneNumber(phoneNumber);
+  public void setPhoneNumber(final String phoneNumber) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setPhoneNumber(phoneNumber);
+      }
+    });
   }
 
   @ReactMethod
-  public void setLanguage(String language) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLanguage(language);
+  public void setLanguage(final String language) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setLanguage(language);
+      }
+    });
   }
 
   @ReactMethod
-  public void setAvatarImageUrl(String avatarImageUrl) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setAvatarImageUrl(avatarImageUrl);
+  public void setAvatarImageUrl(final String avatarImageUrl) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setAvatarImageUrl(avatarImageUrl);
+      }
+    });
   }
 
   @ReactMethod
-  public void setPushNotificationSubscriptionType(String subscriptionType, Callback callback) {
-    NotificationSubscriptionType notificationSubscriptionType;
+  public void setPushNotificationSubscriptionType(String subscriptionType, final Callback callback) {
+    final NotificationSubscriptionType notificationSubscriptionType;
     if (subscriptionType == null) {
       reportResultWithCallback(callback, "Input subscription type was null. Push notification subscription type not set.", null);
       return;
@@ -328,13 +442,18 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Invalid subscription type " + subscriptionType + ". Push notification subscription type not set.", null);
       return;
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setPushNotificationSubscriptionType(notificationSubscriptionType);
-    reportResultWithCallback(callback, null, result);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setPushNotificationSubscriptionType(notificationSubscriptionType);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setEmailNotificationSubscriptionType(String subscriptionType, Callback callback) {
-    NotificationSubscriptionType notificationSubscriptionType;
+  public void setEmailNotificationSubscriptionType(String subscriptionType, final Callback callback) {
+    final NotificationSubscriptionType notificationSubscriptionType;
     if (subscriptionType == null) {
       reportResultWithCallback(callback, "Input subscription type was null. Email notification subscription type not set.", null);
       return;
@@ -348,14 +467,38 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Invalid subscription type " + subscriptionType + ". Email notification subscription type not set.", null);
       return;
     }
-    boolean result = Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setEmailNotificationSubscriptionType(notificationSubscriptionType);
-    reportResultWithCallback(callback, null, result);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        boolean result = appboyUser.setEmailNotificationSubscriptionType(notificationSubscriptionType);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
   }
 
   @ReactMethod
-  public void setTwitterData(Integer id, String screenName, String name, String description, Integer followersCount, Integer friendsCount, Integer statusesCount, String profileImageUrl) {
-    TwitterUser twitterUser = new TwitterUser(id, screenName, name, description, followersCount, friendsCount, statusesCount, profileImageUrl);
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setTwitterData(twitterUser);
+  public void setTwitterData(Integer id,
+                             String screenName,
+                             String name,
+                             String description,
+                             Integer followersCount,
+                             Integer friendsCount,
+                             Integer statusesCount,
+                             String profileImageUrl) {
+    final TwitterUser twitterUser = new TwitterUser(id,
+        screenName,
+        name,
+        description,
+        followersCount,
+        friendsCount,
+        statusesCount,
+        profileImageUrl);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setTwitterData(twitterUser);
+      }
+    });
   }
 
   @ReactMethod
@@ -406,9 +549,14 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         cityName = location.getString("name");
       }
     }
-    FacebookUser facebookUser = new FacebookUser(facebookId, firstName, lastName, email,
+    final FacebookUser facebookUser = new FacebookUser(facebookId, firstName, lastName, email,
             bio, cityName, genderEnum, numberOfFriends, likesList, birthday);
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setFacebookData(facebookUser);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setFacebookData(facebookUser);
+      }
+    });
   }
 
   @ReactMethod
@@ -626,50 +774,53 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     IEventSubscriber<FeedUpdatedEvent> feedUpdatedSubscriber = null;
     boolean requestingFeedUpdateFromCache = false;
 
-    if (cardCountTag.equals(CARD_COUNT_TAG)) {
-      // getCardCount
-      feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
-        @Override
-        public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
-          // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
-          synchronized (mCallbackWasCalledMapLock) {
-            if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
-              mCallbackWasCalledMap.put(callback, new Boolean(true));
-              if (category.equals("all")) {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount());
-              } else {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount(cardCategory));
+    switch (cardCountTag) {
+      case CARD_COUNT_TAG:
+        // getCardCount
+        feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
+          @Override
+          public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
+            // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
+            synchronized (mCallbackWasCalledMapLock) {
+              if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
+                mCallbackWasCalledMap.put(callback, new Boolean(true));
+                if (category.equals("all")) {
+                  reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount());
+                } else {
+                  reportResultWithCallback(callback, null, feedUpdatedEvent.getCardCount(cardCategory));
+                }
               }
             }
+            // Remove this listener from the feed subscriber map and from Appboy
+            Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+            mFeedSubscriberMap.remove(callback);
           }
-          // Remove this listener from the feed subscriber map and from Appboy
-          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
-          mFeedSubscriberMap.remove(callback);
-        }
-      };
-      requestingFeedUpdateFromCache = true;
-    } else if (cardCountTag.equals(UNREAD_CARD_COUNT_TAG)) {
-      // getUnreadCardCount
-      feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
-        @Override
-        public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
-          // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
-          synchronized (mCallbackWasCalledMapLock) {
-            if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback)!= null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
-              mCallbackWasCalledMap.put(callback, new Boolean(true));
-              if (category.equals("all")) {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount());
-              } else {
-                reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount(cardCategory));
+        };
+        requestingFeedUpdateFromCache = true;
+        break;
+      case UNREAD_CARD_COUNT_TAG:
+        // getUnreadCardCount
+        feedUpdatedSubscriber = new IEventSubscriber<FeedUpdatedEvent>() {
+          @Override
+          public void trigger(FeedUpdatedEvent feedUpdatedEvent) {
+            // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
+            synchronized (mCallbackWasCalledMapLock) {
+              if (mCallbackWasCalledMap.get(callback) == null || mCallbackWasCalledMap.get(callback) != null && !mCallbackWasCalledMap.get(callback).booleanValue()) {
+                mCallbackWasCalledMap.put(callback, new Boolean(true));
+                if (category.equals("all")) {
+                  reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount());
+                } else {
+                  reportResultWithCallback(callback, null, feedUpdatedEvent.getUnreadCardCount(cardCategory));
+                }
               }
             }
+            // Remove this listener from the feed subscriber map and from Appboy
+            Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+            mFeedSubscriberMap.remove(callback);
           }
-          // Remove this listener from the feed subscriber map and from Appboy
-          Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
-          mFeedSubscriberMap.remove(callback);
-        }
-      };
-      requestingFeedUpdateFromCache = true;
+        };
+        requestingFeedUpdateFromCache = true;
+        break;
     }
 
     if (requestingFeedUpdateFromCache) {
@@ -716,10 +867,15 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setLocationCustomAttribute(String key, Double latitude, Double longitude, Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setLocationCustomAttribute(key, latitude, longitude);
-    // Always return true as Android doesn't support getting a result from setLocationCustomAttribute().
-    reportResultWithCallback(callback, null, true);
+  public void setLocationCustomAttribute(final String key, final Double latitude, final Double longitude, final Callback callback) {
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setLocationCustomAttribute(key, latitude, longitude);
+        // Always return true as Android doesn't support getting a result from setLocationCustomAttribute().
+        reportResultWithCallback(callback, null, true);
+      }
+    });
   }
 
   @ReactMethod
@@ -759,8 +915,13 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setAttributionData(String network, String campaign, String adGroup, String creative) {
-    AttributionData attributionData = new AttributionData(network, campaign, adGroup, creative);
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser().setAttributionData(attributionData);
+    final AttributionData attributionData = new AttributionData(network, campaign, adGroup, creative);
+    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+      @Override
+      public void onSuccess(@NonNull AppboyUser appboyUser) {
+        appboyUser.setAttributionData(attributionData);
+      }
+    });
   }
 
   @ReactMethod
