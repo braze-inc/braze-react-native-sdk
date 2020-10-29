@@ -1,3 +1,9 @@
+## 1.25.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.29.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3291), which adds improved support for in-app message display on iPhone 12 models.
+- Updated the native Android bridge to [Braze Android SDK 11.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1100).
+
 ## 1.24.0
 
 ##### ⚠ Breaking
