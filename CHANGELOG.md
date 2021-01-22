@@ -1,3 +1,9 @@
+## 1.26.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.31.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3312).
+- Updated the native Android bridge to [Braze Android SDK 12.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1200).
+
 ## 1.25.0
 
 ##### ⚠ Breaking
