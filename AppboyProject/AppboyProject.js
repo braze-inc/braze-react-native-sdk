@@ -68,6 +68,7 @@ class AppboyProject extends Component {
     Linking.getInitialURL().then((url) => {
       if (url) {
         console.log('Linking.getInitialURL is ' + url);
+        this._showToast('Linking.getInitialURL is ' + url);
         this._handleOpenUrl({url});
       }
     }).catch(err => console.error('Error getting initial URL', err));
@@ -80,6 +81,7 @@ class AppboyProject extends Component {
     ReactAppboy.getInitialURL(function(url) {
       if (url) {
         console.log('ReactAppboy.getInitialURL is ' + url);
+        that._showToast('ReactAppboy.getInitialURL is ' + url);
         that._handleOpenUrl({url});
       }
     });

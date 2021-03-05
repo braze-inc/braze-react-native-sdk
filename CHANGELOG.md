@@ -1,3 +1,15 @@
+## 1.27.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 3.33.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3331).
+- Updated the native Android bridge to [Braze Android SDK 13.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1300).
+
+##### Added
+- Added support for receiving iOS push action button deep links in `ReactAppboy.getInitialURL()`. If you are using `ReactAppboy.getInitialURL()` and implement iOS push action button categories, add the following code to the beginning of your `userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:`:
+  ```
+  [[AppboyReactUtils sharedInstance] populateInitialUrlForCategories:response.notification.request.content.userInfo];
+  ```
+
 ## 1.26.0
 
 ##### ⚠ Breaking

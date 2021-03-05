@@ -30,4 +30,23 @@ static AppboyReactUtils *sharedInstance;
   return false;
 }
 
+- (BOOL)populateInitialUrlForCategories:(NSDictionary *)userInfo {
+  // When action buttons are opened, didFinishLaunchingWithOptions's launchOptions are always nil.
+  if (sharedInstance.initialUrlString) {
+    NSLog(@"initialUrlString already populated in didFinishLaunchingWithOptions. Doing nothing.");
+    return false;
+  }
+  NSDictionary *categories = [userInfo valueForKeyPath:@"ab.ab_cat"];
+  if (categories && [categories count] > 0) {
+    NSDictionary *category = [[categories allValues] objectAtIndex:0];
+    if (category[@"a_uri"]) {
+      sharedInstance.initialUrlString = category[@"a_uri"];
+      RCTLogInfo(@"[AppboyReactUtils sharedInstance].initialUrlString set to %@.", sharedInstance.initialUrlString);
+      return true;
+    }
+  }
+  sharedInstance.initialUrlString = nil;
+  return false;
+}
+
 @end

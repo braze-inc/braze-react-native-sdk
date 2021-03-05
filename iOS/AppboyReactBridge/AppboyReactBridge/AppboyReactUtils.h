@@ -5,6 +5,7 @@
 
 + (AppboyReactUtils *)sharedInstance;
 - (BOOL)populateInitialUrlFromLaunchOptions:(NSDictionary *)launchOptions;
+- (BOOL)populateInitialUrlForCategories:(NSDictionary *)userInfo;
 
 @property NSString *initialUrlString;
 

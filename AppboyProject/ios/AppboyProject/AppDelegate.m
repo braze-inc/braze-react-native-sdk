@@ -5,6 +5,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 #import "AppboyKit.h"
+#import "ABKPushUtils.h"
 #import "AppboyReactUtils.h"
 
 @implementation AppDelegate
@@ -44,16 +45,12 @@
                             NSLog(@"Permission granted.");
                             [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
                           }];
+    [center setNotificationCategories:[ABKPushUtils getAppboyUNNotificationCategorySet]];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-  } else if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
+  } else {
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound) categories:nil];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-  } else {
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeAlert |
-      UIRemoteNotificationTypeBadge |
-      UIRemoteNotificationTypeSound)];
   }
 
   [[AppboyReactUtils sharedInstance] populateInitialUrlFromLaunchOptions:launchOptions];
@@ -69,6 +66,7 @@
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+  [[AppboyReactUtils sharedInstance] populateInitialUrlForCategories:response.notification.request.content.userInfo];
   [[Appboy sharedInstance] userNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 }
 
@@ -79,7 +77,6 @@
 - (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
   [[Appboy sharedInstance] registerDeviceToken:deviceToken];
 }
-
 
 // Deep linking
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url

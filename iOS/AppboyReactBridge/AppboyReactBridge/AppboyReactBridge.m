@@ -69,7 +69,7 @@ RCT_EXPORT_METHOD(setSDKFlavor) {
   [Appboy sharedInstance].sdkFlavor = REACT;
 }
 
-// Returns the deep link from the push dictionary in application:didFinishLaunchingWithOptions: launchOptions, if one exists
+// Returns push deep links from cold app starts.
 // For more context see getInitialURL() in index.js
 RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
   if ([AppboyReactUtils sharedInstance].initialUrlString != nil) {

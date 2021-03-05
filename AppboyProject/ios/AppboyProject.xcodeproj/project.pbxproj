@@ -543,7 +543,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AppboyProject/AppboyProject.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Appboy Appboy (QWFN3H2ZPW)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -566,7 +566,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.appboy.helloreact;
 				PRODUCT_NAME = AppboyProject;
 				PROVISIONING_PROFILE = "45b1f7df-eef1-458b-8139-7ff580e8e80b";
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.appboy.helloreact";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.appboy.helloreact";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
