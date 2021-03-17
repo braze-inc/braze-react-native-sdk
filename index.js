@@ -455,6 +455,13 @@ var ReactAppboy = {
   },
 
   /**
+  * Closes the News Feed UI element.
+  */
+  closeContentCard: function() {
+  return AppboyReactBridge.closeContentCard();
+  },
+
+  /**
    * Returns a content cards array
    * @returns {Promise<ContentCard[]>}
    */

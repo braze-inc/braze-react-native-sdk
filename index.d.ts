@@ -388,6 +388,11 @@ export interface CaptionedContentCard extends ContentCard {
 export function launchContentCards(): void;
 
 /**
+ * Closes the Content Card UI element.
+ */
+export function closeContentCard(): Promise<void>;
+
+/**
  * Requests a refresh of the content cards from Appboy's servers.
  */
 export function requestContentCardsRefresh(): void;
