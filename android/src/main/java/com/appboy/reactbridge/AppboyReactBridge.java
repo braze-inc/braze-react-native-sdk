@@ -44,7 +44,7 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-
+import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -880,7 +880,16 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void hideCurrentInAppMessage() {
-    AppboyInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
+    try {
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          AppboyInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
+        }
+      });
+    } catch (Exception e) {
+      AppboyLogger.e(TAG, "Something went wrong in hideCurrentInAppMessage: " + e.getMessage());
+    }
   }
 
   @ReactMethod
