@@ -142,6 +142,19 @@ var ReactAppboy = {
   },
 
   /**
+  * This method sets the Google Advertising ID and associated ad-tracking enabled field for this device. Note that the
+  * SDK does not automatically collect this data.
+  *
+  * No-op on iOS.
+  *
+  * @param {string} googleAdvertisingId - The Google Advertising ID
+  * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled for the Google Advertising ID
+  */
+ setGoogleAdvertisingId: function(googleAdvertisingId, adTrackingEnabled) {
+    AppboyReactBridge.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
+  },
+
+  /**
   * Reports that the current user performed a custom named event.
   * @param {string} eventName - The identifier for the event to track. Best practice is to track generic events
   *      useful for segmenting, instead of specific user actions (i.e. track watched_sports_video instead of

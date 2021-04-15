@@ -125,6 +125,11 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setGoogleAdvertisingId(String googleAdvertisingId, Boolean adTrackingEnabled) {
+    Appboy.getInstance(getReactApplicationContext()).setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
+  }
+
+  @ReactMethod
   public void logCustomEvent(String eventName, ReadableMap eventProperties) {
     if (eventProperties == null) {
       Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName);

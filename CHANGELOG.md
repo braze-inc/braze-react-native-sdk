@@ -1,3 +1,15 @@
+## 1.28.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 4.0.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#402).
+- Updated the native Android bridge to [Braze Android SDK 13.1.2](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1312), which contains support for Android 12.
+
+##### Added
+- Added support for `ReactAppboy.setGoogleAdvertisingId()` to set the Google Advertising ID and associated ad-tracking enabled field for Android devices. This is a no-op on iOS.
+
+##### Fixed
+- Fixed an issue where calling `getInstallTrackingId()` while the SDK was disabled would cause a crash on iOS.
+
 ## 1.27.0
 
 ##### ⚠ Breaking

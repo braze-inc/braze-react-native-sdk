@@ -58,7 +58,7 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
     if (error != nil) {
       callback(@[error, [NSNull null]]);
     } else {
-      callback(@[[NSNull null], result]);
+      callback(@[[NSNull null], (result != nil) ? result : @""]);
     }
   } else {
     RCTLogInfo(@"Warning: AppboyReactBridge callback was null.");
@@ -96,6 +96,11 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabe
 }
 
 RCT_EXPORT_METHOD(registerAndroidPushToken:(NSString *)token)
+{
+  RCTLogInfo(@"Warning: This is an Android only feature.");
+}
+
+RCT_EXPORT_METHOD(setGoogleAdvertisingId:(NSString *)googleAdvertisingId andAdTrackingEnabled:(BOOL)adTrackingEnabled)
 {
   RCTLogInfo(@"Warning: This is an Android only feature.");
 }

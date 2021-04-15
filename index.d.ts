@@ -150,6 +150,17 @@ export function setDateOfBirth(year: number, month: MonthsAsNumber, day: number)
 export function registerAndroidPushToken(token: string): void;
 
 /**
+ * This method sets the Google Advertising ID and associated ad-tracking enabled field for this device. Note that the
+ * SDK does not automatically collect this data.
+ *
+ * No-op on iOS.
+ *
+ * @param {string} googleAdvertisingId - The Google Advertising ID
+ * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled for the Google Advertising ID
+ */
+export function setGoogleAdvertisingId(googleAdvertisingId: string, adTrackingEnabled: boolean): void;
+
+/**
  * Sets whether the user should be sent push campaigns.
  * @param {NotificationSubscriptionType} notificationSubscriptionType - Notification setting (explicitly
  *    opted-in, subscribed, or unsubscribed).

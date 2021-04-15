@@ -18,6 +18,7 @@ jest.mock('NativeModules', () => {
   return {
     AppboyReactBridge: {
       registerAndroidPushToken: jest.fn(),
+      setGoogleAdvertisingId: jest.fn(),
       setFirstName: jest.fn(),
       setLastName: jest.fn(),
       setLanguage: jest.fn(),
@@ -88,6 +89,13 @@ test('it calls AppboyReactBridge.registerAndroidPushToken', () => {
   const token = "some_token";
   ReactAppboy.registerAndroidPushToken(token);
   expect(NativeModules.AppboyReactBridge.registerAndroidPushToken).toBeCalledWith(token);
+});
+
+test('it calls AppboyReactBridge.setGoogleAdvertisingId', () => {
+  const googleAdvertisingId = "some_ga_id";
+  const adTrackingEnabled = true;
+  ReactAppboy.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
+  expect(NativeModules.AppboyReactBridge.setGoogleAdvertisingId).toBeCalledWith(googleAdvertisingId, adTrackingEnabled);
 });
 
 test('it calls AppboyReactBridge.setFirstName', () => {

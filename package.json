@@ -1,6 +1,6 @@
 {
   "name": "react-native-appboy-sdk",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "description": "Braze SDK for React Native.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -27,7 +27,7 @@
     "segmentation"
   ],
   "author": "Appboy",
-  "license": "LICENSE.md",
+  "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
     "url": "https://github.com/Appboy/appboy-react-sdk/issues"
   },

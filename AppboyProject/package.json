@@ -1,6 +1,7 @@
 {
   "name": "AppboyProject",
   "version": "0.0.1",
+  "license": "SEE LICENSE IN ../LICENSE.md",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
