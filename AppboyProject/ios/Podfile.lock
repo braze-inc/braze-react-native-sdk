@@ -1,17 +1,17 @@
 PODS:
-  - Appboy-iOS-SDK (4.0.2):
-    - Appboy-iOS-SDK/UI (= 4.0.2)
-  - Appboy-iOS-SDK/ContentCards (4.0.2):
+  - Appboy-iOS-SDK (4.2.0):
+    - Appboy-iOS-SDK/UI (= 4.2.0)
+  - Appboy-iOS-SDK/ContentCards (4.2.0):
     - Appboy-iOS-SDK/Core
     - SDWebImage (< 6, >= 5.8.2)
-  - Appboy-iOS-SDK/Core (4.0.2)
-  - Appboy-iOS-SDK/InAppMessage (4.0.2):
+  - Appboy-iOS-SDK/Core (4.2.0)
+  - Appboy-iOS-SDK/InAppMessage (4.2.0):
     - Appboy-iOS-SDK/Core
     - SDWebImage (< 6, >= 5.8.2)
-  - Appboy-iOS-SDK/NewsFeed (4.0.2):
+  - Appboy-iOS-SDK/NewsFeed (4.2.0):
     - Appboy-iOS-SDK/Core
     - SDWebImage (< 6, >= 5.8.2)
-  - Appboy-iOS-SDK/UI (4.0.2):
+  - Appboy-iOS-SDK/UI (4.2.0):
     - Appboy-iOS-SDK/ContentCards
     - Appboy-iOS-SDK/Core
     - Appboy-iOS-SDK/InAppMessage
@@ -199,8 +199,8 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-appboy-sdk (1.28.0):
-    - Appboy-iOS-SDK (~> 4.0.2)
+  - react-native-appboy-sdk (1.29.0):
+    - Appboy-iOS-SDK (~> 4.2.0)
     - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
@@ -237,9 +237,9 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
-  - SDWebImage (5.11.0):
-    - SDWebImage/Core (= 5.11.0)
-  - SDWebImage/Core (5.11.0)
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -334,7 +334,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Appboy-iOS-SDK: a423c382ef27ff998c8aa7b6ee81541c35687341
+  Appboy-iOS-SDK: 3c3e75a932427d5f443062c130f8799885a85313
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
@@ -350,7 +350,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-appboy-sdk: 005bf1834e6ef260f75675e2a1840a70cf3e4d2f
+  react-native-appboy-sdk: a186a2a546b089660cad4c6111a1b4f522fa548d
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -361,7 +361,7 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
 PODFILE CHECKSUM: 5e38fbb08cd1a275383326ec8003103e6721fdc2

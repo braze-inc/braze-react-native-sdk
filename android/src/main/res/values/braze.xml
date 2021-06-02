@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!--- Internal Appboy Usage -->
+  <!--- Internal Braze Usage -->
   <string translatable="false" name="com_appboy_sdk_flavor">REACT</string>
 </resources>

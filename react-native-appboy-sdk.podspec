@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js'
   s.source_files   = 'iOS/**/*.{h,m}'
 
-  s.dependency 'Appboy-iOS-SDK', '~> 4.0.2'
+  s.dependency 'Appboy-iOS-SDK', '~> 4.2.0'
   s.dependency 'React'
 end

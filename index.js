@@ -829,7 +829,8 @@ var ReactAppboy = {
   },
 
   Events: {
-    'CONTENT_CARDS_UPDATED': 'contentCardsUpdated'
+    'CONTENT_CARDS_UPDATED': 'contentCardsUpdated',
+    'SDK_AUTHENTICATION_ERROR': 'sdkAuthenticationError'
   },
 
   ClickAction: {

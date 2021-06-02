@@ -5,11 +5,11 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import com.appboy.Appboy;
-import com.appboy.AppboyUser;
 import com.appboy.enums.CardCategory;
 import com.appboy.enums.Gender;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
+import com.appboy.events.BrazeSdkAuthenticationErrorEvent;
 import com.appboy.events.ContentCardsUpdatedEvent;
 import com.appboy.events.FeedUpdatedEvent;
 import com.appboy.events.IEventSubscriber;
@@ -26,11 +26,13 @@ import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.models.outgoing.AttributionData;
 import com.appboy.models.outgoing.FacebookUser;
 import com.appboy.models.outgoing.TwitterUser;
-import com.appboy.services.AppboyLocationService;
 import com.appboy.support.AppboyLogger;
 import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
 import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
+import com.braze.Braze;
+import com.braze.BrazeUser;
+import com.braze.support.BrazeLogger;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
@@ -50,15 +52,17 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AppboyReactBridge extends ReactContextBaseJavaModule {
-  private static final String TAG = AppboyLogger.getAppboyLogTag(AppboyReactBridge.class);
+  private static final String TAG = BrazeLogger.getBrazeLogTag(AppboyReactBridge.class);
   private static final String CARD_COUNT_TAG = "card count";
   private static final String UNREAD_CARD_COUNT_TAG = "unread card count";
   private static final String CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated";
+  private static final String SDK_AUTH_ERROR_EVENT_NAME = "sdkAuthenticationError";
 
   private final Object mCallbackWasCalledMapLock = new Object();
   private final List<Card> mContentCards = new ArrayList<>();
@@ -66,10 +70,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private final Map<Callback, Boolean> mCallbackWasCalledMap = new ConcurrentHashMap<>();
   private long mContentCardsUpdatedAt = 0;
   private IEventSubscriber<ContentCardsUpdatedEvent> mContentCardsUpdatedSubscriber;
+  private IEventSubscriber<BrazeSdkAuthenticationErrorEvent> mSdkAuthErrorSubscriber;
 
   public AppboyReactBridge(ReactApplicationContext reactContext) {
     super(reactContext);
     subscribeToContentCardsUpdatedEvent();
+    subscribeToSdkAuthenticationErrorEvents();
   }
 
   @Override
@@ -96,45 +102,50 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void setSDKFlavor() {
     // Dummy method required for the iOS SDK flavor implementation; see AppboyReactBridge.setSDKFlavor()
-    // in index.js. The Android bridge sets the REACT SDK flavor via an appboy.xml parameter.
+    // in index.js. The Android bridge sets the REACT SDK flavor via a braze.xml parameter.
   }
 
   @ReactMethod
   public void requestImmediateDataFlush() {
-    Appboy.getInstance(getReactApplicationContext()).requestImmediateDataFlush();
+    Braze.getInstance(getReactApplicationContext()).requestImmediateDataFlush();
   }
 
   @ReactMethod
   public void changeUser(String userName) {
-    Appboy.getInstance(getReactApplicationContext()).changeUser(userName);
+    Braze.getInstance(getReactApplicationContext()).changeUser(userName);
+  }
+
+  @ReactMethod
+  public void changeUser(String userName, String sdkAuthToken) {
+    Braze.getInstance(getReactApplicationContext()).changeUser(userName, sdkAuthToken);
   }
 
   @ReactMethod
   public void addAlias(final String aliasName, final String aliasLabel) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.addAlias(aliasName, aliasLabel);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.addAlias(aliasName, aliasLabel);
       }
     });
   }
 
   @ReactMethod
   public void registerAndroidPushToken(String token) {
-    Appboy.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);
+    Braze.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);
   }
 
   @ReactMethod
   public void setGoogleAdvertisingId(String googleAdvertisingId, Boolean adTrackingEnabled) {
-    Appboy.getInstance(getReactApplicationContext()).setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
+    Braze.getInstance(getReactApplicationContext()).setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
   }
 
   @ReactMethod
   public void logCustomEvent(String eventName, ReadableMap eventProperties) {
     if (eventProperties == null) {
-      Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName);
+      Braze.getInstance(getReactApplicationContext()).logCustomEvent(eventName);
     } else {
-      Appboy.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
+      Braze.getInstance(getReactApplicationContext()).logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties));
     }
   }
 
@@ -189,18 +200,18 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void logPurchase(String productIdentifier, String price, String currencyCode, int quantity, ReadableMap eventProperties) {
     if (eventProperties == null) {
-      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity);
+      Braze.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity);
     } else {
-      Appboy.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity, populateEventPropertiesFromReadableMap(eventProperties));
+      Braze.getInstance(getReactApplicationContext()).logPurchase(productIdentifier, currencyCode, new BigDecimal(price), quantity, populateEventPropertiesFromReadableMap(eventProperties));
     }
   }
 
   @ReactMethod
   public void setStringCustomUserAttribute(final String key, final String value, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setCustomUserAttribute(key, value);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setCustomUserAttribute(key, value);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -208,10 +219,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setBoolCustomUserAttribute(final String key, final Boolean value, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setCustomUserAttribute(key, value);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setCustomUserAttribute(key, value);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -219,10 +230,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setIntCustomUserAttribute(final String key, final int value, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setCustomUserAttribute(key, value);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setCustomUserAttribute(key, value);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -230,10 +241,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setDoubleCustomUserAttribute(final String key, final float value, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setCustomUserAttribute(key, value);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setCustomUserAttribute(key, value);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -241,10 +252,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setDateCustomUserAttribute(final String key, final int timeStamp, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setCustomUserAttributeToSecondsFromEpoch(key, timeStamp);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setCustomUserAttributeToSecondsFromEpoch(key, timeStamp);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -252,10 +263,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void incrementCustomUserAttribute(final String key, final int incrementValue, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.incrementCustomUserAttribute(key, incrementValue);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.incrementCustomUserAttribute(key, incrementValue);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -263,10 +274,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void unsetCustomUserAttribute(final String key, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.unsetCustomUserAttribute(key);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.unsetCustomUserAttribute(key);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -279,10 +290,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     for (int i = 0; i < size; i++) {
       attributeArray[i] = value.getString(i);
     }
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setCustomAttributeArray(key, attributeArray);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setCustomAttributeArray(key, attributeArray);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -290,10 +301,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void addToCustomAttributeArray(final String key, final String value, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.addToCustomAttributeArray(key, value);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.addToCustomAttributeArray(key, value);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -301,10 +312,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void removeFromCustomAttributeArray(final String key, final String value, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.removeFromCustomAttributeArray(key, value);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.removeFromCustomAttributeArray(key, value);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -312,30 +323,30 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setFirstName(final String firstName) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setFirstName(firstName);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setFirstName(firstName);
       }
     });
   }
 
   @ReactMethod
   public void setLastName(final String lastName) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setLastName(lastName);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setLastName(lastName);
       }
     });
   }
 
   @ReactMethod
   public void setEmail(final String email) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setEmail(email);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setEmail(email);
       }
     });
   }
@@ -362,10 +373,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Invalid input " + gender + ". Gender not set.", null);
       return;
     }
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setGender(genderEnum);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setGender(genderEnum);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -373,60 +384,60 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setDateOfBirth(final int year, final int month, final int day) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setDateOfBirth(year, parseMonth(month), day);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setDateOfBirth(year, parseMonth(month), day);
       }
     });
   }
 
   @ReactMethod
   public void setCountry(final String country) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setCountry(country);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setCountry(country);
       }
     });
   }
 
   @ReactMethod
   public void setHomeCity(final String homeCity) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setHomeCity(homeCity);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setHomeCity(homeCity);
       }
     });
   }
 
   @ReactMethod
   public void setPhoneNumber(final String phoneNumber) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setPhoneNumber(phoneNumber);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setPhoneNumber(phoneNumber);
       }
     });
   }
 
   @ReactMethod
   public void setLanguage(final String language) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setLanguage(language);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setLanguage(language);
       }
     });
   }
 
   @ReactMethod
   public void setAvatarImageUrl(final String avatarImageUrl) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setAvatarImageUrl(avatarImageUrl);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setAvatarImageUrl(avatarImageUrl);
       }
     });
   }
@@ -447,10 +458,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Invalid subscription type " + subscriptionType + ". Push notification subscription type not set.", null);
       return;
     }
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setPushNotificationSubscriptionType(notificationSubscriptionType);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setPushNotificationSubscriptionType(notificationSubscriptionType);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -472,10 +483,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       reportResultWithCallback(callback, "Invalid subscription type " + subscriptionType + ". Email notification subscription type not set.", null);
       return;
     }
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        boolean result = appboyUser.setEmailNotificationSubscriptionType(notificationSubscriptionType);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.setEmailNotificationSubscriptionType(notificationSubscriptionType);
         reportResultWithCallback(callback, null, result);
       }
     });
@@ -498,10 +509,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         friendsCount,
         statusesCount,
         profileImageUrl);
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setTwitterData(twitterUser);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setTwitterData(twitterUser);
       }
     });
   }
@@ -556,10 +567,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     }
     final FacebookUser facebookUser = new FacebookUser(facebookId, firstName, lastName, email,
             bio, cityName, genderEnum, numberOfFriends, likesList, birthday);
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setFacebookData(facebookUser);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setFacebookData(facebookUser);
       }
     });
   }
@@ -580,7 +591,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void requestContentCardsRefresh() {
-    Appboy.getInstance(getReactApplicationContext()).requestContentCardsRefresh(false);
+    Braze.getInstance(getReactApplicationContext()).requestContentCardsRefresh(false);
   }
 
   @ReactMethod
@@ -590,11 +601,16 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       public void trigger(ContentCardsUpdatedEvent event) {
         promise.resolve(mapContentCards(event.getAllCards()));
         updateContentCardsIfNeeded(event);
-        Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(this, ContentCardsUpdatedEvent.class);
+        Braze.getInstance(getReactApplicationContext()).removeSingleSubscription(this, ContentCardsUpdatedEvent.class);
       }
     };
-    Appboy.getInstance(getReactApplicationContext()).subscribeToContentCardsUpdates(subscriber);
-    Appboy.getInstance(getReactApplicationContext()).requestContentCardsRefresh(true);
+    Braze.getInstance(getReactApplicationContext()).subscribeToContentCardsUpdates(subscriber);
+    Braze.getInstance(getReactApplicationContext()).requestContentCardsRefresh(true);
+  }
+
+  @ReactMethod
+  public void setSdkAuthenticationSignature(String token) {
+    Braze.getInstance(getReactApplicationContext()).setSdkAuthenticationSignature(token);
   }
 
   private WritableArray mapContentCards(List<Card> cardsList) {
@@ -633,14 +649,13 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       case CAPTIONED_IMAGE:
         mappedCard.merge(captionedImageCardToWritableMap((CaptionedImageCard)card));
         break;
-      case DEFAULT:
-        break;
       case SHORT_NEWS:
         mappedCard.merge(shortNewsCardToWritableMap((ShortNewsCard)card));
         break;
       case TEXT_ANNOUNCEMENT:
         mappedCard.merge(textAnnouncementCardToWritableMap((TextAnnouncementCard)card));
         break;
+      case DEFAULT:
       case CONTROL:
         break;
     }
@@ -688,7 +703,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   private void subscribeToContentCardsUpdatedEvent() {
-    Appboy.getInstance(getReactApplicationContext())
+    Braze.getInstance(getReactApplicationContext())
             .removeSingleSubscription(mContentCardsUpdatedSubscriber, ContentCardsUpdatedEvent.class);
     mContentCardsUpdatedSubscriber = new IEventSubscriber<ContentCardsUpdatedEvent>() {
       @Override
@@ -702,7 +717,26 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         updateContentCardsIfNeeded(event);
       }
     };
-    Appboy.getInstance(getReactApplicationContext()).subscribeToContentCardsUpdates(mContentCardsUpdatedSubscriber);
+    Braze.getInstance(getReactApplicationContext()).subscribeToContentCardsUpdates(mContentCardsUpdatedSubscriber);
+  }
+
+  private void subscribeToSdkAuthenticationErrorEvents() {
+    Braze.getInstance(getReactApplicationContext()).removeSingleSubscription(mSdkAuthErrorSubscriber, BrazeSdkAuthenticationErrorEvent.class);
+    mSdkAuthErrorSubscriber = new IEventSubscriber<BrazeSdkAuthenticationErrorEvent>() {
+      @Override
+      public void trigger(BrazeSdkAuthenticationErrorEvent errorEvent) {
+        final Map<String, Object> data = new HashMap<>();
+        data.put("error_code", errorEvent.getErrorCode());
+        data.put("user_id", errorEvent.getUserId());
+        data.put("original_signature", errorEvent.getSignature());
+        data.put("error_reason", errorEvent.getErrorReason());
+
+        getReactApplicationContext()
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(SDK_AUTH_ERROR_EVENT_NAME, data);
+      }
+    };
+    Braze.getInstance(getReactApplicationContext()).subscribeToSdkAuthenticationFailures(mSdkAuthErrorSubscriber);
   }
 
   private void updateContentCardsIfNeeded(ContentCardsUpdatedEvent event) {
@@ -715,7 +749,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   private void logContentCardsDisplayed() {
-    Appboy.getInstance(getReactApplicationContext()).logContentCardsDisplayed();
+    Braze.getInstance(getReactApplicationContext()).logContentCardsDisplayed();
   }
 
   @ReactMethod
@@ -753,7 +787,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void requestFeedRefresh() {
-    Appboy.getInstance(getReactApplicationContext()).requestFeedRefresh();
+    Braze.getInstance(getReactApplicationContext()).requestFeedRefresh();
   }
 
   private CardCategory getCardCategoryFromString(String categoryString) {
@@ -797,7 +831,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
               }
             }
             // Remove this listener from the feed subscriber map and from Appboy
-            Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+            Braze.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
             mFeedSubscriberMap.remove(callback);
           }
         };
@@ -820,7 +854,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
               }
             }
             // Remove this listener from the feed subscriber map and from Appboy
-            Appboy.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
+            Braze.getInstance(getReactApplicationContext()).removeSingleSubscription(mFeedSubscriberMap.get(callback), FeedUpdatedEvent.class);
             mFeedSubscriberMap.remove(callback);
           }
         };
@@ -831,8 +865,8 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     if (requestingFeedUpdateFromCache) {
       // Put the subscriber into a map so we can remove it later from future subscriptions
       mFeedSubscriberMap.put(callback, feedUpdatedSubscriber);
-      Appboy.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
-      Appboy.getInstance(getReactApplicationContext()).requestFeedRefreshFromCache();
+      Braze.getInstance(getReactApplicationContext()).subscribeToFeedUpdates(feedUpdatedSubscriber);
+      Braze.getInstance(getReactApplicationContext()).requestFeedRefreshFromCache();
     }
   }
 
@@ -863,20 +897,20 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void requestLocationInitialization() {
-    AppboyLocationService.requestInitialization(getReactApplicationContext());
+    Braze.getInstance(getReactApplicationContext()).requestLocationInitialization();
   }
 
   @ReactMethod
   public void requestGeofences(Double latitude, Double longitude) {
-    Appboy.getInstance(getReactApplicationContext()).requestGeofences(latitude, longitude);
+    Braze.getInstance(getReactApplicationContext()).requestGeofences(latitude, longitude);
   }
 
   @ReactMethod
   public void setLocationCustomAttribute(final String key, final Double latitude, final Double longitude, final Callback callback) {
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setLocationCustomAttribute(key, latitude, longitude);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setLocationCustomAttribute(key, latitude, longitude);
         // Always return true as Android doesn't support getting a result from setLocationCustomAttribute().
         reportResultWithCallback(callback, null, true);
       }
@@ -890,7 +924,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void logInAppMessageClicked(String inAppMessageString) {
-    IInAppMessage inAppMessage = Appboy.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
+    IInAppMessage inAppMessage = Braze.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
     if (inAppMessage != null) {
       inAppMessage.logClick();
     }
@@ -898,7 +932,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void logInAppMessageImpression(String inAppMessageString) {
-    IInAppMessage inAppMessage = Appboy.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
+    IInAppMessage inAppMessage = Braze.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
     if (inAppMessage != null) {
       inAppMessage.logImpression();
     }
@@ -906,7 +940,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void logInAppMessageButtonClicked(String inAppMessageString, Integer buttonId) {
-    IInAppMessage inAppMessage = Appboy.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
+    IInAppMessage inAppMessage = Braze.getInstance(getReactApplicationContext()).deserializeInAppMessageString(inAppMessageString);
     if (inAppMessage instanceof IInAppMessageImmersive) {
       IInAppMessageImmersive inAppMessageImmersive = (IInAppMessageImmersive)inAppMessage;
       for (MessageButton button : inAppMessageImmersive.getMessageButtons()) {
@@ -921,17 +955,17 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   @ReactMethod
   public void setAttributionData(String network, String campaign, String adGroup, String creative) {
     final AttributionData attributionData = new AttributionData(network, campaign, adGroup, creative);
-    Appboy.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<AppboyUser>() {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
-      public void onSuccess(@NonNull AppboyUser appboyUser) {
-        appboyUser.setAttributionData(attributionData);
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        brazeUser.setAttributionData(attributionData);
       }
     });
   }
 
   @ReactMethod
   public void getInstallTrackingId(Callback callback) {
-    reportResultWithCallback(callback, null, Appboy.getInstance(getReactApplicationContext()).getInstallTrackingId());
+    reportResultWithCallback(callback, null, Braze.getInstance(getReactApplicationContext()).getInstallTrackingId());
   }
 
   private Month parseMonth(int monthInt) {
