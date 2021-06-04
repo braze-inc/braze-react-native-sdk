@@ -199,7 +199,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-appboy-sdk (1.29.0):
+  - react-native-appboy-sdk (1.29.1):
     - Appboy-iOS-SDK (~> 4.2.0)
     - React
   - React-RCTActionSheet (0.61.5):
@@ -350,7 +350,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-appboy-sdk: a186a2a546b089660cad4c6111a1b4f522fa548d
+  react-native-appboy-sdk: 56dca097c248e752a878a9f0f88aaa946510dd66
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72

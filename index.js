@@ -108,7 +108,7 @@ var ReactAppboy = {
   */
   changeUser: function(userId) {
     AppboyReactBridge.setSDKFlavor();
-    AppboyReactBridge.changeUser(userId);
+    AppboyReactBridge.changeUser(userId, null);
   },
 
   /**

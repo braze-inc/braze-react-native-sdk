@@ -111,11 +111,6 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void changeUser(String userName) {
-    Braze.getInstance(getReactApplicationContext()).changeUser(userName);
-  }
-
-  @ReactMethod
   public void changeUser(String userName, String sdkAuthToken) {
     Braze.getInstance(getReactApplicationContext()).changeUser(userName, sdkAuthToken);
   }

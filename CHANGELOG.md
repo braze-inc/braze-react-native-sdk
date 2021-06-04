@@ -1,3 +1,8 @@
+## 1.29.1
+
+##### Fixed
+- Fixed issue introduced in 1.29.0 where calling `ReactAppboy.changeUser` would cause an error on Android.
+
 ## 1.29.0
 
 ##### ⚠ Breaking

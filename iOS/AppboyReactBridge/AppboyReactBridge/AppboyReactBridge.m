@@ -83,10 +83,10 @@ RCT_EXPORT_METHOD(getInstallTrackingId:(RCTResponseSenderBlock)callback) {
   [self reportResultWithCallback:callback andError:nil andResult:[[Appboy sharedInstance] getDeviceId]];
 }
 
-RCT_EXPORT_METHOD(changeUser:(NSString *)userId)
+RCT_EXPORT_METHOD(changeUser:(NSString *)userId sdkAuthSignature:(nullable NSString *)signature)
 {
-  RCTLogInfo(@"[Appboy sharedInstance] changeUser with value %@", userId);
-  [[Appboy sharedInstance] changeUser:userId];
+  RCTLogInfo(@"[Appboy sharedInstance] changeUser with values %@ %@", userId, signature);
+  [[Appboy sharedInstance] changeUser:userId sdkAuthSignature:signature];
 }
 
 RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabel)
@@ -314,12 +314,12 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
 
 - (NSArray *)getMappedContentCards {
   NSArray<ABKContentCard *> *cards = [[Appboy sharedInstance].contentCardsController getContentCards];
-  
+
   NSMutableArray *mappedCards = [NSMutableArray arrayWithCapacity:[cards count]];
   [cards enumerateObjectsUsingBlock:^(id card, NSUInteger idx, BOOL *stop) {
     [mappedCards addObject:RCTFormatContentCard(card)];
   }];
-  
+
   return mappedCards;
 }
 
@@ -327,11 +327,11 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   NSArray<ABKContentCard *> *cards = [[Appboy sharedInstance].contentCardsController getContentCards];
   NSPredicate *predicate = [NSPredicate predicateWithFormat:@"idString == %@", idString];
   NSArray *filteredArray = [cards filteredArrayUsingPredicate:predicate];
-  
+
   if ([filteredArray count]) {
     return filteredArray[0];
   }
-  
+
   return nil;
 }
 
@@ -387,7 +387,7 @@ RCT_EXPORT_METHOD(logContentCardsDisplayed) {
 
 static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
   NSMutableDictionary *formattedContentCardData = [NSMutableDictionary dictionary];
-  
+
   formattedContentCardData[@"id"] = card.idString;
   formattedContentCardData[@"created"] = @(card.created);
   formattedContentCardData[@"expiresAt"] = @(card.expiresAt);
@@ -398,9 +398,9 @@ static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
   formattedContentCardData[@"dismissible"] = @(card.dismissible);
   formattedContentCardData[@"url"] = RCTNullIfNil(card.urlString);
   formattedContentCardData[@"openURLInWebView"] = @(card.openUrlInWebView);
-  
+
   formattedContentCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
-  
+
   if ([card isKindOfClass:[ABKCaptionedImageContentCard class]]) {
     ABKCaptionedImageContentCard *captionedCard = (ABKCaptionedImageContentCard *)card;
     formattedContentCardData[@"image"] = captionedCard.image;
@@ -410,14 +410,14 @@ static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
     formattedContentCardData[@"domain"] = RCTNullIfNil(captionedCard.domain);
     formattedContentCardData[@"type"] = @"Captioned";
   }
-  
+
   if ([card isKindOfClass:[ABKBannerContentCard class]]) {
     ABKBannerContentCard *bannerCard = (ABKBannerContentCard *)card;
     formattedContentCardData[@"image"] = bannerCard.image;
     formattedContentCardData[@"imageAspectRatio"] = @(bannerCard.imageAspectRatio);
     formattedContentCardData[@"type"] = @"Banner";
   }
-  
+
   if ([card isKindOfClass:[ABKClassicContentCard class]]) {
     ABKClassicContentCard *classicCard = (ABKClassicContentCard *)card;
     formattedContentCardData[@"image"] = RCTNullIfNil(classicCard.image);
@@ -426,7 +426,7 @@ static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
     formattedContentCardData[@"domain"] = RCTNullIfNil(classicCard.domain);
     formattedContentCardData[@"type"] = @"Classic";
   }
-  
+
   return formattedContentCardData;
 }
 
