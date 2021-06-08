@@ -1,9 +1,15 @@
 ## 1.29.1
 
+##### ⚠️ Known Issues
+- This release contains a known issue with the Content Cards default UI on iOS, where showing a "Classic" type card with an image causes a crash. If you are using the default Content Cards UI, do not upgrade to this version.
+
 ##### Fixed
 - Fixed issue introduced in 1.29.0 where calling `ReactAppboy.changeUser` would cause an error on Android.
 
 ## 1.29.0
+
+##### ⚠️ Known Issues
+- This release contains a known issue with the Content Cards default UI on iOS, where showing a "Classic" type card with an image causes a crash. If you are using the default Content Cards UI, do not upgrade to this version.
 
 ##### ⚠ Breaking
 - Updated the native Android bridge to [Braze Android SDK 14.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1400).
