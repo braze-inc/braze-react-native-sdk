@@ -45,6 +45,7 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.json.JSONObject;
@@ -52,7 +53,6 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -720,11 +720,14 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     mSdkAuthErrorSubscriber = new IEventSubscriber<BrazeSdkAuthenticationErrorEvent>() {
       @Override
       public void trigger(BrazeSdkAuthenticationErrorEvent errorEvent) {
-        final Map<String, Object> data = new HashMap<>();
-        data.put("error_code", errorEvent.getErrorCode());
-        data.put("user_id", errorEvent.getUserId());
-        data.put("original_signature", errorEvent.getSignature());
-        data.put("error_reason", errorEvent.getErrorReason());
+        if (!getReactApplicationContext().hasActiveCatalystInstance()) {
+          return;
+        }
+        final WritableNativeMap data = new WritableNativeMap();
+        data.putInt("error_code", errorEvent.getErrorCode());
+        data.putString("user_id", errorEvent.getUserId());
+        data.putString("original_signature", errorEvent.getSignature());
+        data.putString("error_reason", errorEvent.getErrorReason());
 
         getReactApplicationContext()
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)

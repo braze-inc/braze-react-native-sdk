@@ -1,3 +1,9 @@
+## 1.30.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#430), which fixes a crashing issue with Content Cards when using the default UI.
+- Updated the native Android bridge to [Braze Android SDK 14.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1401).
+
 ## 1.29.1
 
 ##### ⚠️ Known Issues

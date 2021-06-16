@@ -1,21 +1,20 @@
 {
   "project_info": {
-    "project_number": "354899208806",
-    "firebase_url": "https://appboyproject-react.firebaseio.com",
-    "project_id": "appboyproject-react",
-    "storage_bucket": "appboyproject-react.appspot.com"
+    "project_number": "531790618696",
+    "project_id": "android-react-sample-app",
+    "storage_bucket": "android-react-sample-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:354899208806:android:22e79902e0a56e7c",
+        "mobilesdk_app_id": "1:531790618696:android:18f24c0f9c5b8c58f9f87d",
         "android_client_info": {
           "package_name": "com.appboyproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "354899208806-9gu0k6r40sb336pbg3u5933ocvkt000l.apps.googleusercontent.com",
+          "client_id": "531790618696-d9deirj22dfprlbp12l8pkd405cccpm4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -25,15 +24,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531790618696-d9deirj22dfprlbp12l8pkd405cccpm4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
