@@ -1,3 +1,11 @@
+## 1.31.0
+
+##### ⚠ Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#431).
+
+##### Added
+- Added support for new SDK Authentication feature to the Javascript layer. See `setSdkAuthenticationSignature` on the `Appboy` interface, as well as the optional `signature` parameter on `ReactAppboy.changeUser`.
+
 ## 1.30.0
 
 ##### ⚠ Breaking

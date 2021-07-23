@@ -21,6 +21,7 @@ class AppboyProject extends Component {
     super(props);
     this.state = {
       userIdText : '',
+      signatureText: '',
       customEventText : '',
       subscriptionState : 's',
       gender : 'm',
@@ -30,6 +31,7 @@ class AppboyProject extends Component {
     this._getInstallTrackingId = this._getInstallTrackingId.bind(this);
     this._updateCardCount = this._updateCardCount.bind(this);
     this._changeUserPress = this._changeUserPress.bind(this);
+    this._setSignaturePress = this._setSignaturePress.bind(this);
     this._logCustomEventPress = this._logCustomEventPress.bind(this);
     this._setSubscriptionStatePress = this._setSubscriptionStatePress.bind(this);
     this._logPurchasePress = this._logPurchasePress.bind(this);
@@ -88,7 +90,11 @@ class AppboyProject extends Component {
 
     ReactAppboy.addListener(ReactAppboy.Events.CONTENT_CARDS_UPDATED, function() {
       console.log('Content Cards Updated.');
-    })
+    });
+
+    ReactAppboy.addListener(ReactAppboy.Events.SDK_AUTHENTICATION_ERROR, function(data) {
+      console.log(`SDK Authentication for ${data.user_id} failed with error code ${data.error_code}.`);
+    });
 
     this._listener = DeviceEventEmitter.addListener("inAppMessageReceived", function(event) {
       let inAppMessage = new ReactAppboy.BrazeInAppMessage(event.inAppMessage);
@@ -154,6 +160,17 @@ class AppboyProject extends Component {
           <TouchableHighlight
             onPress={this._changeUserPress}>
             <Text>Set User ID</Text>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.row}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={(signatureText) => this.setState({signatureText})}
+            value={this.state.signatureText}
+            />
+          <TouchableHighlight
+            onPress={this._setSignaturePress}>
+            <Text>Set Signature</Text>
           </TouchableHighlight>
         </View>
         <View style={styles.row}>
@@ -324,6 +341,10 @@ class AppboyProject extends Component {
   _changeUserPress(event) {
     ReactAppboy.changeUser(this.state.userIdText);
     this._showToast('User changed to: ' + this.state.userIdText);
+  }
+  _setSignaturePress(event) {
+    ReactAppboy.setSdkAuthenticationSignature(this.state.signatureText);
+    this._showToast('Signature set to: ' + this.state.signatureText);
   }
   _logCustomEventPress(event) {
     var testDate = new Date();

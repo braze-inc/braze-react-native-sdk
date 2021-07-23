@@ -105,10 +105,21 @@ var ReactAppboy = {
   *    to target while logged out and switching back to that user ID as part of your app's logout process.
   *
   * @param {string} userId - A unique identifier for this user.
+  * @param {string} signature - An optional authentication signature to be used with the SDK Authentication feature.
   */
-  changeUser: function(userId) {
+  changeUser: function(userId, signature) {
     AppboyReactBridge.setSDKFlavor();
-    AppboyReactBridge.changeUser(userId, null);
+    AppboyReactBridge.changeUser(userId, signature != null ? signature : null);
+  },
+
+  /**
+   * Sets the signature to be used to authenticate the current user. You can also set the signature when calling `changeUser`.
+   * This signature will only have an effect if SDK Authentication is enabled.
+   *
+   * @param signature - The signature to add to network requests to authenticate the current user.
+   */
+  setSdkAuthenticationSignature: function(signature) {
+    AppboyReactBridge.setSdkAuthenticationSignature(signature);
   },
 
   /**

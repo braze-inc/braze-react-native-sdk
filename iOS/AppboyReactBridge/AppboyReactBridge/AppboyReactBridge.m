@@ -8,12 +8,17 @@
 #import "ABKContentCardsViewController.h"
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
+static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
 
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                    (@{@"subscribed":@(ABKSubscribed), @"unsubscribed":@(ABKUnsubscribed),@"optedin":@(ABKOptedIn)}),
                    ABKSubscribed,
                    integerValue);
+@end
+
+@interface AppboyReactBridge () <ABKSdkAuthenticationDelegate>
+
 @end
 
 @implementation AppboyReactBridge {
@@ -35,17 +40,20 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                                             selector:@selector(handleContentCardsUpdated:)
                                                 name:ABKContentCardsProcessedNotification
                                               object:nil];
+  [Appboy sharedInstance].sdkAuthenticationDelegate = self;
 }
 
 - (void)stopObserving {
   hasListeners = NO;
   [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [Appboy sharedInstance].sdkAuthenticationDelegate = nil;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
   return @[
-            kContentCardsUpdatedEvent
-            ];
+    kContentCardsUpdatedEvent,
+    kSdkAuthenticationErrorEvent
+  ];
 
 }
 - (NSDictionary *)constantsToExport
@@ -493,7 +501,7 @@ RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:
 
 RCT_EXPORT_METHOD(requestImmediateDataFlush) {
   RCTLogInfo(@"requestImmediateDataFlush called");
-  [[Appboy sharedInstance] flushDataAndProcessRequestQueue];
+  [[Appboy sharedInstance] requestImmediateDataFlush];
 }
 
 RCT_EXPORT_METHOD(setLocationCustomAttribute:(NSString *)key latitude:(double)latitude longitude:(double)longitude callback:(RCTResponseSenderBlock)callback) {
@@ -533,4 +541,26 @@ RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  b
 }
 
 RCT_EXPORT_MODULE();
+
+#pragma mark - SDK Authentication
+
+RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
+{
+  RCTLogInfo(@"[Appboy sharedInstance] setSdkAuthenticationSignature with value %@", signature);
+  [[Appboy sharedInstance] setSdkAuthenticationSignature:signature];
+}
+
+- (void)handleSdkAuthenticationError:(ABKSdkAuthenticationError *)authError {
+  if (!hasListeners) {
+    return;
+  }
+
+  NSMutableDictionary *error = [NSMutableDictionary dictionary];
+  error[@"error_code"] = @(authError.code);
+  error[@"user_id"] = authError.userId;
+  error[@"original_signature"] = authError.signature;
+  error[@"reason"] = authError.reason;
+  [self sendEventWithName:kSdkAuthenticationErrorEvent body:error];
+}
+
 @end

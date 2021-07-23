@@ -6,7 +6,7 @@
 	<string></string>
 	<key>CFBundleDisplayName</key>
 	<string></string>
-	<key>Appboy</key>
+	<key>Braze</key>
 	<dict>
 		<key>LogLevel</key>
 		<string>0</string>

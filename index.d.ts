@@ -52,8 +52,18 @@ export function getInstallTrackingId(callback: Callback): void;
  *    to target while logged out and switching back to that user ID as part of your app's logout process.
  *
  * @param {string} userId - A unique identifier for this user.
+ * @param {string} signature - An encrypted signature to add to network requests to authenticate the current user. You can update the signature
+   *   using the `setSdkAuthenticationSignature` method. This signature will only have an effect if SDK Authentication is enabled.
  */
-export function changeUser(userId: string): void;
+export function changeUser(userId: string, signature?: string): void;
+
+/**
+ * Sets the signature to be used to authenticate the current user. You can also set the signature when calling `changeUser`.
+ * This signature will only have an effect if SDK Authentication is enabled.
+ *
+ * @param signature - The signature to add to network requests to authenticate the current user.
+ */
+export function setSdkAuthenticationSignature(signature: string): void;
 
 /**
  * An alias serves as an alternative unique user identifier. Use aliases to identify users along different
@@ -631,6 +641,7 @@ export const NotificationSubscriptionTypes : NotificationSubscriptionType;
 
 interface AppboyEvent {
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
+  SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
 }
 export const Events : AppboyEvent;
 

@@ -25,6 +25,7 @@ jest.mock('NativeModules', () => {
       setEmail: jest.fn(),
       setPhoneNumber: jest.fn(),
       changeUser: jest.fn(),
+      setSdkAuthenticationSignature: jest.fn(),
       setSDKFlavor: jest.fn(),
       logCustomEvent: jest.fn(),
       logPurchase: jest.fn(),
@@ -246,7 +247,13 @@ test('it calls AppboyReactBridge.changeUser', () => {
   const user_id = "some_id";
   ReactAppboy.changeUser(user_id);
   expect(NativeModules.AppboyReactBridge.setSDKFlavor).toBeCalled();
-  expect(NativeModules.AppboyReactBridge.changeUser).toBeCalledWith(user_id);
+  expect(NativeModules.AppboyReactBridge.changeUser).toBeCalledWith(user_id, null);
+});
+
+test('it calls AppboyReactBridge.setSdkAuthenticationSignature', () => {
+  const signature = "signature";
+  ReactAppboy.setSdkAuthenticationSignature(signature);
+  expect(NativeModules.AppboyReactBridge.setSdkAuthenticationSignature).toBeCalledWith(signature);
 });
 
 test('it calls AppboyReactBridge.logCustomEvent', () => {
