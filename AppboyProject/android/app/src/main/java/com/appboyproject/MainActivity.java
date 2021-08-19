@@ -1,13 +1,5 @@
 package com.appboyproject;
 
-import com.appboy.Constants;
-import com.appboy.models.IInAppMessage;
-import com.appboy.models.MessageButton;
-import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
-import com.appboy.ui.inappmessage.InAppMessageCloser;
-import com.appboy.ui.inappmessage.InAppMessageOperation;
-import com.appboy.ui.inappmessage.listeners.IInAppMessageManagerListener;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,18 +7,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.braze.models.inappmessage.IInAppMessage;
+import com.braze.models.inappmessage.MessageButton;
+import com.braze.support.BrazeLogger;
+import com.braze.ui.inappmessage.BrazeInAppMessageManager;
+import com.braze.ui.inappmessage.InAppMessageCloser;
+import com.braze.ui.inappmessage.InAppMessageOperation;
+import com.braze.ui.inappmessage.listeners.IInAppMessageManagerListener;
+import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.ReactActivity;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends ReactActivity {
-  private static final String TAG = String.format("%s.%s", Constants.APPBOY_LOG_TAG_PREFIX, MainActivity.class.getName());
+  private static final String TAG = BrazeLogger.getBrazeLogTag(MainActivity.class);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +32,6 @@ public class MainActivity extends ReactActivity {
       Log.i(TAG, "Deep link is " + data.toString());
     }
     class BrazeInAppMessageManagerListener implements IInAppMessageManagerListener {
-      @Override
-      public boolean onInAppMessageReceived(IInAppMessage inAppMessage) {
-        return false;
-      }
-
       @Override
       public InAppMessageOperation beforeInAppMessageDisplayed(IInAppMessage inAppMessage) {
         WritableMap parameters = new WritableNativeMap();
@@ -80,7 +69,7 @@ public class MainActivity extends ReactActivity {
       @Override
       public void afterInAppMessageViewClosed(IInAppMessage inAppMessage) { }
     }
-    AppboyInAppMessageManager.getInstance().setCustomInAppMessageManagerListener(new BrazeInAppMessageManagerListener());
+    BrazeInAppMessageManager.getInstance().setCustomInAppMessageManagerListener(new BrazeInAppMessageManagerListener());
   }
 
   /**

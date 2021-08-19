@@ -10,13 +10,9 @@ import com.appboy.enums.Gender;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.events.BrazeSdkAuthenticationErrorEvent;
-import com.appboy.events.ContentCardsUpdatedEvent;
 import com.appboy.events.FeedUpdatedEvent;
 import com.appboy.events.IEventSubscriber;
 import com.appboy.events.SimpleValueCallback;
-import com.appboy.models.IInAppMessage;
-import com.appboy.models.IInAppMessageImmersive;
-import com.appboy.models.MessageButton;
 import com.appboy.models.cards.BannerImageCard;
 import com.appboy.models.cards.CaptionedImageCard;
 import com.appboy.models.cards.Card;
@@ -29,10 +25,14 @@ import com.appboy.models.outgoing.TwitterUser;
 import com.appboy.support.AppboyLogger;
 import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
-import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
 import com.braze.Braze;
 import com.braze.BrazeUser;
+import com.braze.events.ContentCardsUpdatedEvent;
+import com.braze.models.inappmessage.IInAppMessage;
+import com.braze.models.inappmessage.IInAppMessageImmersive;
+import com.braze.models.inappmessage.MessageButton;
 import com.braze.support.BrazeLogger;
+import com.braze.ui.inappmessage.BrazeInAppMessageManager;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
@@ -917,7 +917,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void hideCurrentInAppMessage() {
-    AppboyInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
+    BrazeInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true);
   }
 
   @ReactMethod
