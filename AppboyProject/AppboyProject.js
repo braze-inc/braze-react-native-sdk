@@ -350,6 +350,7 @@ class AppboyProject extends Component {
     var testDate = new Date();
     ReactAppboy.logCustomEvent(this.state.customEventText, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate});
     ReactAppboy.logCustomEvent(this.state.customEventText + 'NoProps');
+    ReactAppboy.logCustomEvent(this.state.customEventText, {'arrayKey': ['arrayVal1', 'arrayVal2', testDate, [testDate, 'nestedArrayval'], {'dictInArrayKey': testDate}], 'dictKey': {'dictKey1': 'dictVal1', 'dictKey2': testDate, 'dictKey3': {'nestedDictKey1': testDate}, 'dictKey4': ['nestedArrayVal1', 'nestedArrayVal2']}});
     this._showToast('Event logged: ' + this.state.customEventText);
   }
   _setLanguagePress(event) {
@@ -396,7 +397,7 @@ class AppboyProject extends Component {
   }
   _logPurchasePress(event) {
     var testDate = new Date();
-    ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate});
+    ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate, 'dictKey':{'dictKey1': 'dictVal1'}});
     ReactAppboy.logPurchase('reactProductIdentifier' + 'NoProps', '1.2', 'USD', 2);
     this._showToast('Purchase logged');
   }

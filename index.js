@@ -40,6 +40,44 @@ function callFunctionWithCallback(methodName, argsArray, callback) {
   methodName.apply(this, argsArray);
 }
 
+function parseNestedProperties(object) {
+  if (object instanceof Array) {
+    for (let i = 0; i < object.length; i++) {
+      if (object[i] instanceof Date){
+        var dateProp = object[i];
+        object[i] = {
+          type: "UNIX_timestamp",
+          value: dateProp.valueOf()
+        }
+      } else {
+        parseNestedProperties(object[i]);
+      }
+    }
+  } else if (object instanceof Object) {
+    for (const key of keys(object)) {
+      if (object[key] instanceof Date) {
+        var dateProp = object[key];
+        object[key] = {
+          type: "UNIX_timestamp",
+          value: dateProp.valueOf()
+        }
+      } else {
+        parseNestedProperties(object[key]);
+      }
+    }
+  }
+}
+
+function keys(a) {
+  const keys = [];
+  for (let k in a) {
+    if (a.hasOwnProperty(k)) {
+      keys.push(k);
+    }
+  }
+  return keys;
+}
+
 var ReactAppboy = {
   /**
   * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
@@ -177,15 +215,7 @@ var ReactAppboy = {
   */
   logCustomEvent: function(eventName, eventProperties) {
     AppboyReactBridge.setSDKFlavor();
-    for (var key in eventProperties) {
-      if (eventProperties[key] instanceof Date){
-        var dateProp = eventProperties[key];
-        eventProperties[key] = {
-          type: "UNIX_timestamp",
-          value: dateProp.valueOf()
-        }
-      }
-    }
+    parseNestedProperties(eventProperties);
     AppboyReactBridge.logCustomEvent(eventName, eventProperties);
   },
 
@@ -214,15 +244,7 @@ var ReactAppboy = {
   *      Values can be numeric, boolean, Date, or strings 255 characters or shorter.
   */
   logPurchase: function(productId, price, currencyCode, quantity, purchaseProperties) {
-    for (var key in purchaseProperties) {
-      if (purchaseProperties[key] instanceof Date){
-        var dateProp = purchaseProperties[key];
-        purchaseProperties[key] = {
-          type: "UNIX_timestamp",
-          value: dateProp.valueOf()
-        }
-      }
-    }
+    parseNestedProperties(purchaseProperties);
     AppboyReactBridge.logPurchase(productId, price, currencyCode, quantity, purchaseProperties);
   },
 
@@ -353,6 +375,24 @@ var ReactAppboy = {
   */
   setDateOfBirth: function(year, month, day) {
     AppboyReactBridge.setDateOfBirth(year, month, day);
+  },
+
+  /**
+  * Adds the user to a subscription group.
+  * @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
+  * @param {function(error, result)} callback - A callback that receives the function call result.
+  */
+   addToSubscriptionGroup: function(groupId, callback) {
+    callFunctionWithCallback(AppboyReactBridge.addToSubscriptionGroup, [groupId], callback);
+  },
+
+  /**
+  * Removes the user from a subscription group.
+  * @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
+  * @param {function(error, result)} callback - A callback that receives the function call result.
+  */
+   removeFromSubscriptionGroup: function(groupId, callback) {
+    callFunctionWithCallback(AppboyReactBridge.removeFromSubscriptionGroup, [groupId], callback);
   },
 
   /**

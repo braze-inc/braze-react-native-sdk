@@ -56,6 +56,8 @@ jest.mock('NativeModules', () => {
       setDoubleCustomUserAttribute: jest.fn(),
       incrementCustomUserAttribute: jest.fn(),
       setGender: jest.fn(),
+      addToSubscriptionGroup: jest.fn(),
+      removeFromSubscriptionGroup: jest.fn(),
       setPushNotificationSubscriptionType: jest.fn(),
       setEmailNotificationSubscriptionType: jest.fn(),
       addToCustomAttributeArray: jest.fn(),
@@ -389,6 +391,18 @@ test('it calls AppboyReactBridge.setGender', () => {
   const gender = "male";
   ReactAppboy.setGender(gender, testCallback);
   expect(NativeModules.AppboyReactBridge.setGender).toBeCalledWith(gender, testCallback);
+});
+
+test('it calls AppboyReactBridge.addToSubscriptionGroup', () => {
+  const groupId = "some_group_id";
+  ReactAppboy.addToSubscriptionGroup(groupId, testCallback);
+  expect(NativeModules.AppboyReactBridge.addToSubscriptionGroup).toBeCalledWith(groupId, testCallback);
+});
+
+test('it calls AppboyReactBridge.removeFromSubscriptionGroup', () => {
+  const groupId = "some_group_id";
+  ReactAppboy.removeFromSubscriptionGroup(groupId, testCallback);
+  expect(NativeModules.AppboyReactBridge.removeFromSubscriptionGroup).toBeCalledWith(groupId, testCallback);
 });
 
 test('it calls AppboyReactBridge.setPushNotificationSubscriptionType', () => {

@@ -1,3 +1,13 @@
+## 1.33.0
+
+##### ⚠ Breaking
+- Updated the native Android bridge to [Braze Android SDK 16.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1600).
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.4](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#434).
+
+##### Added
+- Added `ReactAppboy.addToSubscriptionGroup()` and `ReactAppboy.removeFromSubscriptionGroup()` to manage SMS/Email Subscription Groups.
+- Custom events and purchases now support nested properties. In addition to integers, floats, booleans, dates, or strings, a JSON object can be provided containing dictionaries of arrays or nested dictionaries. All properties combined can be up to 50 KB in total length.
+
 ## 1.32.0
 
 ##### ⚠ Breaking

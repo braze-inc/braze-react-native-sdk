@@ -115,29 +115,68 @@ RCT_EXPORT_METHOD(setGoogleAdvertisingId:(NSString *)googleAdvertisingId andAdTr
 
 RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable NSDictionary *)properties) {
   RCTLogInfo(@"[Appboy sharedInstance] logCustomEvent with eventName %@", eventName);
-  NSMutableDictionary *transformedProperties = [properties mutableCopy];
-  for (NSString* key in properties) {
-    if ([properties[key] isKindOfClass:[NSDictionary class]]) {
-      NSDictionary* value = properties[key];
-      NSString* type = value[@"type"];
+  if (!properties) {
+    [[Appboy sharedInstance] logCustomEvent:eventName];
+    return;
+  }
+
+  [[Appboy sharedInstance] logCustomEvent:eventName withProperties:[self parseDictionary:properties]];
+}
+
+- (NSDictionary *)parseDictionary:(NSDictionary *)dictionary {
+  NSArray *keys = [dictionary allKeys];
+  NSMutableDictionary *parsedDictionary = [dictionary mutableCopy];
+  for (NSString *key in keys) {
+    if ([dictionary[key] isKindOfClass:[NSDictionary class]]){
+      NSString* type = dictionary[key][@"type"];
       if ([type isEqualToString:@"UNIX_timestamp"]) {
-        double timestamp = [value[@"value"] doubleValue];
+        double timestamp = [dictionary[key][@"value"] doubleValue];
         NSDate* nativeDate = [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
-        [transformedProperties setObject:nativeDate forKey:key];
+        [parsedDictionary setObject:nativeDate forKey:key];
       } else {
-        [transformedProperties removeObjectForKey:key];
-        RCTLogInfo(@"[Appboy sharedInstance] logCustomEvent property not supported %@", type);
+        NSDictionary *dictProperty = (NSDictionary *)dictionary[key];
+        [parsedDictionary setObject:[self parseDictionary:dictProperty] forKey:key];
       }
+    } else if ([dictionary[key] isKindOfClass:[NSArray class]]) {
+      NSArray *array = (NSArray *)dictionary[key];
+      [parsedDictionary setObject:[self parseArray:array] forKey:key];
     }
   }
 
-  [[Appboy sharedInstance] logCustomEvent:eventName withProperties:transformedProperties];
+  return parsedDictionary;
+}
+
+- (NSArray *)parseArray:(NSArray *)array {
+  NSMutableArray *parsedArray = [array mutableCopy];
+  for (int i = 0; i < array.count; i++) {
+    if ([array[i] isKindOfClass:[NSDictionary class]]){
+      NSString* type = array[i][@"type"];
+      if ([type isEqualToString:@"UNIX_timestamp"]) {
+        double timestamp = [array[i][@"value"] doubleValue];
+        NSDate* nativeDate = [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
+        parsedArray[i] = nativeDate;
+      } else {
+        NSDictionary *dictionary = (NSDictionary *)array[i];
+        parsedArray[i] = [self parseDictionary:dictionary];
+      }
+    } else if ([array[i] isKindOfClass:[NSArray class]]) {
+      NSArray *arrayProperty = (NSArray *)array[i];
+      parsedArray[i] = [self parseArray:arrayProperty];
+    }
+  }
+
+  return parsedArray;
 }
 
 RCT_EXPORT_METHOD(logPurchase:(NSString *)productIdentifier atPrice:(NSString *)price inCurrency:(NSString *)currencyCode withQuantity:(NSUInteger)quantity andProperties:(nullable NSDictionary *)properties) {
   RCTLogInfo(@"[Appboy sharedInstance] logPurchase with productIdentifier %@", productIdentifier);
   NSDecimalNumber *decimalPrice = [NSDecimalNumber decimalNumberWithString:price];
-  [[Appboy sharedInstance] logPurchase:productIdentifier inCurrency:currencyCode atPrice:decimalPrice withQuantity:quantity andProperties:properties];
+  if (!properties) {
+    [[Appboy sharedInstance] logPurchase:productIdentifier inCurrency:currencyCode atPrice:decimalPrice withQuantity:quantity];
+    return;
+  }
+
+  [[Appboy sharedInstance] logPurchase:productIdentifier inCurrency:currencyCode atPrice:decimalPrice withQuantity:quantity andProperties:[self parseDictionary:properties]];
 }
 
 RCT_EXPORT_METHOD(setFirstName:(NSString *)firstName) {
@@ -208,6 +247,16 @@ RCT_EXPORT_METHOD(setPhoneNumber:(NSString *)phone) {
 RCT_EXPORT_METHOD(setAvatarImageUrl:(NSString *)avatarImageURL) {
   RCTLogInfo(@"[Appboy sharedInstance].user.avatarImageURL =  %@", avatarImageURL);
   [Appboy sharedInstance].user.avatarImageURL = avatarImageURL;
+}
+
+RCT_EXPORT_METHOD(addToSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"[Appboy sharedInstance].user addtoSubscriptionGroup: =  %@", groupId);
+  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addToSubscriptionGroup:groupId])];
+}
+
+RCT_EXPORT_METHOD(removeFromSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"[Appboy sharedInstance].user removeFromSubscriptionGroup: =  %@", groupId);
+  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user removeFromSubscriptionGroup:groupId])];
 }
 
 RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(ABKNotificationSubscriptionType)emailNotificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {

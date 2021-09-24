@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AppboyReactBridge extends ReactContextBaseJavaModule {
@@ -145,51 +146,51 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   private AppboyProperties populateEventPropertiesFromReadableMap(ReadableMap eventProperties) {
-    AppboyProperties properties = new AppboyProperties();
-    ReadableMapKeySetIterator keySetIterator = eventProperties.keySetIterator();
     if (eventProperties == JSONObject.NULL) {
-      return properties;
+      return new AppboyProperties();
     }
 
+    return new AppboyProperties(new JSONObject(parseReadableMap(eventProperties)));
+  }
+
+  private Map parseReadableMap(ReadableMap readableMap) {
+    ReadableMapKeySetIterator keySetIterator = readableMap.keySetIterator();
+    Map parsedMap = readableMap.toHashMap();
     while (keySetIterator.hasNextKey()) {
       String key = keySetIterator.nextKey();
-      ReadableType readableType = eventProperties.getType(key);
-      switch (readableType) {
-        case String:
-          properties.addProperty(key, eventProperties.getString(key));
-          break;
-        case Boolean:
-          properties.addProperty(key, eventProperties.getBoolean(key));
-          break;
-        case Number:
-          try {
-            properties.addProperty(key, eventProperties.getDouble(key));
-          } catch (Exception e) {
-            try {
-              properties.addProperty(key, eventProperties.getInt(key));
-            } catch (Exception e2) {
-              AppboyLogger.e(TAG, "Could not parse ReadableType.Number from ReadableMap for key: " + key, e2);
-            }
-          }
-          break;
-        case Map:
-          try {
-            if (eventProperties.getMap(key).getString("type").equals("UNIX_timestamp")) {
-              double unixTimestamp = eventProperties.getMap(key).getDouble("value");
-              properties.addProperty(key, new Date((long) unixTimestamp));
-            } else {
-              AppboyLogger.w(TAG, "Unsupported ReadableMap type received for key: " + key);
-            }
-          } catch (Exception e) {
-            AppboyLogger.e(TAG, "Could not determine type from ReadableMap for key: " + key, e);
-          }
-          break;
-        default:
-          AppboyLogger.w(TAG, "Could not map ReadableType to an AppboyProperty value for key: " + key);
-          break;
+      ReadableType readableType = readableMap.getType(key);
+      if (readableType == readableType.Map) {
+        if (readableMap.getMap(key).hasKey("type") &&
+                readableMap.getMap(key).getString("type").equals("UNIX_timestamp")) {
+          double unixTimestamp = readableMap.getMap(key).getDouble("value");
+          parsedMap.put(key, new Date((long) unixTimestamp));
+        } else {
+          parsedMap.put(key, parseReadableMap(readableMap.getMap(key)));
+        }
+      } else if (readableType == readableType.Array) {
+        parsedMap.put(key, parseReadableArray(readableMap.getArray(key)));
       }
     }
-    return properties;
+    return parsedMap;
+  }
+
+  private List parseReadableArray(ReadableArray readableArray) {
+    List parsedList = readableArray.toArrayList();
+    for (int i = 0; i < readableArray.size(); i++) {
+      ReadableType readableType = readableArray.getType(i);
+      if (readableType == readableType.Map) {
+        if (readableArray.getMap(i).hasKey("type") &&
+                readableArray.getMap(i).getString("type").equals("UNIX_timestamp")) {
+          double unixTimestamp = readableArray.getMap(i).getDouble("value");
+          parsedList.set(i, new Date((long) unixTimestamp));
+        } else {
+          parsedList.set(i, parseReadableMap(readableArray.getMap(i)));
+        }
+      } else if (readableType == readableType.Array) {
+        parsedList.set(i, parseReadableArray(readableArray.getArray(i)));
+      }
+    }
+    return parsedList;
   }
 
   @ReactMethod
@@ -433,6 +434,28 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
       @Override
       public void onSuccess(@NonNull BrazeUser brazeUser) {
         brazeUser.setAvatarImageUrl(avatarImageUrl);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void addToSubscriptionGroup(String groupId, final Callback callback) {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
+      @Override
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.addToSubscriptionGroup(groupId);
+        reportResultWithCallback(callback, null, result);
+      }
+    });
+  }
+
+  @ReactMethod
+  public void removeFromSubscriptionGroup(String groupId, final Callback callback) {
+    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
+      @Override
+      public void onSuccess(@NonNull BrazeUser brazeUser) {
+        boolean result = brazeUser.removeFromSubscriptionGroup(groupId);
+        reportResultWithCallback(callback, null, result);
       }
     });
   }

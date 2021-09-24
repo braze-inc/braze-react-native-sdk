@@ -171,6 +171,20 @@ export function registerAndroidPushToken(token: string): void;
 export function setGoogleAdvertisingId(googleAdvertisingId: string, adTrackingEnabled: boolean): void;
 
 /**
+* Adds the user to a subscription group.
+* @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
+* @param {function(error, result)} callback - A callback that receives the function call result.
+*/
+export function addToSubscriptionGroup(groupId: string, callback?: Callback): void
+
+/**
+* Removes the user from a subscription group.
+* @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
+* @param {function(error, result)} callback - A callback that receives the function call result.
+*/
+export function removeFromSubscriptionGroup(groupId: string, callback?: Callback): void;
+
+/**
  * Sets whether the user should be sent push campaigns.
  * @param {NotificationSubscriptionType} notificationSubscriptionType - Notification setting (explicitly
  *    opted-in, subscribed, or unsubscribed).

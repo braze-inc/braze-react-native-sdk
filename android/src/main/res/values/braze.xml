@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--- Internal Braze Usage -->
-  <string translatable="false" name="com_appboy_sdk_flavor">REACT</string>
+  <string translatable="false" name="com_braze_sdk_flavor">REACT</string>
 </resources>
