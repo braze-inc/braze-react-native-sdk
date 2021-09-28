@@ -251,12 +251,12 @@ RCT_EXPORT_METHOD(setAvatarImageUrl:(NSString *)avatarImageURL) {
 
 RCT_EXPORT_METHOD(addToSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].user addtoSubscriptionGroup: =  %@", groupId);
-  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addToSubscriptionGroup:groupId])];
+  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addToSubscriptionGroupWithGroupId:groupId])];
 }
 
 RCT_EXPORT_METHOD(removeFromSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].user removeFromSubscriptionGroup: =  %@", groupId);
-  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user removeFromSubscriptionGroup:groupId])];
+  [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user removeFromSubscriptionGroupWithGroupId:groupId])];
 }
 
 RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(ABKNotificationSubscriptionType)emailNotificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
