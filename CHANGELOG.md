@@ -1,3 +1,8 @@
+# 1.33.1
+
+##### Fixed
+- Fixed an issue introduced in 1.33.0 that caused a build error on iOS.
+
 ## 1.33.0
 
 ##### ⚠ Breaking
