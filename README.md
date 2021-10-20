@@ -6,10 +6,7 @@ Effective marketing automation is an essential part of successfully scaling and 
 
 ## SDK Integration
 
-See our Technical Documentation for instructions on integrating Braze into your React Native application.
-- [iOS Documentation](https://www.braze.com/documentation/React_Native/iOS/)
-- [Android Documentation](https://www.braze.com/documentation/React_Native/Android_and_FireOS/)
-
+See our [Technical Documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/react_sdk_setup/) for instructions on integrating Braze into your React Native application.
 
 ## Components
 
