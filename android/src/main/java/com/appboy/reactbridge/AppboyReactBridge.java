@@ -127,6 +127,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void pushAuthorizationFromUserNotificationCenter(boolean pushAuthGranted) {
+    // Dummy method required for the iOS SDK flavor implementation; see AppboyReactBridge.pushAuthorizationFromUserNotificationCenter()
+    // in index.js. The Android bridge does not need this.
+  }
+
+  @ReactMethod
   public void registerAndroidPushToken(String token) {
     Braze.getInstance(getReactApplicationContext()).registerAppboyPushMessages(token);
   }

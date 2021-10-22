@@ -17,6 +17,7 @@ jest.mock('NativeEventEmitter');
 jest.mock('NativeModules', () => {
   return {
     AppboyReactBridge: {
+      pushAuthorizationFromUserNotificationCenter: jest.fn(),
       registerAndroidPushToken: jest.fn(),
       setGoogleAdvertisingId: jest.fn(),
       setFirstName: jest.fn(),
@@ -86,6 +87,12 @@ const testInAppMessageJson = `{\"message\":\"body body\",\"type\":\"MODAL\",\"te
 
 afterEach(() => {
   jest.clearAllMocks();
+});
+
+test('it calls AppboyReactBridge.pushAuthorizationFromUserNotificationCenter', () => {
+  const pushAuthGranted = true;
+  ReactAppboy.pushAuthorizationFromUserNotificationCenter(pushAuthGranted);
+  expect(NativeModules.AppboyReactBridge.pushAuthorizationFromUserNotificationCenter).toBeCalledWith(pushAuthGranted);
 });
 
 test('it calls AppboyReactBridge.registerAndroidPushToken', () => {

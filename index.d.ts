@@ -151,6 +151,15 @@ export function setAvatarImageUrl(avatarImageUrl: string): void;
 export function setDateOfBirth(year: number, month: MonthsAsNumber, day: number): void;
 
 /**
+ * This method pots the current device's push authorization status to Braze server.
+ * 
+ * iOS only.
+ * 
+ * @param {boolean} pushAuthGranted - If the permission is granted or not.
+ */
+export function pushAuthorizationFromUserNotificationCenter(pushAuthGranted: boolean): void;
+
+/**
  * This method posts a token to Appboy's servers to associate the token with the current device.
  *
  * No-op on iOS.

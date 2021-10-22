@@ -180,6 +180,17 @@ var ReactAppboy = {
   },
 
   /**
+   * This method pots the current device's push authorization status to Braze server.
+   * 
+   * iOS only.
+   * 
+   * @param {boolean} pushAuthGranted - If the permission is granted or not.
+   */
+  pushAuthorizationFromUserNotificationCenter: function(pushAuthGranted) {
+    AppboyReactBridge.pushAuthorizationFromUserNotificationCenter(pushAuthGranted);
+  },
+
+  /**
   * This method posts a token to Appboy's servers to associate the token with the current device.
   *
   * No-op on iOS.

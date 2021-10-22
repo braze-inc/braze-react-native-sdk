@@ -103,6 +103,12 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabe
   [[Appboy sharedInstance].user addAlias:aliasName withLabel:aliasLabel];
 }
 
+RCT_EXPORT_METHOD(pushAuthorizationFromUserNotificationCenter:(BOOL)pushAuthGranted) 
+{
+  RCTLogInfo(@"[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter");
+  [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:pushAuthGranted];
+}
+
 RCT_EXPORT_METHOD(registerAndroidPushToken:(NSString *)token)
 {
   RCTLogInfo(@"Warning: This is an Android only feature.");
