@@ -521,6 +521,11 @@ RCT_EXPORT_METHOD(enableSDK) {
   [Appboy requestEnableSDKOnNextAppRun];
 }
 
+RCT_EXPORT_METHOD(startWithApiKey:(NSString *)brazeKey withLaunchOptions:(nullable NSDictionary *)launchOptions) {
+	UIApplication *application = [UIApplication sharedApplication];
+	[Appboy startWithApiKey:brazeKey inApplication:application withLaunchOptions:launchOptions];
+}
+
 RCT_EXPORT_METHOD(requestLocationInitialization) {
   RCTLogInfo(@"Warning: This is an Android only feature.");
 }

@@ -620,6 +620,13 @@ var ReactAppboy = {
   },
 
   /**
+  * Starts the Braze SDK with an API key
+  */
+   startWithApiKey: function(apiKey, options) {
+    AppboyReactBridge.startWithApiKey(apiKey, options);
+  },
+
+  /**
   * Call this method once a user grants location permissions on Android
   * to initialize Braze location features. Calling this method is a no-op on
   * iOS.
