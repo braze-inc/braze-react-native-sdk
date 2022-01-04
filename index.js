@@ -694,7 +694,18 @@ var ReactAppboy = {
     const inAppMessageString = inAppMessage.toString();
     AppboyReactBridge.logInAppMessageButtonClicked(inAppMessageString, buttonId);
   },
-
+  /**
+   * Request notification permission for ios, always returns true on android
+   * @platform ios
+   * @param {*} permissionOptions 
+   * @returns 
+   */
+  requestPermission: function(permissionOptions) {
+    if(Platform.OS === 'ios') {
+      return AppboyReactBridge.requestPermission(permissionOptions)
+    }
+    return true
+  },
   // Events
   /**
    * Subscribes to the specific SDK event.

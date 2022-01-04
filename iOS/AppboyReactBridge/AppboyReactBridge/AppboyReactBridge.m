@@ -612,4 +612,100 @@ RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
   [self sendEventWithName:kSdkAuthenticationErrorEvent body:error];
 }
 
+#pragma mark - Native permission handler
+
+RCT_EXPORT_METHOD(hasPermission: (RCTPromiseResolveBlock)resolve: (RCTPromiseRejectBlock)reject) {
+  if (@available(iOS 10.0, *)) {
+      [[UNUserNotificationCenter currentNotificationCenter]
+       getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *_Nonnull settings)
+       {
+          if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
+              resolve(@0);
+          }
+        
+          if (settings.authorizationStatus == UNAuthorizationStatusDenied) {
+              resolve(@-1);
+          }
+          
+          if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
+              resolve(@1);
+          }
+
+          if (@available(iOS 12.0, *)) {
+            if (settings.authorizationStatus == UNAuthorizationStatusProvisional) {
+                resolve(@2);
+            }
+          }
+      }];
+  } else {
+      resolve(@1);
+  }
+}
+
+RCT_EXPORT_METHOD(requestPermission
+                  : (NSDictionary *)permissions
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  if (@available(iOS 10.0, *)) {
+    UNAuthorizationOptions options = UNAuthorizationOptionNone;
+
+    if ([permissions[@"alert"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionAlert;
+    }
+
+    if ([permissions[@"badge"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionBadge;
+    }
+
+    if ([permissions[@"sound"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionSound;
+    }
+
+    if ([permissions[@"criticalAlert"] isEqual:@(YES)]) {
+      if (@available(iOS 12.0, *)) {
+        options |= UNAuthorizationOptionCriticalAlert;
+      }
+    }
+
+    if ([permissions[@"provisional"] isEqual:@(YES)]) {
+      if (@available(iOS 12.0, *)) {
+        options |= UNAuthorizationOptionProvisional;
+      }
+    }
+
+    if ([permissions[@"announcement"] isEqual:@(YES)]) {
+      if (@available(iOS 13.0, *)) {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+        options |= UNAuthorizationOptionAnnouncement;
+#endif
+      }
+    }
+
+    if ([permissions[@"carPlay"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionCarPlay;
+    }
+
+    if ([permissions[@"providesAppNotificationSettings"] isEqual:@(YES)]) {
+        if (@available(iOS 12.0, *)) {
+            options |= UNAuthorizationOptionProvidesAppNotificationSettings;
+        }
+    }
+
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+      
+    [center requestAuthorizationWithOptions:options
+                          completionHandler:^(BOOL granted, NSError *_Nullable error) {
+        
+        if (error) {
+            reject(@"PERMISSION_ERROR", @"Error while requesting permission",error);
+        } else {
+            [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
+            [self hasPermission:resolve:reject];
+        }
+    }];
+  } else {
+      resolve(@1);
+  }
+}
+
 @end

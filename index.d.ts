@@ -575,6 +575,25 @@ export function logInAppMessageButtonClicked(
   buttonId: number
 ): void;
 
+interface PermissionOptions {
+
+}
+
+export enum PermissionStatus {
+  NOT_DETERMINED = 0,
+  DENIED = -1,
+  AUTHORIZED = 1,
+  PROVISIONAL = 2
+}
+
+/**
+ * Request notification permission for ios, always returns true on android
+ * @param {PermissionOptions} permissionOptions
+ */
+export function requestPermission(
+  permissionOptions?: PermissionOptions,
+): Promise<PermissionStatus>;
+
 export class BrazeInAppMessage {
   constructor(_data: string)
   inAppMessageJsonString: string
@@ -592,7 +611,6 @@ export class BrazeInAppMessage {
   buttons: [BrazeButton]
   toString(): string;
 }
-
 export class BrazeButton {
   constructor(_data: string)
   text: string
