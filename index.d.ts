@@ -594,6 +594,12 @@ export function requestPermission(
   permissionOptions?: PermissionOptions,
 ): Promise<PermissionStatus>;
 
+/**
+ * Register device for remote notifications, no-op on android
+ * @platform ios
+ */
+export function registerDeviceForRemoteNotifications(): void;
+
 export class BrazeInAppMessage {
   constructor(_data: string)
   inAppMessageJsonString: string

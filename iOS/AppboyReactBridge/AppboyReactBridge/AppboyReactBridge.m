@@ -708,4 +708,9 @@ RCT_EXPORT_METHOD(requestPermission
   }
 }
 
+RCT_EXPORT_METHOD(registerDeviceForRemoteNotifications)
+{
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+}
+
 @end

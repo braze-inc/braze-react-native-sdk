@@ -706,6 +706,15 @@ var ReactAppboy = {
     }
     return true
   },
+  /**
+ * Register device for remote notifications, no-op on android
+ * @platform ios
+ */
+  registerDeviceForRemoteNotifications: function() {
+    if(Platform.OS === 'ios') {
+      return AppboyReactBridge.registerDeviceForRemoteNotifications()
+    }
+  },
   // Events
   /**
    * Subscribes to the specific SDK event.
