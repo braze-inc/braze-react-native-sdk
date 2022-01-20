@@ -28,7 +28,7 @@ public class MainActivity extends ReactActivity {
     Intent intent = getIntent();
     Uri data = intent.getData();
     if (data != null) {
-      Toast.makeText(this, "Activity opened by deep link: " + data.toString(), Toast.LENGTH_LONG);
+      Toast.makeText(this, "Activity opened by deep link: " + data.toString(), Toast.LENGTH_LONG).show();
       Log.i(TAG, "Deep link is " + data.toString());
     }
     class BrazeInAppMessageManagerListener implements IInAppMessageManagerListener {

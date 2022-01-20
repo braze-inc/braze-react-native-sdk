@@ -375,18 +375,10 @@ export function setAttributionData(
 export function launchNewsFeed(): void;
 
 // Content Cards
-interface ContentCardType {
-  CLASSIC: 'Classic',
-  BANNER: 'Banner',
-  CAPTIONED: 'Captioned',
-}
-export const ContentCardTypes: ContentCardType;
-
-export interface ContentCard {
+export interface ContentCardBase {
   id: string;
   created: number;
   expiresAt: number;
-  type: ContentCardType[keyof ContentCardType];
   viewed: boolean;
   clicked: boolean;
   pinned: boolean;
@@ -397,25 +389,30 @@ export interface ContentCard {
   extras: { [key: string]: string };
 }
 
-export interface ClassicContentCard extends ContentCard {
+export interface ClassicContentCard extends ContentCardBase {
+  type: 'Classic';
   image?: string;
   title: string;
   cardDescription: string;
   domain?: string;
 }
 
-export interface BannerContentCard extends ContentCard {
+export interface BannerContentCard extends ContentCardBase {
+  type: 'Banner';
   image: string;
   imageAspectRatio: number;
 }
 
-export interface CaptionedContentCard extends ContentCard {
+export interface CaptionedContentCard extends ContentCardBase {
+  type: 'Captioned';
   image: string;
   imageAspectRatio: number;
   title: string;
   cardDescription: string;
   domain?: string;
 }
+
+export type ContentCard = ClassicContentCard | BannerContentCard | CaptionedContentCard;
 
 /**
  * Launches the Content Cards UI element.

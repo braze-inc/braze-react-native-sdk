@@ -2,11 +2,11 @@
 
 buildscript {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:7.0.2'
         classpath "com.google.gms:google-services:4.3.4"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -15,11 +15,11 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenLocal()
-        jcenter()
         maven { url "$rootDir/../node_modules/react-native/android" }
-        maven { url "http://appboy.github.io/appboy-android-sdk/sdk" }
-        google()
         maven { url "$rootDir/../node_modules/jsc-android/dist" }
+        google()
+        mavenCentral()
+        maven { url "https://appboy.github.io/appboy-android-sdk/sdk" }
+        mavenLocal()
     }
 }

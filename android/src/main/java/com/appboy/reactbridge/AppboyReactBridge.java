@@ -18,11 +18,9 @@ import com.appboy.models.cards.CaptionedImageCard;
 import com.appboy.models.cards.Card;
 import com.appboy.models.cards.ShortNewsCard;
 import com.appboy.models.cards.TextAnnouncementCard;
-import com.appboy.models.outgoing.AppboyProperties;
 import com.appboy.models.outgoing.AttributionData;
 import com.appboy.models.outgoing.FacebookUser;
 import com.appboy.models.outgoing.TwitterUser;
-import com.appboy.support.AppboyLogger;
 import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
 import com.braze.Braze;
@@ -31,6 +29,7 @@ import com.braze.events.ContentCardsUpdatedEvent;
 import com.braze.models.inappmessage.IInAppMessage;
 import com.braze.models.inappmessage.IInAppMessageImmersive;
 import com.braze.models.inappmessage.MessageButton;
+import com.braze.models.outgoing.BrazeProperties;
 import com.braze.support.BrazeLogger;
 import com.braze.ui.inappmessage.BrazeInAppMessageManager;
 import com.facebook.react.bridge.Arguments;
@@ -55,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AppboyReactBridge extends ReactContextBaseJavaModule {
@@ -96,7 +94,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         callback.invoke(null, result);
       }
     } else {
-      AppboyLogger.w(TAG, "Warning: AppboyReactBridge callback was null.");
+      BrazeLogger.w(TAG, "Warning: AppboyReactBridge callback was null.");
     }
   }
 
@@ -145,12 +143,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     }
   }
 
-  private AppboyProperties populateEventPropertiesFromReadableMap(ReadableMap eventProperties) {
+  private BrazeProperties populateEventPropertiesFromReadableMap(ReadableMap eventProperties) {
     if (eventProperties == JSONObject.NULL) {
-      return new AppboyProperties();
+      return new BrazeProperties();
     }
 
-    return new AppboyProperties(new JSONObject(parseReadableMap(eventProperties)));
+    return new BrazeProperties(new JSONObject(parseReadableMap(eventProperties)));
   }
 
   private Map parseReadableMap(ReadableMap readableMap) {

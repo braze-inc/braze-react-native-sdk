@@ -1,3 +1,14 @@
+# 1.34.0
+
+##### ⚠ Breaking
+- Updated the native Android bridge to [Braze Android SDK 18.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1801git).
+
+##### Fixed
+- Fixed an issue with Content Card types. Thanks @jtparret!
+
+##### Changed
+- Improved logging around `getInitialUrl`.
+
 # 1.33.1
 
 ##### Fixed

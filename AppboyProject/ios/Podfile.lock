@@ -199,7 +199,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-appboy-sdk (1.33.1):
+  - react-native-appboy-sdk (1.34.0):
     - Appboy-iOS-SDK (~> 4.3.4)
     - React
   - React-RCTActionSheet (0.61.5):
@@ -350,7 +350,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-appboy-sdk: 91fb3c1b9d27fc1de2dc90c0239eecdb64929b44
+  react-native-appboy-sdk: cdb33785e7f182f1ef7341c63626586605282e83
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -366,4 +366,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 12f4fef8b6ce7354bd8698dc795dfb0568db600d
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

@@ -6,13 +6,14 @@ import {
   View,
   ScrollView,
   TouchableHighlight,
-  Picker,
   Linking,
   Alert,
   TextInput,
   Platform,
   DeviceEventEmitter
 } from 'react-native';
+
+import { Picker } from '@react-native-picker/picker';
 
 const ReactAppboy = require('react-native-appboy-sdk');
 
