@@ -82,6 +82,8 @@ RCT_EXPORT_METHOD(setSDKFlavor) {
 RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
   if ([AppboyReactUtils sharedInstance].initialUrlString != nil) {
     [self reportResultWithCallback:callback andError:nil andResult:[AppboyReactUtils sharedInstance].initialUrlString];
+  } else {
+    [self reportResultWithCallback:callback andError:nil andResult:nil];
   }
 }
 
