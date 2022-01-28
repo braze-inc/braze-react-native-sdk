@@ -1,3 +1,8 @@
+# 1.34.1
+
+##### Fixed
+- Fixed an issue with where `getInitialUrl` would not resolve when there is no initial URL.
+
 # 1.34.0
 
 ##### ⚠ Breaking

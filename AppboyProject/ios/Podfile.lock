@@ -199,7 +199,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-appboy-sdk (1.34.0):
+  - react-native-appboy-sdk (1.34.1):
     - Appboy-iOS-SDK (~> 4.3.4)
     - React
   - React-RCTActionSheet (0.61.5):
