@@ -147,6 +147,7 @@ var ReactAppboy = {
   */
   changeUser: function(userId, signature) {
     AppboyReactBridge.setSDKFlavor();
+    AppboyReactBridge.setMetadata();
     AppboyReactBridge.changeUser(userId, signature != null ? signature : null);
   },
 
@@ -176,6 +177,7 @@ var ReactAppboy = {
    */
   addAlias: function(aliasName, aliasLabel) {
     AppboyReactBridge.setSDKFlavor();
+    AppboyReactBridge.setMetadata();
     AppboyReactBridge.addAlias(aliasName, aliasLabel);
   },
 
@@ -215,6 +217,7 @@ var ReactAppboy = {
   */
   logCustomEvent: function(eventName, eventProperties) {
     AppboyReactBridge.setSDKFlavor();
+    AppboyReactBridge.setMetadata();
     parseNestedProperties(eventProperties);
     AppboyReactBridge.logCustomEvent(eventName, eventProperties);
   },

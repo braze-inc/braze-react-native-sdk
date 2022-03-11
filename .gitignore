@@ -47,10 +47,6 @@ yarn-error.log
 # CocoaPods
 Pods
 
-#fastlane
-AppboyProject/ios/fastlane/README.md
-AppboyProject/ios/fastlane/report.xml
-
 # Emacs
 *~
 

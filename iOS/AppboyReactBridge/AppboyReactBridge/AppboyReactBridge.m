@@ -77,6 +77,10 @@ RCT_EXPORT_METHOD(setSDKFlavor) {
   [Appboy sharedInstance].sdkFlavor = REACT;
 }
 
+RCT_EXPORT_METHOD(setMetadata) {
+  [[Appboy sharedInstance] addSdkMetadata:@[ABKSdkMetadataReactNative]];
+}
+
 // Returns push deep links from cold app starts.
 // For more context see getInitialURL() in index.js
 RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {

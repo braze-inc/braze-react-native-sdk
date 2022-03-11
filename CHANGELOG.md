@@ -1,7 +1,13 @@
+# 1.35.0
+
+##### Breaking
+- Updated the native iOS bridge to [Braze iOS SDK 4.4.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#442).
+- Drops support for iOS 9 and 10.
+
 # 1.34.1
 
 ##### Fixed
-- Fixed an issue where `getInitialUrl` would not resolve when there is no initial URL.
+- Fixed an issue with where `getInitialUrl` would not resolve when there is no initial URL.
 
 # 1.34.0
 
