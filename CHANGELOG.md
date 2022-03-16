@@ -1,3 +1,8 @@
+# 1.35.1
+
+##### Fixed
+- Fixed an issue where `setMetadata` did not have a method implementation for Android.
+
 # 1.35.0
 
 ##### Breaking
@@ -7,7 +12,7 @@
 # 1.34.1
 
 ##### Fixed
-- Fixed an issue with where `getInitialUrl` would not resolve when there is no initial URL.
+- Fixed an issue where `getInitialUrl` would not resolve when there is no initial URL.
 
 # 1.34.0
 

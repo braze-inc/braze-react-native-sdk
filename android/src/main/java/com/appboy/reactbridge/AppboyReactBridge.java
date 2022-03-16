@@ -105,6 +105,12 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setMetadata() {
+    // Dummy method required for the iOS SDK Metadata implementation; see AppboyReactBridge.setMetadata()
+    // in index.js. The Android bridge sets the REACT SDK Metadata field via a braze.xml parameter.
+  }
+
+  @ReactMethod
   public void requestImmediateDataFlush() {
     Braze.getInstance(getReactApplicationContext()).requestImmediateDataFlush();
   }

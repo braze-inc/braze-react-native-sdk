@@ -226,7 +226,7 @@ PODS:
   - React-jsinspector (0.66.4)
   - React-logger (0.66.4):
     - glog
-  - react-native-appboy-sdk (1.35.0):
+  - react-native-appboy-sdk (1.35.1):
     - Appboy-iOS-SDK (~> 4.4.2)
     - React
   - React-perflogger (0.66.4)
