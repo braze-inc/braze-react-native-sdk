@@ -5,12 +5,12 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', 31)
-  buildToolsVersion safeExtGet('buildToolsVersion', '31.0.0')
+  compileSdkVersion safeExtGet('compileSdkVersion', 33)
+  buildToolsVersion safeExtGet('buildToolsVersion', '33.0.0')
 
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 16)
-    targetSdkVersion safeExtGet('targetSdkVersion', 31)
+    targetSdkVersion safeExtGet('targetSdkVersion', 33)
     versionCode 1
     versionName '1.0'
   }
@@ -22,6 +22,6 @@ android {
 }
 
 dependencies {
-  api 'com.appboy:android-sdk-ui:18.0.1'
+  api 'com.appboy:android-sdk-ui:21.0.0'
   api 'com.facebook.react:react-native:+'
 }

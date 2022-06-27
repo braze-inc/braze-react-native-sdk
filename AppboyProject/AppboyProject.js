@@ -426,7 +426,6 @@ class AppboyProject extends Component {
       }
     });
     ReactAppboy.setPhoneNumber('9085555555');
-    ReactAppboy.setAvatarImageUrl('https://raw.githubusercontent.com/Appboy/appboy-react-sdk/master/braze-logo.png');
     ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
     ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
     ReactAppboy.addAlias('arrayattr', 'alias-label-1');
@@ -602,7 +601,6 @@ class AppboyProject extends Component {
           ReactAppboy.logContentCardImpression(cardId);
           // ReactAppboy.logContentCardDismissed(cardId);
         }
-        ReactAppboy.logContentCardsDisplayed(cardId);
       }
     }).catch(function () {
       console.log("Content Cards Promise Rejected");

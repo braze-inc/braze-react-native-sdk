@@ -4,12 +4,10 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import com.appboy.Appboy;
 import com.appboy.enums.CardCategory;
 import com.appboy.enums.Gender;
 import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
-import com.appboy.events.BrazeSdkAuthenticationErrorEvent;
 import com.appboy.events.FeedUpdatedEvent;
 import com.appboy.events.IEventSubscriber;
 import com.appboy.events.SimpleValueCallback;
@@ -25,6 +23,7 @@ import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
 import com.braze.Braze;
 import com.braze.BrazeUser;
+import com.braze.events.BrazeSdkAuthenticationErrorEvent;
 import com.braze.events.ContentCardsUpdatedEvent;
 import com.braze.models.inappmessage.IInAppMessage;
 import com.braze.models.inappmessage.IInAppMessageImmersive;
@@ -433,16 +432,6 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setAvatarImageUrl(final String avatarImageUrl) {
-    Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
-      @Override
-      public void onSuccess(@NonNull BrazeUser brazeUser) {
-        brazeUser.setAvatarImageUrl(avatarImageUrl);
-      }
-    });
-  }
-
-  @ReactMethod
   public void addToSubscriptionGroup(String groupId, final Callback callback) {
     Braze.getInstance(getReactApplicationContext()).getCurrentUser(new SimpleValueCallback<BrazeUser>() {
       @Override
@@ -650,9 +639,9 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
     mappedCard.putDouble("expiresAt", card.getExpiresAt());
     mappedCard.putBoolean("viewed", card.getViewed());
     mappedCard.putBoolean("clicked", card.isClicked());
-    mappedCard.putBoolean("pinned", card.getIsPinned());
+    mappedCard.putBoolean("pinned", card.isPinned());
     mappedCard.putBoolean("dismissed", card.isDismissed());
-    mappedCard.putBoolean("dismissible", card.getIsDismissibleByUser());
+    mappedCard.putBoolean("dismissible", card.isDismissibleByUser());
     mappedCard.putString("url", card.getUrl());
     mappedCard.putBoolean("openURLInWebView", card.getOpenUriInWebView());
 
@@ -773,15 +762,10 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  private void logContentCardsDisplayed() {
-    Braze.getInstance(getReactApplicationContext()).logContentCardsDisplayed();
-  }
-
-  @ReactMethod
   private void logContentCardDismissed(String id) {
     Card card = getCardById(id);
     if (card != null) {
-      card.setIsDismissed(true);
+      card.setDismissed(true);
     }
   }
 
@@ -907,17 +891,17 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void wipeData() {
-    Appboy.wipeData(getReactApplicationContext());
+    Braze.wipeData(getReactApplicationContext());
   }
 
   @ReactMethod
   public void disableSDK() {
-    Appboy.disableSdk(getReactApplicationContext());
+    Braze.disableSdk(getReactApplicationContext());
   }
 
   @ReactMethod
   public void enableSDK() {
-    Appboy.enableSdk(getReactApplicationContext());
+    Braze.enableSdk(getReactApplicationContext());
   }
 
   @ReactMethod

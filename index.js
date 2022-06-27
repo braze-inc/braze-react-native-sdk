@@ -362,15 +362,6 @@ var ReactAppboy = {
   },
 
   /**
-  * Sets the url for the avatar image for the user, which will be displayed on the user profile and throughout the Appboy
-  *    dashboard.
-  * @param {string} avatarImageUrl
-  */
-  setAvatarImageUrl: function(avatarImageUrl) {
-    AppboyReactBridge.setAvatarImageUrl(avatarImageUrl);
-  },
-
-  /**
   * Sets the date of birth of the user.
   * @param {integer} year
   * @param {integer} month - 1-12
@@ -552,14 +543,6 @@ var ReactAppboy = {
    */
   logContentCardImpression: function(id) {
     AppboyReactBridge.logContentCardImpression(id);
-  },
-
-  /**
-   * When displaying the Content Cards in your own user interface,
-   * you can manually record Content Cards impressions via the method logContentCardsDisplayed;
-   */
-  logContentCardsDisplayed: function() {
-    AppboyReactBridge.logContentCardsDisplayed();
   },
 
   /**

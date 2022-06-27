@@ -5178,7 +5178,7 @@ react-is@^16.13.1, react-is@^16.8.4:
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
 "react-native-appboy-sdk@file:..":
-  version "1.35.1"
+  version "1.36.0"
 
 react-native-codegen@^0.0.7:
   version "0.0.7"

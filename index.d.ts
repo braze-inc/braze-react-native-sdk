@@ -136,13 +136,6 @@ export function setHomeCity(homeCity: string): void;
 export function setPhoneNumber(phoneNumber: string): void;
 
 /**
- * Sets the url for the avatar image for the user, which will be displayed on the user profile and throughout
- * the Appboy dashboard.
- * @param {string} avatarImageUrl
- */
-export function setAvatarImageUrl(avatarImageUrl: string): void;
-
-/**
  * Sets the date of birth of the user.
  * @param {number} year
  * @param {MonthsAsNumber} month - 1-12
@@ -442,12 +435,6 @@ export function logContentCardDismissed(id: string): void;
  * @param {string} id
  */
 export function logContentCardImpression(id: string): void;
-
-/**
- * When displaying the Content Cards in your own user interface,
- * you can manually record Content Cards impressions via the method logContentCardsDisplayed;
- */
-export function logContentCardsDisplayed(): void;
 
 /**
  * Returns a content cards array

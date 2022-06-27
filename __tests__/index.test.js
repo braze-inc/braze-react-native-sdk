@@ -31,7 +31,6 @@ jest.mock('NativeModules', () => {
       logPurchase: jest.fn(),
       setCountry: jest.fn(),
       setHomeCity: jest.fn(),
-      setAvatarImageUrl: jest.fn(),
       setDateOfBirth: jest.fn(),
       setTwitterData: jest.fn(),
       setFacebookData: jest.fn(),
@@ -42,7 +41,6 @@ jest.mock('NativeModules', () => {
       logContentCardClicked: jest.fn(),
       logContentCardDismissed: jest.fn(),
       logContentCardImpression: jest.fn(),
-      logContentCardsDisplayed: jest.fn(),
       requestFeedRefresh: jest.fn(),
       requestImmediateDataFlush: jest.fn(),
       enableSDK: jest.fn(),
@@ -176,11 +174,6 @@ test('it calls AppboyReactBridge.logContentCardImpression', () => {
   expect(NativeModules.AppboyReactBridge.logContentCardImpression).toBeCalledWith(id);
 });
 
-test('it calls AppboyReactBridge.logContentCardsDisplayed', () => {
-  ReactAppboy.logContentCardsDisplayed();
-  expect(NativeModules.AppboyReactBridge.logContentCardsDisplayed).toBeCalled();
-});
-
 test('it calls AppboyReactBridge.requestFeedRefresh', () => {
   ReactAppboy.requestFeedRefresh();
   expect(NativeModules.AppboyReactBridge.requestFeedRefresh).toBeCalled();
@@ -229,12 +222,6 @@ test('it calls AppboyReactBridge.setLocationCustomAttribute', () => {
 test('it calls AppboyReactBridge.requestContentCardsRefresh', () => {
   ReactAppboy.requestContentCardsRefresh();
   expect(NativeModules.AppboyReactBridge.requestContentCardsRefresh).toBeCalled();
-});
-
-test('it calls AppboyReactBridge.setAvatarImageUrl', () => {
-  const url = "braze.com";
-  ReactAppboy.setAvatarImageUrl(url);
-  expect(NativeModules.AppboyReactBridge.setAvatarImageUrl).toBeCalledWith(url);
 });
 
 test('it calls AppboyReactBridge.setDateOfBirth', () => {

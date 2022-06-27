@@ -248,11 +248,6 @@ RCT_EXPORT_METHOD(setPhoneNumber:(NSString *)phone) {
   [Appboy sharedInstance].user.phone = phone;
 }
 
-RCT_EXPORT_METHOD(setAvatarImageUrl:(NSString *)avatarImageURL) {
-  RCTLogInfo(@"[Appboy sharedInstance].user.avatarImageURL =  %@", avatarImageURL);
-  [Appboy sharedInstance].user.avatarImageURL = avatarImageURL;
-}
-
 RCT_EXPORT_METHOD(addToSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"[Appboy sharedInstance].user addToSubscriptionGroupWithGroupId:groupId: =  %@", groupId);
   [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user addToSubscriptionGroupWithGroupId:groupId])];
@@ -439,11 +434,6 @@ RCT_EXPORT_METHOD(logContentCardImpression:(NSString *)idString) {
     RCTLogInfo(@"logContentCardImpression with id %@", idString);
     [cardToClick logContentCardImpression];
   }
-}
-
-RCT_EXPORT_METHOD(logContentCardsDisplayed) {
-  RCTLogInfo(@"logContentCardsDisplayed called");
-  [[Appboy sharedInstance] logContentCardsDisplayed];
 }
 
 static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
