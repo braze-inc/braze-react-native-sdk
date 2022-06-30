@@ -495,6 +495,11 @@ export function disableSDK(): void;
 export function enableSDK(): void;
 
 /**
+ * Starts the Braze SDK.
+ */
+ export function startWithApiKey(apiKey: string, options: Record<string, string> | undefined): void;
+
+/**
  * Call this method once a user grants location permissions on Android
  * to initialize Braze location features. Calling this method is a no-op on
  * iOS.
