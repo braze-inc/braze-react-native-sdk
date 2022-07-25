@@ -1,6 +1,7 @@
 package com.appboy.reactbridge;
 
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -21,6 +22,7 @@ import com.appboy.models.outgoing.FacebookUser;
 import com.appboy.models.outgoing.TwitterUser;
 import com.appboy.ui.activities.AppboyContentCardsActivity;
 import com.appboy.ui.activities.AppboyFeedActivity;
+
 import com.braze.Braze;
 import com.braze.BrazeUser;
 import com.braze.events.BrazeSdkAuthenticationErrorEvent;
@@ -31,6 +33,10 @@ import com.braze.models.inappmessage.MessageButton;
 import com.braze.models.outgoing.BrazeProperties;
 import com.braze.support.BrazeLogger;
 import com.braze.ui.inappmessage.BrazeInAppMessageManager;
+import com.braze.ui.inappmessage.InAppMessageCloser;
+import com.braze.ui.inappmessage.InAppMessageOperation;
+import com.braze.ui.inappmessage.listeners.IInAppMessageManagerListener;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
@@ -61,6 +67,7 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
   private static final String UNREAD_CARD_COUNT_TAG = "unread card count";
   private static final String CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated";
   private static final String SDK_AUTH_ERROR_EVENT_NAME = "sdkAuthenticationError";
+  private static final String IN_APP_MESSAGE_RECEIVED_EVENT_NAME = "inAppMessageReceived";
 
   private final Object mCallbackWasCalledMapLock = new Object();
   private final List<Card> mContentCards = new ArrayList<>();
@@ -924,6 +931,53 @@ public class AppboyReactBridge extends ReactContextBaseJavaModule {
         reportResultWithCallback(callback, null, true);
       }
     });
+  }
+
+  @ReactMethod
+  public void subscribeToInAppMessage(Boolean useBrazeUI) {
+    class BrazeInAppMessageManagerListener implements IInAppMessageManagerListener {
+      @Override
+      public InAppMessageOperation beforeInAppMessageDisplayed(IInAppMessage inAppMessage) {
+        WritableMap parameters = new WritableNativeMap();
+        parameters.putString("inAppMessage", inAppMessage.forJsonPut().toString());
+        getReactApplicationContext()
+          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+          .emit(IN_APP_MESSAGE_RECEIVED_EVENT_NAME, parameters);
+
+        if (useBrazeUI) {
+          return InAppMessageOperation.DISPLAY_NOW;
+        } else {
+          return InAppMessageOperation.DISCARD;
+        }
+      }
+
+      @Override
+      public boolean onInAppMessageClicked(IInAppMessage inAppMessage, InAppMessageCloser inAppMessageCloser) {
+        return false;
+      }
+
+      @Override
+      public boolean onInAppMessageButtonClicked(IInAppMessage inAppMessage, MessageButton button, InAppMessageCloser inAppMessageCloser) {
+        return false;
+      }
+
+      @Override
+      public void onInAppMessageDismissed(IInAppMessage inAppMessage) { }
+
+      @Override
+      public void beforeInAppMessageViewOpened(View inAppMessageView, IInAppMessage inAppMessage) { }
+
+      @Override
+      public void afterInAppMessageViewOpened(View inAppMessageView, IInAppMessage inAppMessage) { }
+
+      @Override
+      public void beforeInAppMessageViewClosed(View inAppMessageView, IInAppMessage inAppMessage) { }
+
+      @Override
+      public void afterInAppMessageViewClosed(IInAppMessage inAppMessage) { }
+    }
+
+    BrazeInAppMessageManager.getInstance().setCustomInAppMessageManagerListener(new BrazeInAppMessageManagerListener());
   }
 
   @ReactMethod

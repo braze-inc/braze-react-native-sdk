@@ -1,2 +1,11 @@
-#sample apps
+# sample apps
 AppboyProject
+
+# setup files
+.prettierrc.js
+node_modules
+yarn.lock
+.gitignore
+.eslintrc.json
+braze-logo.png
+CHANGELOG.md

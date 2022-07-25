@@ -9,6 +9,7 @@
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
 static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
+static NSString *const kInAppMessageReceivedEvent = @"inAppMessageReceived";
 
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
@@ -17,12 +18,13 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                    integerValue);
 @end
 
-@interface AppboyReactBridge () <ABKSdkAuthenticationDelegate>
+@interface AppboyReactBridge () <ABKSdkAuthenticationDelegate, ABKInAppMessageControllerDelegate>
 
 @end
 
 @implementation AppboyReactBridge {
     bool hasListeners;
+    bool useBrazeUIForInAppMessages;
 }
 
 - (dispatch_queue_t)methodQueue
@@ -47,12 +49,14 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
   hasListeners = NO;
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   [Appboy sharedInstance].sdkAuthenticationDelegate = nil;
+  [Appboy sharedInstance].inAppMessageController.delegate = nil;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
   return @[
     kContentCardsUpdatedEvent,
-    kSdkAuthenticationErrorEvent
+    kSdkAuthenticationErrorEvent,
+    kInAppMessageReceivedEvent
   ];
 
 }
@@ -604,6 +608,31 @@ RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
   error[@"original_signature"] = authError.signature;
   error[@"reason"] = authError.reason;
   [self sendEventWithName:kSdkAuthenticationErrorEvent body:error];
+}
+
+#pragma mark - In-App Messages
+
+RCT_EXPORT_METHOD(subscribeToInAppMessage:(BOOL)useBrazeUI)
+{
+  useBrazeUIForInAppMessages = useBrazeUI;
+  [Appboy sharedInstance].inAppMessageController.delegate = self;
+}
+
+- (ABKInAppMessageDisplayChoice) beforeInAppMessageDisplayed:(ABKInAppMessage *)inAppMessage {
+  NSData *inAppMessageData = [inAppMessage serializeToData];
+  NSString *inAppMessageString = [[NSString alloc] initWithData:inAppMessageData encoding:NSUTF8StringEncoding];
+  NSDictionary *arguments = @{
+    @"inAppMessage" : inAppMessageString
+  };
+
+  // Send to JavaScript
+  [self sendEventWithName:kInAppMessageReceivedEvent body:arguments];
+
+  if (useBrazeUIForInAppMessages) {
+    return ABKDisplayInAppMessageNow;
+  } else {
+    return ABKDiscardInAppMessage;
+  }
 }
 
 @end

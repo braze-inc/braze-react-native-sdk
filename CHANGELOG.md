@@ -1,3 +1,11 @@
+# 1.37.0
+
+##### ⚠ Breaking
+- The Braze React Native SDK now exports its default object as an ES Module. If you currently import the SDK using `require()`, you will need to now import it as a standard ES Module (e.g. `import Braze from "react-native-appboy-sdk"`).
+
+##### Added
+- Introduced `Braze.subscribeToInAppMessage()` which publishes an event to the Javascript layer when an in-app message is triggered and allows you to choose whether or not to use the default Braze UI to display in-app messages.
+
 # 1.36.0
 
 ##### ⚠ Breaking
@@ -13,7 +21,7 @@
 
 # 1.35.0
 
-##### Breaking
+##### ⚠ Breaking
 - Updated the native iOS bridge to [Braze iOS SDK 4.4.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#442).
 - Drops support for iOS 9 and 10.
 

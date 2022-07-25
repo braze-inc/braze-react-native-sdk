@@ -1,4 +1,4 @@
-Copyright (c) 2018 Braze, Inc.
+Copyright (c) 2022 Braze, Inc.
 All rights reserved.
 
 * The use of source code or binaries contained within Braze's sample apps, documentation, stub APIs and other related utilities is permitted only to enable testing and quality assurance of integrations with the Braze platform by current customers of Braze.

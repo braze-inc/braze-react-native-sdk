@@ -9,13 +9,12 @@ import {
   Linking,
   Alert,
   TextInput,
-  Platform,
-  DeviceEventEmitter
+  Platform
 } from 'react-native';
 
 import { Picker } from '@react-native-picker/picker';
 
-const ReactAppboy = require('react-native-appboy-sdk');
+import Braze from "react-native-appboy-sdk";
 
 class AppboyProject extends Component {
   constructor(props) {
@@ -64,7 +63,7 @@ class AppboyProject extends Component {
     console.log('componentDidMount called');
 
     // Listen to the `url` event to handle incoming deep links
-    Linking.addEventListener('url', this._handleOpenUrl);
+    this._urlListener = Linking.addEventListener('url', this._handleOpenUrl);
 
     // No `url` event is triggered on application start, so this handles
     // the case where a deep link launches the application
@@ -79,37 +78,40 @@ class AppboyProject extends Component {
     // Handles deep links when an iOS app is launched from hard close via push click.
     // Note that this isn't handled by Linking.getInitialURL(), as the app is
     // launched not from a deep link, but from clicking on the push notification.
-    // For more detail, see `ReactAppboy.getInitialURL` in `index.js`.
-    var that = this;
-    ReactAppboy.getInitialURL(function(url) {
+    // For more detail, see `Braze.getInitialURL` in `index.js`.
+    Braze.getInitialURL((url) => {
       if (url) {
-        console.log('ReactAppboy.getInitialURL is ' + url);
-        that._showToast('ReactAppboy.getInitialURL is ' + url);
-        that._handleOpenUrl({url});
+        console.log('Braze.getInitialURL is ' + url);
+        this._showToast('Braze.getInitialURL is ' + url);
+        this._handleOpenUrl({url});
       }
     });
 
-    ReactAppboy.addListener(ReactAppboy.Events.CONTENT_CARDS_UPDATED, function() {
+    Braze.subscribeToInAppMessage(true, (event) => {
+      let inAppMessage = new Braze.BrazeInAppMessage(event.inAppMessage);
+      Braze.logInAppMessageClicked(inAppMessage);
+      Braze.logInAppMessageImpression(inAppMessage);
+      Braze.logInAppMessageButtonClicked(inAppMessage, 0);
+      this._showToast('inAppMessage received in the React layer');
+      console.log(inAppMessage);
+    });
+
+    Braze.addListener(Braze.Events.IN_APP_MESSAGE_RECEIVED, function(event) {
+      console.log('In-App Message Received');
+    });
+
+    Braze.addListener(Braze.Events.CONTENT_CARDS_UPDATED, function(cards) {
       console.log('Content Cards Updated.');
     });
 
-    ReactAppboy.addListener(ReactAppboy.Events.SDK_AUTHENTICATION_ERROR, function(data) {
+    Braze.addListener(Braze.Events.SDK_AUTHENTICATION_ERROR, function(data) {
       console.log(`SDK Authentication for ${data.user_id} failed with error code ${data.error_code}.`);
     });
-
-    this._listener = DeviceEventEmitter.addListener("inAppMessageReceived", function(event) {
-      let inAppMessage = new ReactAppboy.BrazeInAppMessage(event.inAppMessage);
-      ReactAppboy.logInAppMessageClicked(inAppMessage);
-      ReactAppboy.logInAppMessageImpression(inAppMessage);
-      ReactAppboy.logInAppMessageButtonClicked(inAppMessage, 0);
-      that._showToast('inAppMessage received in the React layer');
-      console.log(inAppMessage);
-    })
   }
 
   componentWillUnmount() {
     // Remove `url` event handler
-    Linking.removeEventListener('url', this._handleOpenUrl);
+    this._urlListener.remove();
   }
 
   _handleOpenUrl(event) {
@@ -124,14 +126,14 @@ class AppboyProject extends Component {
   }
 
   _updateCardCount() {
-    ReactAppboy.getUnreadCardCountForCategories(ReactAppboy.CardCategory.ALL, (err, res) => {
+    Braze.getUnreadCardCountForCategories(Braze.CardCategory.ALL, (err, res) => {
       if (err) {
         console.log('getUnreadCardCountForCategories returned error ' + err);
       } else if (res != null) {
         this.setState({unreadCardCount: res});
       }
     });
-    ReactAppboy.getCardCountForCategories(ReactAppboy.CardCategory.ALL, (err, res) => {
+    Braze.getCardCountForCategories(Braze.CardCategory.ALL, (err, res) => {
       if (err) {
         console.log('getCardCountForCategories returned error ' + err);
       } else if (res != null) {
@@ -340,122 +342,122 @@ class AppboyProject extends Component {
     }, 1000)
   }
   _changeUserPress(event) {
-    ReactAppboy.changeUser(this.state.userIdText);
+    Braze.changeUser(this.state.userIdText);
     this._showToast('User changed to: ' + this.state.userIdText);
   }
   _setSignaturePress(event) {
-    ReactAppboy.setSdkAuthenticationSignature(this.state.signatureText);
+    Braze.setSdkAuthenticationSignature(this.state.signatureText);
     this._showToast('Signature set to: ' + this.state.signatureText);
   }
   _logCustomEventPress(event) {
     var testDate = new Date();
-    ReactAppboy.logCustomEvent(this.state.customEventText, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate});
-    ReactAppboy.logCustomEvent(this.state.customEventText + 'NoProps');
-    ReactAppboy.logCustomEvent(this.state.customEventText, {'arrayKey': ['arrayVal1', 'arrayVal2', testDate, [testDate, 'nestedArrayval'], {'dictInArrayKey': testDate}], 'dictKey': {'dictKey1': 'dictVal1', 'dictKey2': testDate, 'dictKey3': {'nestedDictKey1': testDate}, 'dictKey4': ['nestedArrayVal1', 'nestedArrayVal2']}});
+    Braze.logCustomEvent(this.state.customEventText, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate});
+    Braze.logCustomEvent(this.state.customEventText + 'NoProps');
+    Braze.logCustomEvent(this.state.customEventText, {'arrayKey': ['arrayVal1', 'arrayVal2', testDate, [testDate, 'nestedArrayval'], {'dictInArrayKey': testDate}], 'dictKey': {'dictKey1': 'dictVal1', 'dictKey2': testDate, 'dictKey3': {'nestedDictKey1': testDate}, 'dictKey4': ['nestedArrayVal1', 'nestedArrayVal2']}});
     this._showToast('Event logged: ' + this.state.customEventText);
   }
   _setLanguagePress(event) {
-    ReactAppboy.setLanguage(this.state.languageText);
+    Braze.setLanguage(this.state.languageText);
     this._showToast('Language changed to: ' + this.state.languageText);
   }
   _setSubscriptionStatePress(event) {
     console.log('Received request to change subscription state for email and push to ' + this.state.subscriptionState);
     if (this.state.subscriptionState == 'o') {
-      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.OPTED_IN);
-      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.OPTED_IN);
+      Braze.setEmailNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.OPTED_IN);
+      Braze.setPushNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.OPTED_IN);
       this._showToast('User opted in to Email & Push');
     } else if (this.state.subscriptionState == 'u') {
-      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
-      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
+      Braze.setEmailNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.UNSUBSCRIBED);
+      Braze.setPushNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.UNSUBSCRIBED);
       this._showToast('User unsubscribed from Email & Push');
     } else if (this.state.subscriptionState == 's') {
-      ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
-      ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
+      Braze.setEmailNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.SUBSCRIBED);
+      Braze.setPushNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.SUBSCRIBED);
       this._showToast('User subscribed to Email & Push');
     }
   }
   _setGenderPress(event) {
     console.log('Received request to change gender to ' + this.state.gender);
     if (this.state.gender == 'f') {
-      ReactAppboy.setGender(ReactAppboy.Genders.FEMALE)
+      Braze.setGender(Braze.Genders.FEMALE)
       this._showToast('User gender set to "female"');
     } else if (this.state.gender == 'm') {
-      ReactAppboy.setGender(ReactAppboy.Genders.MALE)
+      Braze.setGender(Braze.Genders.MALE)
       this._showToast('User gender set to "male"');
     }  else if (this.state.gender == 'n') {
-      ReactAppboy.setGender(ReactAppboy.Genders.NOT_APPLICABLE)
+      Braze.setGender(Braze.Genders.NOT_APPLICABLE)
       this._showToast('User gender set to "not applicable"');
     } else if (this.state.gender == 'o') {
-      ReactAppboy.setGender(ReactAppboy.Genders.OTHER)
+      Braze.setGender(Braze.Genders.OTHER)
       this._showToast('User gender set to "other"');
     } else if (this.state.gender == 'p') {
-      ReactAppboy.setGender(ReactAppboy.Genders.PREFER_NOT_TO_SAY)
+      Braze.setGender(Braze.Genders.PREFER_NOT_TO_SAY)
       this._showToast('User gender set to "prefer not to say"');
     } else if (this.state.gender == 'u') {
-      ReactAppboy.setGender(ReactAppboy.Genders.UNKNOWN)
+      Braze.setGender(Braze.Genders.UNKNOWN)
       this._showToast('User gender set to "unknown"');
     }
   }
   _logPurchasePress(event) {
     var testDate = new Date();
-    ReactAppboy.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate, 'dictKey':{'dictKey1': 'dictVal1'}});
-    ReactAppboy.logPurchase('reactProductIdentifier' + 'NoProps', '1.2', 'USD', 2);
+    Braze.logPurchase('reactProductIdentifier', '1.2', 'USD', 2, {'stringKey': 'stringValue', 'intKey': 42, 'floatKey': 1.23, 'boolKey': true, 'dateKey': testDate, 'dictKey':{'dictKey1': 'dictVal1'}});
+    Braze.logPurchase('reactProductIdentifier' + 'NoProps', '1.2', 'USD', 2);
     this._showToast('Purchase logged');
   }
   _logCustomAttributePress(event) {
-    ReactAppboy.setCustomUserAttribute('sk', 'sv');
-    ReactAppboy.setCustomUserAttribute('doubleattr', 4.5);
-    ReactAppboy.setCustomUserAttribute('intattr', 88);
-    ReactAppboy.setCustomUserAttribute('booleanattr', true);
-    ReactAppboy.setCustomUserAttribute('dateattr', new Date());
-    ReactAppboy.setCustomUserAttribute('arrayattr', ['a', 'b']);
+    Braze.setCustomUserAttribute('sk', 'sv');
+    Braze.setCustomUserAttribute('doubleattr', 4.5);
+    Braze.setCustomUserAttribute('intattr', 88);
+    Braze.setCustomUserAttribute('booleanattr', true);
+    Braze.setCustomUserAttribute('dateattr', new Date());
+    Braze.setCustomUserAttribute('arrayattr', ['a', 'b']);
     this._showToast('Custom attributes set');
   }
   _logUserPropertiesPress(event) {
-    ReactAppboy.setFirstName('Brian');
-    ReactAppboy.setLastName('Wheeler');
-    ReactAppboy.setEmail('brian+react@appboy.com');
-    ReactAppboy.setDateOfBirth(1987, 9, 21);
-    ReactAppboy.setCountry('USA');
-    ReactAppboy.setHomeCity('New York');
-    ReactAppboy.setGender(ReactAppboy.Genders.MALE, (err, res) => {
+    Braze.setFirstName('Brian');
+    Braze.setLastName('Wheeler');
+    Braze.setEmail('brian+react@appboy.com');
+    Braze.setDateOfBirth(1987, 9, 21);
+    Braze.setCountry('USA');
+    Braze.setHomeCity('New York');
+    Braze.setGender(Braze.Genders.MALE, (err, res) => {
       if (err) {
         console.log('Example callback error is ' + err);
       } else {
         console.log('Example callback result is ' + res);
       }
     });
-    ReactAppboy.setPhoneNumber('9085555555');
-    ReactAppboy.setEmailNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.UNSUBSCRIBED);
-    ReactAppboy.setPushNotificationSubscriptionType(ReactAppboy.NotificationSubscriptionTypes.SUBSCRIBED);
-    ReactAppboy.addAlias('arrayattr', 'alias-label-1');
+    Braze.setPhoneNumber('9085555555');
+    Braze.setEmailNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.UNSUBSCRIBED);
+    Braze.setPushNotificationSubscriptionType(Braze.NotificationSubscriptionTypes.SUBSCRIBED);
+    Braze.addAlias('arrayattr', 'alias-label-1');
     this._showToast('User properties set');
   }
   _launchNewsFeedPress(event) {
-    ReactAppboy.launchNewsFeed();
+    Braze.launchNewsFeed();
   }
   _launchContentCardsPress(event) {
-    ReactAppboy.launchContentCards();
+    Braze.launchContentCards();
   }
   _unsetCustomUserAttributePress(event) {
-    ReactAppboy.unsetCustomUserAttribute('sk');
+    Braze.unsetCustomUserAttribute('sk');
     this._showToast('Custom attribute unset');
   }
   _addToCustomAttributeArrayPress(event) {
-    ReactAppboy.addToCustomUserAttributeArray('myArray', 'arrayValue1');
-    ReactAppboy.addToCustomUserAttributeArray('myArray', 'arrayValue2');
+    Braze.addToCustomUserAttributeArray('myArray', 'arrayValue1');
+    Braze.addToCustomUserAttributeArray('myArray', 'arrayValue2');
     this._showToast('Added to custom attribute array');
   }
   _removeFromCustomAttributeArrayPress(event) {
-    ReactAppboy.removeFromCustomUserAttributeArray('myArray', 'arrayValue1');
+    Braze.removeFromCustomUserAttributeArray('myArray', 'arrayValue1');
     this._showToast('Removed from custom attribute array');
   }
   _incrementCustomAttributePress(event) {
-    ReactAppboy.incrementCustomUserAttribute('intattr', 5);
+    Braze.incrementCustomUserAttribute('intattr', 5);
     this._showToast('Attribute incremented');
   }
   _setTwitterData(event) {
-    ReactAppboy.setTwitterData(6253282, 'billmag', 'Bill', 'Adventurer', 700, 200, 1000,
+    Braze.setTwitterData(6253282, 'billmag', 'Bill', 'Adventurer', 700, 200, 1000,
         'https://si0.twimg.com/profile_images/2685532587/fa47382ad67a0135acc62d4c6b49dbdc_bigger.jpeg');
     this._showToast('Twitter data set');
   }
@@ -489,17 +491,17 @@ class AppboyProject extends Component {
         'created_time': '2016-09-24T20:43:01+0000'
       }
     ];
-    ReactAppboy.setFacebookData(profile, 500, likes);
+    Braze.setFacebookData(profile, 500, likes);
     this._showToast('Facebook data set');
   }
 
   _requestFeedRefresh(event) {
-    ReactAppboy.requestFeedRefresh();
+    Braze.requestFeedRefresh();
     this._showToast('Feed refreshed');
   }
 
   _requestImmediateDataFlush(event) {
-    ReactAppboy.requestImmediateDataFlush();
+    Braze.requestImmediateDataFlush();
     this._showToast('Data flushed');
   }
 
@@ -511,7 +513,7 @@ class AppboyProject extends Component {
         {text: 'Cancel', style: 'cancel'},
         {
           text: 'OK', onPress: () => {
-            ReactAppboy.wipeData();
+            Braze.wipeData();
             this._showToast('Data wiped');
           }
         }
@@ -527,7 +529,7 @@ class AppboyProject extends Component {
         {text: 'Cancel', style: 'cancel'},
         {
           text: 'OK', onPress: () => {
-            ReactAppboy.disableSDK();
+            Braze.disableSDK();
             this._showToast('SDK disabled');
           }
         }
@@ -536,36 +538,36 @@ class AppboyProject extends Component {
   }
 
   _enableSDK(event) {
-    ReactAppboy.enableSDK();
+    Braze.enableSDK();
     this._showToast('SDK enabled');
   }
 
   // Note that this should normally be called only once
   // location permissions are granted by end user
   _requestLocationInitialization(event) {
-    ReactAppboy.requestLocationInitialization();
+    Braze.requestLocationInitialization();
     this._showToast('Init Requested');
   }
 
   // Note that this should normally be called only once per session
   // Demo location is Baltimore
   _requestGeofences(event) {
-    ReactAppboy.requestGeofences(39.29, -76.61);
+    Braze.requestGeofences(39.29, -76.61);
     this._showToast('Geofences Requested');
   }
 
   _setLocationCustomAttribute(event) {
-    ReactAppboy.setLocationCustomAttribute("work", 40.7128, 74.0060);
+    Braze.setLocationCustomAttribute("work", 40.7128, 74.0060);
     this._showToast('Location Set');
   }
 
   _requestContentCardsRefresh(event) {
-    ReactAppboy.requestContentCardsRefresh();
+    Braze.requestContentCardsRefresh();
     this._showToast('Content Cards Refreshed');
   }
 
   _hideCurrentInAppMessage(event) {
-    ReactAppboy.hideCurrentInAppMessage();
+    Braze.hideCurrentInAppMessage();
     this._showToast('Message dismissed');
   }
 
@@ -574,12 +576,12 @@ class AppboyProject extends Component {
     var campaign = "everyone";
     var adGroup = "adgroup1";
     var creative = "bigBanner";
-    ReactAppboy.setAttributionData(network, campaign, adGroup, creative);
+    Braze.setAttributionData(network, campaign, adGroup, creative);
     this._showToast('Attribution Data Set');
   }
 
   _getInstallTrackingId(event) {
-    ReactAppboy.getInstallTrackingId((err, res) => {
+    Braze.getInstallTrackingId((err, res) => {
       if (err) {
         console.log('Error is ' + err);
       } else {
@@ -589,7 +591,7 @@ class AppboyProject extends Component {
   }
 
   _getContentCards(event) {
-    ReactAppboy.getContentCards().then(function(result) {
+    Braze.getContentCards().then(function(result) {
       if (result === undefined || result.length == 0) {
         console.log('No cached Content Cards Found.');
       } else {
@@ -597,9 +599,9 @@ class AppboyProject extends Component {
         for (var i = 0; i < result.length; i++) {
           var cardId = result[i].id;
           console.log('Got content card: ' + JSON.stringify(result[i]));
-          ReactAppboy.logContentCardClicked(cardId);
-          ReactAppboy.logContentCardImpression(cardId);
-          // ReactAppboy.logContentCardDismissed(cardId);
+          Braze.logContentCardClicked(cardId);
+          Braze.logContentCardImpression(cardId);
+          // Braze.logContentCardDismissed(cardId);
         }
       }
     }).catch(function () {

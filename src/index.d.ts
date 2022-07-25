@@ -7,7 +7,7 @@ import { EmitterSubscription } from 'react-native';
  * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
  * support handling deep links embedded in push notifications. This is due to a race condition on startup between
  * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
- * If an application is launched from a push notification click, we return any Appboy deep links in the push payload.
+ * If an application is launched from a push notification click, we return any Braze deep links in the push payload.
  * @param {function(string)} callback - A callback that retuns the deep link as a string. If there is no deep link,
  * returns null.
  */
@@ -15,13 +15,13 @@ export function getInitialURL(callback: (deepLink: string) => void): void;
 
 /**
  * Returns a unique device ID for install tracking. This method is equivalent to calling
- * Appboy.getInstallTrackingId() on Android and returns the IDFV on iOS.
+ * Braze.getInstallTrackingId() on Android and returns the IDFV on iOS.
  * @param {function(error, result)} callback - A callback that receives the function call result.
  */
 export function getInstallTrackingId(callback: Callback): void;
 
 /**
- * When a user first uses Appboy on a device they are considered "anonymous". Use this method to identify a user
+ * When a user first uses Braze on a device they are considered "anonymous". Use this method to identify a user
  *    with a unique ID, which enables the following:
  *
  *    - If the same user is identified on another device, their user profile, usage history and event history will
@@ -34,7 +34,7 @@ export function getInstallTrackingId(callback: Callback): void;
  *    existing user ID), the current session for the previous user (anonymous or not) is automatically ended and
  *    a new session is started. Similarly, following a call to changeUser, any events which fire are guaranteed to
  *    be for the new user -- if an in-flight server request completes for the old user after the user switch no
- *    events will fire, so you do not need to worry about filtering out events from Appboy for old users.
+ *    events will fire, so you do not need to worry about filtering out events from Braze for old users.
  *
  * Additionally, if you identify a user which has never been identified on another device, the entire history of
  *    that user as an "anonymous" user on this device will be preserved and associated with the newly identified
@@ -144,7 +144,7 @@ export function setPhoneNumber(phoneNumber: string): void;
 export function setDateOfBirth(year: number, month: MonthsAsNumber, day: number): void;
 
 /**
- * This method posts a token to Appboy's servers to associate the token with the current device.
+ * This method posts a token to Braze's servers to associate the token with the current device.
  *
  * No-op on iOS.
  *
@@ -413,7 +413,7 @@ export type ContentCard = ClassicContentCard | BannerContentCard | CaptionedCont
 export function launchContentCards(): void;
 
 /**
- * Requests a refresh of the content cards from Appboy's servers.
+ * Requests a refresh of the content cards from Braze's servers.
  */
 export function requestContentCardsRefresh(): void;
 
@@ -444,7 +444,7 @@ export function getContentCards(): Promise<ContentCard[]>;
 
 /**
  * Returns the current number of News Feed cards for the given category.
- * @param {BrazeCardCategory} category - Card category. Use ReactAppboy.CardCategory.ALL to get the total card count.
+ * @param {BrazeCardCategory} category - Card category. Use Braze.CardCategory.ALL to get the total card count.
  * @param {function(error, result)} callback - A callback that receives the export function call result.
  * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once.
  * There is also a slight race condition around calling changeUser,
@@ -457,7 +457,7 @@ export function getCardCountForCategories(
 
 /**
  * Returns the number of unread News Feed cards for the given category.
- * @param {BrazeCardCategory} category - Card category. Use ReactAppboy.CardCategory.ALL to get the total unread card count
+ * @param {BrazeCardCategory} category - Card category. Use Braze.CardCategory.ALL to get the total unread card count
  * @param {function(error, result)} callback - A callback that receives the export function call result.
  * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once.
  * There is also a slight race condition around calling changeUser,
@@ -474,7 +474,7 @@ export function getUnreadCardCountForCategories(
 export function requestFeedRefresh(): void;
 
 /**
- * Requests an immediate flush of any data waiting to be sent to Appboy's servers.
+ * Requests an immediate flush of any data waiting to be sent to Braze's servers.
  */
 export function requestImmediateDataFlush(): void;
 
@@ -529,6 +529,18 @@ export function setLocationCustomAttribute(
 ): void;
 
 /**
+ * Call this method to have the SDK publish an "inAppMessageReceived" event containing the in-app message data to the
+ * Javascript layer. You can listen to this event with `Braze.addListener()`.
+ *
+ * @param {boolean} useBrazeUI - Whether to use the default Braze UI for in-app messages.
+ * @param {function} subscriber - The method to call when an in-app message is received.
+ *
+ * @returns subscription - If a subscriber is passed to the function, returns the subscription. When you want to stop
+ * listening, call `.remove()` on the returned subscription. Returns undefined if no subscriber is provided.
+ */
+export function subscribeToInAppMessage(useBrazeUI: boolean, subscriber?: Function): EmitterSubscription?;
+
+/**
  * Dismisses the currently displayed in app message.
  */
 export function hideCurrentInAppMessage(): void;
@@ -572,7 +584,7 @@ export class BrazeInAppMessage {
   clickAction: BrazeClickAction[keyof BrazeClickAction]
   dismissType: BrazeDismissType[keyof BrazeDismissType]
   messageType: BrazeMessageType[keyof BrazeMessageType]
-  extras: {[key: string]: string}
+  extras: { [key: string]: string }
   buttons: [BrazeButton]
   toString(): string;
 }
@@ -635,13 +647,14 @@ interface NotificationSubscriptionType {
   SUBSCRIBED: 'subscribed';
   UNSUBSCRIBED: 'unsubscribed';
 }
-export const NotificationSubscriptionTypes : NotificationSubscriptionType;
+export const NotificationSubscriptionTypes: NotificationSubscriptionType;
 
 interface AppboyEvent {
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
+  IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived',
 }
-export const Events : AppboyEvent;
+export const Events: AppboyEvent;
 
 /**
  * Subscribes to the specific SDK event
