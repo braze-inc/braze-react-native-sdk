@@ -10,6 +10,7 @@
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
 static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
 static NSString *const kInAppMessageReceivedEvent = @"inAppMessageReceived";
+static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 
 @implementation RCTConvert (AppboySubscriptionType)
 RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
@@ -56,7 +57,8 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
   return @[
     kContentCardsUpdatedEvent,
     kSdkAuthenticationErrorEvent,
-    kInAppMessageReceivedEvent
+    kInAppMessageReceivedEvent,
+    kPushNotificationEvent
   ];
 
 }
@@ -608,6 +610,45 @@ RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
   error[@"original_signature"] = authError.signature;
   error[@"reason"] = authError.reason;
   [self sendEventWithName:kSdkAuthenticationErrorEvent body:error];
+}
+
+#pragma mark - Push Notifications
+
+RCT_EXPORT_METHOD(requestPushPermission:(NSDictionary *)permissions) {
+  if (@available(iOS 10.0, *)) {
+    UNAuthorizationOptions options = UNAuthorizationOptionNone;
+
+    if ([permissions[@"alert"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionAlert;
+    }
+
+    if ([permissions[@"badge"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionBadge;
+    }
+
+    if ([permissions[@"sound"] isEqual:@(YES)]) {
+      options |= UNAuthorizationOptionSound;
+    }
+
+    if ([permissions[@"provisional"] isEqual:@(YES)]) {
+      if (@available(iOS 12.0, *)) {
+        options |= UNAuthorizationOptionProvisional;
+      }
+    }
+
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+
+    [center requestAuthorizationWithOptions:options
+                          completionHandler:^(BOOL granted, NSError *_Nullable error) {
+
+        if (error) {
+            RCTLogInfo(@"Error while requesting permission: %@", error);
+        } else {
+            RCTLogInfo(@"Notification authorization, granted: %s", granted ? "true" : "false");
+            [[Appboy sharedInstance] pushAuthorizationFromUserNotificationCenter:granted];
+        }
+    }];
+  }
 }
 
 #pragma mark - In-App Messages

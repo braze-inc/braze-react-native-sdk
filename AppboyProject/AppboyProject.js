@@ -57,6 +57,7 @@ class AppboyProject extends Component {
     this._hideCurrentInAppMessage = this._hideCurrentInAppMessage.bind(this);
     this._setAttributionData = this._setAttributionData.bind(this);
     this._getContentCards = this._getContentCards.bind(this);
+    this._requestPushPermission = this._requestPushPermission.bind(this);
   }
 
   componentDidMount() {
@@ -106,6 +107,12 @@ class AppboyProject extends Component {
 
     Braze.addListener(Braze.Events.SDK_AUTHENTICATION_ERROR, function(data) {
       console.log(`SDK Authentication for ${data.user_id} failed with error code ${data.error_code}.`);
+    });
+
+    Braze.addListener(Braze.Events.PUSH_NOTIFICATION_EVENT, function(data) {
+      console.log(`Push Notification event of type ${data.push_event_type} seen.
+        Title ${data.title}\n and deeplink ${data.deeplink}`);
+      console.log(JSON.stringify(data, undefined, 2));
     });
   }
 
@@ -327,6 +334,10 @@ class AppboyProject extends Component {
         <TouchableHighlight
           onPress={this._getContentCards}>
           <Text>Request Cached Content Cards</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={this._requestPushPermission}>
+          <Text>Request Push Permission</Text>
         </TouchableHighlight>
         </ScrollView>
     );
@@ -607,6 +618,17 @@ class AppboyProject extends Component {
     }).catch(function () {
       console.log("Content Cards Promise Rejected");
     });
+  }
+
+  _requestPushPermission(event) {
+    const options = {
+      "alert": true,
+      "badge": true,
+      "sound": true,
+      "provisional": false
+    };
+
+    Braze.requestPushPermission(options);
   }
 }
 

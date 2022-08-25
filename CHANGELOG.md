@@ -1,3 +1,30 @@
+# 1.38.0
+
+##### ⚠ Breaking
+- Updated the native Android bridge to [Braze Android SDK 23.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2301).
+- Updated the native iOS bridge to [Braze iOS SDK 4.5.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#450).
+- The Braze React Native Android SDK now requires Kotlin directly for compilation. An example is included below:
+  ```groovy
+    buildscript {
+        ext.kotlin_version = '1.6.0'
+
+        dependencies {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        }
+    }
+  ```
+
+##### Added
+- Introduced `Braze.Events.PUSH_NOTIFICATION_EVENT` which can be used to listen for Braze Push Notification events on Android. See example below:
+  ```javascript
+  Braze.addListener(Braze.Events.PUSH_NOTIFICATION_EVENT, function(data) {
+    console.log(`Push Notification event of type ${data.push_event_type} seen.
+      Title ${data.title}\n and deeplink ${data.deeplink}`);
+    console.log(JSON.stringify(data, undefined, 2));
+  });
+  ```
+- Added `Braze.requestPushPermission()` to request a permissions prompt for push notifications.
+
 # 1.37.0
 
 ##### ⚠ Breaking

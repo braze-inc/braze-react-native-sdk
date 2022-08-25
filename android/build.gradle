@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -19,9 +20,15 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+  kotlinOptions {
+    freeCompilerArgs = ['-Xjvm-default=all']
+    jvmTarget = "1.8"
+  }
 }
 
 dependencies {
-  api 'com.appboy:android-sdk-ui:21.0.0'
+  api 'com.appboy:android-sdk-ui:23.0.1'
   api 'com.facebook.react:react-native:+'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

@@ -33,6 +33,7 @@ export const Events = {
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
   IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived',
+  PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent',
 };
 
 export const ClickAction = {

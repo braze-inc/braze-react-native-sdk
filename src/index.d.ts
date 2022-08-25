@@ -538,7 +538,7 @@ export function setLocationCustomAttribute(
  * @returns subscription - If a subscriber is passed to the function, returns the subscription. When you want to stop
  * listening, call `.remove()` on the returned subscription. Returns undefined if no subscriber is provided.
  */
-export function subscribeToInAppMessage(useBrazeUI: boolean, subscriber?: Function): EmitterSubscription?;
+export function subscribeToInAppMessage(useBrazeUI: boolean, subscriber?: Function): EmitterSubscription | undefined;
 
 /**
  * Dismisses the currently displayed in app message.
@@ -570,6 +570,15 @@ export function logInAppMessageButtonClicked(
   inAppMessage: BrazeInAppMessage,
   buttonId: number
 ): void;
+
+type PermissionOptions = "alert" | "badge" | "sound" | "provisional";
+/**
+ * Requests a push permission prompt. On Android 12 and below, this is a no-op.
+ *
+ * @param permissionOptions - iOS permission options that determine the authorized features of local and remote notifications. If not provided,
+ *   all permission options except provisional are set to true.
+ */
+export function requestPushPermission(permissionOptions?: Record<PermissionOptions, boolean>): void;
 
 export class BrazeInAppMessage {
   constructor(_data: string)
@@ -650,9 +659,14 @@ interface NotificationSubscriptionType {
 export const NotificationSubscriptionTypes: NotificationSubscriptionType;
 
 interface AppboyEvent {
+  /** Callback passes a boolean that indicates whether content cards have changed in the latest refresh. */
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
+  /** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
+  /** Callback passes the BrazeInAppMessage object. */
   IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived',
+  /** Only supported on Android. */
+  PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent',
 }
 export const Events: AppboyEvent;
 

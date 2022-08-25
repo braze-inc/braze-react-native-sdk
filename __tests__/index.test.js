@@ -517,6 +517,19 @@ test('it calls AppboyReactBridge.logInAppMessageButtonClicked', () => {
   expect(NativeModules.AppboyReactBridge.logInAppMessageButtonClicked).toBeCalledWith(testInAppMessageJson, testId);
 });
 
+test('calls AppboyReactBridge.requestPushPermission', () => {
+  const options = {
+    "alert": true,
+    "badge": true,
+    "sound": true,
+    "timeSensitive": true,
+    "provisional": true,
+  }
+
+  Braze.requestPushPermission(options);
+  expect(NativeModules.AppboyReactBridge.requestPushPermission).toBeCalledWith(options);
+})
+
 it('instantiates a BrazeButton object', () => {
   const testId = 53;
   const testClickAction = 'URI';

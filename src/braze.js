@@ -798,6 +798,23 @@ export class Braze {
     );
   }
 
+  /**
+   * Requests a push permission prompt. On Android 12 and below, this is a no-op.
+   *
+   * @param {*} permissionOptions
+   */
+  static requestPushPermission(permissionOptions) {
+    if (!permissionOptions) {
+      permissionOptions = {
+        "alert": true,
+        "badge": true,
+        "sound": true,
+        "provisional": false
+      }
+    }
+    this.bridge.requestPushPermission(permissionOptions);
+  }
+
   // Events
   /**
    * Subscribes to the specific SDK event.

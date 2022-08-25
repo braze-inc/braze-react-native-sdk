@@ -68,6 +68,7 @@ jest.mock('react-native', () => {
       logInAppMessageButtonClicked: jest.fn(),
       setLastKnownLocation: jest.fn(),
       setMetadata: jest.fn(),
+      requestPushPermission: jest.fn(),
   };
 
   return RN;

@@ -18,7 +18,7 @@ public class AppboyReactPackage implements ReactPackage {
   public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new AppboyReactBridge(reactContext));
+    modules.add(new BrazeReactBridge(reactContext));
     return modules;
   }
 
