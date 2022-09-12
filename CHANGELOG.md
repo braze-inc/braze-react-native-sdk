@@ -1,3 +1,8 @@
+# 1.38.1
+
+##### Fixed
+- Fixed an issue introduced in 1.38.0 where `setEmail` did not work as expected on Android.
+
 # 1.38.0
 
 ##### ⚠ Breaking

@@ -238,7 +238,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     fun setLastName(lastName: String?) = runOnUser { it.setLastName(lastName) }
 
     @ReactMethod
-    fun setEmail(email: String?) = runOnUser { it.setLastName(email) }
+    fun setEmail(email: String?) = runOnUser { it.setEmail(email) }
 
     @ReactMethod
     fun setGender(gender: String?, callback: Callback?) {
