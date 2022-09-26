@@ -1,3 +1,12 @@
+# 1.39.0
+
+##### ⚠ Breaking
+- Renamed the `kotlin_version` gradle template variable to `kotlinVersion`.
+- Updated the native Android bridge to [Braze Android SDK 23.2.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2320).
+
+##### Fixed
+- Fixed an issue that caused a NativeEventEmitter warning message to appear.
+
 # 1.38.1
 
 ##### Fixed

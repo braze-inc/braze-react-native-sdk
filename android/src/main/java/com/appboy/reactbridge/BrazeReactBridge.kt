@@ -689,6 +689,16 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         // in index.js. The Android bridge sets the REACT SDK Metadata field via a braze.xml parameter.
     }
 
+    @ReactMethod
+    fun addListener(eventName: String) {
+        // Dummy method required to suppress NativeEventEmitter warnings.
+    }
+
+    @ReactMethod
+    fun removeListeners(count: Int) {
+        // Dummy method required to suppress NativeEventEmitter warnings.
+    }
+
     /**
      * Updates the last known Content Card refresh data
      */
