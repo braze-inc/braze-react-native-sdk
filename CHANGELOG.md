@@ -1,3 +1,12 @@
+# 1.40.0
+
+##### ⚠ Breaking
+- Updated the native Android bridge to [Braze Android SDK 23.2.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2321).
+- Updated the native iOS bridge to [Braze iOS SDK 4.5.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#451).
+
+##### Changed
+- Updated the `React` podspec dependency to `React-Core`.
+
 # 1.39.0
 
 ##### ⚠ Breaking
