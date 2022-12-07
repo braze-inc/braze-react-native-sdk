@@ -10,7 +10,7 @@ body:
   - type: dropdown
     id: platform
     attributes:
-      label: Platform
+      label: Which Platforms?
       multiple: false
       options:
         - iOS
@@ -21,14 +21,14 @@ body:
   - type: input
     id: platform_version
     attributes:
-      label: React Native Version
-      placeholder: ex. iOS 0.64.0
+      label: Which React Native Version?
+      placeholder: ex. 0.64.0
     validations:
       required: true
   - type: input
     id: sdk_version
     attributes:
-      label: Braze SDK Version
+      label: Which react-native-appboy-sdk SDK version?
       placeholder: ex. 1.40.0
     validations:
       required: true

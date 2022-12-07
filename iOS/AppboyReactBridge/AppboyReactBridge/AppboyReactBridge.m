@@ -325,28 +325,6 @@ RCT_EXPORT_METHOD(removeFromCustomAttributeArray:(NSString *)key value:(NSString
   [self reportResultWithCallback:callback andError:nil andResult:@([[Appboy sharedInstance].user removeFromCustomAttributeArrayWithKey:key value:value])];
 }
 
-RCT_EXPORT_METHOD(setTwitterData:(NSUInteger)twitterId withScreenName:(NSString *)screenName withName:(NSString *)name withDescription:(NSString *)description withFollowersCount:(NSUInteger)followersCount withFriendsCount:(NSUInteger)friendsCount withStatusesCount:(NSUInteger)statusesCount andProfileImageUrl:(NSString *)profileImageUrl) {
-    RCTLogInfo(@"[Appboy sharedInstance].user setTwitterData with screenName %@", screenName);
-    ABKTwitterUser *twitterUser = [[ABKTwitterUser alloc] init];
-    twitterUser.userDescription = description;
-    twitterUser.twitterID = twitterId;
-    twitterUser.twitterName = name;
-    twitterUser.profileImageUrl = profileImageUrl;
-    twitterUser.friendsCount = friendsCount;
-    twitterUser.followersCount = followersCount;
-    twitterUser.screenName = screenName;
-    twitterUser.statusesCount = statusesCount;
-    [Appboy sharedInstance].user.twitterUser = twitterUser;
-}
-
-RCT_EXPORT_METHOD(setFacebookData:(nullable NSDictionary *)facebookUserDictionary withNumberOfFriends:(NSUInteger)numberOfFriends withLikes:(NSArray *)likes) {
-  RCTLogInfo(@"[Appboy sharedInstance].user setFacebookData");
-  ABKFacebookUser *facebookUser = [[ABKFacebookUser alloc] initWithFacebookUserDictionary:facebookUserDictionary
-                                                                          numberOfFriends:numberOfFriends
-                                                                                    likes:likes];
-  [Appboy sharedInstance].user.facebookUser = facebookUser;
-}
-
 RCT_EXPORT_METHOD(setAttributionData:(NSString *)network withCampaign:(NSString *)campaign withAdGroup:(NSString *)adGroup withCreative:(NSString *)creative) {
   RCTLogInfo(@"[Appboy sharedInstance].user setAttributionData");
   ABKAttributionData *attributionData = [[ABKAttributionData alloc]
@@ -455,6 +433,7 @@ static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
   formattedContentCardData[@"dismissible"] = @(card.dismissible);
   formattedContentCardData[@"url"] = RCTNullIfNil(card.urlString);
   formattedContentCardData[@"openURLInWebView"] = @(card.openUrlInWebView);
+  formattedContentCardData[@"isControl"] = @(card.isControlCard);
 
   formattedContentCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
 

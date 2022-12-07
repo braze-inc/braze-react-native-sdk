@@ -26,6 +26,7 @@ fun mapContentCard(card: Card): WritableMap {
     mappedCard.putBoolean("dismissible", card.isDismissibleByUser)
     mappedCard.putString("url", card.url)
     mappedCard.putBoolean("openURLInWebView", card.openUriInWebView)
+    mappedCard.putBoolean("isControl", card.isControl)
 
     // Extras
     val extras = Arguments.createMap()
@@ -38,7 +39,8 @@ fun mapContentCard(card: Card): WritableMap {
         CardType.CAPTIONED_IMAGE -> mappedCard.merge(captionedImageCardToWritableMap(card as CaptionedImageCard))
         CardType.SHORT_NEWS -> mappedCard.merge(shortNewsCardToWritableMap(card as ShortNewsCard))
         CardType.TEXT_ANNOUNCEMENT -> mappedCard.merge(textAnnouncementCardToWritableMap(card as TextAnnouncementCard))
-        CardType.DEFAULT, CardType.CONTROL -> {}
+        CardType.CONTROL -> mappedCard.merge(controlCardToWritableMap(card as ControlCard))
+        CardType.DEFAULT -> {}
     }
     return mappedCard
 }
@@ -79,5 +81,11 @@ fun bannerImageCardToWritableMap(card: BannerImageCard): WritableMap {
     mappedCard.putDouble("imageAspectRatio", card.aspectRatio.toDouble())
     mappedCard.putString("domain", card.domain)
     mappedCard.putString("type", "Banner")
+    return mappedCard
+}
+
+fun controlCardToWritableMap(card: ControlCard): WritableMap {
+    val mappedCard = Arguments.createMap()
+    mappedCard.putString("type", "Control")
     return mappedCard
 }

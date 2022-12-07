@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-  api 'com.appboy:android-sdk-ui:23.2.1'
+  api 'com.appboy:android-sdk-ui:23.3.0'
   api 'com.facebook.react:react-native:+'
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
 }

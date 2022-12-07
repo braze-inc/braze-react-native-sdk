@@ -226,7 +226,7 @@ PODS:
   - React-jsinspector (0.66.4)
   - React-logger (0.66.4):
     - glog
-  - react-native-appboy-sdk (1.40.0):
+  - react-native-appboy-sdk (1.41.0):
     - Appboy-iOS-SDK (~> 4.5.1)
     - React-Core
   - React-perflogger (0.66.4)
@@ -429,7 +429,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 94ce921e1d8ce7023366873ec371f3441383b396
   React-jsinspector: d0374f7509d407d2264168b6d0fad0b54e300b85
   React-logger: 933f80c97c633ee8965d609876848148e3fef438
-  react-native-appboy-sdk: 60b4dbb70486426ccc00cd04ab105f8f9afc83fa
+  react-native-appboy-sdk: 7fc3141f4843a1de05e22d530ac3cc87c24b9bee
   React-perflogger: 93075d8931c32cd1fce8a98c15d2d5ccc4d891bd
   React-RCTActionSheet: 7d3041e6761b4f3044a37079ddcb156575fb6d89
   React-RCTAnimation: 743e88b55ac62511ae5c2e22803d4f503f2a3a13

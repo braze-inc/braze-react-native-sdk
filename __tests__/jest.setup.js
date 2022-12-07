@@ -24,8 +24,6 @@ jest.mock('react-native', () => {
       setCountry: jest.fn(),
       setHomeCity: jest.fn(),
       setDateOfBirth: jest.fn(),
-      setTwitterData: jest.fn(),
-      setFacebookData: jest.fn(),
       setAttributionData: jest.fn(),
       launchNewsFeed: jest.fn(),
       launchContentCards: jest.fn(),

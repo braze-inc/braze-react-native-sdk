@@ -1,3 +1,14 @@
+# 1.41.0
+
+##### ⚠ Breaking
+- Removed `setFacebookData()`.
+- Removed `setTwitterData()`.
+
+##### Changed
+- Updated the native Android bridge to [Braze Android SDK 23.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2330).
+- Exposes `isControl` field for `ContentCard`.
+- Removed `kotlinVersion` gradle template variable. To override the Kotlin version used, please use a Gradle dependency `resolutionStrategy`.
+
 # 1.40.0
 
 ##### ⚠ Breaking

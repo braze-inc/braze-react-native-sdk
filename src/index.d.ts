@@ -302,52 +302,6 @@ export function incrementCustomUserAttribute(
 ): void;
 
 /**
- * Sets user Twitter data.
- *
- * @param {number} id - The Twitter user Id. May not be null.
- * @param {string} screenName - The user's Twitter handle
- * @param {string} name - The user's name
- * @param {string} description - A description of the user
- * @param {number} followersCount - Number of Twitter users following this user. May not be null.
- * @param {number} friendsCount - Number of Twitter users this user is following. May not be null.
- * @param {number} statusesCount - Number of Tweets by this user. May not be null.
- * @param {string} profileImageUrl - Link to profile image
- */
-export function setTwitterData(
-  id: number,
-  screenName: string,
-  name: string,
-  description: string,
-  followersCount: number,
-  friendsCount: number,
-  statusesCount: number,
-  profileImageUrl: string
-): void;
-
-/**
- * Sets user Facebook data.
- *
- * @param {object} facebookUserDictionary - The dictionary returned from facebook with facebook graph
- * api endpoint "/me". Please refer to https://developers.facebook.com/docs/graph-api/reference/v2.7/user
- * for more information.
- * Note: Android only supports the firstName, lastName, email, bio, cityName, gender, and birthday fields.
- * All other user fields will be dropped.
- * @param {number} numberOfFriends - The length of the friends array from facebook.
- * You can get the array from the dictionary returned from facebook with facebook graph api endpoint "/me/friends",
- * under the key "data". Please refer to
- * https://developers.facebook.com/docs/graph-api/reference/v2.7/user/friends for more information. May not be null.
- * @param {Array} likes - The array of user's facebook likes from facebook.
- * You can get the array from the dictionary returned from facebook with facebook graph api endpoint "/me/likes",
- * under the key "data"; Please refer to
- * https://developers.facebook.com/docs/graph-api/reference/v2.7/user/likes for more information.
- */
-export function setFacebookData(
-  facebookUserDictionary: object,
-  numberOfFriends: number,
-  likes: Array<any>
-): void;
-
-/**
  * Sets user attribution data.
  *
  * @param {string} network - The attribution network
@@ -379,6 +333,7 @@ export interface ContentCardBase {
   dismissible: boolean;
   url?: string;
   openURLInWebView: boolean;
+  isControl: boolean;
   extras: { [key: string]: string };
 }
 

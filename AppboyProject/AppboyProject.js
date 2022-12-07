@@ -42,8 +42,6 @@ class AppboyProject extends Component {
     this._addToCustomAttributeArrayPress = this._addToCustomAttributeArrayPress.bind(this);
     this._removeFromCustomAttributeArrayPress = this._removeFromCustomAttributeArrayPress.bind(this);
     this._incrementCustomAttributePress = this._incrementCustomAttributePress.bind(this);
-    this._setTwitterData = this._setTwitterData.bind(this);
-    this._setFacebookData = this._setFacebookData.bind(this);
     this._requestFeedRefresh = this._requestFeedRefresh.bind(this);
     this._requestImmediateDataFlush = this._requestImmediateDataFlush.bind(this);
     this._wipeData = this._wipeData.bind(this);
@@ -267,14 +265,6 @@ class AppboyProject extends Component {
           <Text>Increment Custom Attribute Array</Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={this._setTwitterData}>
-          <Text>Set Twitter Data</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress={this._setFacebookData}>
-          <Text>Set Facebook Data</Text>
-        </TouchableHighlight>
-        <TouchableHighlight
           onPress={this._launchNewsFeedPress}>
           <Text>Launch News Feed</Text>
         </TouchableHighlight>
@@ -466,44 +456,6 @@ class AppboyProject extends Component {
   _incrementCustomAttributePress(event) {
     Braze.incrementCustomUserAttribute('intattr', 5);
     this._showToast('Attribute incremented');
-  }
-  _setTwitterData(event) {
-    Braze.setTwitterData(6253282, 'billmag', 'Bill', 'Adventurer', 700, 200, 1000,
-        'https://si0.twimg.com/profile_images/2685532587/fa47382ad67a0135acc62d4c6b49dbdc_bigger.jpeg');
-    this._showToast('Twitter data set');
-  }
-  _setFacebookData(event) {
-    var profile = {
-      id: '708379',
-      first_name: 'Bill',
-      last_name: 'Mag',
-      location: {
-        name: 'new york'
-      },
-      age_range: {
-        min: 21, max: 31
-      },
-      email: 'bill@m.ag',
-      bio: 'adventurer',
-      gender: 'male',
-      birthday: '01/01/2016'
-    };
-    // May also be a list of strings, e.g. below:
-    // var likes = ["Messiaen", "Durufle", "Buxtehude"];
-    var likes = [
-      {
-        'name': 'Hot Rabbit',
-        'id': '199600656843963',
-        'created_time': '2016-09-25T17:05:01+0000'
-      },
-      {
-        'name': 'This Bridge Called Our Health',
-        'id': '543928779075283',
-        'created_time': '2016-09-24T20:43:01+0000'
-      }
-    ];
-    Braze.setFacebookData(profile, 500, likes);
-    this._showToast('Facebook data set');
   }
 
   _requestFeedRefresh(event) {

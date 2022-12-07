@@ -322,27 +322,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         }
     }
 
-    @Suppress("LongParameterList", "UnusedPrivateMember")
-    @ReactMethod
-    fun setTwitterData(
-        id: Int?,
-        screenName: String?,
-        name: String?,
-        description: String?,
-        followersCount: Int?,
-        friendsCount: Int?,
-        statusesCount: Int?,
-        profileImageUrl: String?
-    ) {
-        // no-op
-    }
-
-    @Suppress("UnusedPrivateMember")
-    @ReactMethod
-    fun setFacebookData(facebookUserDictionary: ReadableMap?, numberOfFriends: Int?, likes: ReadableArray?) {
-        // no-op
-    }
-
     @ReactMethod
     fun launchNewsFeed() {
         val intent = Intent(currentActivity, AppboyFeedActivity::class.java)

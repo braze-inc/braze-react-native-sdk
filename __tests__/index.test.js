@@ -198,59 +198,6 @@ test('it calls AppboyReactBridge.logPurchase', () => {
   expect(NativeModules.AppboyReactBridge.logPurchase).toBeCalledWith(product_id, price, currency_code, quantity, purchase_properties);
 });
 
-test('it calls AppboyReactBridge.setTwitterData', () => {
-  const id = "some_id";
-  const screen_name = "some_screen_name";
-  const name = "some_name";
-  const description = "some_description";
-  const followers_count = 22;
-  const friends_count = 33;
-  const statuses_count = 44;
-  const profile_image_url = "braze.com"
-  Braze.setTwitterData(id, screen_name, name, description, followers_count, friends_count, statuses_count, profile_image_url);
-  expect(NativeModules.AppboyReactBridge.setTwitterData).toBeCalledWith(id, screen_name, name, description, followers_count, friends_count, statuses_count, profile_image_url);
-});
-
-test('it does not call AppboyReactBridge.setTwitterData when required arguments are missing, and logs to the console', () => {
-  let id = null;
-  const screen_name = "some_screen_name";
-  const name = "some_name";
-  const description = "some_description";
-  let followers_count = 22;
-  let friends_count = 33;
-  let statuses_count = 44;
-  const profile_image_url = "braze.com"
-  Braze.setTwitterData(id, screen_name, name, description, followers_count, friends_count, statuses_count, profile_image_url);
-  id = "some_id";
-  followers_count = null;
-  Braze.setTwitterData(id, screen_name, name, description, followers_count, friends_count, statuses_count, profile_image_url);
-  followers_count = 22;
-  friends_count = null;
-  Braze.setTwitterData(id, screen_name, name, description, followers_count, friends_count, statuses_count, profile_image_url);
-  friends_count = 33;
-  statuses_count = null;
-  Braze.setTwitterData(id, screen_name, name, description, followers_count, friends_count, statuses_count, profile_image_url);
-  expect(console.log).toHaveBeenCalledTimes(4);
-  expect(NativeModules.AppboyReactBridge.setTwitterData).not.toHaveBeenCalled();
-});
-
-test('it calls AppboyReactBridge.setFacebookData', () => {
-  const facebook_user_dictionary = "some_facebook_user_dictionary";
-  const number_of_friends = 55;
-  const likes = 600;
-  Braze.setFacebookData(facebook_user_dictionary, number_of_friends, likes);
-  expect(NativeModules.AppboyReactBridge.setFacebookData).toBeCalledWith(facebook_user_dictionary, number_of_friends, likes);
-});
-
-test('it does not call AppboyReactBridge.setFacebookData when required arguments are missing, and logs to the console', () => {
-  const facebook_user_dictionary = "some_facebook_user_dictionary";
-  const number_of_friends = null;
-  const likes = 600;
-  Braze.setFacebookData(facebook_user_dictionary, number_of_friends, likes);
-  expect(console.log).toHaveBeenCalled();
-  expect(NativeModules.AppboyReactBridge.setFacebookData).not.toHaveBeenCalled();
-});
-
 test('it calls AppboyReactBridge.setAttributionData', () => {
   const network = "some_network";
   const campaign = "some_campaign";
