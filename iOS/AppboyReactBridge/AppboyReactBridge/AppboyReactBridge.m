@@ -8,6 +8,7 @@
 #import "ABKContentCardsViewController.h"
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
+static NSString *const kFeedCardsUpdatedEvent = @"feedCardsUpdated";
 static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
 static NSString *const kInAppMessageReceivedEvent = @"inAppMessageReceived";
 static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
@@ -43,6 +44,10 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
                                             selector:@selector(handleContentCardsUpdated:)
                                                 name:ABKContentCardsProcessedNotification
                                               object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                              selector:@selector(handleFeedCardsUpdated:)
+                                                  name:ABKFeedUpdatedNotification
+                                                object:nil];
   [Appboy sharedInstance].sdkAuthenticationDelegate = self;
 }
 
@@ -56,6 +61,7 @@ RCT_ENUM_CONVERTER(ABKNotificationSubscriptionType,
 - (NSArray<NSString *> *)supportedEvents {
   return @[
     kContentCardsUpdatedEvent,
+    kFeedCardsUpdatedEvent,
     kSdkAuthenticationErrorEvent,
     kInAppMessageReceivedEvent,
     kPushNotificationEvent
@@ -335,8 +341,8 @@ RCT_EXPORT_METHOD(setAttributionData:(NSString *)network withCampaign:(NSString 
   [[Appboy sharedInstance].user setAttributionData:attributionData];
 }
 
-RCT_EXPORT_METHOD(launchNewsFeed) {
-  RCTLogInfo(@"launchNewsFeed called");
+RCT_EXPORT_METHOD(launchFeed) {
+  RCTLogInfo(@"launchFeed called");
   ABKNewsFeedViewController *feedModal = [[ABKNewsFeedViewController alloc] init];
   feedModal.navigationItem.title = @"News";
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
@@ -344,11 +350,46 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   [mainViewController presentViewController:feedModal animated:YES completion:nil];
 }
 
+RCT_REMAP_METHOD(getFeedCards, getFeedCardsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeedCards called");
+  [self requestFeedRefresh];
+  resolve([self getMappedFeedCards]);
+}
+
+RCT_EXPORT_METHOD(logFeedCardClicked:(NSString *)idString) {
+  ABKCard *cardToClick = [self getFeedCardById:idString];
+  if (cardToClick) {
+    RCTLogInfo(@"logFeedCardClicked with id %@", idString);
+    [cardToClick logCardClicked];
+  }
+}
+
+RCT_EXPORT_METHOD(logFeedCardImpression:(NSString *)idString) {
+  ABKCard *cardToClick = [self getFeedCardById:idString];
+  if (cardToClick) {
+    RCTLogInfo(@"logFeedCardImpression with id %@", idString);
+    [cardToClick logCardImpression];
+  }
+}
+
+RCT_EXPORT_METHOD(requestFeedRefresh) {
+  [[Appboy sharedInstance] requestFeedRefresh];
+}
+
+
 - (void)handleContentCardsUpdated:(NSNotification *)notification {
   BOOL updateIsSuccessful = [notification.userInfo[ABKContentCardsProcessedIsSuccessfulKey] boolValue];
   if (hasListeners && updateIsSuccessful) {
       RCTLogInfo(@"contentCardsUpdated sent to the bridge");
       [self sendEventWithName:kContentCardsUpdatedEvent body:nil];
+  }
+}
+
+- (void)handleFeedCardsUpdated:(NSNotification *)notification {
+  BOOL updateIsSuccessful = [notification.userInfo[ABKFeedUpdatedIsSuccessfulKey] boolValue];
+  if (hasListeners && updateIsSuccessful) {
+      RCTLogInfo(@"feedCardsUpdated sent to the bridge");
+      [self sendEventWithName:kFeedCardsUpdatedEvent body:nil];
   }
 }
 
@@ -363,8 +404,31 @@ RCT_EXPORT_METHOD(launchNewsFeed) {
   return mappedCards;
 }
 
+- (NSArray *)getMappedFeedCards {
+  NSArray<ABKCard *> *cards = [Appboy sharedInstance].feedController.newsFeedCards;
+
+  NSMutableArray *mappedCards = [NSMutableArray arrayWithCapacity:[cards count]];
+  [cards enumerateObjectsUsingBlock:^(id card, NSUInteger idx, BOOL *stop) {
+    [mappedCards addObject:RCTFormatFeedCard(card)];
+  }];
+
+  return mappedCards;
+}
+
 - (nullable ABKContentCard *)getContentCardById:(NSString *)idString {
   NSArray<ABKContentCard *> *cards = [[Appboy sharedInstance].contentCardsController getContentCards];
+  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"idString == %@", idString];
+  NSArray *filteredArray = [cards filteredArrayUsingPredicate:predicate];
+
+  if ([filteredArray count]) {
+    return filteredArray[0];
+  }
+
+  return nil;
+}
+
+- (nullable ABKCard *)getFeedCardById:(NSString *)idString {
+  NSArray<ABKCard *> *cards = [Appboy sharedInstance].feedController.newsFeedCards;
   NSPredicate *predicate = [NSPredicate predicateWithFormat:@"idString == %@", idString];
   NSArray *filteredArray = [cards filteredArrayUsingPredicate:predicate];
 
@@ -466,6 +530,54 @@ static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
   return formattedContentCardData;
 }
 
+static NSDictionary *RCTFormatFeedCard(ABKCard *card) {
+  NSMutableDictionary *formattedFeedCardData = [NSMutableDictionary dictionary];
+  formattedFeedCardData[@"id"] = card.idString;
+  formattedFeedCardData[@"created"] = @(card.created);
+  formattedFeedCardData[@"expiresAt"] = @(card.expiresAt);
+  formattedFeedCardData[@"viewed"] = @(card.viewed);
+  formattedFeedCardData[@"url"] = RCTNullIfNil(card.urlString);
+  formattedFeedCardData[@"openURLInWebView"] = @(card.openUrlInWebView);
+  formattedFeedCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
+
+  if ([card isKindOfClass:[ABKBannerCard class]]) {
+    ABKBannerCard *bannerCard = (ABKBannerCard *)card;
+    formattedFeedCardData[@"image"] = bannerCard.image;
+    formattedFeedCardData[@"imageAspectRatio"] = @(bannerCard.imageAspectRatio);
+    formattedFeedCardData[@"domain"] = RCTNullIfNil(bannerCard.domain);
+    formattedFeedCardData[@"type"] = @"Banner";
+  }
+
+  if ([card isKindOfClass:[ABKCaptionedImageCard class]]) {
+    ABKCaptionedImageCard *captionedCard = (ABKCaptionedImageCard *)card;
+    formattedFeedCardData[@"image"] = captionedCard.image;
+    formattedFeedCardData[@"imageAspectRatio"] = @(captionedCard.imageAspectRatio);
+    formattedFeedCardData[@"title"] = captionedCard.title;
+    formattedFeedCardData[@"cardDescription"] = captionedCard.cardDescription;
+    formattedFeedCardData[@"domain"] = RCTNullIfNil(captionedCard.domain);
+    formattedFeedCardData[@"type"] = @"Captioned";
+  }
+    
+  if ([card isKindOfClass:[ABKClassicCard class]]) {
+    ABKClassicCard *classicCard = (ABKClassicCard *)card;
+    formattedFeedCardData[@"image"] = classicCard.image;
+    formattedFeedCardData[@"cardDescription"] = classicCard.cardDescription;
+    formattedFeedCardData[@"title"] = classicCard.title;
+    formattedFeedCardData[@"domain"] = classicCard.domain;
+    formattedFeedCardData[@"type"] = @"Classic";
+  }
+
+  if ([card isKindOfClass:[ABKTextAnnouncementCard class]]) {
+    ABKTextAnnouncementCard *captionedCard = (ABKTextAnnouncementCard *)card;
+    formattedFeedCardData[@"title"] = captionedCard.title;
+    formattedFeedCardData[@"cardDescription"] = captionedCard.cardDescription;
+    formattedFeedCardData[@"domain"] = RCTNullIfNil(captionedCard.domain);
+    formattedFeedCardData[@"type"] = @"TextAnnouncement";
+  }
+
+  return formattedFeedCardData;
+}
+
 - (ABKCardCategory)getCardCategoryForString:(NSString *)category {
   ABKCardCategory cardCategory = 0;
   if ([[category lowercaseString] isEqualToString:@"advertising"]) {
@@ -482,10 +594,6 @@ static NSDictionary *RCTFormatContentCard(ABKContentCard *card) {
     cardCategory = ABKCardCategoryAll;
   }
   return cardCategory;
-}
-
-RCT_EXPORT_METHOD(requestFeedRefresh) {
-  [[Appboy sharedInstance] requestFeedRefresh];
 }
 
 RCT_EXPORT_METHOD(wipeData) {
