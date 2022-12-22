@@ -53,7 +53,7 @@ export function getInstallTrackingId(callback: Callback): void;
  *
  * @param {string} userId - A unique identifier for this user.
  * @param {string} signature - An encrypted signature to add to network requests to authenticate the current user. You can update the signature
-   *   using the `setSdkAuthenticationSignature` method. This signature will only have an effect if SDK Authentication is enabled.
+ *   using the `setSdkAuthenticationSignature` method. This signature will only have an effect if SDK Authentication is enabled.
  */
 export function changeUser(userId: string, signature?: string): void;
 
@@ -78,9 +78,7 @@ export function setSdkAuthenticationSignature(signature: string): void;
  * @param {string} aliasName - An identifier for alias name.
  * @param {string} aliasLabel - An identifier for alias label.
  */
-export function addAlias(aliasName: string,
-  aliasLabel: string
-): void;
+export function addAlias(aliasName: string, aliasLabel: string): void;
 
 /**
  * Sets the first name of the user.
@@ -141,7 +139,11 @@ export function setPhoneNumber(phoneNumber: string): void;
  * @param {MonthsAsNumber} month - 1-12
  * @param {number} day
  */
-export function setDateOfBirth(year: number, month: MonthsAsNumber, day: number): void;
+export function setDateOfBirth(
+  year: number,
+  month: MonthsAsNumber,
+  day: number
+): void;
 
 /**
  * This method posts a token to Braze's servers to associate the token with the current device.
@@ -161,21 +163,30 @@ export function registerAndroidPushToken(token: string): void;
  * @param {string} googleAdvertisingId - The Google Advertising ID
  * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled for the Google Advertising ID
  */
-export function setGoogleAdvertisingId(googleAdvertisingId: string, adTrackingEnabled: boolean): void;
+export function setGoogleAdvertisingId(
+  googleAdvertisingId: string,
+  adTrackingEnabled: boolean
+): void;
 
 /**
-* Adds the user to a subscription group.
-* @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
-* @param {function(error, result)} callback - A callback that receives the function call result.
-*/
-export function addToSubscriptionGroup(groupId: string, callback?: Callback): void
+ * Adds the user to a subscription group.
+ * @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function addToSubscriptionGroup(
+  groupId: string,
+  callback?: Callback
+): void;
 
 /**
-* Removes the user from a subscription group.
-* @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
-* @param {function(error, result)} callback - A callback that receives the function call result.
-*/
-export function removeFromSubscriptionGroup(groupId: string, callback?: Callback): void;
+ * Removes the user from a subscription group.
+ * @param {string} groupId - The string UUID corresponding to the subscription group, provided by the Braze dashboard.
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function removeFromSubscriptionGroup(
+  groupId: string,
+  callback?: Callback
+): void;
 
 /**
  * Sets whether the user should be sent push campaigns.
@@ -209,7 +220,10 @@ export function setEmailNotificationSubscriptionType(
  *      characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
  *      Values can be numeric, boolean, or strings 255 characters or shorter.
  */
-export function logCustomEvent(eventName: string, eventProperties?: object): void;
+export function logCustomEvent(
+  eventName: string,
+  eventProperties?: object
+): void;
 
 /**
  * Reports that the current user made an in-app purchase. Useful for tracking and segmenting users.
@@ -283,7 +297,10 @@ export function removeFromCustomUserAttributeArray(
  *    cannot begin with a $, and can only contain alphanumeric characters and punctuation.
  * @param {function(error, result)} callback - A callback that receives the export function call result.
  */
-export function unsetCustomUserAttribute(key: string, callback?: Callback): void;
+export function unsetCustomUserAttribute(
+  key: string,
+  callback?: Callback
+): void;
 
 /**
  * Increment/decrement the value of a custom attribute. Only numeric custom attributes can be incremented. Attempts to
@@ -319,7 +336,61 @@ export function setAttributionData(
 /**
  * Launches the News Feed UI element.
  */
-export function launchNewsFeed(): void;
+export function launchFeed(): void;
+
+export interface FeedCardBase {
+  id: string;
+  created: number;
+  updated: number;
+  viewed: boolean;
+  url?: string;
+  extras: { [key: string]: string };
+}
+
+export interface BannerFeedCard extends FeedCardBase {
+  type: 'Banner';
+  image: string;
+  imageAspectRatio: number;
+}
+
+export interface CaptionedFeedCard extends FeedCardBase {
+  type: 'Captioned';
+  image: string;
+  title: string;
+  cardDescription: string;
+  domain?: string;
+}
+
+export interface TextAnnouncementFeedCard extends FeedCardBase {
+  type: 'TextAnnouncement';
+  title: string;
+  cardDescription: string;
+  domain?: string;
+}
+
+export type FeedCard =
+  | BannerFeedCard
+  | CaptionedFeedCard
+  | TextAnnouncementFeedCard;
+
+/**
+ * Manually log a click to Braze for a particular news feed card.
+ * The SDK will only log a card click when the card has the url property with a valid value.
+ * @param {string} id
+ */
+export function logFeedCardClicked(id: string): void;
+
+/**
+ * Manually log an impression to Braze for a particular news feed card.
+ * @param {string} id
+ */
+export function logFeedCardImpression(id: string): void;
+
+/**
+ * Returns a feed cards array
+ * @returns {Promise<FeedCard[]>}
+ */
+export function getFeedCards(): Promise<FeedCard[]>;
 
 // Content Cards
 export interface ContentCardBase {
@@ -360,7 +431,10 @@ export interface CaptionedContentCard extends ContentCardBase {
   domain?: string;
 }
 
-export type ContentCard = ClassicContentCard | BannerContentCard | CaptionedContentCard;
+export type ContentCard =
+  | ClassicContentCard
+  | BannerContentCard
+  | CaptionedContentCard;
 
 /**
  * Launches the Content Cards UI element.
@@ -463,10 +537,7 @@ export function requestLocationInitialization(): void;
  * @param {double} latitude - Location latitude.
  * @param {double} longitude - Location longitude.
  */
-export function requestGeofences(
-  latitude: number,
-  longitude: number
-): void;
+export function requestGeofences(latitude: number, longitude: number): void;
 
 /**
  * Sets a custom location attribute for the user.
@@ -493,7 +564,10 @@ export function setLocationCustomAttribute(
  * @returns subscription - If a subscriber is passed to the function, returns the subscription. When you want to stop
  * listening, call `.remove()` on the returned subscription. Returns undefined if no subscriber is provided.
  */
-export function subscribeToInAppMessage(useBrazeUI: boolean, subscriber?: Function): EmitterSubscription | undefined;
+export function subscribeToInAppMessage(
+  useBrazeUI: boolean,
+  subscriber?: Function
+): EmitterSubscription | undefined;
 
 /**
  * Dismisses the currently displayed in app message.
@@ -504,9 +578,7 @@ export function hideCurrentInAppMessage(): void;
  * Logs a click for the provided in-app message data
  * @param {BrazeInAppMessage} inAppMessage
  */
-export function logInAppMessageClicked(
-  inAppMessage: BrazeInAppMessage
-): void;
+export function logInAppMessageClicked(inAppMessage: BrazeInAppMessage): void;
 
 /**
  * Logs an impression for the provided in-app message data
@@ -526,63 +598,65 @@ export function logInAppMessageButtonClicked(
   buttonId: number
 ): void;
 
-type PermissionOptions = "alert" | "badge" | "sound" | "provisional";
+type PermissionOptions = 'alert' | 'badge' | 'sound' | 'provisional';
 /**
  * Requests a push permission prompt. On Android 12 and below, this is a no-op.
  *
  * @param permissionOptions - iOS permission options that determine the authorized features of local and remote notifications. If not provided,
  *   all permission options except provisional are set to true.
  */
-export function requestPushPermission(permissionOptions?: Record<PermissionOptions, boolean>): void;
+export function requestPushPermission(
+  permissionOptions?: Record<PermissionOptions, boolean>
+): void;
 
 export class BrazeInAppMessage {
-  constructor(_data: string)
-  inAppMessageJsonString: string
-  message: string
-  header: string
-  uri: string
-  imageUrl: string
-  zippedAssetsUrl: string
-  useWebView: boolean
-  duration: number
-  clickAction: BrazeClickAction[keyof BrazeClickAction]
-  dismissType: BrazeDismissType[keyof BrazeDismissType]
-  messageType: BrazeMessageType[keyof BrazeMessageType]
-  extras: { [key: string]: string }
-  buttons: [BrazeButton]
+  constructor(_data: string);
+  inAppMessageJsonString: string;
+  message: string;
+  header: string;
+  uri: string;
+  imageUrl: string;
+  zippedAssetsUrl: string;
+  useWebView: boolean;
+  duration: number;
+  clickAction: BrazeClickAction[keyof BrazeClickAction];
+  dismissType: BrazeDismissType[keyof BrazeDismissType];
+  messageType: BrazeMessageType[keyof BrazeMessageType];
+  extras: { [key: string]: string };
+  buttons: [BrazeButton];
   toString(): string;
 }
 
 export class BrazeButton {
-  constructor(_data: string)
-  text: string
-  uri: string
-  useWebView: boolean
-  clickAction: BrazeClickAction[keyof BrazeClickAction]
-  id: number
+  constructor(_data: string);
+  text: string;
+  uri: string;
+  useWebView: boolean;
+  clickAction: BrazeClickAction[keyof BrazeClickAction];
+  id: number;
   toString(): string;
 }
 
 type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 interface BrazeClickAction {
-  'NEWS_FEED': 'news_feed',
-  'URI': 'uri',
-  'NONE': 'none'
+  NEWS_FEED: 'news_feed';
+  URI: 'uri';
+  NONE: 'none';
 }
 export const ClickAction: BrazeClickAction;
 
 interface BrazeDismissType {
-  'SWIPE': 'swipe',
-  'AUTO_DISMISS': 'auto_dismiss'
+  SWIPE: 'swipe';
+  AUTO_DISMISS: 'auto_dismiss';
 }
 export const DismissType: BrazeDismissType;
 
 interface BrazeMessageType {
-  'SLIDEUP': 'slideup',
-  'MODAL': 'modal',
-  'FULL': 'full',
-  'HTML_FULL': 'html_full'
+  SLIDEUP: 'slideup';
+  MODAL: 'modal';
+  FULL: 'full';
+  HTML_FULL: 'html_full';
 }
 export const MessageType: BrazeMessageType;
 
@@ -615,13 +689,13 @@ export const NotificationSubscriptionTypes: NotificationSubscriptionType;
 
 interface AppboyEvent {
   /** Callback passes a boolean that indicates whether content cards have changed in the latest refresh. */
-  CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
+  CONTENT_CARDS_UPDATED: 'contentCardsUpdated';
   /** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
-  SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
+  SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError';
   /** Callback passes the BrazeInAppMessage object. */
-  IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived',
+  IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived';
   /** Only supported on Android. */
-  PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent',
+  PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent';
 }
 export const Events: AppboyEvent;
 
@@ -630,7 +704,10 @@ export const Events: AppboyEvent;
  * @param {AppboyEvent} event
  * @param {function} subscriber
  */
-export function addListener(event: AppboyEvent[keyof AppboyEvent], subscriber: Function): EmitterSubscription;
+export function addListener(
+  event: AppboyEvent[keyof AppboyEvent],
+  subscriber: Function
+): EmitterSubscription;
 
 type Callback = (error: object, result: object) => void;
 

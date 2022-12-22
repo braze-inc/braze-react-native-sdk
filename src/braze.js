@@ -512,8 +512,33 @@ export class Braze {
   /**
    * Launches the News Feed UI element.
    */
-  static launchNewsFeed() {
-    this.bridge.launchNewsFeed();
+  static launchFeed() {
+    this.bridge.launchFeed();
+  }
+
+  /**
+   * Returns a news feed cards array
+   * @returns {Promise<FeedCard[]>}
+   */
+  static getFeedCards() {
+    return this.bridge.getFeedCards();
+  }
+
+  /**
+   * Manually log a click to Braze for a particular news feed card.
+   * The SDK will only log a card click when the card has the url property with a valid value.
+   * @param {string} id
+   */
+  static logFeedCardClicked(id) {
+    this.bridge.logFeedCardClicked(id);
+  }
+
+  /**
+   * Manually log an impression to Braze for a particular news feed card.
+   * @param {string} id
+   */
+  static logFeedCardImpression(id) {
+    this.bridge.logFeedCardImpression(id);
   }
 
   // Content Cards

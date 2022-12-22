@@ -39,15 +39,19 @@ import java.util.concurrent.ConcurrentHashMap
 class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBaseJavaModule(reactContext) {
     private val callbackCallLock = Any()
     private val contentCards = mutableListOf<Card>()
+    private val feedCards = mutableListOf<Card>()
     private val feedSubscriberMap: MutableMap<Callback, IEventSubscriber<FeedUpdatedEvent>?> = ConcurrentHashMap()
     private val callbackCallMap = ConcurrentHashMap<Callback, Boolean?>()
     private var contentCardsUpdatedAt: Long = 0
+    private var feedCardsUpdatedAt: Long = 0
     private lateinit var contentCardsUpdatedSubscriber: IEventSubscriber<ContentCardsUpdatedEvent>
+    private lateinit var feedCardsUpdatedSubscriber: IEventSubscriber<FeedUpdatedEvent>
     private lateinit var sdkAuthErrorSubscriber: IEventSubscriber<BrazeSdkAuthenticationErrorEvent>
     private lateinit var pushNotificationEventSubscriber: IEventSubscriber<BrazePushEvent>
 
     init {
         subscribeToContentCardsUpdatedEvent()
+        subscribeToFeedCardsUpdatedEvent()
         subscribeToSdkAuthenticationErrorEvents()
         subscribeToPushNotificationEvents()
     }
@@ -323,10 +327,38 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun launchNewsFeed() {
+    fun launchFeed() {
         val intent = Intent(currentActivity, AppboyFeedActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         this.reactApplicationContext.startActivity(intent)
+    }
+
+    @ReactMethod
+    fun requestFeedRefresh() {
+        braze.requestFeedRefresh()
+    }
+
+    @ReactMethod
+    fun getFeedCards(promise: Promise) {
+        val subscriber: IEventSubscriber<FeedUpdatedEvent> = object : IEventSubscriber<FeedUpdatedEvent> {
+            override fun trigger(message: FeedUpdatedEvent) {
+                promise.resolve(mapContentCards(message.feedCards))
+                updateFeedCardsIfNeeded(message)
+                braze.removeSingleSubscription(this, FeedUpdatedEvent::class.java)
+            }
+        }
+        braze.subscribeToFeedUpdates(subscriber)
+        braze.requestFeedRefresh()
+    }
+
+    @ReactMethod
+    fun logFeedCardClicked(id: String) {
+        getFeedCardById(id)?.logClick()
+    }
+
+    @ReactMethod
+    fun logFeedCardImpression(id: String) {
+        getFeedCardById(id)?.logImpression()
     }
 
     @ReactMethod
@@ -383,6 +415,26 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         }
 
         braze.subscribeToContentCardsUpdates(contentCardsUpdatedSubscriber)
+    }
+
+    private fun subscribeToFeedCardsUpdatedEvent() {
+        if (this::feedCardsUpdatedSubscriber.isInitialized) {
+            braze.removeSingleSubscription(
+                feedCardsUpdatedSubscriber,
+                FeedUpdatedEvent::class.java
+            )
+        }
+        feedCardsUpdatedSubscriber = IEventSubscriber { event ->
+            val updated = event.lastUpdatedInSecondsFromEpoch() > contentCardsUpdatedAt
+            if (updated && reactApplicationContext.hasActiveReactInstance()) {
+                reactApplicationContext
+                    .getJSModule(RCTDeviceEventEmitter::class.java)
+                    .emit(FEED_CARDS_UPDATED_EVENT_NAME, updated)
+            }
+            updateFeedCardsIfNeeded(event)
+        }
+
+        braze.subscribeToFeedUpdates(feedCardsUpdatedSubscriber)
     }
 
     private fun subscribeToSdkAuthenticationErrorEvents() {
@@ -456,22 +508,17 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun logContentCardDismissed(id: String) {
-        getCardById(id)?.isDismissed = true
+        getContentCardById(id)?.isDismissed = true
     }
 
     @ReactMethod
     fun logContentCardClicked(id: String) {
-        getCardById(id)?.logClick()
+        getContentCardById(id)?.logClick()
     }
 
     @ReactMethod
     fun logContentCardImpression(id: String) {
-        getCardById(id)?.logImpression()
-    }
-
-    @ReactMethod
-    fun requestFeedRefresh() {
-        braze.requestFeedRefresh()
+        getContentCardById(id)?.logImpression()
     }
 
     /**
@@ -689,13 +736,28 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         }
     }
 
-    private fun getCardById(id: String): Card? =
+    /**
+     * Updates the last known Feed Card refresh data
+     */
+    private fun updateFeedCardsIfNeeded(event: FeedUpdatedEvent) {
+        if (event.lastUpdatedInSecondsFromEpoch() > feedCardsUpdatedAt) {
+            feedCardsUpdatedAt = event.lastUpdatedInSecondsFromEpoch()
+            feedCards.clear()
+            feedCards.addAll(event.feedCards)
+        }
+    }
+
+    private fun getFeedCardById(id: String): Card? =
+        feedCards.firstOrNull { it.id == id }
+
+    private fun getContentCardById(id: String): Card? =
         contentCards.firstOrNull { it.id == id }
 
     companion object {
         private const val CARD_COUNT_TAG = "card count"
         private const val UNREAD_CARD_COUNT_TAG = "unread card count"
         private const val CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated"
+        private const val FEED_CARDS_UPDATED_EVENT_NAME = "feedCardsUpdated"
         private const val SDK_AUTH_ERROR_EVENT_NAME = "sdkAuthenticationError"
         private const val IN_APP_MESSAGE_RECEIVED_EVENT_NAME = "inAppMessageReceived"
         private const val PUSH_NOTIFICATION_EVENT_NAME = "pushNotificationEvent"
