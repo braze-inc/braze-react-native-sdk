@@ -33,7 +33,7 @@ export class Braze {
   static DismissType = DismissType;
   static MessageType = MessageType;
 
-  static bridge = NativeModules.AppboyReactBridge;
+  static bridge = NativeModules.BrazeReactBridge;
   static eventEmitter = Platform.select({
     ios: new NativeEventEmitter(this.bridge),
     android: DeviceEventEmitter
@@ -57,7 +57,7 @@ export class Braze {
         }
       });
     } else {
-      // AppboyReactBridge.getInitialUrl not implemented on Android
+      // BrazeReactBridge.getInitialUrl not implemented on Android
       callback(null);
     }
   }
@@ -514,6 +514,31 @@ export class Braze {
    */
   static launchNewsFeed() {
     this.bridge.launchNewsFeed();
+  }
+
+  /**
+   * Returns an array of News Feed cards.
+   * @returns {Promise<NewsFeedCard[]>}
+   */
+  static getNewsFeedCards() {
+    return this.bridge.getNewsFeedCards();
+  }
+
+  /**
+   * Manually log a click to Braze for a particular News Feed card.
+   * The SDK will only log a card click when the card has the url property with a valid value.
+   * @param {string} id
+   */
+  static logNewsFeedCardClicked(id) {
+    this.bridge.logNewsFeedCardClicked(id);
+  }
+
+  /**
+   * Manually log an impression to Braze for a particular News Feed card.
+   * @param {string} id
+   */
+  static logNewsFeedCardImpression(id) {
+    this.bridge.logNewsFeedCardImpression(id);
   }
 
   // Content Cards

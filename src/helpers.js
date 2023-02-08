@@ -1,5 +1,5 @@
 /**
- * This default callback logs errors and null or false results. AppboyReactBridge methods with callbacks will
+ * This default callback logs errors and null or false results. BrazeReactBridge methods with callbacks will
  * default to this if there is no user-provided callback.
  * @callback brazeCallback
  * @param {object} error - The callback error object
@@ -14,9 +14,9 @@ export function brazeCallback(error, result) {
 }
 
 /**
- * A helper method that wraps calls to AppboyReactBridge and passes in the
+ * A helper method that wraps calls to BrazeReactBridge and passes in the
  * default Braze callback if no callback is provided.
- * @param {function} methodName - The AppboyReactBridge function to call
+ * @param {function} methodName - The BrazeReactBridge function to call
  * @param {array} argsArray - An array of arguments to pass into methodName
  * @param {function(error, result)} callback - The user-provided callback
  */

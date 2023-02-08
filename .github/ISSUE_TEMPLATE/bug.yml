@@ -28,7 +28,7 @@ body:
   - type: input
     id: sdk_version
     attributes:
-      label: Which react-native-appboy-sdk SDK version?
+      label: Which @braze/react-native-sdk SDK version?
       placeholder: ex. 1.40.0
     validations:
       required: true
@@ -47,7 +47,7 @@ body:
       description: Please provide a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example)
       value: |
         Example:
-          1. `import Braze from "react-native-appboy-sdk"`.
+          1. `import Braze from "@braze/react-native-sdk"`.
           2. `Braze.changeUser("id")`
           2. Run the app.
     validations:

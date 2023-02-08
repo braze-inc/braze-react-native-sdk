@@ -30,8 +30,8 @@ local.properties
 android/bin/
 .project
 .settings
-AppboyProject/android/app/bin/
-AppboyProject/android/app/.classpath
+BrazeProject/android/app/bin/
+BrazeProject/android/app/.classpath
 !debug.keystore
 
 # Node

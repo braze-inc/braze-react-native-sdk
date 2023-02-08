@@ -16,24 +16,24 @@ If you're using Expo, you can install our plugin to integrate the React Native S
 
 ## Running the Sample App
 
-- `AppboyProject` - Contains the AppboyProject sample app with integration examples for the React Native bridge. This sample app integrates the iOS bridge via manual linking, and the iOS SDK via Cocoapods. It can
+- `BrazeProject` - Contains the BrazeProject sample app with integration examples for the React Native bridge. This sample app integrates the iOS bridge via manual linking, and the iOS SDK via Cocoapods. It can
 also optionally integrate the iOS bridge using Cocoapods via a local Podspec.
 
-The following commands apply to both sample projects and use the `AppboyProject` directory as an example.
+The following commands apply to both sample projects and use the `BrazeProject` directory as an example.
 
 ```zsh
-cd AppboyProject/
+cd BrazeProject/
 yarn install
 
 # In a separate tab:
-cd AppboyProject/
+cd BrazeProject/
 npx react-native start
 ```
 
 ### iOS
 Our sample app integrates the native Braze iOS SDK through [Cocoapods](https://guides.cocoapods.org/using/getting-started.html).
 
-From the `AppboyProject` directory:
+From the `BrazeProject` directory:
 ```zsh
 sudo gem install cocoapods
 cd ios/
@@ -43,7 +43,7 @@ npx react-native run-ios
 ```
 
 ### Android
-From the `AppboyProject` directory:
+From the `BrazeProject` directory:
 ```zsh
 npx react-native run-android
 ```

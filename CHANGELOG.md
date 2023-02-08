@@ -1,3 +1,33 @@
+# 2.0.0
+
+##### ⚠ Breaking
+- The Braze React Native SDK npm package has moved from `react-native-appboy-sdk` to `@braze/react-native-sdk`.
+- Renames `AppboyReactBridge` and `AppboyReactUtils` to `BrazeReactBridge` and `BrazeReactUtils`, respectively.
+- Updates the native iOS bridge to use the new Swift SDK [version 5.9.1](https://github.com/braze-inc/braze-swift-sdk/blob/main/CHANGELOG.md#591).
+- During migration, update your project with the following changes in your iOS integration:
+  - To initialize Braze, [follow these integration steps](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/a2-configure-braze) to create a `configuration` object. Then, add this code to complete the setup:
+    ```
+    let braze = BrazePlugin.initBraze(configuration)
+    ```
+  - To continue using `SDWebImage` as a dependency, add this line to your project's `/ios/Podfile`:
+    ```
+    pod 'SDWebImage', :modular_headers => true
+    ```
+      - Then, follow [these setup instructions](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/c3-gif-support).
+  - For sample code to help with the migration, reference our sample app and [`AppDelegate.m`](https://github.com/braze-inc/braze-react-sdk/blob/master/public/BrazeProject/ios/BrazeProject/AppDelegate.m) file.
+  - If you are integrating this SDK with an application that uses only Objective-C, create an empty Swift file to ensure that all the relevant Swift runtime libraries are linked. Reference [this file](https://github.com/braze-inc/braze-react-sdk/blob/master/BrazeProject/ios/BrazeProject/empty-file.swift) from our sample app.
+- The following methods for News Feed are now no-ops on iOS:
+  - `Braze.launchNewsFeed()`
+  - `Braze.getCardCountForCategories()`
+  - `Braze.getUnreadCardCountForCategories()`
+- Updates the native Android bridge to [Braze Android SDK 24.2.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2420).
+
+##### Added
+- Adds the following APIs to more easily interface with the News Feed product. Thanks @swissmanu for your contribution!
+  - `Braze.getNewsFeedCards()`
+  - `Braze.logNewsFeedCardClicked()`
+  - `Braze.logNewsFeedCardImpression()`
+
 # 1.41.0
 
 ##### ⚠ Breaking

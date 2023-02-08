@@ -12,362 +12,379 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('it calls AppboyReactBridge.registerAndroidPushToken', () => {
+test('it calls BrazeReactBridge.registerAndroidPushToken', () => {
   const token = "some_token";
   Braze.registerAndroidPushToken(token);
-  expect(NativeModules.AppboyReactBridge.registerAndroidPushToken).toBeCalledWith(token);
+  expect(NativeModules.BrazeReactBridge.registerAndroidPushToken).toBeCalledWith(token);
 });
 
-test('it calls AppboyReactBridge.setGoogleAdvertisingId', () => {
+test('it calls BrazeReactBridge.setGoogleAdvertisingId', () => {
   const googleAdvertisingId = "some_ga_id";
   const adTrackingEnabled = true;
   Braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
-  expect(NativeModules.AppboyReactBridge.setGoogleAdvertisingId).toBeCalledWith(googleAdvertisingId, adTrackingEnabled);
+  expect(NativeModules.BrazeReactBridge.setGoogleAdvertisingId).toBeCalledWith(googleAdvertisingId, adTrackingEnabled);
 });
 
-test('it calls AppboyReactBridge.setFirstName', () => {
+test('it calls BrazeReactBridge.setFirstName', () => {
   const first_name = "some_name";
   Braze.setFirstName(first_name);
-  expect(NativeModules.AppboyReactBridge.setFirstName).toBeCalledWith(first_name);
+  expect(NativeModules.BrazeReactBridge.setFirstName).toBeCalledWith(first_name);
 });
 
-test('it calls AppboyReactBridge.setLastName', () => {
+test('it calls BrazeReactBridge.setLastName', () => {
   const last_name = "some_name";
   Braze.setLastName(last_name);
-  expect(NativeModules.AppboyReactBridge.setLastName).toBeCalledWith(last_name);
+  expect(NativeModules.BrazeReactBridge.setLastName).toBeCalledWith(last_name);
 });
 
-test('it calls AppboyReactBridge.setLanguage', () => {
+test('it calls BrazeReactBridge.setLanguage', () => {
   const language = "to";
   Braze.setLanguage(language);
-  expect(NativeModules.AppboyReactBridge.setLanguage).toBeCalledWith(language);
+  expect(NativeModules.BrazeReactBridge.setLanguage).toBeCalledWith(language);
 });
 
-test('it calls AppboyReactBridge.setEmail', () => {
+test('it calls BrazeReactBridge.setEmail', () => {
   const email = "some_email";
   Braze.setEmail(email);
-  expect(NativeModules.AppboyReactBridge.setEmail).toBeCalledWith(email);
+  expect(NativeModules.BrazeReactBridge.setEmail).toBeCalledWith(email);
 });
 
-test('it calls AppboyReactBridge.setCountry', () => {
+test('it calls BrazeReactBridge.setCountry', () => {
   const country = "some_country";
   Braze.setCountry(country);
-  expect(NativeModules.AppboyReactBridge.setCountry).toBeCalledWith(country);
+  expect(NativeModules.BrazeReactBridge.setCountry).toBeCalledWith(country);
 });
 
-test('it calls AppboyReactBridge.setHomeCity', () => {
+test('it calls BrazeReactBridge.setHomeCity', () => {
   const city = "some_city";
   Braze.setHomeCity(city);
-  expect(NativeModules.AppboyReactBridge.setHomeCity).toBeCalledWith(city);
+  expect(NativeModules.BrazeReactBridge.setHomeCity).toBeCalledWith(city);
 });
 
-test('it calls AppboyReactBridge.setPhoneNumber', () => {
+test('it calls BrazeReactBridge.setPhoneNumber', () => {
   const number = "555-867-5309";
   Braze.setPhoneNumber(number);
-  expect(NativeModules.AppboyReactBridge.setPhoneNumber).toBeCalledWith(number);
+  expect(NativeModules.BrazeReactBridge.setPhoneNumber).toBeCalledWith(number);
 });
 
-test('it calls AppboyReactBridge.launchNewsFeed', () => {
+test('it calls BrazeReactBridge.requestFeedRefresh', () => {
+  Braze.requestFeedRefresh();
+  expect(NativeModules.BrazeReactBridge.requestFeedRefresh).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.launchNewsFeed', () => {
   Braze.launchNewsFeed();
-  expect(NativeModules.AppboyReactBridge.launchNewsFeed).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.launchNewsFeed).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.launchContentCards', () => {
+test('it calls BrazeReactBridge.getNewsFeedCards', () => {
+  Braze.getNewsFeedCards();
+  expect(NativeModules.BrazeReactBridge.getNewsFeedCards).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.logNewsFeedCardClicked', () => {
+  const id = "1234";
+  Braze.logNewsFeedCardClicked(id);
+  expect(NativeModules.BrazeReactBridge.logNewsFeedCardClicked).toBeCalledWith(id);
+});
+
+test('it calls BrazeReactBridge.logNewsFeedCardImpression', () => {
+  const id = "1234";
+  Braze.logNewsFeedCardImpression(id);
+  expect(NativeModules.BrazeReactBridge.logNewsFeedCardImpression).toBeCalledWith(id);
+});
+
+test('it calls BrazeReactBridge.launchContentCards', () => {
   Braze.launchContentCards();
-  expect(NativeModules.AppboyReactBridge.launchContentCards).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.launchContentCards).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.getContentCards', () => {
+test('it calls BrazeReactBridge.getContentCards', () => {
   Braze.getContentCards();
-  expect(NativeModules.AppboyReactBridge.getContentCards).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.getContentCards).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.logContentCardClicked', () => {
+test('it calls BrazeReactBridge.logContentCardClicked', () => {
   const id = "1234";
   Braze.logContentCardClicked(id);
-  expect(NativeModules.AppboyReactBridge.logContentCardClicked).toBeCalledWith(id);
+  expect(NativeModules.BrazeReactBridge.logContentCardClicked).toBeCalledWith(id);
 });
 
-test('it calls AppboyReactBridge.logContentCardDismissed', () => {
+test('it calls BrazeReactBridge.logContentCardDismissed', () => {
   const id = "1234";
   Braze.logContentCardDismissed(id);
-  expect(NativeModules.AppboyReactBridge.logContentCardDismissed).toBeCalledWith(id);
+  expect(NativeModules.BrazeReactBridge.logContentCardDismissed).toBeCalledWith(id);
 });
 
-test('it calls AppboyReactBridge.logContentCardImpression', () => {
+test('it calls BrazeReactBridge.logContentCardImpression', () => {
   const id = "1234";
   Braze.logContentCardImpression(id);
-  expect(NativeModules.AppboyReactBridge.logContentCardImpression).toBeCalledWith(id);
+  expect(NativeModules.BrazeReactBridge.logContentCardImpression).toBeCalledWith(id);
 });
 
-test('it calls AppboyReactBridge.requestFeedRefresh', () => {
-  Braze.requestFeedRefresh();
-  expect(NativeModules.AppboyReactBridge.requestFeedRefresh).toBeCalled();
-});
-
-test('it calls AppboyReactBridge.requestImmediateDataFlush', () => {
+test('it calls BrazeReactBridge.requestImmediateDataFlush', () => {
   Braze.requestImmediateDataFlush();
-  expect(NativeModules.AppboyReactBridge.requestImmediateDataFlush).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.requestImmediateDataFlush).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.wipeData', () => {
+test('it calls BrazeReactBridge.wipeData', () => {
   Braze.wipeData();
-  expect(NativeModules.AppboyReactBridge.wipeData).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.wipeData).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.disableSDK', () => {
+test('it calls BrazeReactBridge.disableSDK', () => {
   Braze.disableSDK();
-  expect(NativeModules.AppboyReactBridge.disableSDK).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.disableSDK).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.enableSDK', () => {
+test('it calls BrazeReactBridge.enableSDK', () => {
   Braze.enableSDK();
-  expect(NativeModules.AppboyReactBridge.enableSDK).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.enableSDK).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.requestLocationInitialization', () => {
+test('it calls BrazeReactBridge.requestLocationInitialization', () => {
   Braze.requestLocationInitialization();
-  expect(NativeModules.AppboyReactBridge.requestLocationInitialization).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.requestLocationInitialization).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.requestGeofences', () => {
+test('it calls BrazeReactBridge.requestGeofences', () => {
   const latitude = 40.7128;
   const longitude = 74.0060;
   Braze.requestGeofences(latitude, longitude);
-  expect(NativeModules.AppboyReactBridge.requestGeofences).toBeCalledWith(latitude, longitude);
+  expect(NativeModules.BrazeReactBridge.requestGeofences).toBeCalledWith(latitude, longitude);
 });
 
-test('it calls AppboyReactBridge.setLocationCustomAttribute', () => {
+test('it calls BrazeReactBridge.setLocationCustomAttribute', () => {
   const key = "some_key";
   const latitude = 40.7128;
   const longitude = 74.0060;
   Braze.setLocationCustomAttribute(key, latitude, longitude, testCallback);
-  expect(NativeModules.AppboyReactBridge.setLocationCustomAttribute).toBeCalledWith(key, latitude, longitude, testCallback);
+  expect(NativeModules.BrazeReactBridge.setLocationCustomAttribute).toBeCalledWith(key, latitude, longitude, testCallback);
 });
 
-test('it calls AppboyReactBridge.requestContentCardsRefresh', () => {
+test('it calls BrazeReactBridge.requestContentCardsRefresh', () => {
   Braze.requestContentCardsRefresh();
-  expect(NativeModules.AppboyReactBridge.requestContentCardsRefresh).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.requestContentCardsRefresh).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.setDateOfBirth', () => {
+test('it calls BrazeReactBridge.setDateOfBirth', () => {
   const year = 2011;
   const month = 11;
   const day = 23;
   Braze.setDateOfBirth(year, month, day);
-  expect(NativeModules.AppboyReactBridge.setDateOfBirth).toBeCalledWith(year, month, day);
+  expect(NativeModules.BrazeReactBridge.setDateOfBirth).toBeCalledWith(year, month, day);
 });
 
-test('it calls AppboyReactBridge.changeUser', () => {
+test('it calls BrazeReactBridge.changeUser', () => {
   const user_id = "some_id";
   Braze.changeUser(user_id);
-  expect(NativeModules.AppboyReactBridge.setSDKFlavor).toBeCalled();
-  expect(NativeModules.AppboyReactBridge.changeUser).toBeCalledWith(user_id, null);
+  expect(NativeModules.BrazeReactBridge.setSDKFlavor).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.changeUser).toBeCalledWith(user_id, null);
 });
 
-test('it calls AppboyReactBridge.setSdkAuthenticationSignature', () => {
+test('it calls BrazeReactBridge.setSdkAuthenticationSignature', () => {
   const signature = "signature";
   Braze.setSdkAuthenticationSignature(signature);
-  expect(NativeModules.AppboyReactBridge.setSdkAuthenticationSignature).toBeCalledWith(signature);
+  expect(NativeModules.BrazeReactBridge.setSdkAuthenticationSignature).toBeCalledWith(signature);
 });
 
-test('it calls AppboyReactBridge.addAlias', () => {
+test('it calls BrazeReactBridge.addAlias', () => {
   const aliasName = "name";
   const aliasLabel = "label";
   Braze.addAlias(aliasName, aliasLabel);
-  expect(NativeModules.AppboyReactBridge.addAlias).toBeCalledWith(aliasName, aliasLabel);
-  expect(NativeModules.AppboyReactBridge.setSDKFlavor).toBeCalled();
-  expect(NativeModules.AppboyReactBridge.setMetadata).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.addAlias).toBeCalledWith(aliasName, aliasLabel);
+  expect(NativeModules.BrazeReactBridge.setSDKFlavor).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.setMetadata).toBeCalled();
 });
 
-test('it calls AppboyReactBridge.logCustomEvent', () => {
+test('it calls BrazeReactBridge.logCustomEvent', () => {
   const event_name = "event_name";
   const event_properties = "event_properties";
   Braze.logCustomEvent(event_name, event_properties);
-  expect(NativeModules.AppboyReactBridge.setSDKFlavor).toBeCalled();
-  expect(NativeModules.AppboyReactBridge.logCustomEvent).toBeCalledWith(event_name, event_properties);
+  expect(NativeModules.BrazeReactBridge.setSDKFlavor).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.logCustomEvent).toBeCalledWith(event_name, event_properties);
 });
 
-test('it calls AppboyReactBridge.logPurchase', () => {
+test('it calls BrazeReactBridge.logPurchase', () => {
   const product_id = "product_id";
   const price = "price";
   const currency_code = "currency_code";
   const quantity = "quantity";
   const purchase_properties = "purchase_properties";
   Braze.logPurchase(product_id, price, currency_code, quantity, purchase_properties);
-  expect(NativeModules.AppboyReactBridge.logPurchase).toBeCalledWith(product_id, price, currency_code, quantity, purchase_properties);
+  expect(NativeModules.BrazeReactBridge.logPurchase).toBeCalledWith(product_id, price, currency_code, quantity, purchase_properties);
 });
 
-test('it calls AppboyReactBridge.setAttributionData', () => {
+test('it calls BrazeReactBridge.setAttributionData', () => {
   const network = "some_network";
   const campaign = "some_campaign";
   const adGroup = "some_adGroup";
   const creative = "some_creative";
   Braze.setAttributionData(network, campaign, adGroup, creative);
-  expect(NativeModules.AppboyReactBridge.setAttributionData).toBeCalledWith(network, campaign, adGroup, creative);
+  expect(NativeModules.BrazeReactBridge.setAttributionData).toBeCalledWith(network, campaign, adGroup, creative);
 });
 
-test('it calls AppboyReactBridge.setDateCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.setDateCustomUserAttribute', () => {
   const key = "some_key";
   const date = new Date('December 17, 1995 03:24:00');
   Braze.setCustomUserAttribute(key, date, testCallback);
-  expect(NativeModules.AppboyReactBridge.setDateCustomUserAttribute).toBeCalledWith(key, Math.floor(date.getTime() / 1000), testCallback);
+  expect(NativeModules.BrazeReactBridge.setDateCustomUserAttribute).toBeCalledWith(key, Math.floor(date.getTime() / 1000), testCallback);
 });
 
-test('it calls AppboyReactBridge.setCustomUserAttributeArray', () => {
+test('it calls BrazeReactBridge.setCustomUserAttributeArray', () => {
   const key = "some_key";
-  const array = ['a','b'];
+  const array = ['a', 'b'];
   Braze.setCustomUserAttribute(key, array, testCallback);
-  expect(NativeModules.AppboyReactBridge.setCustomUserAttributeArray).toBeCalledWith(key, array, testCallback);
+  expect(NativeModules.BrazeReactBridge.setCustomUserAttributeArray).toBeCalledWith(key, array, testCallback);
 });
 
-test('it calls AppboyReactBridge.setBoolCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.setBoolCustomUserAttribute', () => {
   const key = "some_key";
   const bool_value = true;
   Braze.setCustomUserAttribute(key, bool_value, testCallback);
-  expect(NativeModules.AppboyReactBridge.setBoolCustomUserAttribute).toBeCalledWith(key, bool_value, testCallback);
+  expect(NativeModules.BrazeReactBridge.setBoolCustomUserAttribute).toBeCalledWith(key, bool_value, testCallback);
 });
 
-test('it calls AppboyReactBridge.setStringCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.setStringCustomUserAttribute', () => {
   const key = "some_key";
   const string_value = "some string";
   Braze.setCustomUserAttribute(key, string_value, testCallback);
-  expect(NativeModules.AppboyReactBridge.setStringCustomUserAttribute).toBeCalledWith(key, string_value, testCallback);
+  expect(NativeModules.BrazeReactBridge.setStringCustomUserAttribute).toBeCalledWith(key, string_value, testCallback);
 });
 
-test('it calls AppboyReactBridge.setIntCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.setIntCustomUserAttribute', () => {
   const key = "some_key";
   const int_value = 55;
   Braze.setCustomUserAttribute(key, int_value, testCallback);
-  expect(NativeModules.AppboyReactBridge.setIntCustomUserAttribute).toBeCalledWith(key, int_value, testCallback);
+  expect(NativeModules.BrazeReactBridge.setIntCustomUserAttribute).toBeCalledWith(key, int_value, testCallback);
 });
 
-test('it calls AppboyReactBridge.setDoubleCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.setDoubleCustomUserAttribute', () => {
   const key = "some_key";
   const double_value = 3.14;
   Braze.setCustomUserAttribute(key, double_value, testCallback);
-  expect(NativeModules.AppboyReactBridge.setDoubleCustomUserAttribute).toBeCalledWith(key, double_value, testCallback);
+  expect(NativeModules.BrazeReactBridge.setDoubleCustomUserAttribute).toBeCalledWith(key, double_value, testCallback);
 });
 
-test('it calls AppboyReactBridge.incrementCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.incrementCustomUserAttribute', () => {
   const key = "some_key";
   const value = 5;
   Braze.incrementCustomUserAttribute(key, value, testCallback);
-  expect(NativeModules.AppboyReactBridge.incrementCustomUserAttribute).toBeCalledWith(key, value, testCallback);
+  expect(NativeModules.BrazeReactBridge.incrementCustomUserAttribute).toBeCalledWith(key, value, testCallback);
 });
 
-test('it calls AppboyReactBridge.setGender', () => {
+test('it calls BrazeReactBridge.setGender', () => {
   const gender = "male";
   Braze.setGender(gender, testCallback);
-  expect(NativeModules.AppboyReactBridge.setGender).toBeCalledWith(gender, testCallback);
+  expect(NativeModules.BrazeReactBridge.setGender).toBeCalledWith(gender, testCallback);
 });
 
-test('it calls AppboyReactBridge.addToSubscriptionGroup', () => {
+test('it calls BrazeReactBridge.addToSubscriptionGroup', () => {
   const groupId = "some_group_id";
   Braze.addToSubscriptionGroup(groupId, testCallback);
-  expect(NativeModules.AppboyReactBridge.addToSubscriptionGroup).toBeCalledWith(groupId, testCallback);
+  expect(NativeModules.BrazeReactBridge.addToSubscriptionGroup).toBeCalledWith(groupId, testCallback);
 });
 
-test('it calls AppboyReactBridge.removeFromSubscriptionGroup', () => {
+test('it calls BrazeReactBridge.removeFromSubscriptionGroup', () => {
   const groupId = "some_group_id";
   Braze.removeFromSubscriptionGroup(groupId, testCallback);
-  expect(NativeModules.AppboyReactBridge.removeFromSubscriptionGroup).toBeCalledWith(groupId, testCallback);
+  expect(NativeModules.BrazeReactBridge.removeFromSubscriptionGroup).toBeCalledWith(groupId, testCallback);
 });
 
-test('it calls AppboyReactBridge.setPushNotificationSubscriptionType', () => {
+test('it calls BrazeReactBridge.setPushNotificationSubscriptionType', () => {
   const sub_type = "some_sub_type";
   Braze.setPushNotificationSubscriptionType(sub_type, testCallback);
-  expect(NativeModules.AppboyReactBridge.setPushNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
+  expect(NativeModules.BrazeReactBridge.setPushNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
 });
 
-test('it calls AppboyReactBridge.setEmailNotificationSubscriptionType', () => {
+test('it calls BrazeReactBridge.setEmailNotificationSubscriptionType', () => {
   const sub_type = "some_sub_type";
   Braze.setEmailNotificationSubscriptionType(sub_type, testCallback);
-  expect(NativeModules.AppboyReactBridge.setEmailNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
+  expect(NativeModules.BrazeReactBridge.setEmailNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
 });
 
-test('it calls AppboyReactBridge.addToCustomAttributeArray', () => {
+test('it calls BrazeReactBridge.addToCustomAttributeArray', () => {
   const key = "some_key";
   const value = "some_value"
   Braze.addToCustomUserAttributeArray(key, value, testCallback);
-  expect(NativeModules.AppboyReactBridge.addToCustomAttributeArray).toBeCalledWith(key, value, testCallback);
+  expect(NativeModules.BrazeReactBridge.addToCustomAttributeArray).toBeCalledWith(key, value, testCallback);
 });
 
-test('it calls AppboyReactBridge.removeFromCustomAttributeArray', () => {
+test('it calls BrazeReactBridge.removeFromCustomAttributeArray', () => {
   const key = "some_key";
   const value = "some_value"
   Braze.removeFromCustomUserAttributeArray(key, value, testCallback);
-  expect(NativeModules.AppboyReactBridge.removeFromCustomAttributeArray).toBeCalledWith(key, value, testCallback);
+  expect(NativeModules.BrazeReactBridge.removeFromCustomAttributeArray).toBeCalledWith(key, value, testCallback);
 });
 
-test('it calls AppboyReactBridge.unsetCustomUserAttribute', () => {
+test('it calls BrazeReactBridge.unsetCustomUserAttribute', () => {
   const key = "some_key";
   Braze.unsetCustomUserAttribute(key, testCallback);
-  expect(NativeModules.AppboyReactBridge.unsetCustomUserAttribute).toBeCalledWith(key, testCallback);
+  expect(NativeModules.BrazeReactBridge.unsetCustomUserAttribute).toBeCalledWith(key, testCallback);
 });
 
-test('it calls AppboyReactBridge.getCardCountForCategories', () => {
+test('it calls BrazeReactBridge.getCardCountForCategories', () => {
   const category = "some_category";
   Braze.getCardCountForCategories(category, testCallback);
-  expect(NativeModules.AppboyReactBridge.getCardCountForCategories).toBeCalledWith(category, testCallback);
+  expect(NativeModules.BrazeReactBridge.getCardCountForCategories).toBeCalledWith(category, testCallback);
 });
 
-test('it calls AppboyReactBridge.getUnreadCardCountForCategories', () => {
+test('it calls BrazeReactBridge.getUnreadCardCountForCategories', () => {
   const category = "some_category";
   Braze.getUnreadCardCountForCategories(category, testCallback);
-  expect(NativeModules.AppboyReactBridge.getUnreadCardCountForCategories).toBeCalledWith(category, testCallback);
+  expect(NativeModules.BrazeReactBridge.getUnreadCardCountForCategories).toBeCalledWith(category, testCallback);
 });
 
-test('it calls AppboyReactBridge.getInitialUrl if defined', () => {
-  NativeModules.AppboyReactBridge.getInitialUrl.mockImplementation((callback) => {
+test('it calls BrazeReactBridge.getInitialUrl if defined', () => {
+  NativeModules.BrazeReactBridge.getInitialUrl.mockImplementation((callback) => {
     callback(null, "some_data");
   });
   Braze.getInitialURL(testCallback);
-  expect(NativeModules.AppboyReactBridge.getInitialUrl).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.getInitialUrl).toBeCalled();
   expect(testCallback).toBeCalledWith("some_data");
 });
 
-test('it calls AppboyReactBridge.getInstallTrackingId', () => {
-  NativeModules.AppboyReactBridge.getInstallTrackingId.mockImplementation((callback) => {
+test('it calls BrazeReactBridge.getInstallTrackingId', () => {
+  NativeModules.BrazeReactBridge.getInstallTrackingId.mockImplementation((callback) => {
     callback(null, "some_tracking_id");
   });
   Braze.getInstallTrackingId(testCallback);
-  expect(NativeModules.AppboyReactBridge.getInstallTrackingId).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.getInstallTrackingId).toBeCalled();
   expect(testCallback).toBeCalledWith(null, "some_tracking_id");
 });
 
-test('it calls the callback with null and logs the error if AppboyReactBridge.getInitialUrl returns an error', () => {
-  NativeModules.AppboyReactBridge.getInitialUrl.mockImplementation((callback) => {
+test('it calls the callback with null and logs the error if BrazeReactBridge.getInitialUrl returns an error', () => {
+  NativeModules.BrazeReactBridge.getInitialUrl.mockImplementation((callback) => {
     callback("error", null);
   });
   Braze.getInitialURL(testCallback);
-  expect(NativeModules.AppboyReactBridge.getInitialUrl).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.getInitialUrl).toBeCalled();
   expect(testCallback).toBeCalledWith(null);
   expect(console.log).toBeCalledWith("error");
 });
 
-test('it calls the callback with null if AppboyReactBridge.getInitialUrl is not defined', () => {
-  NativeModules.AppboyReactBridge.getInitialUrl = null;
+test('it calls the callback with null if BrazeReactBridge.getInitialUrl is not defined', () => {
+  NativeModules.BrazeReactBridge.getInitialUrl = null;
   Braze.getInitialURL(testCallback);
   expect(testCallback).toBeCalledWith(null);
 });
 
-test('it calls AppboyReactBridge.subscribeToInAppMessage', () => {
+test('it calls BrazeReactBridge.subscribeToInAppMessage', () => {
   Braze.subscribeToInAppMessage(true);
-  expect(NativeModules.AppboyReactBridge.subscribeToInAppMessage).toBeCalledWith(true);
+  expect(NativeModules.BrazeReactBridge.subscribeToInAppMessage).toBeCalledWith(true);
 
   Braze.subscribeToInAppMessage(false);
-  expect(NativeModules.AppboyReactBridge.subscribeToInAppMessage).toBeCalledWith(false);
+  expect(NativeModules.BrazeReactBridge.subscribeToInAppMessage).toBeCalledWith(false);
 });
 
-test('it calls AppboyReactBridge.hideCurrentInAppMessage', () => {
+test('it calls BrazeReactBridge.hideCurrentInAppMessage', () => {
   Braze.hideCurrentInAppMessage();
-  expect(NativeModules.AppboyReactBridge.hideCurrentInAppMessage).toBeCalled();
+  expect(NativeModules.BrazeReactBridge.hideCurrentInAppMessage).toBeCalled();
 });
 
 test('it adds a listener', () => {
   let counter = 0;
-  let testFunction = () => {counter += 1};
+  let testFunction = () => { counter += 1 };
   let testEvent = Braze.Events.CONTENT_CARDS_UPDATED;
   const nativeEmitter = new NativeEventEmitter();
   Braze.addListener(testEvent, testFunction);
@@ -445,26 +462,26 @@ it('returns the original JSON when calling BrazeInAppMessage.toString()', () => 
   expect(inAppMessage.toString()).toBe(testInAppMessageJson);
 });
 
-test('it calls AppboyReactBridge.logInAppMessageClicked', () => {
+test('it calls BrazeReactBridge.logInAppMessageClicked', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
   Braze.logInAppMessageClicked(inAppMessage);
-  expect(NativeModules.AppboyReactBridge.logInAppMessageClicked).toBeCalledWith(testInAppMessageJson);
+  expect(NativeModules.BrazeReactBridge.logInAppMessageClicked).toBeCalledWith(testInAppMessageJson);
 });
 
-test('it calls AppboyReactBridge.logInAppMessageImpression', () => {
+test('it calls BrazeReactBridge.logInAppMessageImpression', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
   Braze.logInAppMessageImpression(inAppMessage);
-  expect(NativeModules.AppboyReactBridge.logInAppMessageImpression).toBeCalledWith(testInAppMessageJson);
+  expect(NativeModules.BrazeReactBridge.logInAppMessageImpression).toBeCalledWith(testInAppMessageJson);
 });
 
-test('it calls AppboyReactBridge.logInAppMessageButtonClicked', () => {
+test('it calls BrazeReactBridge.logInAppMessageButtonClicked', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
   const testId = 23;
   Braze.logInAppMessageButtonClicked(inAppMessage, testId);
-  expect(NativeModules.AppboyReactBridge.logInAppMessageButtonClicked).toBeCalledWith(testInAppMessageJson, testId);
+  expect(NativeModules.BrazeReactBridge.logInAppMessageButtonClicked).toBeCalledWith(testInAppMessageJson, testId);
 });
 
-test('calls AppboyReactBridge.requestPushPermission', () => {
+test('calls BrazeReactBridge.requestPushPermission', () => {
   const options = {
     "alert": true,
     "badge": true,
@@ -474,7 +491,7 @@ test('calls AppboyReactBridge.requestPushPermission', () => {
   }
 
   Braze.requestPushPermission(options);
-  expect(NativeModules.AppboyReactBridge.requestPushPermission).toBeCalledWith(options);
+  expect(NativeModules.BrazeReactBridge.requestPushPermission).toBeCalledWith(options);
 })
 
 it('instantiates a BrazeButton object', () => {
@@ -491,12 +508,12 @@ it('instantiates a BrazeButton object', () => {
   expect(button.uri).toBe(JSON.parse(`"${testUri}"`));
   expect(button.useWebView).toBe(testUseWebView);
   expect(button.toString()).toBe("BrazeButton text:" + button.text + " uri:" + button.uri + " clickAction:"
-  + button.clickAction.toString() + " useWebView:" + button.useWebView.toString());
+    + button.clickAction.toString() + " useWebView:" + button.useWebView.toString());
 });
 
 it('instantiates a BrazeButton object with the desired defaults', () => {
   const defaultUri = '';
-  const defaultText= '';
+  const defaultText = '';
   const defaultUseWebView = false;
   const defaultClickAction = 'NONE';
   const defaultId = 0;

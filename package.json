@@ -1,6 +1,6 @@
 {
-  "name": "react-native-appboy-sdk",
-  "version": "1.41.0",
+  "name": "@braze/react-native-sdk",
+  "version": "2.0.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Appboy/appboy-react-sdk.git"
+    "url": "git+https://github.com/braze-inc/braze-react-sdk.git"
   },
   "keywords": [
     "appboy",
@@ -26,12 +26,12 @@
     "analytics",
     "segmentation"
   ],
-  "author": "Appboy",
+  "author": "Braze, Inc",
   "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
-    "url": "https://github.com/Appboy/appboy-react-sdk/issues"
+    "url": "https://github.com/braze-inc/braze-react-sdk/issues"
   },
-  "homepage": "https://github.com/Appboy/appboy-react-sdk#readme",
+  "homepage": "https://github.com/braze-inc/braze-react-sdk#readme",
   "devDependencies": {
     "eslint": "8.17.0",
     "eslint-config-standard": "^17.0.0",
@@ -46,9 +46,11 @@
   },
   "jest": {
     "modulePathIgnorePatterns": [
-      "<rootDir>/AppboyProject/"
+      "<rootDir>/BrazeProject/"
     ],
-    "setupFiles": ["<rootDir>/__tests__/jest.setup.js"],
+    "setupFiles": [
+      "<rootDir>/__tests__/jest.setup.js"
+    ],
     "testMatch": [
       "<rootDir>/__tests__/**/*.test.js?(x)"
     ],
