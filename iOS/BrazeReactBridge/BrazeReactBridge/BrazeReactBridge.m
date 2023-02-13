@@ -261,19 +261,40 @@ RCT_EXPORT_METHOD(setHomeCity:(NSString *)homeCity) {
 RCT_EXPORT_METHOD(setGender:(NSString *)gender callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.gender =  %@", gender);
   if ([[gender capitalizedString] hasPrefix:@"F"]) {
-   [braze.user setGender:BRZUserGender.female];
+    [braze.user setGender:BRZUserGender.female];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
   } else if ([[gender capitalizedString] hasPrefix:@"M"]) {
-   [braze.user setGender:BRZUserGender.male];
+    [braze.user setGender:BRZUserGender.male];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
   } else if ([[gender capitalizedString] hasPrefix:@"N"]) {
-   [braze.user setGender:BRZUserGender.notApplicable];
+    [braze.user setGender:BRZUserGender.notApplicable];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
   } else if ([[gender capitalizedString] hasPrefix:@"O"]) {
-   [braze.user setGender:BRZUserGender.other];
+    [braze.user setGender:BRZUserGender.other];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
   } else if ([[gender capitalizedString] hasPrefix:@"P"]) {
-   [braze.user setGender:BRZUserGender.preferNotToSay];
+    [braze.user setGender:BRZUserGender.preferNotToSay];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
   } else if ([[gender capitalizedString] hasPrefix:@"U"]) {
-   [braze.user setGender:BRZUserGender.unknown];
+    [braze.user setGender:BRZUserGender.unknown];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
   } else {
-   [self reportResultWithCallback:callback andError:[NSString stringWithFormat:@"Invalid input %@. Gender not set.", gender] andResult:nil];
+    NSString *error = [NSString stringWithFormat:@"Invalid input %@. Gender not set.", gender];
+    [self reportResultWithCallback:callback
+                          andError:error
+                         andResult:@(NO)];
   }
 }
 
@@ -290,72 +311,114 @@ RCT_EXPORT_METHOD(setPhoneNumber:(NSString *)phone) {
 RCT_EXPORT_METHOD(addToSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user addToSubscriptionGroupWithGroupId:groupId: =  %@", groupId);
   [braze.user addToSubscriptionGroupWithGroupId:groupId];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(removeFromSubscriptionGroup:(NSString *)groupId callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user removeFromSubscriptionGroup: =  %@", groupId);
   [braze.user removeFromSubscriptionGroupWithGroupId:groupId];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(BRZUserSubscriptionState)emailNotificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user.emailNotificationSubscriptionType =  %@", @"enum");
   [braze.user setEmailSubscriptionState:emailNotificationSubscriptionType];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setPushNotificationSubscriptionType:(BRZUserSubscriptionState)pushNotificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.pushNotificationSubscriptionType =  %@", @"enum");
   [braze.user setPushNotificationSubscriptionState:pushNotificationSubscriptionType];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setBoolCustomUserAttribute:(NSString *)key andValue:(BOOL)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndBoolValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key boolValue:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setStringCustomUserAttribute:(NSString *)key andValue:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndStringValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key stringValue:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setDoubleCustomUserAttribute:(NSString *)key andValue:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndDoubleValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key doubleValue:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setDateCustomUserAttribute:(NSString *)key andValue:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndDateValue: =  %@", key);
   NSDate *date = [NSDate dateWithTimeIntervalSince1970:value];
   [braze.user setCustomAttributeWithKey:key dateValue:date];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setIntCustomUserAttribute:(NSString *)key andValue:(int)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndIntValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key intValue:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setCustomUserAttributeArray:(NSString *)key andValue:(NSArray *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeArrayWithKey:array:: =  %@", key);
   [braze.user setCustomAttributeArrayWithKey:key array:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(unsetCustomUserAttribute:(NSString *)key callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user unsetCustomUserAttribute: =  %@", key);
   [braze.user unsetCustomAttributeWithKey:key];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(incrementCustomUserAttribute:(NSString *)key by:(NSInteger)incrementValue callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user incrementCustomUserAttribute: =  %@", key);
   [braze.user incrementCustomUserAttribute:key by:incrementValue];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(addToCustomAttributeArray:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user addToCustomAttributeArray: =  %@", key);
   [braze.user addToCustomAttributeArrayWithKey:key value:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(removeFromCustomAttributeArray:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user removeFromCustomAttributeArrayWithKey: =  %@", key);
   [braze.user removeFromCustomAttributeArrayWithKey:key value:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(setAttributionData:(NSString *)network withCampaign:(NSString *)campaign withAdGroup:(NSString *)adGroup withCreative:(NSString *)creative) {
@@ -589,10 +652,16 @@ RCT_EXPORT_METHOD(requestGeofences:(double)latitude longitude:(double)longitude)
 
 RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"News Feed helper methods not supported on iOS");
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(0)];
 }
 
 RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"News Feed helper methods not supported on iOS");
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(0)];
 }
 
 RCT_EXPORT_METHOD(requestImmediateDataFlush) {
@@ -603,6 +672,9 @@ RCT_EXPORT_METHOD(requestImmediateDataFlush) {
 RCT_EXPORT_METHOD(setLocationCustomAttribute:(NSString *)key latitude:(double)latitude longitude:(double)longitude callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setLocationCustomAttribute:latitude:longitude:: =  %@", key);
   [braze.user setLocationCustomAttributeWithKey:key latitude:latitude longitude:longitude];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
 }
 
 RCT_EXPORT_METHOD(requestContentCardsRefresh) {
@@ -736,7 +808,7 @@ RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  b
 #pragma mark - RCTBridgeDelegate protocol
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
-  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 }
 
 RCT_EXPORT_MODULE();

@@ -1,3 +1,9 @@
+# 2.0.1
+
+##### Fixed
+- Fixes compatibility issues with newer versions of React Native introduced in 2.0.0.
+- Fixes an issue where callbacks were not being executed for some user attribute methods.
+
 # 2.0.0
 
 ##### ⚠ Breaking
@@ -14,8 +20,8 @@
     pod 'SDWebImage', :modular_headers => true
     ```
       - Then, follow [these setup instructions](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/c3-gif-support).
-  - For sample code to help with the migration, reference our sample app and [`AppDelegate.m`](https://github.com/braze-inc/braze-react-sdk/blob/master/public/BrazeProject/ios/BrazeProject/AppDelegate.m) file.
-  - If you are integrating this SDK with an application that uses only Objective-C, create an empty Swift file to ensure that all the relevant Swift runtime libraries are linked. Reference [this file](https://github.com/braze-inc/braze-react-sdk/blob/master/BrazeProject/ios/BrazeProject/empty-file.swift) from our sample app.
+  - For sample code to help with the migration, reference our sample app and [`AppDelegate.m`](https://github.com/braze-inc/braze-react-native-sdk/blob/master/public/BrazeProject/ios/BrazeProject/AppDelegate.m) file.
+  - If you are integrating this SDK with an application that uses only Objective-C, create an empty Swift file to ensure that all the relevant Swift runtime libraries are linked. Reference [this file](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/empty-file.swift) from our sample app.
 - The following methods for News Feed are now no-ops on iOS:
   - `Braze.launchNewsFeed()`
   - `Braze.getCardCountForCategories()`

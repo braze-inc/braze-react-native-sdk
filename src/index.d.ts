@@ -18,7 +18,7 @@ export function getInitialURL(callback: (deepLink: string) => void): void;
  * Braze.getInstallTrackingId() on Android and returns the IDFV on iOS.
  * @param {function(error, result)} callback - A callback that receives the function call result.
  */
-export function getInstallTrackingId(callback: Callback): void;
+export function getInstallTrackingId(callback: Callback<string>): void;
 
 /**
  * When a user first uses Braze on a device they are considered "anonymous". Use this method to identify a user
@@ -105,7 +105,7 @@ export function setEmail(email: string): void;
  */
 export function setGender(
   gender: GenderTypes[keyof GenderTypes],
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -175,7 +175,7 @@ export function setGoogleAdvertisingId(
  */
 export function addToSubscriptionGroup(
   groupId: string,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -185,7 +185,7 @@ export function addToSubscriptionGroup(
  */
 export function removeFromSubscriptionGroup(
   groupId: string,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -196,7 +196,7 @@ export function removeFromSubscriptionGroup(
  */
 export function setPushNotificationSubscriptionType(
   notificationSubscriptionType: NotificationSubscriptionType[keyof NotificationSubscriptionType],
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -207,7 +207,7 @@ export function setPushNotificationSubscriptionType(
  */
 export function setEmailNotificationSubscriptionType(
   notificationSubscriptionType: NotificationSubscriptionType[keyof NotificationSubscriptionType],
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -260,7 +260,7 @@ export function logPurchase(
 export function setCustomUserAttribute(
   key: string,
   value: number | boolean | string | string[] | Date | null,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -274,7 +274,7 @@ export function setCustomUserAttribute(
 export function addToCustomUserAttributeArray(
   key: string,
   value: string,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -288,7 +288,7 @@ export function addToCustomUserAttributeArray(
 export function removeFromCustomUserAttributeArray(
   key: string,
   value: string,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -299,7 +299,7 @@ export function removeFromCustomUserAttributeArray(
  */
 export function unsetCustomUserAttribute(
   key: string,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -315,7 +315,7 @@ export function unsetCustomUserAttribute(
 export function incrementCustomUserAttribute(
   key: string,
   value: number,
-  callback?: Callback
+  callback?: Callback<boolean>
 ): void;
 
 /**
@@ -472,29 +472,19 @@ export function logContentCardImpression(id: string): void;
 export function getContentCards(): Promise<ContentCard[]>;
 
 /**
- * Returns the current number of News Feed cards for the given category.
- * @param {BrazeCardCategory} category - Card category. Use Braze.CardCategory.ALL to get the total card count.
- * @param {function(error, result)} callback - A callback that receives the export function call result.
- * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once.
- * There is also a slight race condition around calling changeUser,
- * which requests a feed refresh, so the counts may not always be accurate.
+ * @deprecated This method is a no-op on iOS.
  */
 export function getCardCountForCategories(
   category: BrazeCardCategory[keyof BrazeCardCategory],
-  callback: Callback
+  callback: Callback<number>
 ): void;
 
 /**
- * Returns the number of unread News Feed cards for the given category.
- * @param {BrazeCardCategory} category - Card category. Use Braze.CardCategory.ALL to get the total unread card count
- * @param {function(error, result)} callback - A callback that receives the export function call result.
- * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once.
- * There is also a slight race condition around calling changeUser,
- * which requests a feed refresh, so the counts may not always be accurate.
+ * @deprecated This method is a no-op on iOS.
  */
 export function getUnreadCardCountForCategories(
   category: BrazeCardCategory[keyof BrazeCardCategory],
-  callback: Callback
+  callback: Callback<number>
 ): void;
 
 /**
@@ -551,7 +541,7 @@ export function setLocationCustomAttribute(
   key: string,
   latitude: number,
   longitude: number,
-  callback?: Callback
+  callback?: Callback<undefined>
 ): void;
 
 /**
@@ -687,6 +677,24 @@ interface NotificationSubscriptionType {
 }
 export const NotificationSubscriptionTypes: NotificationSubscriptionType;
 
+export interface SDKAuthenticationErrorType {
+  error_code: string;
+  user_id: string;
+  original_signature: string;
+  reason: string;
+}
+
+export interface PushNotificationEvent {
+  push_event_type: string;
+  title: string;
+  deeplink: string;
+  context_text: string;
+  summary_text: string;
+  image_url: string;
+  raw_android_push_data: string;
+  kvp_data: { [key: string]: any };
+}
+
 interface BrazeEvent {
   /** Callback passes a boolean that indicates whether content cards have changed in the latest refresh. */
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated';
@@ -706,7 +714,7 @@ export const Events: BrazeEvent;
  */
 export function addListener(event: BrazeEvent[keyof BrazeEvent], subscriber: Function): EmitterSubscription;
 
-type Callback = (error: object, result: object) => void;
+type Callback<T> = (error?: object, result?: T) => void;
 
 type BrazeCurrencyCode =
   | 'AED'

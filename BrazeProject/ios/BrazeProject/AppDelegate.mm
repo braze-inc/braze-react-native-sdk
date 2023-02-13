@@ -20,6 +20,9 @@ static NSString *const endpoint = @"sondheim.braze.com";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  self.moduleName = @"BrazeProject";
+  self.initialProps = @{};
+
   // Setup Braze bridge
   id<RCTBridgeDelegate> moduleInitializer = [[BrazeReactBridge alloc] init];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:moduleInitializer
@@ -46,7 +49,7 @@ static NSString *const endpoint = @"sondheim.braze.com";
   [self registerForPushNotifications];
   [[BrazeReactUtils sharedInstance] populateInitialUrlFromLaunchOptions:launchOptions];
 
-  return YES;
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 #pragma mark - Push Notifications
@@ -97,15 +100,13 @@ static NSString *const endpoint = @"sondheim.braze.com";
 
 #pragma mark - Linking
 
-// Deep linking
+// Deep Linking
 - (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+   openURL:(NSURL *)url
+   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
   NSLog(@"Calling RCTLinkingManager with url %@", url);
-  return [RCTLinkingManager application:application openURL:url
-                      sourceApplication:sourceApplication annotation:annotation];
+  return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 // Universal links
@@ -126,6 +127,18 @@ static NSString *const endpoint = @"sondheim.braze.com";
 
 + (void)setBraze:(Braze *)braze {
   _braze = braze;
+}
+
+#pragma mark - React Native methods
+
+/// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
+///
+/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
+/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
+/// @return: `true` if the `concurrentRoot` feature is enabled. Otherwise, it returns `false`.
+- (BOOL)concurrentRootEnabled
+{
+  return false;
 }
 
 @end

@@ -2,6 +2,7 @@
 BrazeProject
 
 # setup files
+.github
 .prettierrc.js
 node_modules
 yarn.lock

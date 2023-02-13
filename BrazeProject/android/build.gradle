@@ -1,12 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext {
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 21
+        compileSdkVersion = 33
+        targetSdkVersion = 33
+
+        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
+        ndkVersion = "23.1.7779620"
+    }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0'
+        classpath("com.android.tools.build:gradle:7.3.1")
+        classpath("com.facebook.react:react-native-gradle-plugin")
         classpath "com.google.gms:google-services:4.3.4"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
     }
@@ -14,11 +24,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "$rootDir/../node_modules/react-native/android" }
-        maven { url "$rootDir/../node_modules/jsc-android/dist" }
-        google()
-        mavenCentral()
         maven { url "https://appboy.github.io/appboy-android-sdk/sdk" }
-        mavenLocal()
     }
 }

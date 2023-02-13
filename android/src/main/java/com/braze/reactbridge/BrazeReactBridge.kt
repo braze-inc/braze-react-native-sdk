@@ -251,7 +251,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
             callback.reportResult(error = "Invalid input $gender. Gender not set.")
             return
         }
-        runOnUser { it.setGender(genderValue) }
+        runOnUser { callback.reportResult(it.setGender(genderValue)) }
     }
 
     @ReactMethod
@@ -483,6 +483,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
                 putString("push_event_type", pushType)
                 putString("title", eventData.titleText)
                 putString("deeplink", eventData.deeplink)
+                putString("content_text", eventData.contentText)
                 putString("summary_text", eventData.summaryText)
                 putString("image_url", eventData.bigImageUrl)
                 putString("raw_android_push_data", eventData.notificationExtras.toString())

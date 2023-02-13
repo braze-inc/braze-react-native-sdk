@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license        = package['license']
   s.author         = package['author']
   s.homepage       = package['homepage']
-  s.source         = { :git => 'git+https://github.com/braze-inc/braze-react-sdk.git', :tag => s.version }
+  s.source         = { :git => 'git+https://github.com/braze-inc/braze-react-native-sdk.git', :tag => s.version }
 
   s.requires_arc   = true
   s.platform       = :ios, '11.0'
@@ -23,4 +23,7 @@ Pod::Spec.new do |s|
   s.dependency 'BrazeUI', '~> 5.9.1'
 
   s.dependency 'React-Core'
+
+  # For compatibility with Objective-C++
+  s.user_target_xcconfig = { 'OTHER_CPLUSPLUSFLAGS' => '-fmodules -fcxx-modules' }
 end
