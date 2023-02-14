@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.requires_arc   = true
   s.platform       = :ios, '11.0'
 
-  s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js'
+  s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js', 'iOS/replace-at-import-statements.sh'
   s.source_files   = 'iOS/**/*.{h,m}'
 
   s.dependency 'BrazeKit', '~> 5.9.1'
@@ -24,6 +24,9 @@ Pod::Spec.new do |s|
 
   s.dependency 'React-Core'
 
-  # For compatibility with Objective-C++
-  s.user_target_xcconfig = { 'OTHER_CPLUSPLUSFLAGS' => '-fmodules -fcxx-modules' }
+  s.script_phase = { 
+    :name => "Replace Braze SDK @import statements",
+    :script => "bash ${PODS_TARGET_SRCROOT}/iOS/replace-at-import-statements.sh",
+    :execution_position => :before_compile
+  }
 end

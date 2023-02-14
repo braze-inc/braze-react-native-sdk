@@ -2,7 +2,7 @@
 #import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>
 
-@import BrazeKit;
+#import <BrazeKit/BrazeKit-Swift.h>
 
 @interface BrazeReactBridge : RCTEventEmitter <RCTBridgeModule, RCTBridgeDelegate>
 

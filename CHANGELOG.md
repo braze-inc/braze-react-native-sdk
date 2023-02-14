@@ -1,3 +1,11 @@
+# 2.0.2
+
+##### Fixed
+- Removes the usage of Objective-C modules when importing the Braze Swift SDK for improved compatibility with Objective-C++.
+  - When importing `BrazeKit` or `BrazeLocation`, you must use the `#import <Module/Module-Swift.h>` syntax:
+    - `@import BrazeKit;` → `#import <BrazeKit/BrazeKit-Swift.h>`
+    - `@import BrazeLocation;` → `#import <BrazeLocation/BrazeLocation-Swift.h>`
+
 # 2.0.1
 
 ##### Fixed

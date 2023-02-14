@@ -7,7 +7,7 @@
 #import "BrazeReactUtils.h"
 #import "BrazeReactBridge.h"
 
-@import BrazeKit;
+#import <BrazeKit/BrazeKit-Swift.h>
 
 @implementation AppDelegate
 
