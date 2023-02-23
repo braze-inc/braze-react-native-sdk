@@ -592,7 +592,7 @@ static NSDictionary *RCTFormatContentCard(BRZContentCardRaw *card) {
   formattedContentCardData[@"pinned"] = @(card.pinned);
   formattedContentCardData[@"dismissed"] = @(card.removed);
   formattedContentCardData[@"dismissible"] = @(card.dismissible);
-  formattedContentCardData[@"url"] = RCTNullIfNil(card.url);
+  formattedContentCardData[@"url"] = RCTNullIfNil(card.url ? card.url.absoluteString : nil);
   formattedContentCardData[@"openURLInWebView"] = @(card.useWebView);
   formattedContentCardData[@"isControl"] = @(NO);
 
@@ -600,7 +600,7 @@ static NSDictionary *RCTFormatContentCard(BRZContentCardRaw *card) {
 
   switch (card.type) {
     case BRZContentCardRawTypeCaptionedImage:
-      formattedContentCardData[@"image"] = card.image;
+      formattedContentCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
       formattedContentCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
       formattedContentCardData[@"title"] = card.title;
       formattedContentCardData[@"cardDescription"] = card.cardDescription;
@@ -608,12 +608,12 @@ static NSDictionary *RCTFormatContentCard(BRZContentCardRaw *card) {
       formattedContentCardData[@"type"] = @"Captioned";
       break;
     case BRZContentCardRawTypeBanner:
-      formattedContentCardData[@"image"] = card.image;
+      formattedContentCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
       formattedContentCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
       formattedContentCardData[@"type"] = @"Banner";
       break;
     case BRZContentCardRawTypeClassic:
-      formattedContentCardData[@"image"] = RCTNullIfNil(card.image);
+      formattedContentCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
       formattedContentCardData[@"title"] = card.title;
       formattedContentCardData[@"cardDescription"] = card.cardDescription;
       formattedContentCardData[@"domain"] = RCTNullIfNil(card.domain);
