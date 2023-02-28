@@ -24,7 +24,12 @@ Pod::Spec.new do |s|
 
   s.dependency 'React-Core'
 
-  s.script_phase = { 
+  # Swift/Objective-C compatibility
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES'
+  }
+
+  s.script_phase = {
     :name => "Replace Braze SDK @import statements",
     :script => "bash ${PODS_TARGET_SRCROOT}/iOS/replace-at-import-statements.sh",
     :execution_position => :before_compile

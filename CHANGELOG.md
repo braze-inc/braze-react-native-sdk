@@ -1,3 +1,8 @@
+# 2.1.0
+
+##### Added
+- Added `'DEFINES_MODULE' => 'YES'` to the Cocoapod's xcconfig to remove the need for static framework linkage on iOS when using the Braze Expo plugin.
+
 # 2.0.2
 
 ##### Fixed
