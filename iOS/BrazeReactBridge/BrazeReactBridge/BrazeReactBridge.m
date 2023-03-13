@@ -464,12 +464,20 @@ RCT_EXPORT_METHOD(logNewsFeedCardImpression:(NSString *)idString) {
 }
 
 - (NSArray *)getMappedNewsFeedCards {
-  NSArray<BRZNewsFeedCard *> *cards = braze.newsFeed.cards;
-  NSMutableArray *mappedCards = [NSMutableArray arrayWithCapacity:[cards count]];
-  [cards enumerateObjectsUsingBlock:^(id card, NSUInteger idx, BOOL *stop) {
-    [mappedCards addObject:RCTFormatNewsFeedCard(card)];
+  NSArray<BRZNewsFeedCard *> *newsFeedCards = braze.newsFeed.cards;
+  NSMutableArray *mappedNewsFeedCards = [NSMutableArray arrayWithCapacity:[newsFeedCards count]];
+  [newsFeedCards enumerateObjectsUsingBlock:^(BRZNewsFeedCard *card, NSUInteger idx, BOOL *stop) {
+    NSError* error = nil;
+    id cardJSON = [NSJSONSerialization JSONObjectWithData:[card json]
+                                                  options:NSJSONReadingMutableContainers
+                                                    error:&error];
+    if (error) {
+      RCTLogInfo(@"Unable to parse News Feed Card: %@, error: %@. Skipping.", card, error);
+    } else {
+      [mappedNewsFeedCards addObject:cardJSON];
+    }
   }];
-  return mappedCards;
+  return mappedNewsFeedCards;
 }
 
 - (nullable BRZNewsFeedCard *)getNewsFeedCardById:(NSString *)idString {
@@ -481,44 +489,6 @@ RCT_EXPORT_METHOD(logNewsFeedCardImpression:(NSString *)idString) {
     return filteredArray[0];
   }
   return nil;
-}
-
-static NSDictionary *RCTFormatNewsFeedCard(BRZNewsFeedCard *card) {
-  NSMutableDictionary *newsFeedCardData = [NSMutableDictionary dictionary];
-  newsFeedCardData[@"id"] = card.identifier;
-  newsFeedCardData[@"created"] = @(card.created);
-  newsFeedCardData[@"expiresAt"] = @(card.expires);
-  newsFeedCardData[@"viewed"] = @(card.viewed);
-  newsFeedCardData[@"url"] = RCTNullIfNil(card.url);
-  newsFeedCardData[@"openURLInWebView"] = @(card.useWebView);
-  newsFeedCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
-
-  switch (card.type) {
-    case BRZNewsFeedCardTypeBanner:
-      newsFeedCardData[@"image"] = card.image;
-      newsFeedCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      newsFeedCardData[@"domain"] = RCTNullIfNil(card.domain);
-      newsFeedCardData[@"type"] = @"Banner";
-    case BRZNewsFeedCardTypeCaptionedImage:
-      newsFeedCardData[@"image"] = card.image;
-      newsFeedCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      newsFeedCardData[@"title"] = card.title;
-      newsFeedCardData[@"cardDescription"] = card.cardDescription;
-      newsFeedCardData[@"domain"] = RCTNullIfNil(card.domain);
-      newsFeedCardData[@"type"] = @"Captioned";
-    case BRZNewsFeedCardTypeClassic:
-      newsFeedCardData[@"image"] = card.image;
-      newsFeedCardData[@"cardDescription"] = card.cardDescription;
-      newsFeedCardData[@"title"] = card.title;
-      newsFeedCardData[@"domain"] = card.domain;
-      newsFeedCardData[@"type"] = @"Classic";
-    case BRZNewsFeedCardTypeTextAnnouncement:
-      newsFeedCardData[@"title"] = card.title;
-      newsFeedCardData[@"cardDescription"] = card.cardDescription;
-      newsFeedCardData[@"domain"] = RCTNullIfNil(card.domain);
-      newsFeedCardData[@"type"] = @"TextAnnouncement";
-  }
-  return newsFeedCardData;
 }
 
 #pragma mark - Content Cards
@@ -545,7 +515,29 @@ RCT_EXPORT_METHOD(launchContentCards) {
 
 RCT_REMAP_METHOD(getContentCards, getContentCardsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"getContentCards called");
-  resolve([self getMappedContentCards]);
+
+  [braze.contentCards requestRefreshWithCompletion:^(
+    NSArray<BRZContentCardRaw *> *_Nullable cards,
+    NSError *_Nullable refreshError) {
+      if (refreshError) {
+        RCTLogInfo(@"Error during Content Card refresh: %@", refreshError);
+      }
+
+      NSMutableArray *mappedContentCards = [NSMutableArray arrayWithCapacity:[cards count]];
+      [cards enumerateObjectsUsingBlock:^(BRZContentCardRaw *card, NSUInteger idx, BOOL *stop) {
+        NSError* parsingError = nil;
+        id cardJSON = [NSJSONSerialization JSONObjectWithData:[card json]
+                                                      options:NSJSONReadingMutableContainers
+                                                        error:&parsingError];
+        if (parsingError) {
+          RCTLogInfo(@"Unable to parse Content Card: %@, error: %@. Skipping.", card, parsingError);
+        } else {
+          [mappedContentCards addObject:cardJSON];
+        }
+      }];
+
+      resolve(mappedContentCards);
+    }];
 }
 
 RCT_EXPORT_METHOD(logContentCardClicked:(NSString *)idString) {
@@ -570,61 +562,6 @@ RCT_EXPORT_METHOD(logContentCardImpression:(NSString *)idString) {
     RCTLogInfo(@"logContentCardImpression with id %@", idString);
     [cardToClick logImpressionUsing:braze];
   }
-}
-
-- (NSArray *)getMappedContentCards {
-  NSArray<BRZContentCardRaw *> *cards = braze.contentCards.cards;
-  NSMutableArray *mappedCards = [NSMutableArray arrayWithCapacity:[cards count]];
-  [cards enumerateObjectsUsingBlock:^(id card, NSUInteger idx, BOOL *stop) {
-    [mappedCards addObject:RCTFormatContentCard(card)];
-  }];
-  return mappedCards;
-}
-
-static NSDictionary *RCTFormatContentCard(BRZContentCardRaw *card) {
-  NSMutableDictionary *formattedContentCardData = [NSMutableDictionary dictionary];
-
-  formattedContentCardData[@"id"] = card.identifier;
-  formattedContentCardData[@"created"] = @(card.createdAt);
-  formattedContentCardData[@"expiresAt"] = @(card.expiresAt);
-  formattedContentCardData[@"viewed"] = @(card.viewed);
-  formattedContentCardData[@"clicked"] = @(card.clicked);
-  formattedContentCardData[@"pinned"] = @(card.pinned);
-  formattedContentCardData[@"dismissed"] = @(card.removed);
-  formattedContentCardData[@"dismissible"] = @(card.dismissible);
-  formattedContentCardData[@"url"] = RCTNullIfNil(card.url);
-  formattedContentCardData[@"openURLInWebView"] = @(card.useWebView);
-  formattedContentCardData[@"isControl"] = @(NO);
-
-  formattedContentCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
-
-  switch (card.type) {
-    case BRZContentCardRawTypeCaptionedImage:
-      formattedContentCardData[@"image"] = card.image;
-      formattedContentCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      formattedContentCardData[@"title"] = card.title;
-      formattedContentCardData[@"cardDescription"] = card.cardDescription;
-      formattedContentCardData[@"domain"] = RCTNullIfNil(card.domain);
-      formattedContentCardData[@"type"] = @"Captioned";
-      break;
-    case BRZContentCardRawTypeBanner:
-      formattedContentCardData[@"image"] = card.image;
-      formattedContentCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      formattedContentCardData[@"type"] = @"Banner";
-      break;
-    case BRZContentCardRawTypeClassic:
-      formattedContentCardData[@"image"] = RCTNullIfNil(card.image);
-      formattedContentCardData[@"title"] = card.title;
-      formattedContentCardData[@"cardDescription"] = card.cardDescription;
-      formattedContentCardData[@"domain"] = RCTNullIfNil(card.domain);
-      formattedContentCardData[@"type"] = @"Classic";
-      break;
-    case BRZContentCardRawTypeControl:
-      formattedContentCardData[@"isControl"] = @(YES);
-      break;
-  }
-
-  return formattedContentCardData;
 }
 
 #pragma mark - Other bindings
@@ -799,7 +736,6 @@ RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  b
   NSData *inAppMessageData = [inAppMessageJSONString dataUsingEncoding:NSUTF8StringEncoding];
   BRZInAppMessageRaw *message = [BRZInAppMessageRaw decodingWithJson:inAppMessageData];
   if (message) {
-    message.context = [[BRZInAppMessageContext alloc] initWithMessageRaw:message using: braze];
     return message;
   }
   return nil;

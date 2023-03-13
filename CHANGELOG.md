@@ -1,3 +1,26 @@
+# 3.0.0
+
+> Starting with this release, this SDK will use [Semantic Versioning](https://semver.org/).
+
+##### ⚠ Breaking
+- Fixes the behavior in the iOS bridge introduced in version `2.0.0` when logging clicks for in-app messages, content cards, and news feed cards. Calling `logClick` now only sends a click event for metrics, instead of both sending a click event as well as redirecting to the associated `url` field.
+  - For instance, to log a content card click and redirect to a URL, you will need two commands:
+  ```
+  Braze.logContentCardClicked(contentCard.id);
+
+  // Your own custom implementation
+  Linking.openUrl(contentCard.url);
+  ```
+  - This brings the iOS behavior to match version `1.x` and bring parity with Android's behavior.
+
+##### Fixed
+- Fixes an issue in the iOS bridge introduced in `2.0.0` where `getContentCards()` and `getNewsFeedCards()` would return an array of cards with the `url` and `image` fields as `null`.
+
+##### Changed
+- Updates the native iOS bridge to [Braze Swift SDK 5.11.2](https://github.com/braze-inc/braze-swift-sdk/blob/main/CHANGELOG.md#5112).
+- Updates the native Android bridge to [Braze Android SDK 24.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2430).
+- Updates `getContentCards` on the iOS bridge to initiate a refresh before returning the array of Content Cards. This brings parity with the Android bridge behavior.
+
 # 2.1.0
 
 ##### Added
@@ -22,6 +45,7 @@
 ##### ⚠ Breaking
 - The Braze React Native SDK npm package has moved from `react-native-appboy-sdk` to `@braze/react-native-sdk`.
 - Renames `AppboyReactBridge` and `AppboyReactUtils` to `BrazeReactBridge` and `BrazeReactUtils`, respectively.
+- This version requires React Native `0.68` or higher.
 - Updates the native iOS bridge to use the new Swift SDK [version 5.9.1](https://github.com/braze-inc/braze-swift-sdk/blob/main/CHANGELOG.md#591).
 - During migration, update your project with the following changes in your iOS integration:
   - To initialize Braze, [follow these integration steps](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/a2-configure-braze) to create a `configuration` object. Then, add this code to complete the setup:

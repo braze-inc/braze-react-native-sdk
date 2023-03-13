@@ -1,15 +1,15 @@
 PODS:
   - boost (1.76.0)
-  - braze-react-native-sdk (2.1.0):
-    - BrazeKit (~> 5.9.1)
-    - BrazeLocation (~> 5.9.1)
-    - BrazeUI (~> 5.9.1)
+  - braze-react-native-sdk (2.2.0):
+    - BrazeKit (~> 5.11.2)
+    - BrazeLocation (~> 5.11.2)
+    - BrazeUI (~> 5.11.2)
     - React-Core
-  - BrazeKit (5.9.1)
-  - BrazeLocation (5.9.1):
-    - BrazeKit (= 5.9.1)
-  - BrazeUI (5.9.1):
-    - BrazeKit (= 5.9.1)
+  - BrazeKit (5.11.2)
+  - BrazeLocation (5.11.2):
+    - BrazeKit (= 5.11.2)
+  - BrazeUI (5.11.2):
+    - BrazeKit (= 5.11.2)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.71.2)
@@ -590,10 +590,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  braze-react-native-sdk: 4a25d1021bf5c994ffb5509161e49a8064f1e8a2
-  BrazeKit: 7c8ab19c996bb6447d44a242c14778ad48c9e020
-  BrazeLocation: ba8da78df3221b627c56c4b2ad20df2e0795dfb4
-  BrazeUI: 39d905f9ded70b6ab9d8ab08d6cfdbbfed4cc282
+  braze-react-native-sdk: f7ab95b1b11273530e8a7e9c456761637fb4be4c
+  BrazeKit: 5502faeac539dffd14ad403afbf7d26943060d20
+  BrazeLocation: 3d81f3c36f66939be40ca78ce83a677ff9af1711
+  BrazeUI: a1d2bcddbb18c015efd75289584a9a9f7341a38e
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: d58428b28fe1f5070fe993495b0e2eaf701d3820
@@ -646,4 +646,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a5a205f87842532db01e7cc5eee03c5db5604934
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

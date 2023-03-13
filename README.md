@@ -10,6 +10,15 @@ Effective marketing automation is an essential part of successfully scaling and 
 - [Braze User Guide](https://www.braze.com/docs/user_guide/introduction)
 - [Initial React Native SDK Setup](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/react_sdk_setup/)
 
+## Version Support
+
+| Braze Plugin | React Native |
+| ------------ | ------------ |
+| 2.0.0+       | >= 0.68      |
+| <= 1.41.0    | <= 0.71      |
+
+> Support for React Native 0.69+ (New Architecture) is on the feature roadmap.
+
 ## Braze Expo Plugin
 
 If you're using Expo, you can install our plugin to integrate the React Native SDK without any native code. See the [Braze Expo Plugin Github](https://github.com/braze-inc/braze-expo-plugin) for more details.

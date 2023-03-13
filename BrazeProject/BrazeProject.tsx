@@ -437,11 +437,11 @@ export const BrazeProject = (): ReactElement => {
     }
 
     if (cards == null || cards.length === 0) {
-      console.log('No cached Content Cards Found.');
+      console.log('No Content Cards Found.');
       return;
     }
 
-    console.log(`${cards.length} cached Content Cards found.`);
+    console.log(`${cards.length} Content Cards found.`);
     for (const card of cards) {
       const cardId = card.id;
       console.log(`Got content card: ${JSON.stringify(card)}`);
@@ -593,7 +593,7 @@ export const BrazeProject = (): ReactElement => {
         <Text>Request Content Cards Refresh</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={getContentCards}>
-        <Text>Get Cached Content Cards {'&'} Log interactions</Text>
+        <Text>Get Content Cards {'&'} Log interactions</Text>
       </TouchableHighlight>
 
       {/* News Feed */}

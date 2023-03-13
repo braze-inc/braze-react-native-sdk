@@ -466,7 +466,7 @@ export function logContentCardDismissed(id: string): void;
 export function logContentCardImpression(id: string): void;
 
 /**
- * Returns a content cards array
+ * Performs a refresh and then returns a content cards array.
  * @returns {Promise<ContentCard[]>}
  */
 export function getContentCards(): Promise<ContentCard[]>;
