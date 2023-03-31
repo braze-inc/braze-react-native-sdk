@@ -24,12 +24,12 @@ static NSString *const endpoint = @"sondheim.braze.com";
   self.initialProps = @{};
 
   // Setup Braze bridge
-  id<RCTBridgeDelegate> moduleInitializer = [[BrazeReactBridge alloc] init];
-  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:moduleInitializer
-                                            launchOptions:launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                   moduleName:@"BrazeProject"
-                                            initialProperties:nil];
+  NSURL *jsCodeLocation =
+      [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                      moduleName:self.moduleName
+                                               initialProperties:self.initialProps
+                                                   launchOptions:launchOptions];
   self.bridge = rootView.bridge;
 
   // Configure views in the application

@@ -383,7 +383,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
             }
         }
         braze.subscribeToContentCardsUpdates(subscriber)
-        braze.requestContentCardsRefresh(true)
+        braze.requestContentCardsRefresh(false)
     }
 
     @ReactMethod
@@ -405,12 +405,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
             )
         }
         contentCardsUpdatedSubscriber = IEventSubscriber { event ->
-            val updated = event.timestampSeconds > contentCardsUpdatedAt
-            if (updated && reactApplicationContext.hasActiveReactInstance()) {
-                reactApplicationContext
-                    .getJSModule(RCTDeviceEventEmitter::class.java)
-                    .emit(CONTENT_CARDS_UPDATED_EVENT_NAME, updated)
-            }
+            val eventData = Arguments.createMap()
+            eventData.putArray("cards", mapContentCards(event.allCards))
+            reactApplicationContext
+                .getJSModule(RCTDeviceEventEmitter::class.java)
+                .emit(CONTENT_CARDS_UPDATED_EVENT_NAME, eventData)
             updateContentCardsIfNeeded(event)
         }
 

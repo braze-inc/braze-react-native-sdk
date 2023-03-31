@@ -550,7 +550,7 @@ export class Braze {
   }
 
   /**
-   * Returns a content cards array
+   * Returns a content cards array after performing a refresh.
    * @returns {Promise<ContentCard[]>}
    */
   static getContentCards() {

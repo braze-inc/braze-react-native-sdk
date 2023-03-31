@@ -1,3 +1,20 @@
+# 4.0.0
+
+##### Breaking
+- The iOS bridge now automatically attaches the default In-App Message UI with the `braze` instance, without needing to call `subscribeToInAppMessage()`. This updates the behavior from `2.0.0` to simplify integration.
+  - This change doesn't affect integrations using custom UIs for in-app messages.
+- Changes the returned value when subscribing to `Braze.Events.CONTENT_CARDS_UPDATED` to be a `Braze.ContentCardsUpdatedEvent` object instead of a boolean.
+  - `Braze.ContentCardsUpdatedEvent` contains a `cards` property which is an array of the Content Cards in the update.
+  - Thanks @Minishlink for your contribution!
+
+##### Fixed
+- Fixes an issue in the iOS bridge where `getContentCards()` and `getNewsFeedCards()` returned data in a different format than the Android bridge.
+- Fixes the behavior when using the recommended iOS integration where the React Bridge delegate had conflicts with other dependencies. The updated sample app code can be found [here](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/AppDelegate.mm).
+
+##### Added
+- Updates the native iOS bridge to [Braze Swift SDK 5.13.0](https://github.com/braze-inc/braze-swift-sdk/blob/main/CHANGELOG.md#5130).
+- Improves typescript definitions for `addListener` event types.
+
 # 3.0.0
 
 > Starting with this release, this SDK will use [Semantic Versioning](https://semver.org/).
@@ -57,7 +74,8 @@
     pod 'SDWebImage', :modular_headers => true
     ```
       - Then, follow [these setup instructions](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/c3-gif-support).
-  - For sample code to help with the migration, reference our sample app and [`AppDelegate.m`](https://github.com/braze-inc/braze-react-native-sdk/blob/master/public/BrazeProject/ios/BrazeProject/AppDelegate.m) file.
+  - To use the default In-App Message UI, make sure to call `subscribeToInAppMessage()` or else follow [these instructions](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/c1-inappmessageui) to add it to your app.
+  - For sample code to help with the migration, reference our sample app and [`AppDelegate.mm`](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/AppDelegate.mm) file.
   - If you are integrating this SDK with an application that uses only Objective-C, create an empty Swift file to ensure that all the relevant Swift runtime libraries are linked. Reference [this file](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/empty-file.swift) from our sample app.
 - The following methods for News Feed are now no-ops on iOS:
   - `Braze.launchNewsFeed()`

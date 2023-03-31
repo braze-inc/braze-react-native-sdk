@@ -4,7 +4,7 @@
 
 #import <BrazeKit/BrazeKit-Swift.h>
 
-@interface BrazeReactBridge : RCTEventEmitter <RCTBridgeModule, RCTBridgeDelegate>
+@interface BrazeReactBridge : RCTEventEmitter <RCTBridgeModule>
 
 /// Intializes the Braze instance based on a configuration. This same instance is also used by the Braze bridge.
 /// - Parameters:

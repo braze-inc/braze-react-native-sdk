@@ -111,11 +111,10 @@ export const BrazeProject = (): ReactElement => {
 
     Braze.addListener(
       Braze.Events.CONTENT_CARDS_UPDATED,
-      (cardsUpdated: boolean) => {
-        if (cardsUpdated) {
-          console.log('Content Cards Updated.');
-        }
-      },
+      (data: Braze.ContentCardsUpdatedEvent) => {
+        let cards = data.cards;
+        console.log(`Received ${cards.length} Content Cards with IDs:`, cards.map(card => card.id));
+      }
     );
 
     Braze.addListener(

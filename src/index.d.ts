@@ -549,14 +549,14 @@ export function setLocationCustomAttribute(
  * Javascript layer. You can listen to this event with `Braze.addListener()`.
  *
  * @param {boolean} useBrazeUI - Whether to use the default Braze UI for in-app messages.
- * @param {function} subscriber - The method to call when an in-app message is received.
+ * @param {function} callback - The method to call when an in-app message is received.
  *
- * @returns subscription - If a subscriber is passed to the function, returns the subscription. When you want to stop
- * listening, call `.remove()` on the returned subscription. Returns undefined if no subscriber is provided.
+ * @returns subscription - If a callback is passed to the function, returns the subscription. When you want to stop
+ * listening, call `.remove()` on the returned subscription. Returns undefined if no callback is provided.
  */
 export function subscribeToInAppMessage(
   useBrazeUI: boolean,
-  subscriber?: Function
+  callback?: Function
 ): EmitterSubscription | undefined;
 
 /**
@@ -695,8 +695,12 @@ export interface PushNotificationEvent {
   kvp_data: { [key: string]: any };
 }
 
+export interface ContentCardsUpdatedEvent {
+  cards: ContentCard[];
+}
+
 interface BrazeEvent {
-  /** Callback passes a boolean that indicates whether content cards have changed in the latest refresh. */
+  /** Callback passes an object with the `cards` as of the latest refresh. */
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated';
   /** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError';
@@ -707,12 +711,14 @@ interface BrazeEvent {
 }
 export const Events: BrazeEvent;
 
-/**
- * Subscribes to the specific SDK event
- * @param {BrazeEvent} event
- * @param {function} subscriber
- */
-export function addListener(event: BrazeEvent[keyof BrazeEvent], subscriber: Function): EmitterSubscription;
+/** Callback passes an object with the `cards` as of the latest refresh. */
+export function addListener(event: "contentCardsUpdated", callback: (update: ContentCardsUpdatedEvent) => void): EmitterSubscription;
+/** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
+export function addListener(event: "sdkAuthenticationError", callback: (sdkAuthenticationError: SDKAuthenticationErrorType) => void): EmitterSubscription;
+/** Callback passes the BrazeInAppMessage object. */
+export function addListener(event: "inAppMessageReceived", callback: (inAppMessage: BrazeInAppMessage) => void): EmitterSubscription;
+/** Only supported on Android. */
+export function addListener(event: "pushNotificationEvent", callback: (notification: PushNotificationEvent) => void): EmitterSubscription;
 
 type Callback<T> = (error?: object, result?: T) => void;
 

@@ -18,9 +18,9 @@ Pod::Spec.new do |s|
   s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js', 'iOS/replace-at-import-statements.sh'
   s.source_files   = 'iOS/**/*.{h,m}'
 
-  s.dependency 'BrazeKit', '~> 5.11.2'
-  s.dependency 'BrazeLocation', '~> 5.11.2'
-  s.dependency 'BrazeUI', '~> 5.11.2'
+  s.dependency 'BrazeKit', '~> 5.13.0'
+  s.dependency 'BrazeLocation', '~> 5.13.0'
+  s.dependency 'BrazeUI', '~> 5.13.0'
 
   s.dependency 'React-Core'
 
