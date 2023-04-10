@@ -524,3 +524,34 @@ it('instantiates a BrazeButton object with the desired defaults', () => {
   expect(inAppMessage.clickAction).toBe(defaultClickAction.toLowerCase());
   expect(inAppMessage.id).toBe(defaultId);
 });
+
+test('it calls BrazeReactBridge.getFeatureFlag', () => {
+  const testId = 'test';
+  Braze.getFeatureFlag('test');
+  expect(NativeModules.BrazeReactBridge.getFeatureFlag).toBeCalledWith(testId);
+});
+
+test('it calls BrazeReactBridge.getAllFeatureFlags', () => {
+  Braze.getAllFeatureFlags();
+  expect(NativeModules.BrazeReactBridge.getAllFeatureFlags).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.refreshFeatureFlags', () => {
+  Braze.refreshFeatureFlags();
+  expect(NativeModules.BrazeReactBridge.refreshFeatureFlags).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.getFeatureFlagBooleanProperty', () => {
+  Braze.getFeatureFlagBooleanProperty('id', 'key');
+  expect(NativeModules.BrazeReactBridge.getFeatureFlagBooleanProperty).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.getFeatureFlagStringProperty', () => {
+  Braze.getFeatureFlagStringProperty('id', 'key');
+  expect(NativeModules.BrazeReactBridge.getFeatureFlagStringProperty).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.getFeatureFlagNumberProperty', () => {
+  Braze.getFeatureFlagNumberProperty('id', 'key');
+  expect(NativeModules.BrazeReactBridge.getFeatureFlagNumberProperty).toBeCalled();
+});

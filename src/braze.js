@@ -768,6 +768,53 @@ export class Braze {
     this.bridge.requestPushPermission(permissionOptions);
   }
 
+  /**
+   * Returns feature flags array
+   * @returns {Promise<FeatureFlag[]>}
+   */
+  static getAllFeatureFlags() {
+    return this.bridge.getAllFeatureFlags();
+  }
+
+  /**
+   * Returns feature flag
+   * @returns {Promise<FeatureFlag>}
+   */
+  static getFeatureFlag(id) {
+    return this.bridge.getFeatureFlag(id);
+  }
+
+  /**
+   * Requests a refresh of Feature Flags from the Braze server.
+   */
+  static refreshFeatureFlags() {
+    this.bridge.refreshFeatureFlags();
+  }
+
+  /**
+   * Returns the boolean property for the given feature flag ID.
+   * @returns {Promise<boolean|null>}
+   */
+  static getFeatureFlagBooleanProperty(id, key) {
+    return this.bridge.getFeatureFlagBooleanProperty(id, key);
+  }
+
+  /**
+   * Returns the string property for the given feature flag ID.
+   * @returns {Promise<string|null>}
+   */
+  static getFeatureFlagStringProperty(id, key) {
+    return this.bridge.getFeatureFlagStringProperty(id, key);
+  }
+
+  /**
+   * Returns the number property for the given feature flag ID.
+   * @returns {Promise<number|null>}
+   */
+  static getFeatureFlagNumberProperty(id, key) {
+    return this.bridge.getFeatureFlagNumberProperty(id, key);
+  }
+
   // Events
   /**
    * Subscribes to the specific SDK event.

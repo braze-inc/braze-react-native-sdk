@@ -34,7 +34,8 @@ export const Events = {
   NEWS_FEED_CARDS_UPDATED: 'newsFeedCardsUpdated',
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
   IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived',
-  PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent'
+  PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent',
+  FEATURE_FLAGS_UPDATED: 'featureFlagsUpdated',
 };
 
 export const ClickAction = {

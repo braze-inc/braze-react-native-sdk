@@ -13,6 +13,8 @@ import com.braze.enums.Gender
 import com.braze.enums.Month.Companion.getMonth
 import com.braze.enums.NotificationSubscriptionType
 import com.braze.events.ContentCardsUpdatedEvent
+import com.braze.events.FeatureFlagsUpdatedEvent
+import com.braze.models.FeatureFlag
 import com.braze.events.FeedUpdatedEvent
 import com.braze.events.IEventSubscriber
 import com.braze.models.cards.Card
@@ -48,12 +50,14 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     private lateinit var newsFeedCardsUpdatedSubscriber: IEventSubscriber<FeedUpdatedEvent>
     private lateinit var sdkAuthErrorSubscriber: IEventSubscriber<BrazeSdkAuthenticationErrorEvent>
     private lateinit var pushNotificationEventSubscriber: IEventSubscriber<BrazePushEvent>
+    private lateinit var featureFlagsUpdatedSubscriber: IEventSubscriber<FeatureFlagsUpdatedEvent>
 
     init {
         subscribeToContentCardsUpdatedEvent()
         subscribeToNewsFeedCardsUpdatedEvent()
         subscribeToSdkAuthenticationErrorEvents()
         subscribeToPushNotificationEvents()
+        subscribeToFeatureFlagsUpdatedEvent()
     }
 
     private val braze: Braze
@@ -436,6 +440,29 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         braze.subscribeToFeedUpdates(newsFeedCardsUpdatedSubscriber)
     }
 
+    private fun subscribeToFeatureFlagsUpdatedEvent() {
+        if (this::featureFlagsUpdatedSubscriber.isInitialized) {
+            braze.removeSingleSubscription(
+                featureFlagsUpdatedSubscriber,
+                FeatureFlagsUpdatedEvent::class.java
+            )
+        }
+        featureFlagsUpdatedSubscriber = IEventSubscriber { event ->
+            val data = Arguments.createArray()
+            event.featureFlags.forEach {
+                data.pushMap(convertFeatureFlag(it))
+            }
+
+            if (reactApplicationContext.hasActiveReactInstance()) {
+                reactApplicationContext
+                    .getJSModule(RCTDeviceEventEmitter::class.java)
+                    .emit(FEATURE_FLAGS_UPDATED_EVENT_NAME, data)
+            }
+        }
+
+        braze.subscribeToFeatureFlagsUpdates(featureFlagsUpdatedSubscriber)
+    }
+
     private fun subscribeToSdkAuthenticationErrorEvents() {
         if (this::sdkAuthErrorSubscriber.isInitialized) {
             braze.removeSingleSubscription(
@@ -753,10 +780,44 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     private fun getContentCardById(id: String): Card? =
         contentCards.firstOrNull { it.id == id }
 
+    @ReactMethod
+    fun getAllFeatureFlags(promise: Promise) {
+        val ffs = braze.getAllFeatureFlags()
+        val data = Arguments.createArray()
+        ffs.forEach {
+            data.pushMap(convertFeatureFlag(it))
+        }
+        promise.resolve(data)
+    }
+
+    @ReactMethod
+    fun getFeatureFlag(id: String, promise: Promise) {
+        val ff = braze.getFeatureFlag(id)
+        promise.resolve(convertFeatureFlag(ff))
+    }
+
+    @ReactMethod
+    fun refreshFeatureFlags() {
+        braze.refreshFeatureFlags()
+    }
+
+    @ReactMethod
+    fun getFeatureFlagBooleanProperty(id: String, key: String, promise: Promise) =
+        promise.resolve(braze.getFeatureFlag(id).getBooleanProperty(key))
+
+    @ReactMethod
+    fun getFeatureFlagStringProperty(id: String, key: String, promise: Promise) =
+        promise.resolve(braze.getFeatureFlag(id).getStringProperty(key))
+
+    @ReactMethod
+    fun getFeatureFlagNumberProperty(id: String, key: String, promise: Promise) =
+        promise.resolve(braze.getFeatureFlag(id).getNumberProperty(key))
+
     companion object {
         private const val CARD_COUNT_TAG = "card count"
         private const val UNREAD_CARD_COUNT_TAG = "unread card count"
         private const val CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated"
+        private const val FEATURE_FLAGS_UPDATED_EVENT_NAME = "featureFlagsUpdated"
         private const val NEWS_FEED_CARDS_UPDATED_EVENT_NAME = "newsFeedCardsUpdated"
         private const val SDK_AUTH_ERROR_EVENT_NAME = "sdkAuthenticationError"
         private const val IN_APP_MESSAGE_RECEIVED_EVENT_NAME = "inAppMessageReceived"

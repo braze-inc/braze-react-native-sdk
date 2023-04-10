@@ -70,6 +70,12 @@ jest.mock('react-native', () => {
     setLastKnownLocation: jest.fn(),
     setMetadata: jest.fn(),
     requestPushPermission: jest.fn(),
+    getFeatureFlag: jest.fn(),
+    getAllFeatureFlags: jest.fn(),
+    refreshFeatureFlags: jest.fn(),
+    getFeatureFlagBooleanProperty: jest.fn(),
+    getFeatureFlagNumberProperty: jest.fn(),
+    getFeatureFlagStringProperty: jest.fn(),
   };
 
   return RN;

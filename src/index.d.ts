@@ -599,6 +599,82 @@ export function requestPushPermission(
   permissionOptions?: Record<PermissionOptions, boolean>
 ): void;
 
+export interface FeatureFlagStringProperty {
+  type: "string";
+  value: string;
+}
+
+export interface FeatureFlagNumberProperty {
+  type: "number";
+  value: number;
+}
+
+export interface FeatureFlagBooleanProperty {
+  type: "boolean";
+  value: boolean;
+}
+
+export class FeatureFlag {
+  /** Indicates whether or not this feature flag is enabled. */
+  enabled: boolean;
+
+  /** Properties of this feature flag, listed as key-value pairs. */
+  properties: Partial<Record<string, FeatureFlagStringProperty | FeatureFlagNumberProperty | FeatureFlagBooleanProperty>>;
+
+  /** The ID for this feature flag. */
+  id: string;
+}
+
+/**
+ * Returns all available feature flags
+ * @returns {Promise<FeatureFlag[]>}
+ */
+export function getAllFeatureFlags(): Promise<FeatureFlag[]>;
+
+/**
+ * Get a feature flag by its ID
+ * @returns {Promise<FeatureFlag>}
+ */
+export function getFeatureFlag(id: string): Promise<FeatureFlag>;
+
+/**
+ * Get value of a feature flag property of type boolean.
+ * 
+ * @param id - The ID of the feature flag.
+ * @param key - The key of the property.
+ *
+ * @returns A promise containing the value of the property if the key is found and is of type boolean.
+ *    If the key is not found or if there is a type mismatch, this method will return a null.
+ */
+export function getFeatureFlagBooleanProperty(id: string, key: string): Promise<boolean | null>;
+
+/**
+ * Get value of a feature flag property of type string.
+ *
+ * @param id - The ID of the feature flag.
+ * @param key - The key of the property.
+ *
+ * @returns A promise containing the value of the property if the key is found and is of type string.
+ *    If the key is not found or if there is a type mismatch, this method will return a null.
+ */
+export function getFeatureFlagStringProperty(id: string, key: string): Promise<string | null>;
+
+/**
+ * Get value of a feature flag property of type number.
+ *
+ * @param id - The ID of the feature flag.
+ * @param key - The key of the property.
+ *
+ * @returns A promise containing the value of the property if the key is found and is of type number.
+ *    If the key is not found or if there is a type mismatch, this method will return a null.
+ */
+export function getFeatureFlagNumberProperty(id: string, key: string): Promise<number | null>;
+
+/**
+ * Requests a refresh of Feature Flags from the Braze server.
+ */
+export function refreshFeatureFlags();
+
 export class BrazeInAppMessage {
   constructor(_data: string);
   inAppMessageJsonString: string;
@@ -688,7 +764,7 @@ export interface PushNotificationEvent {
   push_event_type: string;
   title: string;
   deeplink: string;
-  context_text: string;
+  content_text: string;
   summary_text: string;
   image_url: string;
   raw_android_push_data: string;
@@ -706,6 +782,8 @@ interface BrazeEvent {
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError';
   /** Callback passes the BrazeInAppMessage object. */
   IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived';
+  /** Callback that triggers when Feature Flags have received an update in the latest refresh. */
+  FEATURE_FLAGS_UPDATED: 'featureFlagsUpdated';
   /** Only supported on Android. */
   PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent';
 }
@@ -717,6 +795,8 @@ export function addListener(event: "contentCardsUpdated", callback: (update: Con
 export function addListener(event: "sdkAuthenticationError", callback: (sdkAuthenticationError: SDKAuthenticationErrorType) => void): EmitterSubscription;
 /** Callback passes the BrazeInAppMessage object. */
 export function addListener(event: "inAppMessageReceived", callback: (inAppMessage: BrazeInAppMessage) => void): EmitterSubscription;
+/** Callback passes the Feature Flags array. */
+export function addListener(event: "featureFlagsUpdated", callback: (flags: FeatureFlag[]) => void): EmitterSubscription;
 /** Only supported on Android. */
 export function addListener(event: "pushNotificationEvent", callback: (notification: PushNotificationEvent) => void): EmitterSubscription;
 

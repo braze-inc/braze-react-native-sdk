@@ -11,6 +11,7 @@
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
 static NSString *const kNewsFeedCardsUpdatedEvent = @"newsFeedCardsUpdated";
+static NSString *const kFeatureFlagsUpdatedEvent = @"featureFlagsUpdated";
 static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
 static NSString *const kInAppMessageReceivedEvent = @"inAppMessageReceived";
 static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
@@ -29,6 +30,7 @@ RCT_ENUM_CONVERTER(BRZUserSubscriptionState,
 @interface BrazeReactBridge () <BrazeDelegate, BrazeInAppMessageUIDelegate>
 
 @property (strong, nonatomic) BRZCancellable *contentCardsSubscription;
+@property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
 @property (strong, nonatomic) BRZCancellable *newsFeedSubscription;
 
 @end
@@ -69,6 +71,10 @@ static Braze *braze;
     eventData[@"cards"] = RCTFormatContentCards(cards);
     [self sendEventWithName:kContentCardsUpdatedEvent body:eventData];
   }];
+  self.featureFlagsSubscription = [braze.featureFlags subscribeToUpdates:^(NSArray<BRZFeatureFlag *> * _Nonnull featureFlags) {
+    RCTLogInfo(@"Received Feature Flags array via subscription of length: %lu", [featureFlags count]);
+    [self sendEventWithName:kFeatureFlagsUpdatedEvent body:RCTFormatFeatureFlags(featureFlags)];
+  }];
   self.newsFeedSubscription = [braze.newsFeed subscribeToUpdates:^(NSArray<BRZNewsFeedCard *> * _Nonnull cards) {
     RCTLogInfo(@"Received News Feed cards via subscription of length: %lu", [cards count]);
     [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
@@ -84,12 +90,15 @@ static Braze *braze;
   braze.delegate = nil;
   ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = nil;
   self.contentCardsSubscription = nil;
+  self.newsFeedSubscription = nil;
+  self.featureFlagsSubscription = nil;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
   return @[
     kContentCardsUpdatedEvent,
     kNewsFeedCardsUpdatedEvent,
+    kFeatureFlagsUpdatedEvent,
     kSdkAuthenticationErrorEvent,
     kInAppMessageReceivedEvent,
     kPushNotificationEvent
@@ -818,6 +827,73 @@ RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  b
     return message;
   }
   return nil;
+}
+
+#pragma mark - Feature Flags
+
+RCT_EXPORT_METHOD(refreshFeatureFlags) {
+  RCTLogInfo(@"refreshFeatureFlags called");
+  [braze.featureFlags requestRefresh];
+}
+
+RCT_REMAP_METHOD(getFeatureFlag, getFeatureFlagById:(NSString *)flagId withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlag called for ID %@", flagId);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSError* error = nil;
+  id flagJSON = [NSJSONSerialization JSONObjectWithData:[featureFlag json]
+                                                options:NSJSONReadingMutableContainers
+                                                  error:&error];
+  if (error) {
+    reject(@"Unable to parse Feature Flag", error.description, error);
+  } else {
+    resolve(flagJSON);
+  }
+}
+
+RCT_REMAP_METHOD(getAllFeatureFlags, getAllFeatureFlagsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getAllFeatureFlags called");
+  NSArray<BRZFeatureFlag *> *mappedFeatureFlags = RCTFormatFeatureFlags(braze.featureFlags.featureFlags);
+  resolve(mappedFeatureFlags);
+}
+
+RCT_REMAP_METHOD(getFeatureFlagBooleanProperty, getFeatureFlag:(NSString *)flagId booleanProperty:(NSString *)propertyKey withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagBooleanProperty called for key %@", propertyKey);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSNumber *boolProperty = [featureFlag boolPropertyForKey:propertyKey];
+  // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
+  resolve(boolProperty ? boolProperty : [NSNull null]);
+}
+
+RCT_REMAP_METHOD(getFeatureFlagStringProperty, getFeatureFlag:(NSString *)flagId stringProperty:(NSString *)propertyKey withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagStringProperty called for key %@", propertyKey);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSString *stringProperty = [featureFlag stringPropertyForKey:propertyKey];
+  // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
+  resolve(stringProperty ? stringProperty : [NSNull null]);
+}
+
+RCT_REMAP_METHOD(getFeatureFlagNumberProperty, getFeatureFlag:(NSString *)flagId numberProperty:(NSString *)propertyKey withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagNumberProperty called for key %@", propertyKey);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSNumber *numberProperty = [featureFlag numberPropertyForKey:propertyKey];
+  // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
+  resolve(numberProperty ? numberProperty : [NSNull null]);
+}
+
+static NSArray *RCTFormatFeatureFlags(NSArray<BRZFeatureFlag *> *featureFlags) {
+  NSMutableArray *mappedFeatureFlags = [NSMutableArray arrayWithCapacity:[featureFlags count]];
+  [featureFlags enumerateObjectsUsingBlock:^(BRZFeatureFlag *flag, NSUInteger idx, BOOL *stop) {
+    NSError* error = nil;
+    id flagJSON = [NSJSONSerialization JSONObjectWithData:[flag json]
+                                                  options:NSJSONReadingMutableContainers
+                                                    error:&error];
+    if (error) {
+      RCTLogInfo(@"Unable to parse Feature Flag: %@, error: %@. Skipping.", flag, error);
+    } else {
+      [mappedFeatureFlags addObject:flagJSON];
+    }
+  }];
+  return mappedFeatureFlags;
 }
 
 RCT_EXPORT_MODULE();

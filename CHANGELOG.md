@@ -1,3 +1,18 @@
+# 4.1.0
+
+##### Fixed
+- Fixes an issue in the `PushNotificationEvent` object introduced in `2.0.1` where a field was named `context_text` instead of the correct value of `content_text`.
+
+##### Added
+- Adds support for the upcoming Braze Feature Flags product with the following methods:
+  - `getFeatureFlag(id)`
+  - `getAllFeatureFlags()`
+  - `refreshFeatureFlags()`
+  - `getFeatureFlagBooleanProperty(id, key)`
+  - `getFeatureFlagStringProperty(id, key)`
+  - `getFeatureFlagNumberProperty(id, key)`
+- Adds the Braze Event key `Braze.Events.FEATURE_FLAGS_UPDATED` for subscribing to Feature Flags updates.
+
 # 4.0.0
 
 ##### Breaking
