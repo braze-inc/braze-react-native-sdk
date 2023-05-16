@@ -731,18 +731,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setSDKFlavor() {
-        // Dummy method required for the iOS SDK flavor implementation; see BrazeReactBridge.setSDKFlavor()
-        // in index.js. The Android bridge sets the REACT SDK flavor via a braze.xml parameter.
-    }
-
-    @ReactMethod
-    fun setMetadata() {
-        // Dummy method required for the iOS SDK Metadata implementation; see BrazeReactBridge.setMetadata()
-        // in index.js. The Android bridge sets the REACT SDK Metadata field via a braze.xml parameter.
-    }
-
-    @ReactMethod
     fun addListener(eventName: String) {
         // Dummy method required to suppress NativeEventEmitter warnings.
     }

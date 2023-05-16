@@ -1,3 +1,7 @@
+# Unreleased
+
+- Removed `setSDKFlavor` and `setMetadata` which did nothing on all platforms. Removes annoying logging on iOS.
+
 # 4.1.0
 
 ##### Fixed
