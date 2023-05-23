@@ -1,3 +1,17 @@
+# 5.0.0
+
+##### Breaking
+- Updates the native iOS bridge [from Braze Swift SDK 5.13.0 to 6.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/5.13.0...6.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4edR1).
+- Removes `setSDKFlavor` and `setMetadata`, which were no-ops starting from version `2.0.0`.
+  - On iOS, these fields must be set using the `Braze.Configuration` object at SDK initialization.
+  - On Android, these fields must be set via the `braze.xml` file.
+
+##### Fixed
+- Fixes an issue on Android with `getNewsFeedCards()` and `getContentCards()` where promises could be invoked more than once.
+
+##### Added
+- Updates the native Android bridge [from Braze Android SDK 24.3.0 to 25.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v24.3.0...v25.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
 # 4.1.0
 
 ##### Fixed

@@ -23,11 +23,11 @@ fun convertFeatureFlag(ff: FeatureFlag): WritableMap {
     val jsonObjectIterator = ff.properties.keys()
     while (jsonObjectIterator.hasNext()) {
         val key = jsonObjectIterator.next()
-        val prop = ff.properties.get(key) as JSONObject
-        val type = prop.get(FEATURE_FLAG_PROPERTIES_TYPE) as String?
-        val propJson = Arguments.createMap()
-        if (type != null) {
-            propJson.putString(FEATURE_FLAG_PROPERTIES_TYPE, type as String)
+        val prop = ff.properties.optJSONObject(key) ?: continue
+        val type = prop.optString(FEATURE_FLAG_PROPERTIES_TYPE, "")
+        if (!type.isNullOrBlank()) {
+            val propJson = Arguments.createMap()
+            propJson.putString(FEATURE_FLAG_PROPERTIES_TYPE, type)
             when (type) {
                 FEATURE_FLAG_PROPERTIES_TYPE_STRING -> {
                     propJson.putString(FEATURE_FLAG_PROPERTIES_VALUE, ff.getStringProperty(key))

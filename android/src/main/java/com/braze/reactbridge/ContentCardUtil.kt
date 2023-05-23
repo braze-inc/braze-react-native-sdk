@@ -39,7 +39,7 @@ fun mapContentCard(card: Card): WritableMap {
         CardType.CAPTIONED_IMAGE -> mappedCard.merge(captionedImageCardToWritableMap(card as CaptionedImageCard))
         CardType.SHORT_NEWS -> mappedCard.merge(shortNewsCardToWritableMap(card as ShortNewsCard))
         CardType.TEXT_ANNOUNCEMENT -> mappedCard.merge(textAnnouncementCardToWritableMap(card as TextAnnouncementCard))
-        CardType.CONTROL -> mappedCard.merge(controlCardToWritableMap(card as ControlCard))
+        CardType.CONTROL -> mappedCard.merge(controlCardToWritableMap())
         CardType.DEFAULT -> {}
     }
     return mappedCard
@@ -84,7 +84,7 @@ fun bannerImageCardToWritableMap(card: BannerImageCard): WritableMap {
     return mappedCard
 }
 
-fun controlCardToWritableMap(card: ControlCard): WritableMap {
+fun controlCardToWritableMap(): WritableMap {
     val mappedCard = Arguments.createMap()
     mappedCard.putString("type", "Control")
     return mappedCard

@@ -14,9 +14,9 @@ import com.braze.enums.Month.Companion.getMonth
 import com.braze.enums.NotificationSubscriptionType
 import com.braze.events.ContentCardsUpdatedEvent
 import com.braze.events.FeatureFlagsUpdatedEvent
-import com.braze.models.FeatureFlag
 import com.braze.events.FeedUpdatedEvent
 import com.braze.events.IEventSubscriber
+import com.braze.events.IFireOnceEventSubscriber
 import com.braze.models.cards.Card
 import com.braze.models.inappmessage.IInAppMessage
 import com.braze.models.inappmessage.IInAppMessageImmersive
@@ -344,14 +344,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun getNewsFeedCards(promise: Promise) {
-        val subscriber: IEventSubscriber<FeedUpdatedEvent> = object : IEventSubscriber<FeedUpdatedEvent> {
-            override fun trigger(message: FeedUpdatedEvent) {
-                promise.resolve(mapContentCards(message.feedCards))
-                updateNewsFeedCardsIfNeeded(message)
-                braze.removeSingleSubscription(this, FeedUpdatedEvent::class.java)
-            }
-        }
-        braze.subscribeToFeedUpdates(subscriber)
+        braze.subscribeToFeedUpdates(IFireOnceEventSubscriber {
+            promise.resolve(mapContentCards(it.feedCards))
+            updateNewsFeedCardsIfNeeded(it)
+        })
         braze.requestFeedRefresh()
     }
 
@@ -379,14 +375,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun getContentCards(promise: Promise) {
-        val subscriber: IEventSubscriber<ContentCardsUpdatedEvent> = object : IEventSubscriber<ContentCardsUpdatedEvent> {
-            override fun trigger(message: ContentCardsUpdatedEvent) {
-                promise.resolve(mapContentCards(message.allCards))
-                updateContentCardsIfNeeded(message)
-                braze.removeSingleSubscription(this, ContentCardsUpdatedEvent::class.java)
-            }
-        }
-        braze.subscribeToContentCardsUpdates(subscriber)
+        braze.subscribeToContentCardsUpdates(IFireOnceEventSubscriber { message ->
+            promise.resolve(mapContentCards(message.allCards))
+            updateContentCardsIfNeeded(message)
+        })
         braze.requestContentCardsRefresh(false)
     }
 
@@ -399,7 +391,8 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @Suppress("UnusedPrivateMember")
     @ReactMethod
-    fun requestPushPermission(options: ReadableMap?) = currentActivity.requestPushPermissionPrompt()
+    fun requestPushPermission(@Suppress("UNUSED_PARAMETER") options: ReadableMap?) =
+        currentActivity.requestPushPermissionPrompt()
 
     private fun subscribeToContentCardsUpdatedEvent() {
         if (this::contentCardsUpdatedSubscriber.isInitialized) {
@@ -521,7 +514,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
             kvpData.keySet()
                 // AKA "appboy_image_url"
                 .filter { it != Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY }
-                .associateWith { kvpData[it] }
+                .associateWith { @Suppress("deprecation") kvpData[it] }
                 .forEach { returnedKvpMap.putString(it.key, it.value.toString()) }
             data.putMap("kvp_data", returnedKvpMap)
 
@@ -667,20 +660,21 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun subscribeToInAppMessage(useBrazeUI: Boolean) {
-        BrazeInAppMessageManager.getInstance().setCustomInAppMessageManagerListener(object : DefaultInAppMessageManagerListener() {
-            override fun beforeInAppMessageDisplayed(inAppMessage: IInAppMessage): InAppMessageOperation {
-                val parameters: WritableMap = WritableNativeMap()
-                parameters.putString("inAppMessage", inAppMessage.forJsonPut().toString())
-                reactApplicationContext
-                    .getJSModule(RCTDeviceEventEmitter::class.java)
-                    .emit(IN_APP_MESSAGE_RECEIVED_EVENT_NAME, parameters)
-                return if (useBrazeUI) {
-                    InAppMessageOperation.DISPLAY_NOW
-                } else {
-                    InAppMessageOperation.DISCARD
+        BrazeInAppMessageManager.getInstance().setCustomInAppMessageManagerListener(
+            object : DefaultInAppMessageManagerListener() {
+                override fun beforeInAppMessageDisplayed(inAppMessage: IInAppMessage): InAppMessageOperation {
+                    val parameters: WritableMap = WritableNativeMap()
+                    parameters.putString("inAppMessage", inAppMessage.forJsonPut().toString())
+                    reactApplicationContext
+                        .getJSModule(RCTDeviceEventEmitter::class.java)
+                        .emit(IN_APP_MESSAGE_RECEIVED_EVENT_NAME, parameters)
+                    return if (useBrazeUI) {
+                        InAppMessageOperation.DISPLAY_NOW
+                    } else {
+                        InAppMessageOperation.DISCARD
+                    }
                 }
-            }
-        })
+            })
     }
 
     @ReactMethod
@@ -731,24 +725,12 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setSDKFlavor() {
-        // Dummy method required for the iOS SDK flavor implementation; see BrazeReactBridge.setSDKFlavor()
-        // in index.js. The Android bridge sets the REACT SDK flavor via a braze.xml parameter.
-    }
-
-    @ReactMethod
-    fun setMetadata() {
-        // Dummy method required for the iOS SDK Metadata implementation; see BrazeReactBridge.setMetadata()
-        // in index.js. The Android bridge sets the REACT SDK Metadata field via a braze.xml parameter.
-    }
-
-    @ReactMethod
-    fun addListener(eventName: String) {
+    fun addListener(@Suppress("UNUSED_PARAMETER") eventName: String) {
         // Dummy method required to suppress NativeEventEmitter warnings.
     }
 
     @ReactMethod
-    fun removeListeners(count: Int) {
+    fun removeListeners(@Suppress("UNUSED_PARAMETER") count: Int) {
         // Dummy method required to suppress NativeEventEmitter warnings.
     }
 

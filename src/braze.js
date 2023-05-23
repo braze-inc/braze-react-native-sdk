@@ -110,8 +110,6 @@ export class Braze {
    * @param {string} signature - An optional authentication signature to be used with the SDK Authentication feature.
    */
   static changeUser(userId, signature) {
-    this.bridge.setSDKFlavor();
-    this.bridge.setMetadata();
     this.bridge.changeUser(
       userId,
       signature != null ? signature : null
@@ -143,8 +141,6 @@ export class Braze {
    * @param {string} aliasLabel - An identifier for alias label.
    */
   static addAlias(aliasName, aliasLabel) {
-    this.bridge.setSDKFlavor();
-    this.bridge.setMetadata();
     this.bridge.addAlias(aliasName, aliasLabel);
   }
 
@@ -186,8 +182,6 @@ export class Braze {
    *      Values can be numeric, boolean, Date, or strings 255 characters or shorter.
    */
   static logCustomEvent(eventName, eventProperties) {
-    this.bridge.setSDKFlavor();
-    this.bridge.setMetadata();
     parseNestedProperties(eventProperties);
     this.bridge.logCustomEvent(eventName, eventProperties);
   }

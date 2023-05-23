@@ -11,8 +11,6 @@
 
 @implementation AppDelegate
 
-@synthesize bridge;
-
 static Braze *_braze;
 
 static NSString *const apiKey = @"b7271277-0fec-4187-beeb-3ae6e6fbed11";
@@ -30,7 +28,6 @@ static NSString *const endpoint = @"sondheim.braze.com";
                                                       moduleName:self.moduleName
                                                initialProperties:self.initialProps
                                                    launchOptions:launchOptions];
-  self.bridge = rootView.bridge;
 
   // Configure views in the application
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -139,6 +136,14 @@ static NSString *const endpoint = @"sondheim.braze.com";
 - (BOOL)concurrentRootEnabled
 {
   return false;
+}
+
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
+#if DEBUG
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
 }
 
 @end

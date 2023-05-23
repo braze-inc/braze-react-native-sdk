@@ -17,7 +17,7 @@ Effective marketing automation is an essential part of successfully scaling and 
 | 2.0.0+       | >= 0.68      |
 | <= 1.41.0    | <= 0.71      |
 
-> Support for React Native 0.69+ (New Architecture) is on the feature roadmap.
+> From version 2.0.1 and up, the Braze React Native SDK is compatible with the React Native New Architecture introduced in React Native v0.68+. While our React Native SDK is currently compatible with the New Architecture as a Native Module, we are actively working on converting our Braze library to a backwards compatible Turbo Module and will continue to make improvements for the New Architecture.
 
 ## Braze Expo Plugin
 

@@ -6,6 +6,5 @@
 @interface AppDelegate : RCTAppDelegate <UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) RCTBridge* bridge;
 
 @end

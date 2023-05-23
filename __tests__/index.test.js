@@ -178,7 +178,6 @@ test('it calls BrazeReactBridge.setDateOfBirth', () => {
 test('it calls BrazeReactBridge.changeUser', () => {
   const user_id = "some_id";
   Braze.changeUser(user_id);
-  expect(NativeModules.BrazeReactBridge.setSDKFlavor).toBeCalled();
   expect(NativeModules.BrazeReactBridge.changeUser).toBeCalledWith(user_id, null);
 });
 
@@ -193,15 +192,12 @@ test('it calls BrazeReactBridge.addAlias', () => {
   const aliasLabel = "label";
   Braze.addAlias(aliasName, aliasLabel);
   expect(NativeModules.BrazeReactBridge.addAlias).toBeCalledWith(aliasName, aliasLabel);
-  expect(NativeModules.BrazeReactBridge.setSDKFlavor).toBeCalled();
-  expect(NativeModules.BrazeReactBridge.setMetadata).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.logCustomEvent', () => {
   const event_name = "event_name";
   const event_properties = "event_properties";
   Braze.logCustomEvent(event_name, event_properties);
-  expect(NativeModules.BrazeReactBridge.setSDKFlavor).toBeCalled();
   expect(NativeModules.BrazeReactBridge.logCustomEvent).toBeCalledWith(event_name, event_properties);
 });
 

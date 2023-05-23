@@ -128,14 +128,6 @@ static Braze *braze;
 
 #pragma mark - Bridge bindings
 
-RCT_EXPORT_METHOD(setSDKFlavor) {
-  RCTLogInfo(@"No-op on iOS. SDK flavor must be set using the 'Braze.Configuration' object at SDK initialization.");
-}
-
-RCT_EXPORT_METHOD(setMetadata) {
-  RCTLogInfo(@"No-op on iOS. SDK metadata must be set using the 'Braze.Configuration' object at SDK initialization.");
-}
-
 // Returns push deep links from cold app starts.
 // For more context see getInitialURL() in index.js
 RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
