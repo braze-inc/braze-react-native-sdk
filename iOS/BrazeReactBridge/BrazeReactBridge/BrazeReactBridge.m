@@ -27,7 +27,7 @@ RCT_ENUM_CONVERTER(BRZUserSubscriptionState,
                    integerValue);
 @end
 
-@interface BrazeReactBridge () <BrazeDelegate, BrazeInAppMessageUIDelegate>
+@interface BrazeReactBridge () <BrazeSDKAuthDelegate, BrazeInAppMessageUIDelegate>
 
 @property (strong, nonatomic) BRZCancellable *contentCardsSubscription;
 @property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
@@ -63,7 +63,7 @@ static Braze *braze;
 
 - (void)startObserving {
   hasListeners = YES;
-  braze.delegate = self;
+  braze.sdkAuthDelegate = self;
 
   self.contentCardsSubscription = [braze.contentCards subscribeToUpdates:^(NSArray<BRZContentCardRaw *> * _Nonnull cards) {
     RCTLogInfo(@"Received Content Cards array via subscription of length: %lu", [cards count]);
@@ -176,8 +176,8 @@ RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable 
   NSMutableDictionary *parsedDictionary = [dictionary mutableCopy];
   for (NSString *key in keys) {
     if ([dictionary[key] isKindOfClass:[NSDictionary class]]){
-      NSString* type = dictionary[key][@"type"];
-      if ([type isEqualToString:@"UNIX_timestamp"]) {
+      id type = dictionary[key][@"type"];
+      if ([type isKindOfClass:[NSString class]] && [type isEqualToString:@"UNIX_timestamp"]) {
         double timestamp = [dictionary[key][@"value"] doubleValue];
         NSDate* nativeDate = [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
         [parsedDictionary setObject:nativeDate forKey:key];
@@ -198,8 +198,8 @@ RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable 
   NSMutableArray *parsedArray = [array mutableCopy];
   for (int i = 0; i < array.count; i++) {
     if ([array[i] isKindOfClass:[NSDictionary class]]){
-      NSString* type = array[i][@"type"];
-      if ([type isEqualToString:@"UNIX_timestamp"]) {
+      id type = array[i][@"type"];
+      if ([type isKindOfClass:[NSString class]] && [type isEqualToString:@"UNIX_timestamp"]) {
         double timestamp = [array[i][@"value"] doubleValue];
         NSDate* nativeDate = [NSDate dateWithTimeIntervalSince1970:(timestamp / 1000.0)];
         parsedArray[i] = nativeDate;
@@ -709,8 +709,7 @@ RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
   [braze setSDKAuthenticationSignature:signature];
 }
 
-- (void)braze:(Braze * _Nonnull)braze
-  sdkAuthenticationFailedWithError:(BRZSDKAuthenticationError * _Nonnull)error {
+- (void)braze:(Braze *)braze sdkAuthenticationFailedWithError:(BRZSDKAuthenticationError *)error {
   if (!hasListeners) {
     return;
   }

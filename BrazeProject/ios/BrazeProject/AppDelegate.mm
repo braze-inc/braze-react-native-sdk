@@ -6,6 +6,7 @@
 #import <React/RCTEventDispatcher.h>
 #import "BrazeReactUtils.h"
 #import "BrazeReactBridge.h"
+#import "BrazeReactDelegate.h"
 
 #import <BrazeKit/BrazeKit-Swift.h>
 
@@ -41,6 +42,7 @@ static NSString *const endpoint = @"sondheim.braze.com";
   configuration.triggerMinimumTimeInterval = 1;
   configuration.logger.level = BRZLoggerLevelInfo;
   Braze *braze = [BrazeReactBridge initBraze:configuration];
+  braze.delegate = [[BrazeReactDelegate alloc] init];
   AppDelegate.braze = braze;
 
   [self registerForPushNotifications];
@@ -52,32 +54,34 @@ static NSString *const endpoint = @"sondheim.braze.com";
 #pragma mark - Push Notifications
 
 - (void)registerForPushNotifications {
-  if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_x_Max) {
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;
-    if (@available(iOS 12.0, *)) {
-      [center setNotificationCategories:BRZNotifications.categories];
-      [[UIApplication sharedApplication] registerForRemoteNotifications];
-      // authorization is requested later in the Javascript layer
-    } else {
-      UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound) categories:nil];
-      [[UIApplication sharedApplication] registerForRemoteNotifications];
-      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-    }
-  }
+  UNUserNotificationCenter *center = UNUserNotificationCenter.currentNotificationCenter;
+  [center setNotificationCategories:BRZNotifications.categories];
+  center.delegate = self;
+  [UIApplication.sharedApplication registerForRemoteNotifications];
+  // Authorization is requested later in the JavaScript layer via `Braze.requestPushPermission`.
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-  (void)[AppDelegate.braze.notifications handleBackgroundNotificationWithUserInfo:userInfo
-                                                           fetchCompletionHandler:completionHandler];
+  BOOL processedByBraze = AppDelegate.braze != nil && [AppDelegate.braze.notifications handleBackgroundNotificationWithUserInfo:userInfo
+                                                                                                         fetchCompletionHandler:completionHandler];
+  if (processedByBraze) {
+    return;
+  }
+
+  completionHandler(UIBackgroundFetchResultNoData);
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
   didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void (^)(void))completionHandler {
   [[BrazeReactUtils sharedInstance] populateInitialUrlForCategories:response.notification.request.content.userInfo];
-  (void)[AppDelegate.braze.notifications handleUserNotificationWithResponse:response
-                                                      withCompletionHandler:completionHandler];
+  BOOL processedByBraze = AppDelegate.braze != nil && [AppDelegate.braze.notifications handleUserNotificationWithResponse:response
+                                                                                                    withCompletionHandler:completionHandler];
+  if (processedByBraze) {
+    return;
+  }
+
+  completionHandler();
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center

@@ -1,3 +1,9 @@
+# 5.1.0
+
+##### Fixed
+- Fixes an issue that occured whenever a custom event is logged with dictionary properties using a key named "type".
+- Removes the automatic assignment of [`BrazeDelegate`](https://braze-inc.github.io/braze-swift-sdk/documentation/brazekit/braze/delegate) in the iOS bridge, allowing for custom implementations to be assigned to the `braze` instance.
+
 # 5.0.0
 
 ##### Breaking

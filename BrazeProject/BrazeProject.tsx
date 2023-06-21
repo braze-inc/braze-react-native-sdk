@@ -185,12 +185,16 @@ export const BrazeProject = (): ReactElement => {
         testDate,
         [testDate, 'nestedArrayval'],
         { dictInArrayKey: testDate },
+        { type: 5 },
+        { type: null },
       ],
       dictKey: {
         dictKey1: 'dictVal1',
         dictKey2: testDate,
         dictKey3: { nestedDictKey1: testDate },
         dictKey4: ['nestedArrayVal1', 'nestedArrayVal2'],
+        dictKey5: { type: false },
+        type: testDate,
       },
     });
     showToast(`Event logged: ${customEventText}`);

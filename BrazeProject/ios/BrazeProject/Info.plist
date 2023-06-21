@@ -2,17 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Braze</key>
+	<dict>
+		<key>Endpoint</key>
+		<string>sondheim.braze.com</string>
+		<key>LogLevel</key>
+		<string>0</string>
+	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>BrazeProject</string>
-	<key>Braze</key>
-	<dict>
-		<key>LogLevel</key>
-		<string>0</string>
-		<key>Endpoint</key>
-		<string>sondheim.braze.com</string>
-	</dict>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -32,6 +32,8 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.braze.helloreact</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>helloreact</string>
@@ -58,7 +60,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

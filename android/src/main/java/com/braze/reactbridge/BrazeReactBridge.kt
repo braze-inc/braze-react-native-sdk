@@ -844,7 +844,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
                 when (readableMap.getType(key)) {
                     ReadableType.Map -> {
                         val mapValue = readableMap.getMap(key) ?: continue
-                        if (mapValue.getString("type") == "UNIX_timestamp") {
+                        if (mapValue.hasKey("type")
+                            && mapValue.getType("type") == ReadableType.String
+                            && mapValue.getString("type") == "UNIX_timestamp"
+                        ) {
                             val unixTimestamp = mapValue.getDouble("value")
                             parsedMap[key] = Date(unixTimestamp.toLong())
                         } else {
@@ -869,7 +872,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
                 when (readableArray.getType(i)) {
                     ReadableType.Map -> {
                         val mapValue = readableArray.getMap(i)
-                        if (mapValue.getString("type") == "UNIX_timestamp") {
+                        if (mapValue.hasKey("type")
+                            && mapValue.getType("type") == ReadableType.String
+                            && mapValue.getString("type") == "UNIX_timestamp"
+                        ) {
                             val unixTimestamp = mapValue.getDouble("value")
                             parsedList[i] = Date(unixTimestamp.toLong())
                         } else {
