@@ -818,6 +818,9 @@ export class Braze {
    * @param {function} subscriber
    */
   static addListener(event, subscriber) {
+    if (Platform.OS === 'android') {
+      this.bridge.addListener(event);
+    }
     return this.eventEmitter.addListener(event, subscriber);
   }
 }

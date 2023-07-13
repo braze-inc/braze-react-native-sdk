@@ -4,23 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.braze.models.inappmessage.IInAppMessage;
-import com.braze.models.inappmessage.MessageButton;
 import com.braze.support.BrazeLogger;
-import com.braze.ui.inappmessage.BrazeInAppMessageManager;
-import com.braze.ui.inappmessage.InAppMessageCloser;
-import com.braze.ui.inappmessage.InAppMessageOperation;
-import com.braze.ui.inappmessage.listeners.IInAppMessageManagerListener;
-
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
-import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class MainActivity extends ReactActivity {
   private static final String TAG = BrazeLogger.getBrazeLogTag(MainActivity.class);

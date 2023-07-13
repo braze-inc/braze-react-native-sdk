@@ -52,6 +52,13 @@ static Braze *braze;
   return instance;
 }
 
+- (void)createDefaultInAppMessagePresenter {
+  if (!braze.inAppMessagePresenter) {
+    BrazeInAppMessageUI *inAppMessageUI = [[BrazeInAppMessageUI alloc] init];
+    braze.inAppMessagePresenter = inAppMessageUI;
+  }
+}
+
 - (dispatch_queue_t)methodQueue
 {
   return dispatch_get_main_queue();
@@ -80,9 +87,7 @@ static Braze *braze;
     [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
   }];
 
-  // Add default in-app message UI
-  BrazeInAppMessageUI *inAppMessageUI = [[BrazeInAppMessageUI alloc] init];
-  braze.inAppMessagePresenter = inAppMessageUI;
+  [self createDefaultInAppMessagePresenter];
 }
 
 - (void)stopObserving {
@@ -757,6 +762,7 @@ RCT_EXPORT_METHOD(requestPushPermission:(NSDictionary *)permissions) {
 RCT_EXPORT_METHOD(subscribeToInAppMessage:(BOOL)useBrazeUI)
 {
   useBrazeUIForInAppMessages = useBrazeUI;
+  [self createDefaultInAppMessagePresenter];
   ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = self;
 }
 

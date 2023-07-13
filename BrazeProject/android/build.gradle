@@ -15,15 +15,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.1")
+        classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath "com.google.gms:google-services:4.3.4"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
-    }
-}
-
-allprojects {
-    repositories {
-        maven { url "https://appboy.github.io/appboy-android-sdk/sdk" }
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10"
     }
 }

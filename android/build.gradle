@@ -6,8 +6,7 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', 33)
-  buildToolsVersion safeExtGet('buildToolsVersion', '33.0.0')
+  compileSdk safeExtGet('compileSdkVersion', 33)
 
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 16)
@@ -17,18 +16,17 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_11
+    targetCompatibility JavaVersion.VERSION_11
   }
 
   kotlinOptions {
     freeCompilerArgs = ['-Xjvm-default=all']
-    jvmTarget = "1.8"
+    jvmTarget = "11"
   }
 }
 
 dependencies {
   api 'com.braze:android-sdk-ui:25.0.0'
   api 'com.facebook.react:react-native:+'
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.0"
 }

@@ -599,6 +599,14 @@ export function requestPushPermission(
   permissionOptions?: Record<PermissionOptions, boolean>
 ): void;
 
+/**
+ * Notifies the bridge of a listener being added.
+ * @param {Events} event
+ */
+export function addListener(
+  event: string
+): void;
+
 export interface FeatureFlagStringProperty {
   type: "string";
   value: string;

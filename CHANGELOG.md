@@ -1,3 +1,13 @@
+# 5.2.0
+
+##### Fixed
+- Fixes an issue on Android where push notifications wouldn't be forwarded after the app was closed.
+- Fixes an issue on iOS preventing in-app message subscription events from being sent if `subscribeToInAppMessage` is called prior to any `Braze.addListener` calls.
+- Changed the Java compatibility version for the Android plugin to Java 11.
+
+##### Added
+- Updates the native iOS bridge [from Braze Swift SDK 6.2.0 to 6.3.1](https://github.com/braze-inc/braze-swift-sdk/compare/6.2.0...6.3.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
 # 5.1.0
 
 ##### Fixed

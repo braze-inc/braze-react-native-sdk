@@ -22,6 +22,7 @@ import com.braze.models.inappmessage.IInAppMessage
 import com.braze.models.inappmessage.IInAppMessageImmersive
 import com.braze.models.outgoing.AttributionData
 import com.braze.models.outgoing.BrazeProperties
+import com.braze.support.BrazeLogger.Priority.V
 import com.braze.support.BrazeLogger.Priority.W
 import com.braze.support.BrazeLogger.brazelog
 import com.braze.support.requestPushPermissionPrompt
@@ -56,7 +57,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         subscribeToContentCardsUpdatedEvent()
         subscribeToNewsFeedCardsUpdatedEvent()
         subscribeToSdkAuthenticationErrorEvents()
-        subscribeToPushNotificationEvents()
         subscribeToFeatureFlagsUpdatedEvent()
     }
 
@@ -404,9 +404,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         contentCardsUpdatedSubscriber = IEventSubscriber { event ->
             val eventData = Arguments.createMap()
             eventData.putArray("cards", mapContentCards(event.allCards))
-            reactApplicationContext
-                .getJSModule(RCTDeviceEventEmitter::class.java)
-                .emit(CONTENT_CARDS_UPDATED_EVENT_NAME, eventData)
+            if (reactApplicationContext.hasActiveReactInstance()) {
+                reactApplicationContext
+                    .getJSModule(RCTDeviceEventEmitter::class.java)
+                    .emit(CONTENT_CARDS_UPDATED_EVENT_NAME, eventData)
+            }
             updateContentCardsIfNeeded(event)
         }
 
@@ -480,22 +482,24 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     private fun subscribeToPushNotificationEvents() {
+        brazelog(V) { "subscribeToPushNotificationEvents called" }
+        if (!reactApplicationContext.hasActiveReactInstance()) {
+            brazelog { "Cannot call subscribeToPushNotificationEvents without an active react instance" }
+            return
+        }
         if (this::pushNotificationEventSubscriber.isInitialized) {
             braze.removeSingleSubscription(
                 pushNotificationEventSubscriber,
                 BrazePushEvent::class.java
             )
         }
+
         pushNotificationEventSubscriber = IEventSubscriber { event ->
-            if (!reactApplicationContext.hasActiveReactInstance()) {
-                return@IEventSubscriber
-            }
             val pushType = when (event.eventType) {
                 BrazePushEventType.NOTIFICATION_RECEIVED -> "push_received"
                 BrazePushEventType.NOTIFICATION_OPENED -> "push_opened"
-                else -> ""
+                else -> return@IEventSubscriber
             }
-            if (pushType.isBlank()) return@IEventSubscriber
             val eventData = event.notificationPayload
 
             val data = WritableNativeMap().apply {
@@ -726,7 +730,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun addListener(@Suppress("UNUSED_PARAMETER") eventName: String) {
-        // Dummy method required to suppress NativeEventEmitter warnings.
+        if (eventName == PUSH_NOTIFICATION_EVENT_NAME) {
+            brazelog { "Adding push notification event listener $eventName" }
+            subscribeToPushNotificationEvents()
+        }
     }
 
     @ReactMethod
