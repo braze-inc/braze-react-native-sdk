@@ -1,7 +1,6 @@
 import {
   DeviceEventEmitter,
   NativeEventEmitter,
-  NativeModules,
   Platform
 } from 'react-native';
 
@@ -33,7 +32,7 @@ export class Braze {
   static DismissType = DismissType;
   static MessageType = MessageType;
 
-  static bridge = NativeModules.BrazeReactBridge;
+  static bridge = require('./NativeBrazeReactModule').default; 
   static eventEmitter = Platform.select({
     ios: new NativeEventEmitter(this.bridge),
     android: DeviceEventEmitter
@@ -47,8 +46,8 @@ export class Braze {
    * @param {function(string)} callback - A callback that retuns the deep link as a string. If there is no deep link, returns null.
    */
   static getInitialURL(callback) {
-    if (this.bridge.getInitialUrl) {
-      this.bridge.getInitialUrl((err, res) => {
+    if (this.bridge.getInitialURL) {
+      this.bridge.getInitialURL((err, res) => {
         if (err) {
           console.log(err);
           callback(null);
@@ -63,13 +62,28 @@ export class Braze {
   }
 
   /**
-   * Returns a unique device ID for install tracking. This method is equivalent to calling
-   * Braze.getInstallTrackingId() on Android and returns the IDFV on iOS.
-   * @param {function(error, result)} callback - A callback that receives the function call result.
+   * @deprecated This method is deprecated in favor of `getDeviceId`.
    */
   static getInstallTrackingId(callback) {
     callFunctionWithCallback(
-      this.bridge.getInstallTrackingId,
+      this.bridge.getDeviceId,
+      [],
+      callback
+    );
+  }
+
+  /**
+   * Returns a unique ID stored on the device. 
+   * 
+   * On Android, a randomly generated, app specific ID that is stored on the device. A new ID will be generated if the user 
+   * clears the data for the app or removes/re-installs the app. The ID will persist across Braze.changeUser calls.
+   * 
+   * On iOS, this ID is generated from the IDFV. This behavior will be updated in the next major version.
+   * @param {function(error, result)} callback - A callback that receives the function call result.
+   */
+  static getDeviceId(callback) {
+    callFunctionWithCallback(
+      this.bridge.getDeviceId,
       [],
       callback
     );
@@ -449,7 +463,7 @@ export class Braze {
    */
   static addToCustomUserAttributeArray(key, value, callback) {
     callFunctionWithCallback(
-      this.bridge.addToCustomAttributeArray,
+      this.bridge.addToCustomUserAttributeArray,
       [key, value],
       callback
     );
@@ -465,7 +479,7 @@ export class Braze {
    */
   static removeFromCustomUserAttributeArray(key, value, callback) {
     callFunctionWithCallback(
-      this.bridge.removeFromCustomAttributeArray,
+      this.bridge.removeFromCustomUserAttributeArray,
       [key, value],
       callback
     );
@@ -700,7 +714,7 @@ export class Braze {
     if (useBrazeUI != null) {
       withBrazeUI = useBrazeUI;
     }
-    this.bridge.subscribeToInAppMessage(withBrazeUI);
+    this.bridge.subscribeToInAppMessage(withBrazeUI, subscriber);
 
     if (typeof subscriber === "function") {
       return this.eventEmitter.addListener(Events.IN_APP_MESSAGE_RECEIVED, subscriber);

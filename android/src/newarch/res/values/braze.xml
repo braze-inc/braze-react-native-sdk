@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--- Internal Braze Usage -->
+  <string translatable="false" name="com_braze_sdk_flavor">REACT</string>
+  <string-array name="com_braze_internal_sdk_metadata">
+   <item>REACTNATIVE</item>
+   <item>REACTNATIVENEWARCH</item>
+  </string-array>
+</resources>

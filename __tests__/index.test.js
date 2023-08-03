@@ -1,5 +1,5 @@
-const NativeModules = require('react-native').NativeModules;
 const NativeEventEmitter = require('react-native').NativeEventEmitter;
+const NativeBrazeReactModule = require('../src/NativeBrazeReactModule').default;
 
 import Braze from '../src/index';
 
@@ -15,143 +15,144 @@ afterEach(() => {
 test('it calls BrazeReactBridge.registerAndroidPushToken', () => {
   const token = "some_token";
   Braze.registerAndroidPushToken(token);
-  expect(NativeModules.BrazeReactBridge.registerAndroidPushToken).toBeCalledWith(token);
+  expect(NativeBrazeReactModule.registerAndroidPushToken).toBeCalledWith(token);
+  expect(NativeBrazeReactModule.registerAndroidPushToken).toBeCalledWith(token);
 });
 
 test('it calls BrazeReactBridge.setGoogleAdvertisingId', () => {
   const googleAdvertisingId = "some_ga_id";
   const adTrackingEnabled = true;
   Braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
-  expect(NativeModules.BrazeReactBridge.setGoogleAdvertisingId).toBeCalledWith(googleAdvertisingId, adTrackingEnabled);
+  expect(NativeBrazeReactModule.setGoogleAdvertisingId).toBeCalledWith(googleAdvertisingId, adTrackingEnabled);
 });
 
 test('it calls BrazeReactBridge.setFirstName', () => {
   const first_name = "some_name";
   Braze.setFirstName(first_name);
-  expect(NativeModules.BrazeReactBridge.setFirstName).toBeCalledWith(first_name);
+  expect(NativeBrazeReactModule.setFirstName).toBeCalledWith(first_name);
 });
 
 test('it calls BrazeReactBridge.setLastName', () => {
   const last_name = "some_name";
   Braze.setLastName(last_name);
-  expect(NativeModules.BrazeReactBridge.setLastName).toBeCalledWith(last_name);
+  expect(NativeBrazeReactModule.setLastName).toBeCalledWith(last_name);
 });
 
 test('it calls BrazeReactBridge.setLanguage', () => {
   const language = "to";
   Braze.setLanguage(language);
-  expect(NativeModules.BrazeReactBridge.setLanguage).toBeCalledWith(language);
+  expect(NativeBrazeReactModule.setLanguage).toBeCalledWith(language);
 });
 
 test('it calls BrazeReactBridge.setEmail', () => {
   const email = "some_email";
   Braze.setEmail(email);
-  expect(NativeModules.BrazeReactBridge.setEmail).toBeCalledWith(email);
+  expect(NativeBrazeReactModule.setEmail).toBeCalledWith(email);
 });
 
 test('it calls BrazeReactBridge.setCountry', () => {
   const country = "some_country";
   Braze.setCountry(country);
-  expect(NativeModules.BrazeReactBridge.setCountry).toBeCalledWith(country);
+  expect(NativeBrazeReactModule.setCountry).toBeCalledWith(country);
 });
 
 test('it calls BrazeReactBridge.setHomeCity', () => {
   const city = "some_city";
   Braze.setHomeCity(city);
-  expect(NativeModules.BrazeReactBridge.setHomeCity).toBeCalledWith(city);
+  expect(NativeBrazeReactModule.setHomeCity).toBeCalledWith(city);
 });
 
 test('it calls BrazeReactBridge.setPhoneNumber', () => {
   const number = "555-867-5309";
   Braze.setPhoneNumber(number);
-  expect(NativeModules.BrazeReactBridge.setPhoneNumber).toBeCalledWith(number);
+  expect(NativeBrazeReactModule.setPhoneNumber).toBeCalledWith(number);
 });
 
 test('it calls BrazeReactBridge.requestFeedRefresh', () => {
   Braze.requestFeedRefresh();
-  expect(NativeModules.BrazeReactBridge.requestFeedRefresh).toBeCalled();
+  expect(NativeBrazeReactModule.requestFeedRefresh).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.launchNewsFeed', () => {
   Braze.launchNewsFeed();
-  expect(NativeModules.BrazeReactBridge.launchNewsFeed).toBeCalled();
+  expect(NativeBrazeReactModule.launchNewsFeed).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.getNewsFeedCards', () => {
   Braze.getNewsFeedCards();
-  expect(NativeModules.BrazeReactBridge.getNewsFeedCards).toBeCalled();
+  expect(NativeBrazeReactModule.getNewsFeedCards).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.logNewsFeedCardClicked', () => {
   const id = "1234";
   Braze.logNewsFeedCardClicked(id);
-  expect(NativeModules.BrazeReactBridge.logNewsFeedCardClicked).toBeCalledWith(id);
+  expect(NativeBrazeReactModule.logNewsFeedCardClicked).toBeCalledWith(id);
 });
 
 test('it calls BrazeReactBridge.logNewsFeedCardImpression', () => {
   const id = "1234";
   Braze.logNewsFeedCardImpression(id);
-  expect(NativeModules.BrazeReactBridge.logNewsFeedCardImpression).toBeCalledWith(id);
+  expect(NativeBrazeReactModule.logNewsFeedCardImpression).toBeCalledWith(id);
 });
 
 test('it calls BrazeReactBridge.launchContentCards', () => {
   Braze.launchContentCards();
-  expect(NativeModules.BrazeReactBridge.launchContentCards).toBeCalled();
+  expect(NativeBrazeReactModule.launchContentCards).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.getContentCards', () => {
   Braze.getContentCards();
-  expect(NativeModules.BrazeReactBridge.getContentCards).toBeCalled();
+  expect(NativeBrazeReactModule.getContentCards).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.logContentCardClicked', () => {
   const id = "1234";
   Braze.logContentCardClicked(id);
-  expect(NativeModules.BrazeReactBridge.logContentCardClicked).toBeCalledWith(id);
+  expect(NativeBrazeReactModule.logContentCardClicked).toBeCalledWith(id);
 });
 
 test('it calls BrazeReactBridge.logContentCardDismissed', () => {
   const id = "1234";
   Braze.logContentCardDismissed(id);
-  expect(NativeModules.BrazeReactBridge.logContentCardDismissed).toBeCalledWith(id);
+  expect(NativeBrazeReactModule.logContentCardDismissed).toBeCalledWith(id);
 });
 
 test('it calls BrazeReactBridge.logContentCardImpression', () => {
   const id = "1234";
   Braze.logContentCardImpression(id);
-  expect(NativeModules.BrazeReactBridge.logContentCardImpression).toBeCalledWith(id);
+  expect(NativeBrazeReactModule.logContentCardImpression).toBeCalledWith(id);
 });
 
 test('it calls BrazeReactBridge.requestImmediateDataFlush', () => {
   Braze.requestImmediateDataFlush();
-  expect(NativeModules.BrazeReactBridge.requestImmediateDataFlush).toBeCalled();
+  expect(NativeBrazeReactModule.requestImmediateDataFlush).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.wipeData', () => {
   Braze.wipeData();
-  expect(NativeModules.BrazeReactBridge.wipeData).toBeCalled();
+  expect(NativeBrazeReactModule.wipeData).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.disableSDK', () => {
   Braze.disableSDK();
-  expect(NativeModules.BrazeReactBridge.disableSDK).toBeCalled();
+  expect(NativeBrazeReactModule.disableSDK).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.enableSDK', () => {
   Braze.enableSDK();
-  expect(NativeModules.BrazeReactBridge.enableSDK).toBeCalled();
+  expect(NativeBrazeReactModule.enableSDK).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.requestLocationInitialization', () => {
   Braze.requestLocationInitialization();
-  expect(NativeModules.BrazeReactBridge.requestLocationInitialization).toBeCalled();
+  expect(NativeBrazeReactModule.requestLocationInitialization).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.requestGeofences', () => {
   const latitude = 40.7128;
   const longitude = 74.0060;
   Braze.requestGeofences(latitude, longitude);
-  expect(NativeModules.BrazeReactBridge.requestGeofences).toBeCalledWith(latitude, longitude);
+  expect(NativeBrazeReactModule.requestGeofences).toBeCalledWith(latitude, longitude);
 });
 
 test('it calls BrazeReactBridge.setLocationCustomAttribute', () => {
@@ -159,12 +160,12 @@ test('it calls BrazeReactBridge.setLocationCustomAttribute', () => {
   const latitude = 40.7128;
   const longitude = 74.0060;
   Braze.setLocationCustomAttribute(key, latitude, longitude, testCallback);
-  expect(NativeModules.BrazeReactBridge.setLocationCustomAttribute).toBeCalledWith(key, latitude, longitude, testCallback);
+  expect(NativeBrazeReactModule.setLocationCustomAttribute).toBeCalledWith(key, latitude, longitude, testCallback);
 });
 
 test('it calls BrazeReactBridge.requestContentCardsRefresh', () => {
   Braze.requestContentCardsRefresh();
-  expect(NativeModules.BrazeReactBridge.requestContentCardsRefresh).toBeCalled();
+  expect(NativeBrazeReactModule.requestContentCardsRefresh).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.setDateOfBirth', () => {
@@ -172,33 +173,33 @@ test('it calls BrazeReactBridge.setDateOfBirth', () => {
   const month = 11;
   const day = 23;
   Braze.setDateOfBirth(year, month, day);
-  expect(NativeModules.BrazeReactBridge.setDateOfBirth).toBeCalledWith(year, month, day);
+  expect(NativeBrazeReactModule.setDateOfBirth).toBeCalledWith(year, month, day);
 });
 
 test('it calls BrazeReactBridge.changeUser', () => {
   const user_id = "some_id";
   Braze.changeUser(user_id);
-  expect(NativeModules.BrazeReactBridge.changeUser).toBeCalledWith(user_id, null);
+  expect(NativeBrazeReactModule.changeUser).toBeCalledWith(user_id, null);
 });
 
 test('it calls BrazeReactBridge.setSdkAuthenticationSignature', () => {
   const signature = "signature";
   Braze.setSdkAuthenticationSignature(signature);
-  expect(NativeModules.BrazeReactBridge.setSdkAuthenticationSignature).toBeCalledWith(signature);
+  expect(NativeBrazeReactModule.setSdkAuthenticationSignature).toBeCalledWith(signature);
 });
 
 test('it calls BrazeReactBridge.addAlias', () => {
   const aliasName = "name";
   const aliasLabel = "label";
   Braze.addAlias(aliasName, aliasLabel);
-  expect(NativeModules.BrazeReactBridge.addAlias).toBeCalledWith(aliasName, aliasLabel);
+  expect(NativeBrazeReactModule.addAlias).toBeCalledWith(aliasName, aliasLabel);
 });
 
 test('it calls BrazeReactBridge.logCustomEvent', () => {
   const event_name = "event_name";
   const event_properties = "event_properties";
   Braze.logCustomEvent(event_name, event_properties);
-  expect(NativeModules.BrazeReactBridge.logCustomEvent).toBeCalledWith(event_name, event_properties);
+  expect(NativeBrazeReactModule.logCustomEvent).toBeCalledWith(event_name, event_properties);
 });
 
 test('it calls BrazeReactBridge.logPurchase', () => {
@@ -208,7 +209,7 @@ test('it calls BrazeReactBridge.logPurchase', () => {
   const quantity = "quantity";
   const purchase_properties = "purchase_properties";
   Braze.logPurchase(product_id, price, currency_code, quantity, purchase_properties);
-  expect(NativeModules.BrazeReactBridge.logPurchase).toBeCalledWith(product_id, price, currency_code, quantity, purchase_properties);
+  expect(NativeBrazeReactModule.logPurchase).toBeCalledWith(product_id, price, currency_code, quantity, purchase_properties);
 });
 
 test('it calls BrazeReactBridge.setAttributionData', () => {
@@ -217,165 +218,165 @@ test('it calls BrazeReactBridge.setAttributionData', () => {
   const adGroup = "some_adGroup";
   const creative = "some_creative";
   Braze.setAttributionData(network, campaign, adGroup, creative);
-  expect(NativeModules.BrazeReactBridge.setAttributionData).toBeCalledWith(network, campaign, adGroup, creative);
+  expect(NativeBrazeReactModule.setAttributionData).toBeCalledWith(network, campaign, adGroup, creative);
 });
 
 test('it calls BrazeReactBridge.setDateCustomUserAttribute', () => {
   const key = "some_key";
   const date = new Date('December 17, 1995 03:24:00');
   Braze.setCustomUserAttribute(key, date, testCallback);
-  expect(NativeModules.BrazeReactBridge.setDateCustomUserAttribute).toBeCalledWith(key, Math.floor(date.getTime() / 1000), testCallback);
+  expect(NativeBrazeReactModule.setDateCustomUserAttribute).toBeCalledWith(key, Math.floor(date.getTime() / 1000), testCallback);
 });
 
 test('it calls BrazeReactBridge.setCustomUserAttributeArray', () => {
   const key = "some_key";
   const array = ['a', 'b'];
   Braze.setCustomUserAttribute(key, array, testCallback);
-  expect(NativeModules.BrazeReactBridge.setCustomUserAttributeArray).toBeCalledWith(key, array, testCallback);
+  expect(NativeBrazeReactModule.setCustomUserAttributeArray).toBeCalledWith(key, array, testCallback);
 });
 
 test('it calls BrazeReactBridge.setBoolCustomUserAttribute', () => {
   const key = "some_key";
   const bool_value = true;
   Braze.setCustomUserAttribute(key, bool_value, testCallback);
-  expect(NativeModules.BrazeReactBridge.setBoolCustomUserAttribute).toBeCalledWith(key, bool_value, testCallback);
+  expect(NativeBrazeReactModule.setBoolCustomUserAttribute).toBeCalledWith(key, bool_value, testCallback);
 });
 
 test('it calls BrazeReactBridge.setStringCustomUserAttribute', () => {
   const key = "some_key";
   const string_value = "some string";
   Braze.setCustomUserAttribute(key, string_value, testCallback);
-  expect(NativeModules.BrazeReactBridge.setStringCustomUserAttribute).toBeCalledWith(key, string_value, testCallback);
+  expect(NativeBrazeReactModule.setStringCustomUserAttribute).toBeCalledWith(key, string_value, testCallback);
 });
 
 test('it calls BrazeReactBridge.setIntCustomUserAttribute', () => {
   const key = "some_key";
   const int_value = 55;
   Braze.setCustomUserAttribute(key, int_value, testCallback);
-  expect(NativeModules.BrazeReactBridge.setIntCustomUserAttribute).toBeCalledWith(key, int_value, testCallback);
+  expect(NativeBrazeReactModule.setIntCustomUserAttribute).toBeCalledWith(key, int_value, testCallback);
 });
 
 test('it calls BrazeReactBridge.setDoubleCustomUserAttribute', () => {
   const key = "some_key";
   const double_value = 3.14;
   Braze.setCustomUserAttribute(key, double_value, testCallback);
-  expect(NativeModules.BrazeReactBridge.setDoubleCustomUserAttribute).toBeCalledWith(key, double_value, testCallback);
+  expect(NativeBrazeReactModule.setDoubleCustomUserAttribute).toBeCalledWith(key, double_value, testCallback);
 });
 
 test('it calls BrazeReactBridge.incrementCustomUserAttribute', () => {
   const key = "some_key";
   const value = 5;
   Braze.incrementCustomUserAttribute(key, value, testCallback);
-  expect(NativeModules.BrazeReactBridge.incrementCustomUserAttribute).toBeCalledWith(key, value, testCallback);
+  expect(NativeBrazeReactModule.incrementCustomUserAttribute).toBeCalledWith(key, value, testCallback);
 });
 
 test('it calls BrazeReactBridge.setGender', () => {
   const gender = "male";
   Braze.setGender(gender, testCallback);
-  expect(NativeModules.BrazeReactBridge.setGender).toBeCalledWith(gender, testCallback);
+  expect(NativeBrazeReactModule.setGender).toBeCalledWith(gender, testCallback);
 });
 
 test('it calls BrazeReactBridge.addToSubscriptionGroup', () => {
   const groupId = "some_group_id";
   Braze.addToSubscriptionGroup(groupId, testCallback);
-  expect(NativeModules.BrazeReactBridge.addToSubscriptionGroup).toBeCalledWith(groupId, testCallback);
+  expect(NativeBrazeReactModule.addToSubscriptionGroup).toBeCalledWith(groupId, testCallback);
 });
 
 test('it calls BrazeReactBridge.removeFromSubscriptionGroup', () => {
   const groupId = "some_group_id";
   Braze.removeFromSubscriptionGroup(groupId, testCallback);
-  expect(NativeModules.BrazeReactBridge.removeFromSubscriptionGroup).toBeCalledWith(groupId, testCallback);
+  expect(NativeBrazeReactModule.removeFromSubscriptionGroup).toBeCalledWith(groupId, testCallback);
 });
 
 test('it calls BrazeReactBridge.setPushNotificationSubscriptionType', () => {
   const sub_type = "some_sub_type";
   Braze.setPushNotificationSubscriptionType(sub_type, testCallback);
-  expect(NativeModules.BrazeReactBridge.setPushNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
+  expect(NativeBrazeReactModule.setPushNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
 });
 
 test('it calls BrazeReactBridge.setEmailNotificationSubscriptionType', () => {
   const sub_type = "some_sub_type";
   Braze.setEmailNotificationSubscriptionType(sub_type, testCallback);
-  expect(NativeModules.BrazeReactBridge.setEmailNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
+  expect(NativeBrazeReactModule.setEmailNotificationSubscriptionType).toBeCalledWith(sub_type, testCallback);
 });
 
-test('it calls BrazeReactBridge.addToCustomAttributeArray', () => {
+test('it calls BrazeReactBridge.addToCustomUserAttributeArray', () => {
   const key = "some_key";
   const value = "some_value"
   Braze.addToCustomUserAttributeArray(key, value, testCallback);
-  expect(NativeModules.BrazeReactBridge.addToCustomAttributeArray).toBeCalledWith(key, value, testCallback);
+  expect(NativeBrazeReactModule.addToCustomUserAttributeArray).toBeCalledWith(key, value, testCallback);
 });
 
-test('it calls BrazeReactBridge.removeFromCustomAttributeArray', () => {
+test('it calls BrazeReactBridge.removeFromCustomUserAttributeArray', () => {
   const key = "some_key";
   const value = "some_value"
   Braze.removeFromCustomUserAttributeArray(key, value, testCallback);
-  expect(NativeModules.BrazeReactBridge.removeFromCustomAttributeArray).toBeCalledWith(key, value, testCallback);
+  expect(NativeBrazeReactModule.removeFromCustomUserAttributeArray).toBeCalledWith(key, value, testCallback);
 });
 
 test('it calls BrazeReactBridge.unsetCustomUserAttribute', () => {
   const key = "some_key";
   Braze.unsetCustomUserAttribute(key, testCallback);
-  expect(NativeModules.BrazeReactBridge.unsetCustomUserAttribute).toBeCalledWith(key, testCallback);
+  expect(NativeBrazeReactModule.unsetCustomUserAttribute).toBeCalledWith(key, testCallback);
 });
 
 test('it calls BrazeReactBridge.getCardCountForCategories', () => {
   const category = "some_category";
   Braze.getCardCountForCategories(category, testCallback);
-  expect(NativeModules.BrazeReactBridge.getCardCountForCategories).toBeCalledWith(category, testCallback);
+  expect(NativeBrazeReactModule.getCardCountForCategories).toBeCalledWith(category, testCallback);
 });
 
 test('it calls BrazeReactBridge.getUnreadCardCountForCategories', () => {
   const category = "some_category";
   Braze.getUnreadCardCountForCategories(category, testCallback);
-  expect(NativeModules.BrazeReactBridge.getUnreadCardCountForCategories).toBeCalledWith(category, testCallback);
+  expect(NativeBrazeReactModule.getUnreadCardCountForCategories).toBeCalledWith(category, testCallback);
 });
 
-test('it calls BrazeReactBridge.getInitialUrl if defined', () => {
-  NativeModules.BrazeReactBridge.getInitialUrl.mockImplementation((callback) => {
+test('it calls BrazeReactBridge.getInitialURL if defined', () => {
+  NativeBrazeReactModule.getInitialURL.mockImplementation((callback) => {
     callback(null, "some_data");
   });
   Braze.getInitialURL(testCallback);
-  expect(NativeModules.BrazeReactBridge.getInitialUrl).toBeCalled();
+  expect(NativeBrazeReactModule.getInitialURL).toBeCalled();
   expect(testCallback).toBeCalledWith("some_data");
 });
 
-test('it calls BrazeReactBridge.getInstallTrackingId', () => {
-  NativeModules.BrazeReactBridge.getInstallTrackingId.mockImplementation((callback) => {
+test('it calls BrazeReactBridge.getDeviceId', () => {
+  NativeBrazeReactModule.getDeviceId.mockImplementation((callback) => {
     callback(null, "some_tracking_id");
   });
-  Braze.getInstallTrackingId(testCallback);
-  expect(NativeModules.BrazeReactBridge.getInstallTrackingId).toBeCalled();
+  Braze.getDeviceId(testCallback);
+  expect(NativeBrazeReactModule.getDeviceId).toBeCalled();
   expect(testCallback).toBeCalledWith(null, "some_tracking_id");
 });
 
 test('it calls the callback with null and logs the error if BrazeReactBridge.getInitialUrl returns an error', () => {
-  NativeModules.BrazeReactBridge.getInitialUrl.mockImplementation((callback) => {
+  NativeBrazeReactModule.getInitialURL.mockImplementation((callback) => {
     callback("error", null);
   });
   Braze.getInitialURL(testCallback);
-  expect(NativeModules.BrazeReactBridge.getInitialUrl).toBeCalled();
+  expect(NativeBrazeReactModule.getInitialURL).toBeCalled();
   expect(testCallback).toBeCalledWith(null);
   expect(console.log).toBeCalledWith("error");
 });
 
 test('it calls the callback with null if BrazeReactBridge.getInitialUrl is not defined', () => {
-  NativeModules.BrazeReactBridge.getInitialUrl = null;
+  NativeBrazeReactModule.getInitialURL = null;
   Braze.getInitialURL(testCallback);
   expect(testCallback).toBeCalledWith(null);
 });
 
 test('it calls BrazeReactBridge.subscribeToInAppMessage', () => {
-  Braze.subscribeToInAppMessage(true);
-  expect(NativeModules.BrazeReactBridge.subscribeToInAppMessage).toBeCalledWith(true);
+  Braze.subscribeToInAppMessage(true, testCallback);
+  expect(NativeBrazeReactModule.subscribeToInAppMessage).toBeCalledWith(true, testCallback);
 
-  Braze.subscribeToInAppMessage(false);
-  expect(NativeModules.BrazeReactBridge.subscribeToInAppMessage).toBeCalledWith(false);
+  Braze.subscribeToInAppMessage(false, testCallback);
+  expect(NativeBrazeReactModule.subscribeToInAppMessage).toBeCalledWith(false, testCallback);
 });
 
 test('it calls BrazeReactBridge.hideCurrentInAppMessage', () => {
   Braze.hideCurrentInAppMessage();
-  expect(NativeModules.BrazeReactBridge.hideCurrentInAppMessage).toBeCalled();
+  expect(NativeBrazeReactModule.hideCurrentInAppMessage).toBeCalled();
 });
 
 test('it adds a listener', () => {
@@ -461,20 +462,20 @@ it('returns the original JSON when calling BrazeInAppMessage.toString()', () => 
 test('it calls BrazeReactBridge.logInAppMessageClicked', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
   Braze.logInAppMessageClicked(inAppMessage);
-  expect(NativeModules.BrazeReactBridge.logInAppMessageClicked).toBeCalledWith(testInAppMessageJson);
+  expect(NativeBrazeReactModule.logInAppMessageClicked).toBeCalledWith(testInAppMessageJson);
 });
 
 test('it calls BrazeReactBridge.logInAppMessageImpression', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
   Braze.logInAppMessageImpression(inAppMessage);
-  expect(NativeModules.BrazeReactBridge.logInAppMessageImpression).toBeCalledWith(testInAppMessageJson);
+  expect(NativeBrazeReactModule.logInAppMessageImpression).toBeCalledWith(testInAppMessageJson);
 });
 
 test('it calls BrazeReactBridge.logInAppMessageButtonClicked', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
   const testId = 23;
   Braze.logInAppMessageButtonClicked(inAppMessage, testId);
-  expect(NativeModules.BrazeReactBridge.logInAppMessageButtonClicked).toBeCalledWith(testInAppMessageJson, testId);
+  expect(NativeBrazeReactModule.logInAppMessageButtonClicked).toBeCalledWith(testInAppMessageJson, testId);
 });
 
 test('calls BrazeReactBridge.requestPushPermission', () => {
@@ -487,7 +488,7 @@ test('calls BrazeReactBridge.requestPushPermission', () => {
   }
 
   Braze.requestPushPermission(options);
-  expect(NativeModules.BrazeReactBridge.requestPushPermission).toBeCalledWith(options);
+  expect(NativeBrazeReactModule.requestPushPermission).toBeCalledWith(options);
 })
 
 it('instantiates a BrazeButton object', () => {
@@ -524,30 +525,30 @@ it('instantiates a BrazeButton object with the desired defaults', () => {
 test('it calls BrazeReactBridge.getFeatureFlag', () => {
   const testId = 'test';
   Braze.getFeatureFlag('test');
-  expect(NativeModules.BrazeReactBridge.getFeatureFlag).toBeCalledWith(testId);
+  expect(NativeBrazeReactModule.getFeatureFlag).toBeCalledWith(testId);
 });
 
 test('it calls BrazeReactBridge.getAllFeatureFlags', () => {
   Braze.getAllFeatureFlags();
-  expect(NativeModules.BrazeReactBridge.getAllFeatureFlags).toBeCalled();
+  expect(NativeBrazeReactModule.getAllFeatureFlags).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.refreshFeatureFlags', () => {
   Braze.refreshFeatureFlags();
-  expect(NativeModules.BrazeReactBridge.refreshFeatureFlags).toBeCalled();
+  expect(NativeBrazeReactModule.refreshFeatureFlags).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.getFeatureFlagBooleanProperty', () => {
   Braze.getFeatureFlagBooleanProperty('id', 'key');
-  expect(NativeModules.BrazeReactBridge.getFeatureFlagBooleanProperty).toBeCalled();
+  expect(NativeBrazeReactModule.getFeatureFlagBooleanProperty).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.getFeatureFlagStringProperty', () => {
   Braze.getFeatureFlagStringProperty('id', 'key');
-  expect(NativeModules.BrazeReactBridge.getFeatureFlagStringProperty).toBeCalled();
+  expect(NativeBrazeReactModule.getFeatureFlagStringProperty).toBeCalled();
 });
 
 test('it calls BrazeReactBridge.getFeatureFlagNumberProperty', () => {
   Braze.getFeatureFlagNumberProperty('id', 'key');
-  expect(NativeModules.BrazeReactBridge.getFeatureFlagNumberProperty).toBeCalled();
+  expect(NativeBrazeReactModule.getFeatureFlagNumberProperty).toBeCalled();
 });

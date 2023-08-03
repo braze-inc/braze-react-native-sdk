@@ -4,6 +4,7 @@
 #import <React/RCTRootView.h>
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
+
 #import "BrazeReactUtils.h"
 #import "BrazeReactBridge.h"
 #import "BrazeReactDelegate.h"
@@ -21,21 +22,6 @@ static NSString *const endpoint = @"sondheim.braze.com";
 {
   self.moduleName = @"BrazeProject";
   self.initialProps = @{};
-
-  // Setup Braze bridge
-  NSURL *jsCodeLocation =
-      [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:self.moduleName
-                                               initialProperties:self.initialProps
-                                                   launchOptions:launchOptions];
-
-  // Configure views in the application
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
-  rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
-  [self.window makeKeyAndVisible];
 
   // Setup Braze
   BRZConfiguration *configuration = [[BRZConfiguration alloc] initWithApiKey:apiKey endpoint:endpoint];
@@ -139,15 +125,11 @@ static NSString *const endpoint = @"sondheim.braze.com";
 /// @return: `true` if the `concurrentRoot` feature is enabled. Otherwise, it returns `false`.
 - (BOOL)concurrentRootEnabled
 {
-  return false;
+  return true;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
-#if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
-#else
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-#endif
 }
 
 @end

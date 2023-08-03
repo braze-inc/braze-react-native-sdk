@@ -1,10 +1,15 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTEventEmitter.h>
-#import <React/RCTBridgeModule.h>
 
 #import <BrazeKit/BrazeKit-Swift.h>
 
-@interface BrazeReactBridge : RCTEventEmitter <RCTBridgeModule>
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <BrazeReactModuleSpec/BrazeReactModuleSpec.h>
+@interface BrazeReactBridge: RCTEventEmitter <NativeBrazeReactModuleSpec>
+#else
+#import <React/RCTBridgeModule.h>
+@interface BrazeReactBridge: RCTEventEmitter <RCTBridgeModule>
+#endif
 
 /// Intializes the Braze instance based on a configuration. This same instance is also used by the Braze bridge.
 /// - Parameters:

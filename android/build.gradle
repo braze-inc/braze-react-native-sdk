@@ -5,14 +5,39 @@ def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
+def isNewArchitectureEnabled() {
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: 'com.facebook.react'
+}
+
 android {
   compileSdk safeExtGet('compileSdkVersion', 33)
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
+  if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+    namespace "com.braze.reactbridge"
+  }
 
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 16)
     targetSdkVersion safeExtGet('targetSdkVersion', 33)
+    buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
     versionCode 1
     versionName '1.0'
+  }
+
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += ['src/newarch']
+        res.srcDirs += ['src/newarch/res']
+      } else {
+        java.srcDirs += ['src/oldarch']
+        res.srcDirs += ['src/oldarch/res']
+      }
+    }
   }
 
   compileOptions {
@@ -27,6 +52,6 @@ android {
 }
 
 dependencies {
-  api 'com.braze:android-sdk-ui:25.0.0'
+  api 'com.braze:android-sdk-ui:26.3.1'
   api 'com.facebook.react:react-native:+'
 }

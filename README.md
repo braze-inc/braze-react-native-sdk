@@ -12,12 +12,11 @@ Effective marketing automation is an essential part of successfully scaling and 
 
 ## Version Support
 
-| Braze Plugin | React Native |
-| ------------ | ------------ |
-| 2.0.0+       | >= 0.68      |
-| <= 1.41.0    | <= 0.71      |
-
-> From version 2.0.1 and up, the Braze React Native SDK is compatible with the React Native New Architecture introduced in React Native v0.68+. While our React Native SDK is currently compatible with the New Architecture as a Native Module, we are actively working on converting our Braze library to a backwards compatible Turbo Module and will continue to make improvements for the New Architecture.
+| Braze Plugin | React Native | Supports New Architecture? |
+| ------------ | ------------ | -------------------------- |
+| 6.0.0+       | >= 0.68      | ✅ (>= 0.70.0)             |
+| 2.0.0+       | >= 0.68      | ✅                         |
+| <= 1.41.0    | <= 0.71      | ❌                         |
 
 ## Braze Expo Plugin
 
@@ -46,7 +45,7 @@ From the `BrazeProject` directory:
 ```zsh
 sudo gem install cocoapods
 cd ios/
-pod install
+pod install # If you are using the New Architecture, you need to run `RCT_NEW_ARCH_ENABLED=1 pod install` instead.
 cd ../
 npx react-native run-ios
 ```

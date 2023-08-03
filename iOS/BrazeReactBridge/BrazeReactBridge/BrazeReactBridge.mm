@@ -5,9 +5,11 @@
 #import <UserNotifications/UserNotifications.h>
 
 #import "BrazeReactUtils.h"
+#import "BrazeUIHandler.h"
 
-@import BrazeUI;
-@import BrazeLocation;
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "BrazeReactModuleSpec.h"
+#endif
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
 static NSString *const kNewsFeedCardsUpdatedEvent = @"newsFeedCardsUpdated";
@@ -16,18 +18,7 @@ static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
 static NSString *const kInAppMessageReceivedEvent = @"inAppMessageReceived";
 static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 
-@implementation RCTConvert (BrazeSubscriptionType)
-RCT_ENUM_CONVERTER(BRZUserSubscriptionState,
-                   (@{
-                      @"subscribed":@(BRZUserSubscriptionStateSubscribed),
-                      @"unsubscribed":@(BRZUserSubscriptionStateUnsubscribed),
-                      @"optedin":@(BRZUserSubscriptionStateOptedIn)
-                   }),
-                   BRZUserSubscriptionStateSubscribed,
-                   integerValue);
-@end
-
-@interface BrazeReactBridge () <BrazeSDKAuthDelegate, BrazeInAppMessageUIDelegate>
+@interface BrazeReactBridge () <BrazeSDKAuthDelegate>
 
 @property (strong, nonatomic) BRZCancellable *contentCardsSubscription;
 @property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
@@ -36,27 +27,25 @@ RCT_ENUM_CONVERTER(BRZUserSubscriptionState,
 @end
 
 static Braze *braze;
+static BrazeUIHandler *brazeUIHandler;
 
-@implementation BrazeReactBridge {
-    bool hasListeners;
-    bool useBrazeUIForInAppMessages;
-}
+@implementation BrazeReactBridge
+
+BOOL hasListeners = NO;
 
 #pragma mark - Setup
 
 + (Braze *)initBraze:(BRZConfiguration *)configuration {
   [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnative]];
+  #ifdef RCT_NEW_ARCH_ENABLED
+  [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnativenewarch]];
+  #endif
   configuration.api.sdkFlavor = BRZSDKFlavorReact;
   Braze *instance = [[Braze alloc] initWithConfiguration:configuration];
   braze = instance;
+  brazeUIHandler = [[BrazeUIHandler alloc] init];
+  [brazeUIHandler setDefaultInAppMessagePresenter:braze];
   return instance;
-}
-
-- (void)createDefaultInAppMessagePresenter {
-  if (!braze.inAppMessagePresenter) {
-    BrazeInAppMessageUI *inAppMessageUI = [[BrazeInAppMessageUI alloc] init];
-    braze.inAppMessagePresenter = inAppMessageUI;
-  }
 }
 
 - (dispatch_queue_t)methodQueue
@@ -68,32 +57,39 @@ static Braze *braze;
   return YES;
 }
 
+RCT_EXPORT_MODULE()
+
+/// The `startObserving` method will be called as soon as the first `Braze.addListener` method is called.
 - (void)startObserving {
   hasListeners = YES;
   braze.sdkAuthDelegate = self;
+  brazeUIHandler.eventEmitter = self;
 
   self.contentCardsSubscription = [braze.contentCards subscribeToUpdates:^(NSArray<BRZContentCardRaw *> * _Nonnull cards) {
     RCTLogInfo(@"Received Content Cards array via subscription of length: %lu", [cards count]);
     NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
     eventData[@"cards"] = RCTFormatContentCards(cards);
-    [self sendEventWithName:kContentCardsUpdatedEvent body:eventData];
+   [self sendEventWithName:kContentCardsUpdatedEvent body:eventData];
   }];
   self.featureFlagsSubscription = [braze.featureFlags subscribeToUpdates:^(NSArray<BRZFeatureFlag *> * _Nonnull featureFlags) {
     RCTLogInfo(@"Received Feature Flags array via subscription of length: %lu", [featureFlags count]);
-    [self sendEventWithName:kFeatureFlagsUpdatedEvent body:RCTFormatFeatureFlags(featureFlags)];
+   [self sendEventWithName:kFeatureFlagsUpdatedEvent body:RCTFormatFeatureFlags(featureFlags)];
   }];
   self.newsFeedSubscription = [braze.newsFeed subscribeToUpdates:^(NSArray<BRZNewsFeedCard *> * _Nonnull cards) {
     RCTLogInfo(@"Received News Feed cards via subscription of length: %lu", [cards count]);
-    [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
+   [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
   }];
-
-  [self createDefaultInAppMessagePresenter];
+  
+  // Assign a default IAM presenter delegate to publish IAM events to the JavaScript layer.
+  if ([brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
+    [brazeUIHandler useDefaultPresenterDelegate:braze];
+  }
 }
 
 - (void)stopObserving {
   hasListeners = NO;
   braze.delegate = nil;
-  ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = nil;
+  [brazeUIHandler deinitPresenterDelegate:braze];
   self.contentCardsSubscription = nil;
   self.newsFeedSubscription = nil;
   self.featureFlagsSubscription = nil;
@@ -119,6 +115,18 @@ static Braze *braze;
   };
 };
 
+- (BRZUserSubscriptionState)userSubscriptionStateFrom:(NSString *)stateString {
+  if ([stateString isEqualToString: @"subscribed"]) {
+    return BRZUserSubscriptionStateSubscribed;
+  } else if ([stateString isEqualToString:@"unsubscribed"]) {
+    return BRZUserSubscriptionStateUnsubscribed;
+  } else if ([stateString isEqualToString:@"optedin"]) {
+    return BRZUserSubscriptionStateOptedIn;
+  } else {
+    return BRZUserSubscriptionStateSubscribed;
+  }
+}
+
 - (void)reportResultWithCallback:(RCTResponseSenderBlock)callback andError:(NSString *)error andResult:(id)result {
   if (callback != nil) {
     if (error != nil) {
@@ -135,7 +143,7 @@ static Braze *braze;
 
 // Returns push deep links from cold app starts.
 // For more context see getInitialURL() in index.js
-RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(getInitialURL:(RCTResponseSenderBlock)callback) {
   if ([BrazeReactUtils sharedInstance].initialUrlString != nil) {
     [self reportResultWithCallback:callback andError:nil andResult:[BrazeReactUtils sharedInstance].initialUrlString];
   } else {
@@ -143,18 +151,17 @@ RCT_EXPORT_METHOD(getInitialUrl:(RCTResponseSenderBlock)callback) {
   }
 }
 
-RCT_EXPORT_METHOD(getInstallTrackingId:(RCTResponseSenderBlock)callback) {
-  [braze deviceIdWithCompletion:^(NSString *deviceId) {
-    [self reportResultWithCallback:callback andError:nil andResult:deviceId];
-  }];
+RCT_EXPORT_METHOD(getDeviceId:(RCTResponseSenderBlock)callback) {
+  NSString *deviceId = [braze deviceId];
+  [self reportResultWithCallback:callback andError:nil andResult:deviceId];
 }
 
-RCT_EXPORT_METHOD(changeUser:(NSString *)userId sdkAuthSignature:(nullable NSString *)signature) {
+RCT_EXPORT_METHOD(changeUser:(NSString *)userId signature:(NSString *)signature) {
   RCTLogInfo(@"braze changeUser with values %@ %@", userId, signature);
   [braze changeUser:userId sdkAuthSignature:signature];
 }
 
-RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName withLabel:(NSString *)aliasLabel) {
+RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName aliasLabel:(NSString *)aliasLabel) {
   RCTLogInfo(@"braze.user addAlias with values %@ %@", aliasName, aliasLabel);
   [braze.user addAlias:aliasName label:aliasLabel];
 }
@@ -163,17 +170,18 @@ RCT_EXPORT_METHOD(registerAndroidPushToken:(NSString *)token) {
   RCTLogInfo(@"Warning: This is an Android only feature.");
 }
 
-RCT_EXPORT_METHOD(setGoogleAdvertisingId:(NSString *)googleAdvertisingId andAdTrackingEnabled:(BOOL)adTrackingEnabled) {
+RCT_EXPORT_METHOD(setGoogleAdvertisingId:(NSString *)googleAdvertisingId adTrackingEnabled:(BOOL)adTrackingEnabled) {
   RCTLogInfo(@"Warning: This is an Android only feature.");
 }
 
-RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable NSDictionary *)properties) {
+RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName
+                  eventProperties:(NSDictionary *)eventProperties) {
   RCTLogInfo(@"braze logCustomEvent with eventName %@", eventName);
-  if (!properties) {
+  if (!eventProperties) {
     [braze logCustomEvent:eventName];
     return;
   }
-  [braze logCustomEvent:eventName properties:[self parseDictionary:properties]];
+  [braze logCustomEvent:eventName properties:[self parseDictionary:eventProperties]];
 }
 
 - (NSDictionary *)parseDictionary:(NSDictionary *)dictionary {
@@ -221,15 +229,19 @@ RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName withProperties:(nullable 
   return parsedArray;
 }
 
-RCT_EXPORT_METHOD(logPurchase:(NSString *)productIdentifier atPrice:(NSString *)price inCurrency:(NSString *)currencyCode withQuantity:(NSUInteger)quantity andProperties:(nullable NSDictionary *)properties) {
-  RCTLogInfo(@"braze logPurchase with productIdentifier %@", productIdentifier);
+RCT_EXPORT_METHOD(logPurchase:(NSString *)productId
+                  price:(NSString *)price
+           currencyCode:(NSString *)currencyCode
+               quantity:(double)quantity
+     purchaseProperties:(NSDictionary *)purchaseProperties) {
+  RCTLogInfo(@"braze logPurchase with productIdentifier %@", productId);
   double decimalPrice = [[NSDecimalNumber decimalNumberWithString:price] doubleValue];
-  if (!properties) {
-    [braze logPurchase:productIdentifier currency:currencyCode price:decimalPrice quantity:quantity];
+  if (!purchaseProperties) {
+    [braze logPurchase:productId currency:currencyCode price:decimalPrice quantity:quantity];
     return;
   }
 
-  [braze logPurchase:productIdentifier currency:currencyCode price:decimalPrice quantity:quantity properties:[self parseDictionary:properties]];
+  [braze logPurchase:productId currency:currencyCode price:decimalPrice quantity:quantity properties:[self parseDictionary:purchaseProperties]];
 }
 
 #pragma mark - User Attributes
@@ -249,7 +261,7 @@ RCT_EXPORT_METHOD(setEmail:(NSString *)email) {
   [braze.user setEmail:email];
 }
 
-RCT_EXPORT_METHOD(setDateOfBirth:(int)year month:(int)month day:(int)day) {
+RCT_EXPORT_METHOD(setDateOfBirth:(double)year month:(double)month day:(double)day) {
   RCTLogInfo(@"braze.user.dateOfBirth =  %@", @"date");
   NSCalendar *calendar = [NSCalendar currentCalendar];
   NSDateComponents *components = [[NSDateComponents alloc] init];
@@ -336,23 +348,25 @@ RCT_EXPORT_METHOD(removeFromSubscriptionGroup:(NSString *)groupId callback:(RCTR
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(BRZUserSubscriptionState)emailNotificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(NSString *)notificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user.emailNotificationSubscriptionType =  %@", @"enum");
+  BRZUserSubscriptionState emailNotificationSubscriptionType = [self userSubscriptionStateFrom:notificationSubscriptionType];
   [braze.user setEmailSubscriptionState:emailNotificationSubscriptionType];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setPushNotificationSubscriptionType:(BRZUserSubscriptionState)pushNotificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setPushNotificationSubscriptionType:(NSString *)notificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.pushNotificationSubscriptionType =  %@", @"enum");
+  BRZUserSubscriptionState pushNotificationSubscriptionType = [self userSubscriptionStateFrom:notificationSubscriptionType];
   [braze.user setPushNotificationSubscriptionState:pushNotificationSubscriptionType];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setBoolCustomUserAttribute:(NSString *)key andValue:(BOOL)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setBoolCustomUserAttribute:(NSString *)key value:(BOOL)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndBoolValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key boolValue:value];
   [self reportResultWithCallback:callback
@@ -360,7 +374,7 @@ RCT_EXPORT_METHOD(setBoolCustomUserAttribute:(NSString *)key andValue:(BOOL)valu
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setStringCustomUserAttribute:(NSString *)key andValue:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setStringCustomUserAttribute:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndStringValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key stringValue:value];
   [self reportResultWithCallback:callback
@@ -368,7 +382,7 @@ RCT_EXPORT_METHOD(setStringCustomUserAttribute:(NSString *)key andValue:(NSStrin
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setDoubleCustomUserAttribute:(NSString *)key andValue:(double)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setDoubleCustomUserAttribute:(NSString *)key value:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndDoubleValue: =  %@", key);
   [braze.user setCustomAttributeWithKey:key doubleValue:value];
   [self reportResultWithCallback:callback
@@ -376,7 +390,7 @@ RCT_EXPORT_METHOD(setDoubleCustomUserAttribute:(NSString *)key andValue:(double)
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setDateCustomUserAttribute:(NSString *)key andValue:(double)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setDateCustomUserAttribute:(NSString *)key value:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndDateValue: =  %@", key);
   NSDate *date = [NSDate dateWithTimeIntervalSince1970:value];
   [braze.user setCustomAttributeWithKey:key dateValue:date];
@@ -385,15 +399,16 @@ RCT_EXPORT_METHOD(setDateCustomUserAttribute:(NSString *)key andValue:(double)va
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setIntCustomUserAttribute:(NSString *)key andValue:(int)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setIntCustomUserAttribute:(NSString *)key value:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeWithKey:AndIntValue: =  %@", key);
-  [braze.user setCustomAttributeWithKey:key intValue:value];
+  NSInteger intValue = (NSInteger)value;
+  [braze.user setCustomAttributeWithKey:key intValue:intValue];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setCustomUserAttributeArray:(NSString *)key andValue:(NSArray *)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(setCustomUserAttributeArray:(NSString *)key value:(NSArray *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user setCustomAttributeArrayWithKey:array:: =  %@", key);
   [braze.user setCustomAttributeArrayWithKey:key array:value];
   [self reportResultWithCallback:callback
@@ -409,31 +424,31 @@ RCT_EXPORT_METHOD(unsetCustomUserAttribute:(NSString *)key callback:(RCTResponse
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(incrementCustomUserAttribute:(NSString *)key by:(NSInteger)incrementValue callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(incrementCustomUserAttribute:(NSString *)key value:(double)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user incrementCustomUserAttribute: =  %@", key);
-  [braze.user incrementCustomUserAttribute:key by:incrementValue];
+  [braze.user incrementCustomUserAttribute:key by:value];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(addToCustomAttributeArray:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(addToCustomUserAttributeArray:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user addToCustomAttributeArray: =  %@", key);
-  [braze.user addToCustomAttributeArrayWithKey:key value:value];
+  [braze.user addToCustomAttributeStringArrayWithKey:key value:value];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(removeFromCustomAttributeArray:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(removeFromCustomUserAttributeArray:(NSString *)key value:(NSString *)value callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.user removeFromCustomAttributeArrayWithKey: =  %@", key);
-  [braze.user removeFromCustomAttributeArrayWithKey:key value:value];
+  [braze.user removeFromCustomAttributeStringArrayWithKey:key value:value];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
 }
 
-RCT_EXPORT_METHOD(setAttributionData:(NSString *)network withCampaign:(NSString *)campaign withAdGroup:(NSString *)adGroup withCreative:(NSString *)creative) {
+RCT_EXPORT_METHOD(setAttributionData:(NSString *)network campaign:(NSString *)campaign adGroup:(NSString *)adGroup creative:(NSString *)creative) {
   RCTLogInfo(@"braze.user setAttributionData");
   BRZUserAttributionData *attributionData = [[BRZUserAttributionData alloc]
                                              initWithNetwork:network
@@ -453,7 +468,7 @@ RCT_EXPORT_METHOD(requestFeedRefresh) {
   [braze.newsFeed requestRefresh];
 }
 
-RCT_REMAP_METHOD(getNewsFeedCards, getNewsFeedCardsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getNewsFeedCards:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"getNewsFeedCards called");
   [self requestFeedRefresh];
   resolve([self getMappedNewsFeedCards]);
@@ -550,14 +565,10 @@ static NSDictionary *RCTFormatNewsFeedCard(BRZNewsFeedCard *card) {
 
 RCT_EXPORT_METHOD(launchContentCards) {
   RCTLogInfo(@"launchContentCards called");
-  BRZContentCardUIModalViewController *contentCardsModal = [[BRZContentCardUIModalViewController alloc] initWithBraze:braze];
-  contentCardsModal.navigationItem.title = @"Content Cards";
-  UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-  UIViewController *mainViewController = keyWindow.rootViewController;
-  [mainViewController presentViewController:contentCardsModal animated:YES completion:nil];
+  [brazeUIHandler launchContentCards:braze];
 }
 
-RCT_REMAP_METHOD(getContentCards, getContentCardsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getContentCards:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"getContentCards called");
 
   [braze.contentCards requestRefreshWithCompletion:^(
@@ -724,7 +735,7 @@ RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
   errorJSON[@"user_id"] = error.userId;
   errorJSON[@"original_signature"] = error.signature;
   errorJSON[@"reason"] = error.reason;
-  [self sendEventWithName:kSdkAuthenticationErrorEvent body:errorJSON];
+ [self sendEventWithName:kSdkAuthenticationErrorEvent body:errorJSON];
 }
 
 #pragma mark - Push Notifications
@@ -759,35 +770,19 @@ RCT_EXPORT_METHOD(requestPushPermission:(NSDictionary *)permissions) {
 
 #pragma mark - In-App Messages
 
-RCT_EXPORT_METHOD(subscribeToInAppMessage:(BOOL)useBrazeUI)
-{
-  useBrazeUIForInAppMessages = useBrazeUI;
-  [self createDefaultInAppMessagePresenter];
-  ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = self;
-}
-
-/// `BrazeInAppMessageUIDelegate` method
-- (enum BRZInAppMessageUIDisplayChoice)inAppMessage:(BrazeInAppMessageUI *)ui
-                            displayChoiceForMessage:(BRZInAppMessageRaw *)message {
-  NSData *inAppMessageData = [message json];
-  NSString *inAppMessageString = [[NSString alloc] initWithData:inAppMessageData encoding:NSUTF8StringEncoding];
-  NSDictionary *arguments = @{
-    @"inAppMessage" : inAppMessageString
-  };
-
-  // Send to JavaScript
-  [self sendEventWithName:kInAppMessageReceivedEvent body:arguments];
-
-  if (useBrazeUIForInAppMessages) {
-    return BRZInAppMessageUIDisplayChoiceNow;
-  } else {
-    return BRZInAppMessageUIDisplayChoiceDiscard;
+RCT_EXPORT_METHOD(subscribeToInAppMessage:(BOOL)useBrazeUI
+                  callback:(RCTResponseSenderBlock)callback) {
+  if (![brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
+    // A custom delegate is being used. Do nothing.
+    return;
   }
+  brazeUIHandler.showInAppMessagesAutomaticallyInDefaultDelegate = useBrazeUI;
+  [brazeUIHandler useDefaultPresenterDelegate:braze];
 }
 
 RCT_EXPORT_METHOD(hideCurrentInAppMessage) {
   RCTLogInfo(@"hideCurrentInAppMessage called");
-  [(BrazeInAppMessageUI *)braze.inAppMessagePresenter dismiss];
+  [brazeUIHandler dismissInAppMessage:braze];
 }
 
 RCT_EXPORT_METHOD(logInAppMessageClicked:(NSString *)inAppMessageString) {
@@ -806,7 +801,7 @@ RCT_EXPORT_METHOD(logInAppMessageImpression:(NSString *)inAppMessageString) {
   }
 }
 
-RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  buttonId:(int)buttonId) {
+RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  buttonId:(double)buttonId) {
   RCTLogInfo(@"logInAppMessageButtonClicked called with value %@", inAppMessageString);
 
   BRZInAppMessageRaw *inAppMessage = [self getInAppMessageFromString:inAppMessageString braze:braze];
@@ -833,7 +828,9 @@ RCT_EXPORT_METHOD(refreshFeatureFlags) {
   [braze.featureFlags requestRefresh];
 }
 
-RCT_REMAP_METHOD(getFeatureFlag, getFeatureFlagById:(NSString *)flagId withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getFeatureFlag:(NSString *)flagId
+                  resolve:(RCTPromiseResolveBlock)resolve
+                   reject:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"getFeatureFlag called for ID %@", flagId);
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSError* error = nil;
@@ -847,32 +844,42 @@ RCT_REMAP_METHOD(getFeatureFlag, getFeatureFlagById:(NSString *)flagId withResol
   }
 }
 
-RCT_REMAP_METHOD(getAllFeatureFlags, getAllFeatureFlagsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getAllFeatureFlags:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"getAllFeatureFlags called");
   NSArray<BRZFeatureFlag *> *mappedFeatureFlags = RCTFormatFeatureFlags(braze.featureFlags.featureFlags);
   resolve(mappedFeatureFlags);
 }
 
-RCT_REMAP_METHOD(getFeatureFlagBooleanProperty, getFeatureFlag:(NSString *)flagId booleanProperty:(NSString *)propertyKey withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagBooleanProperty called for key %@", propertyKey);
+RCT_EXPORT_METHOD(getFeatureFlagBooleanProperty:(NSString *)flagId
+                  key:(NSString *)key
+              resolve:(RCTPromiseResolveBlock)resolve
+               reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagBooleanProperty called for key %@", key);
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
-  NSNumber *boolProperty = [featureFlag boolPropertyForKey:propertyKey];
+  NSNumber *boolProperty = [featureFlag boolPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
   resolve(boolProperty ? boolProperty : [NSNull null]);
 }
 
-RCT_REMAP_METHOD(getFeatureFlagStringProperty, getFeatureFlag:(NSString *)flagId stringProperty:(NSString *)propertyKey withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagStringProperty called for key %@", propertyKey);
+RCT_EXPORT_METHOD(getFeatureFlagStringProperty:(NSString *)flagId
+                 key:(NSString *)key
+             resolve:(RCTPromiseResolveBlock)resolve
+              reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagStringProperty called for key %@", key);
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
-  NSString *stringProperty = [featureFlag stringPropertyForKey:propertyKey];
+  NSString *stringProperty = [featureFlag stringPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
   resolve(stringProperty ? stringProperty : [NSNull null]);
 }
 
-RCT_REMAP_METHOD(getFeatureFlagNumberProperty, getFeatureFlag:(NSString *)flagId numberProperty:(NSString *)propertyKey withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagNumberProperty called for key %@", propertyKey);
+RCT_EXPORT_METHOD(getFeatureFlagNumberProperty:(NSString *)flagId
+                  key:(NSString *)key
+              resolve:(RCTPromiseResolveBlock)resolve
+               reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagNumberProperty called for key %@", key);
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
-  NSNumber *numberProperty = [featureFlag numberPropertyForKey:propertyKey];
+  NSNumber *numberProperty = [featureFlag numberPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
   resolve(numberProperty ? numberProperty : [NSNull null]);
 }
@@ -893,6 +900,10 @@ static NSArray *RCTFormatFeatureFlags(NSArray<BRZFeatureFlag *> *featureFlags) {
   return mappedFeatureFlags;
 }
 
-RCT_EXPORT_MODULE();
+#ifdef RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params {
+  return std::make_shared<facebook::react::NativeBrazeReactModuleSpecJSI>(params);
+}
+#endif
 
 @end

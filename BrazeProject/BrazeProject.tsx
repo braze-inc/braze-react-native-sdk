@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
 import {
   StyleSheet,
@@ -11,8 +11,8 @@ import {
   TextInput,
   Platform,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import Braze from '@braze/react-native-sdk';
+import RadioGroup from 'react-native-radio-buttons-group';
+import Braze, { BrazeInAppMessage } from '@braze/react-native-sdk';
 
 // Change to `true` to automatically log clicks, button clicks,
 // and impressions for in-app messages and content cards.
@@ -22,31 +22,98 @@ const Space = () => {
   return <View style={styles.spacing} />;
 };
 
-type GenderOptions =
-  | Braze.GenderTypes['MALE']
-  | Braze.GenderTypes['FEMALE']
-  | Braze.GenderTypes['OTHER']
-  | Braze.GenderTypes['PREFER_NOT_TO_SAY']
-  | Braze.GenderTypes['NOT_APPLICABLE']
-  | Braze.GenderTypes['UNKNOWN'];
-
 export const BrazeProject = (): ReactElement => {
   const [userIdText, setUserIdText] = useState('');
   const [signatureText, setSignatureText] = useState('');
   const [customEventText, setCustomEventText] = useState('');
   const [languageText, setLanguageText] = useState('');
-  const [subscriptionState, setSubscriptionState] = useState<'o' | 'u' | 's'>(
-    's',
-  );
-  const [gender, setGender] = useState<GenderOptions>('m');
+  const [subscriptionState, setSubscriptionState] = useState<string>('s');
+  const [gender, setGender] = useState<string>('m');
   const [message, setMessage] = useState('Success');
   const [toastVisible, setToastVisible] = useState(false);
   const [, setFeatureFlags] = useState<Braze.FeatureFlag[]>([]);
   const [featureFlagId, setFeatureFlagId] = useState('');
-  const [featureFlagPropertyType, setFeatureFlagPropertyType] = useState<
-    'bool' | 'num' | 'string'
-  >('bool');
+  const [featureFlagPropertyType, setFeatureFlagPropertyType] =
+    useState<string>('bool');
   const [featureFlagPropertyKey, setFeatureFlagPropertyKey] = useState('');
+
+  const subscriptionStateButtons = useMemo(
+    () => [
+      {
+        id: 'o',
+        label: 'Opted In',
+        value: 'o',
+      },
+      {
+        id: 'u',
+        label: 'Unsubscribed',
+        value: 'u',
+      },
+      {
+        id: 's',
+        label: 'Subscribed',
+        value: 's',
+      },
+    ],
+    [],
+  );
+
+  const genderButtons = useMemo(
+    () => [
+      {
+        id: 'f',
+        label: 'Female',
+        value: 'f',
+      },
+      {
+        id: 'm',
+        label: 'Male',
+        value: 'm',
+      },
+      {
+        id: 'o',
+        label: 'Other',
+        value: 'o',
+      },
+      {
+        id: 'p',
+        label: 'Prefer Not to Say',
+        value: 'p',
+      },
+      {
+        id: 'n',
+        label: 'Not Applicable',
+        value: 'n',
+      },
+      {
+        id: 'u',
+        label: 'Unknown',
+        value: 'u',
+      },
+    ],
+    [],
+  );
+
+  const featureFlagPropertyButtons = useMemo(
+    () => [
+      {
+        id: 'bool',
+        label: 'Boolean',
+        value: 'bool',
+      },
+      {
+        id: 'num',
+        label: 'Number',
+        value: 'num',
+      },
+      {
+        id: 'string',
+        label: 'String',
+        value: 'string',
+      },
+    ],
+    [],
+  );
 
   const handleOpenUrl = (event: { url: string }) => {
     console.log('handleOpenUrl called on url ' + event.url);
@@ -92,21 +159,22 @@ export const BrazeProject = (): ReactElement => {
       }
     });
 
-    Braze.subscribeToInAppMessage(true, (event: { inAppMessage: string }) => {
-      const inAppMessage = new Braze.BrazeInAppMessage(event.inAppMessage);
+    Braze.subscribeToInAppMessage(
+      true,
+      (event) => {
+        if (automaticallyInteract) {
+          console.log(
+            'Automatically logging IAM click, button click `0`, and impression.',
+          );
+          Braze.logInAppMessageClicked(event.inAppMessage);
+          Braze.logInAppMessageImpression(event.inAppMessage);
+          Braze.logInAppMessageButtonClicked(event.inAppMessage, 0);
+        }
 
-      if (automaticallyInteract) {
-        console.log(
-          'Automatically logging IAM click, button click `0`, and impression.',
-        );
-        Braze.logInAppMessageClicked(inAppMessage);
-        Braze.logInAppMessageImpression(inAppMessage);
-        Braze.logInAppMessageButtonClicked(inAppMessage, 0);
-      }
-
-      showToast('inAppMessage received in the React layer');
-      console.log(inAppMessage);
-    });
+        showToast('inAppMessage received in the React layer');
+        console.log(event.inAppMessage);
+      },
+    );
 
     const inAppMessageSubscription = Braze.addListener(
       Braze.Events.IN_APP_MESSAGE_RECEIVED,
@@ -242,24 +310,29 @@ export const BrazeProject = (): ReactElement => {
 
   const setGenderPress = () => {
     console.log(`Received request to change gender to ${gender}`);
-    Braze.setGender(gender);
     switch (gender) {
-      case Braze.Genders.FEMALE:
+      case 'f':
+        Braze.setGender(Braze.Genders.FEMALE);
         showToast('User gender set to "female"');
         break;
-      case Braze.Genders.MALE:
+      case 'm':
+        Braze.setGender(Braze.Genders.MALE);
         showToast('User gender set to "male"');
         break;
-      case Braze.Genders.NOT_APPLICABLE:
+      case 'n':
+        Braze.setGender(Braze.Genders.NOT_APPLICABLE);
         showToast('User gender set to "not applicable"');
         break;
-      case Braze.Genders.OTHER:
+      case 'o':
+        Braze.setGender(Braze.Genders.OTHER);
         showToast('User gender set to "other"');
         break;
-      case Braze.Genders.PREFER_NOT_TO_SAY:
+      case 'p':
+        Braze.setGender(Braze.Genders.PREFER_NOT_TO_SAY);
         showToast('User gender set to "prefer not to say"');
         break;
-      case Braze.Genders.UNKNOWN:
+      case 'u':
+        Braze.setGender(Braze.Genders.UNKNOWN);
         showToast('User gender set to "unknown"');
         break;
     }
@@ -450,12 +523,12 @@ export const BrazeProject = (): ReactElement => {
     showToast('Attribution Data Set');
   };
 
-  const getInstallTrackingId = () => {
-    Braze.getInstallTrackingId((err, res) => {
+  const getDeviceId = () => {
+    Braze.getDeviceId((err, res) => {
       if (err) {
-        console.log(`Error getting install tracking ID: ${err}`);
+        console.log(`Error getting device ID: ${err}`);
       } else {
-        showToast(`Install tracking ID: ${res}`);
+        showToast(`Device ID: ${res}`);
       }
     });
   };
@@ -619,32 +692,23 @@ export const BrazeProject = (): ReactElement => {
       {/* User Attributes */}
 
       <View style={styles.row}>
-        <Picker
-          style={styles.picker}
-          itemStyle={styles.pickerText}
-          selectedValue={subscriptionState}
-          onValueChange={setSubscriptionState}>
-          <Picker.Item label="Subscribed" value="s" />
-          <Picker.Item label="Unsubscribed" value="u" />
-          <Picker.Item label="Opted-in" value="o" />
-        </Picker>
+        <RadioGroup
+          containerStyle={styles.radioGroup}
+          radioButtons={subscriptionStateButtons}
+          selectedId={subscriptionState}
+          onPress={setSubscriptionState}
+        />
         <TouchableHighlight onPress={setSubscriptionStatePress}>
           <Text>Set Subscription State</Text>
         </TouchableHighlight>
       </View>
       <View style={styles.row}>
-        <Picker
-          style={styles.picker}
-          itemStyle={styles.pickerText}
-          selectedValue={gender}
-          onValueChange={setGender}>
-          <Picker.Item label="Female" value="f" />
-          <Picker.Item label="Male" value="m" />
-          <Picker.Item label="Not Applicable" value="n" />
-          <Picker.Item label="Other" value="o" />
-          <Picker.Item label="Prefer Not to Say" value="p" />
-          <Picker.Item label="Unknown" value="u" />
-        </Picker>
+        <RadioGroup
+          containerStyle={styles.radioGroup}
+          radioButtons={genderButtons}
+          selectedId={gender}
+          onPress={setGender}
+        />
         <TouchableHighlight onPress={setGenderPress}>
           <Text>Set Gender</Text>
         </TouchableHighlight>
@@ -716,15 +780,12 @@ export const BrazeProject = (): ReactElement => {
         </TouchableHighlight>
       </View>
       <View style={styles.container}>
-        <Picker
-          style={styles.picker}
-          itemStyle={styles.pickerText}
-          selectedValue={featureFlagPropertyType}
-          onValueChange={setFeatureFlagPropertyType}>
-          <Picker.Item label="Boolean" value="bool" />
-          <Picker.Item label="Number" value="num" />
-          <Picker.Item label="String" value="string" />
-        </Picker>
+        <RadioGroup
+          containerStyle={styles.radioGroup}
+          radioButtons={featureFlagPropertyButtons}
+          selectedId={featureFlagPropertyType}
+          onPress={setFeatureFlagPropertyType}
+        />
         <TextInput
           style={styles.textInput}
           autoCorrect={false}
@@ -763,8 +824,8 @@ export const BrazeProject = (): ReactElement => {
       <TouchableHighlight onPress={setAttributionData}>
         <Text>Set Attribution Data</Text>
       </TouchableHighlight>
-      <TouchableHighlight onPress={getInstallTrackingId}>
-        <Text>Get Install Tracking ID</Text>
+      <TouchableHighlight onPress={getDeviceId}>
+        <Text>Get Device ID</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={wipeData}>
         <Text>Wipe Data</Text>
@@ -804,11 +865,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  picker: {
+  radioGroup: {
     width: 200,
-  },
-  pickerText: {
-    fontSize: 16,
+    alignItems: 'flex-start',
   },
   toastView: {
     display: 'flex',

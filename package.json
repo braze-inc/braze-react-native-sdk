@@ -1,6 +1,6 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "5.2.0",
+  "version": "6.0.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -56,7 +56,15 @@
     ],
     "preset": "react-native",
     "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+      "^.+\\.[jt]s$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    }
+  },
+  "codegenConfig": {
+    "name": "BrazeReactModuleSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.braze.reactbridge"
     }
   }
 }

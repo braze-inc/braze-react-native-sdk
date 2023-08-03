@@ -14,11 +14,20 @@ import { EmitterSubscription } from 'react-native';
 export function getInitialURL(callback: (deepLink: string) => void): void;
 
 /**
- * Returns a unique device ID for install tracking. This method is equivalent to calling
- * Braze.getInstallTrackingId() on Android and returns the IDFV on iOS.
- * @param {function(error, result)} callback - A callback that receives the function call result.
+ * @deprecated This method is deprecated in favor of `getDeviceId`.
  */
 export function getInstallTrackingId(callback: Callback<string>): void;
+
+/**
+ * Returns a unique ID stored on the device. 
+ * 
+ * On Android, a randomly generated, app specific ID that is stored on the device. A new ID will be generated if the user 
+ * clears the data for the app or removes/re-installs the app. The ID will persist across Braze.changeUser calls.
+ * 
+ * On iOS, this ID is generated from the IDFV. This behavior will be updated in the next major version.
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function getDeviceId(callback: Callback<string>): void;
 
 /**
  * When a user first uses Braze on a device they are considered "anonymous". Use this method to identify a user
@@ -556,7 +565,7 @@ export function setLocationCustomAttribute(
  */
 export function subscribeToInAppMessage(
   useBrazeUI: boolean,
-  callback?: Function
+  callback?: (event: {inAppMessage: BrazeInAppMessage}) => void
 ): EmitterSubscription | undefined;
 
 /**
@@ -681,7 +690,7 @@ export function getFeatureFlagNumberProperty(id: string, key: string): Promise<n
 /**
  * Requests a refresh of Feature Flags from the Braze server.
  */
-export function refreshFeatureFlags();
+export function refreshFeatureFlags(): void;
 
 export class BrazeInAppMessage {
   constructor(_data: string);

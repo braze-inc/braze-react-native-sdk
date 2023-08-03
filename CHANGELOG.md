@@ -1,4 +1,26 @@
-# 5.2.0
+## 6.0.0
+
+##### Breaking
+- If you are using the New Architecture, this version requires React Native `0.70` or higher.
+- Fixes the sample setup steps for iOS apps conforming to `RCTAppDelegate`.
+  - ⚠️ If your app conforms to `RCTAppDelegate` and was following our previous `AppDelegate` setup in the sample project or [Braze documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/react_sdk_setup/?tab=ios#step-2-complete-native-setup), you will need to reference our [updated samples](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/AppDelegate.mm) to prevent any crashes from occurring when subscribing to events in the new Turbo Module. ⚠️
+- Updates the native Android bridge [from Braze Android SDK 25.0.0 to 26.3.1](https://github.com/braze-inc/braze-android-sdk/compare/v25.0.0...v26.3.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Fixes the presentation of in-app messages to match the documented behavior.
+  - Calling `subscribeToInAppMessages` or `addListener` in the Javascript layer will no longer cause a custom `BrazeInAppMessageUIDelegate` implementation on iOS to be ignored.
+  - Calling `Braze.addListener` for the `inAppMessageReceived` event will subscribe in both the Javascript and the native layers (iOS + Android). This means it is no longer required to call `Braze.subscribeToInAppMessage`.
+    - Per the Braze documentation, you do not need to explicitly call `subscribeToInAppMessage` to use the default In-App Message UI.
+  - See our documentation for more details around [Advanced customization](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/inapp_messages/?tab=ios#advanced-customization).
+
+##### Added
+- Migrates the Braze bridge to a backwards-compatible [New Architecture Turbo Module](https://reactnative.dev/docs/next/the-new-architecture/pillars-turbomodules).
+  - This is a non-breaking change to your existing imports of the Braze SDK if you are using React Native `0.70`+.
+  - The Braze SDK continues to be compatible with both the New Architecture and old React Native architecture.
+- Adds the `getDeviceId` method to replace `getInstallTrackingId`, which is now deprecated.
+- Updates the native iOS bridge [from Braze Swift SDK 6.3.1 to 6.4.0](https://github.com/braze-inc/braze-swift-sdk/compare/6.3.1...6.4.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Adds a conditional library namespace to the Android `build.gradle` file to prepare for React Native 0.73, which uses AGP 8.x.
+  - For more details, refer to this [React Native announcement](https://github.com/react-native-community/discussions-and-proposals/issues/671).
+
+## 5.2.0
 
 ##### Fixed
 - Fixes an issue on Android where push notifications wouldn't be forwarded after the app was closed.
@@ -8,13 +30,13 @@
 ##### Added
 - Updates the native iOS bridge [from Braze Swift SDK 6.2.0 to 6.3.1](https://github.com/braze-inc/braze-swift-sdk/compare/6.2.0...6.3.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
-# 5.1.0
+## 5.1.0
 
 ##### Fixed
 - Fixes an issue that occured whenever a custom event is logged with dictionary properties using a key named "type".
 - Removes the automatic assignment of [`BrazeDelegate`](https://braze-inc.github.io/braze-swift-sdk/documentation/brazekit/braze/delegate) in the iOS bridge, allowing for custom implementations to be assigned to the `braze` instance.
 
-# 5.0.0
+## 5.0.0
 
 ##### Breaking
 - Updates the native iOS bridge [from Braze Swift SDK 5.13.0 to 6.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/5.13.0...6.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4edR1).
@@ -28,7 +50,7 @@
 ##### Added
 - Updates the native Android bridge [from Braze Android SDK 24.3.0 to 25.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v24.3.0...v25.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
-# 4.1.0
+## 4.1.0
 
 ##### Fixed
 - Fixes an issue in the `PushNotificationEvent` object introduced in `2.0.1` where a field was named `context_text` instead of the correct value of `content_text`.
@@ -43,7 +65,7 @@
   - `getFeatureFlagNumberProperty(id, key)`
 - Adds the Braze Event key `Braze.Events.FEATURE_FLAGS_UPDATED` for subscribing to Feature Flags updates.
 
-# 4.0.0
+## 4.0.0
 
 ##### Breaking
 - The iOS bridge now automatically attaches the default In-App Message UI with the `braze` instance, without needing to call `subscribeToInAppMessage()`. This updates the behavior from `2.0.0` to simplify integration.
@@ -60,7 +82,7 @@
 - Updates the native iOS bridge to [Braze Swift SDK 5.13.0](https://github.com/braze-inc/braze-swift-sdk/blob/main/CHANGELOG.md#5130).
 - Improves typescript definitions for `addListener` event types.
 
-# 3.0.0
+## 3.0.0
 
 > Starting with this release, this SDK will use [Semantic Versioning](https://semver.org/).
 
@@ -83,12 +105,12 @@
 - Updates the native Android bridge to [Braze Android SDK 24.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2430).
 - Updates `getContentCards` on the iOS bridge to initiate a refresh before returning the array of Content Cards. This brings parity with the Android bridge behavior.
 
-# 2.1.0
+## 2.1.0
 
 ##### Added
 - Added `'DEFINES_MODULE' => 'YES'` to the Cocoapod's xcconfig to remove the need for static framework linkage on iOS when using the Braze Expo plugin.
 
-# 2.0.2
+## 2.0.2
 
 ##### Fixed
 - Removes the usage of Objective-C modules when importing the Braze Swift SDK for improved compatibility with Objective-C++.
@@ -96,13 +118,13 @@
     - `@import BrazeKit;` → `#import <BrazeKit/BrazeKit-Swift.h>`
     - `@import BrazeLocation;` → `#import <BrazeLocation/BrazeLocation-Swift.h>`
 
-# 2.0.1
+## 2.0.1
 
 ##### Fixed
 - Fixes compatibility issues with newer versions of React Native introduced in 2.0.0.
 - Fixes an issue where callbacks were not being executed for some user attribute methods.
 
-# 2.0.0
+## 2.0.0
 
 ##### ⚠ Breaking
 - The Braze React Native SDK npm package has moved from `react-native-appboy-sdk` to `@braze/react-native-sdk`.
@@ -134,7 +156,7 @@
   - `Braze.logNewsFeedCardClicked()`
   - `Braze.logNewsFeedCardImpression()`
 
-# 1.41.0
+## 1.41.0
 
 ##### ⚠ Breaking
 - Removed `setFacebookData()`.
@@ -145,7 +167,7 @@
 - Exposes `isControl` field for `ContentCard`.
 - Removed `kotlinVersion` gradle template variable. To override the Kotlin version used, please use a Gradle dependency `resolutionStrategy`.
 
-# 1.40.0
+## 1.40.0
 
 ##### ⚠ Breaking
 - Updated the native Android bridge to [Braze Android SDK 23.2.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2321).
@@ -154,7 +176,7 @@
 ##### Changed
 - Updated the `React` podspec dependency to `React-Core`.
 
-# 1.39.0
+## 1.39.0
 
 ##### ⚠ Breaking
 - Renamed the `kotlin_version` gradle template variable to `kotlinVersion`.
@@ -163,12 +185,12 @@
 ##### Fixed
 - Fixed an issue that caused a NativeEventEmitter warning message to appear.
 
-# 1.38.1
+## 1.38.1
 
 ##### Fixed
 - Fixed an issue introduced in 1.38.0 where `setEmail` did not work as expected on Android.
 
-# 1.38.0
+## 1.38.0
 
 ##### ⚠ Breaking
 - Updated the native Android bridge to [Braze Android SDK 23.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2301).
@@ -195,7 +217,7 @@
   ```
 - Added `Braze.requestPushPermission()` to request a permissions prompt for push notifications.
 
-# 1.37.0
+## 1.37.0
 
 ##### ⚠ Breaking
 - The Braze React Native SDK now exports its default object as an ES Module. If you currently import the SDK using `require()`, you will need to now import it as a standard ES Module (e.g. `import Braze from "react-native-appboy-sdk"`).
@@ -203,7 +225,7 @@
 ##### Added
 - Introduced `Braze.subscribeToInAppMessage()` which publishes an event to the Javascript layer when an in-app message is triggered and allows you to choose whether or not to use the default Braze UI to display in-app messages.
 
-# 1.36.0
+## 1.36.0
 
 ##### ⚠ Breaking
 - Updated the native Android bridge to [Braze Android SDK 21.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2100).
@@ -211,23 +233,23 @@
 - Removed `setAvatarImageUrl()`.
 - Removed `logContentCardsDisplayed`. This method was not part of the recommended Content Cards integration and can be safely removed.
 
-# 1.35.1
+## 1.35.1
 
 ##### Fixed
 - Fixed an issue where `setMetadata` did not have a method implementation for Android.
 
-# 1.35.0
+## 1.35.0
 
 ##### ⚠ Breaking
 - Updated the native iOS bridge to [Braze iOS SDK 4.4.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#442).
 - Drops support for iOS 9 and 10.
 
-# 1.34.1
+## 1.34.1
 
 ##### Fixed
 - Fixed an issue where `getInitialUrl` would not resolve when there is no initial URL.
 
-# 1.34.0
+## 1.34.0
 
 ##### ⚠ Breaking
 - Updated the native Android bridge to [Braze Android SDK 18.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1801).
@@ -238,7 +260,7 @@
 ##### Changed
 - Improved logging around `getInitialUrl`.
 
-# 1.33.1
+## 1.33.1
 
 ##### Fixed
 - Fixed an issue introduced in 1.33.0 that caused a build error on iOS.
