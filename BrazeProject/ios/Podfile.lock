@@ -1,6 +1,6 @@
 PODS:
   - boost (1.76.0)
-  - braze-react-native-sdk (6.0.0):
+  - braze-react-native-sdk (6.0.1):
     - BrazeKit (~> 6.4.0)
     - BrazeLocation (~> 6.4.0)
     - BrazeUI (~> 6.4.0)
@@ -1259,7 +1259,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  braze-react-native-sdk: 4b12c96e4c445d51cff1be0426466168d364468e
+  braze-react-native-sdk: 2b73f41c98a2ec56ea2ff9fb0ac521f8900f2a54
   BrazeKit: 47ebb49398e645ef8cd1df40be9ea7f648029283
   BrazeLocation: 4e25584206096cf060c4e22e14d8a2eb541152d4
   BrazeUI: 56929e8d9825a532e1cbf3b713df7c5f5791ff17

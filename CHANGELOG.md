@@ -1,3 +1,8 @@
+## 6.0.1
+
+##### Fixed
+- Adds `'DEFINES_MODULE' => 'YES'` to the iOS Podspec when compiling the Turbo Module to prevent the need for static framework linkage when using the Braze Expo plugin.
+
 ## 6.0.0
 
 ##### Breaking
