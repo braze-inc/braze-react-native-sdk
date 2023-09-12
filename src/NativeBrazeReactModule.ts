@@ -24,7 +24,7 @@ export interface Spec extends TurboModule {
     month: number,
     day: number
   ): void;
-  registerAndroidPushToken(token: string): void;
+  registerPushToken(token: string): void;
   setGoogleAdvertisingId(
     googleAdvertisingId: string,
     adTrackingEnabled: boolean
@@ -76,9 +76,27 @@ export interface Spec extends TurboModule {
     value: string,
     callback?: ((error?: Object, result?: boolean) => void) | null
   ): void;
+
+  // Sets a dictionary object as a custom user attribute.
+  // `merge` indicates whether to override the existing value (false) or combine its fields (true).
+  setCustomUserAttributeObject(
+    key: string,
+    value: Object,
+    merge: boolean,
+    callback?: ((error?: Object, result?: boolean) => void) | null
+  ): void;
+
+  // Sets an array of strings as a custom user attribute.
   setCustomUserAttributeArray(
     key: string,
     value: string[],
+    callback?: ((error?: Object, result?: boolean) => void) | null
+  ): void;
+
+  // Sets an array of objects as a custom user attribute.
+  setCustomUserAttributeObjectArray(
+    key: string,
+    value: object[],
     callback?: ((error?: Object, result?: boolean) => void) | null
   ): void;
   setDateCustomUserAttribute(
@@ -121,6 +139,7 @@ export interface Spec extends TurboModule {
   logContentCardDismissed(cardId: string): void;
   logContentCardImpression(cardId: string): void;
   getContentCards(): Promise<ContentCard[]>;
+  getCachedContentCards(): Promise<ContentCard[]>;
   getCardCountForCategories(
     category: string,
     callback: ((error?: Object, result?: number) => void) | null
@@ -136,6 +155,13 @@ export interface Spec extends TurboModule {
   enableSDK(): void;
   requestLocationInitialization(): void;
   requestGeofences(latitude: number, longitude: number): void;
+  setLastKnownLocation(
+    latitude: number,
+    longitude: number,
+    altitude: number | null,
+    horizontalAccuracy: number | null,
+    verticalAccuracy: number | null
+  ): void;
   setLocationCustomAttribute(
     key: string,
     latitude: number,
@@ -164,6 +190,7 @@ export interface Spec extends TurboModule {
   getFeatureFlagStringProperty(flagId: string, key: string): Promise<string | null>;
   getFeatureFlagNumberProperty(flagId: string, key: string): Promise<number | null>;
   refreshFeatureFlags(): void;
+  logFeatureFlagImpression(flagId: string): void;
 
   // NativeEventEmitter methods for the New Architecture.
   // The implementations are handled implicitly by React Native.

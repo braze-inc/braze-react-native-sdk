@@ -46,7 +46,7 @@ export class Braze {
    * @param {function(string)} callback - A callback that retuns the deep link as a string. If there is no deep link, returns null.
    */
   static getInitialURL(callback) {
-    if (this.bridge.getInitialURL) {
+    if (Platform.OS === 'ios') {
       this.bridge.getInitialURL((err, res) => {
         if (err) {
           console.log(err);
@@ -159,14 +159,18 @@ export class Braze {
   }
 
   /**
-   * This method posts a token to Braze's servers to associate the token with the current device.
-   *
-   * No-op on iOS.
-   *
-   * @param {string} token - The device's push token.
+   * @deprecated This method is deprecated in favor of `registerPushToken`.
    */
   static registerAndroidPushToken(token) {
-    this.bridge.registerAndroidPushToken(token);
+    this.bridge.registerPushToken(token);
+  }
+
+  /**
+  * This method posts a token to Braze's servers to associate the token with the current device.
+  * @param {string} token - The device's push token.
+  */
+  static registerPushToken(token) {
+    this.bridge.registerPushToken(token);
   }
 
   /**
@@ -252,7 +256,10 @@ export class Braze {
    *    Passing a null value will remove this custom attribute from the user.
    * @param {function(error, result)} callback - A callback that receives the function call result.
    */
-  static setCustomUserAttribute(key, value, callback) {
+  static setCustomUserAttribute(key, value, thirdParam, fourthParam) {
+    const merge = typeof thirdParam === 'boolean' ? thirdParam : false;
+    const callback = typeof thirdParam === 'boolean' ? fourthParam : thirdParam;
+
     var valueType = typeof value;
     if (value instanceof Date) {
       callFunctionWithCallback(
@@ -261,9 +268,25 @@ export class Braze {
         callback
       );
     } else if (value instanceof Array) {
+      if (value.every(item => typeof item === 'string')) {
+        callFunctionWithCallback(
+          this.bridge.setCustomUserAttributeArray,
+          [key, value],
+          callback
+        );
+      } else if (value.every(item => typeof item === 'object')) {
+        callFunctionWithCallback(
+          this.bridge.setCustomUserAttributeObjectArray,
+          [key, value],
+          callback
+        );
+      } else {
+        console.log(`User attribute ${value} was not a valid array. Custom attribute arrays can only contain all strings or all objects.`);
+      }
+    } else if (valueType === 'object') {
       callFunctionWithCallback(
-        this.bridge.setCustomUserAttributeArray,
-        [key, value],
+        this.bridge.setCustomUserAttributeObject,
+        [key, value, merge],
         callback
       );
     } else if (valueType === 'boolean') {
@@ -566,6 +589,14 @@ export class Braze {
   }
 
   /**
+   * Returns the most recent Content Cards array from the cache.
+   * @returns {Promise<ContentCard[]>}
+   */
+  static getCachedContentCards() {
+    return this.bridge.getCachedContentCards();
+  }
+
+  /**
    * Manually log a click to Braze for a particular card.
    * The SDK will only log a card click when the card has the url property with a valid value.
    * @param {string} id
@@ -694,6 +725,20 @@ export class Braze {
     );
   }
 
+  /**
+  * Sets the last known location for the user. For Android, latitude and longitude are required, with altitude and horizontal accuracy being optional parameters, and vertical accuracy being a no-op.
+  * For iOS, latitude, longitude, and horizontal accuracy are required, with altitude and vertical accuracy being optional parameters.
+  * Calling this method with invalid parameters for a specific platform is a no-op. Latitude, longitude, and horizontal accuracy are the minimum required parameters to work for all platforms.
+  * @param {number} latitude - Location latitude. May not be null.
+  * @param {number} longitude - Location longitude. May not be null.
+  * @param {number} altitude - Location altitude. May be null for both platforms.
+  * @param {number} horizontalAccuracy - Location horizontal accuracy. Equivalent to accuracy for Android. May be null for Android only; may not be null for iOS.
+  * @param {number} verticalAccuracy - Location vertical accuracy. May be null for iOS. No-op for Android.
+  */
+  static setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy) {
+    this.bridge.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  }
+
   // Refresh Content Cards
   /**
    * Requests a refresh of the content cards from Braze's servers.
@@ -797,6 +842,13 @@ export class Braze {
    */
   static refreshFeatureFlags() {
     this.bridge.refreshFeatureFlags();
+  }
+
+  /**
+   * Logs an impression for the Feature Flag with the provided ID.
+   */
+  static logFeatureFlagImpression(id) {
+    this.bridge.logFeatureFlagImpression(id);
   }
 
   /**

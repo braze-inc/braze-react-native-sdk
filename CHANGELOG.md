@@ -1,3 +1,24 @@
+## 7.0.0
+
+##### Breaking
+- Updates the native Android bridge [from Braze Android SDK 26.3.2 to 27.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2701).
+
+##### Fixed
+- Fixes the Android layer to record date custom user attributes as ISO strings instead of integers.
+- Fixes a bug introduced in `6.0.0` where `Braze.getInitialUrl()` may not trigger the callback on Android.
+
+##### Added
+- Updates the native iOS bridge [from Braze Swift SDK 6.4.0 to 6.6.0](https://github.com/braze-inc/braze-swift-sdk/compare/6.4.0...6.6.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Adds support for nested custom user attributes.
+  - The `setCustomUserAttribute` now accepts objects and arrays of objects.
+  - Adds an optional `merge` parameter to the `setCustomUserAttribute` method. This is a non-breaking change.
+  - Reference our [public docs](https://www.braze.com/docs/user_guide/data_and_analytics/custom_data/custom_attributes/nested_custom_attribute_support/) for more information.
+- Adds `Braze.setLastKnownLocation()` to set the last known location for the user.
+- Adds `Braze.registerPushToken()` in the JavaScript layer to post a push token to Braze's servers.
+  - Deprecates `Braze.registerAndroidPushToken()` in favor of `Braze.registerPushToken()`.
+- Adds `Braze.getCachedContentCards()` to get the most recent content cards from the cache, without a refresh.
+- Adds support for the Feature Flag method `logFeatureFlagImpression(id)`.
+
 ## 6.0.2
 
 ##### Fixed
@@ -14,6 +35,8 @@
 - If you are using the New Architecture, this version requires React Native `0.70` or higher.
 - Fixes the sample setup steps for iOS apps conforming to `RCTAppDelegate`.
   - ⚠️ If your app conforms to `RCTAppDelegate` and was following our previous `AppDelegate` setup in the sample project or [Braze documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/react_sdk_setup/?tab=ios#step-2-complete-native-setup), you will need to reference our [updated samples](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/AppDelegate.mm) to prevent any crashes from occurring when subscribing to events in the new Turbo Module. ⚠️
+- If your project contains unit tests that depend on the Braze React Native module, you will need to update your imports to the `NativeBrazeReactModule` file to properly mock the Turbo Module functions in Jest.
+  - For an example, refer to the sample test setup [here](https://github.com/braze-inc/braze-react-native-sdk/tree/master/__tests__).
 - Updates the native Android bridge [from Braze Android SDK 25.0.0 to 26.3.1](https://github.com/braze-inc/braze-android-sdk/compare/v25.0.0...v26.3.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 - Fixes the presentation of in-app messages to match the documented behavior.
   - Calling `subscribeToInAppMessages` or `addListener` in the Javascript layer will no longer cause a custom `BrazeInAppMessageUIDelegate` implementation on iOS to be ignored.

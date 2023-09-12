@@ -34,10 +34,13 @@ import com.braze.ui.inappmessage.InAppMessageOperation
 import com.braze.ui.inappmessage.listeners.DefaultInAppMessageManagerListener
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 @Suppress("TooManyFunctions", "LargeClass")
 class BrazeReactBridgeImpl(
@@ -49,6 +52,7 @@ class BrazeReactBridgeImpl(
     private val newsFeedCards = mutableListOf<Card>()
     private val newsFeedSubscriberMap: MutableMap<Callback, IEventSubscriber<FeedUpdatedEvent>?> = ConcurrentHashMap()
     private val callbackCallMap = ConcurrentHashMap<Callback, Boolean?>()
+    private val contentCardsLock = ReentrantLock()
     private var contentCardsUpdatedAt: Long = 0
     private var newsFeedCardsUpdatedAt: Long = 0
     private var inAppMessageDisplayOperation: InAppMessageOperation = InAppMessageOperation.DISPLAY_NOW
@@ -92,7 +96,7 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun registerAndroidPushToken(token: String?) {
+    fun registerPushToken(token: String?) {
         braze.registeredPushToken = token
     }
 
@@ -166,7 +170,7 @@ class BrazeReactBridgeImpl(
             return
         }
         runOnUser {
-            callback.reportResult(it.setCustomUserAttribute(key, timeStamp.toLong()))
+            callback.reportResult(it.setCustomUserAttributeToSecondsFromEpoch(key, timeStamp.toLong()))
         }
     }
 
@@ -190,6 +194,21 @@ class BrazeReactBridgeImpl(
         }
     }
 
+    fun setCustomUserAttributeObjectArray(key: String?, value: ReadableArray?, callback: Callback?) {
+        if (key == null) {
+            brazelog { "Key was null. Not logging setCustomUserAttributeObjectArray." }
+            return
+        }
+        if (value == null) {
+            brazelog { "Value was null. Not logging setCustomUserAttributeObjectArray." }
+            return
+        }
+        val attributeArray = JSONArray(parseReadableArray(value))
+        runOnUser {
+            callback.reportResult(it.setCustomUserAttribute(key, attributeArray))
+        }
+    }
+
     fun setCustomUserAttributeArray(key: String?, value: ReadableArray?, callback: Callback?) {
         if (key == null) {
             brazelog { "Key was null. Not logging setCustomUserAttributeArray." }
@@ -206,6 +225,17 @@ class BrazeReactBridgeImpl(
         }
         runOnUser {
             callback.reportResult(it.setCustomAttributeArray(key, attributeArray))
+        }
+    }
+
+    fun setCustomUserAttributeObject(key: String?, value: ReadableMap, merge: Boolean, callback: Callback?) {
+        if (key == null) {
+            brazelog { "Key was null. Not logging setCustomUserAttributeObject." }
+            return
+        }
+        val json = JSONObject(parseReadableMap(value))
+        runOnUser {
+            callback.reportResult(it.setCustomAttribute(key, json, merge))
         }
     }
 
@@ -353,6 +383,12 @@ class BrazeReactBridgeImpl(
             updateContentCardsIfNeeded(message)
         })
         braze.requestContentCardsRefresh()
+    }
+
+    fun getCachedContentCards(promise: Promise?) {
+        contentCardsLock.withLock {
+            promise?.resolve(mapContentCards(contentCards))
+        }
     }
 
     fun setSdkAuthenticationSignature(token: String?) {
@@ -632,6 +668,12 @@ class BrazeReactBridgeImpl(
         }
     }
 
+    fun setLastKnownLocation(latitude: Double, longitude: Double, altitude: Double?, horizontalAccuracy: Double?, verticalAccuracy: Double?) {
+        runOnUser {
+            it.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
+        }
+    }
+
     fun subscribeToInAppMessage(useBrazeUI: Boolean) {
         inAppMessageDisplayOperation = if (useBrazeUI) {
             InAppMessageOperation.DISPLAY_NOW
@@ -706,9 +748,11 @@ class BrazeReactBridgeImpl(
      */
     private fun updateContentCardsIfNeeded(event: ContentCardsUpdatedEvent) {
         if (event.timestampSeconds > contentCardsUpdatedAt) {
-            contentCardsUpdatedAt = event.timestampSeconds
-            contentCards.clear()
-            contentCards.addAll(event.allCards)
+            contentCardsLock.withLock {
+                contentCardsUpdatedAt = event.timestampSeconds
+                contentCards.clear()
+                contentCards.addAll(event.allCards)                
+            }
         }
     }
 
@@ -726,8 +770,10 @@ class BrazeReactBridgeImpl(
     private fun getNewsFeedCardById(id: String): Card? =
         newsFeedCards.firstOrNull { it.id == id }
 
-    private fun getContentCardById(id: String): Card? =
-        contentCards.firstOrNull { it.id == id }
+    private fun getContentCardById(id: String): Card? = 
+        contentCardsLock.withLock {
+            contentCards.firstOrNull { it.id == id }        
+        }
 
     fun getAllFeatureFlags(promise: Promise?) {
         val ffs = braze.getAllFeatureFlags()
@@ -747,6 +793,10 @@ class BrazeReactBridgeImpl(
 
     fun refreshFeatureFlags() {
         braze.refreshFeatureFlags()
+    }
+
+    fun logFeatureFlagImpression(id: String) {
+        braze.logFeatureFlagImpression(id)
     }
 
     fun getFeatureFlagBooleanProperty(id: String?, key: String?, promise: Promise?) {

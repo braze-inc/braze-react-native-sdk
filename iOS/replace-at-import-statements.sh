@@ -27,7 +27,8 @@ for header in "${headers[@]}"; do
   # BrazeKit
   if [[ $header == *"BrazeKit"* ]]; then
     # Add the required imports
-    perl -0777 -i -pe 's/^\@class NSString;/#import <Foundation\/Foundation.h>\n#import <UIKit\/UIKit.h>\n#import <WebKit\/WebKit.h>\n\n\@class NSString;/gm' "$header"
+    perl -0777 -i -pe 's/^\@class NSString;/#import <Foundation\/Foundation.h>\n#import <UIKit\/UIKit.h>\n#import <WebKit\/WebKit.h>\n\n\@class NSString;\n#import <UserNotifications\/UserNotifications.h>
+/gm' "$header"
   fi
   
 done

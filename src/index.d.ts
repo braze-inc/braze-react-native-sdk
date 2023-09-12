@@ -155,13 +155,15 @@ export function setDateOfBirth(
 ): void;
 
 /**
- * This method posts a token to Braze's servers to associate the token with the current device.
- *
- * No-op on iOS.
- *
- * @param {string} token - The device's push token.
+ * @deprecated This method is deprecated in favor of `registerPushToken`.
  */
 export function registerAndroidPushToken(token: string): void;
+
+/**
+ * This method posts a token to Braze's servers to associate the token with the current device.
+ * @param {string} token - The device's push token.
+ */
+export function registerPushToken(token: string): void;
 
 /**
  * This method sets the Google Advertising ID and associated ad-tracking enabled field for this device. Note that the
@@ -261,14 +263,34 @@ export function logPurchase(
  *    user.
  * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
  *    a $, and can only contain alphanumeric characters and punctuation.
- * @param value - Can be numeric, boolean, a Date object, a string, or an array of strings. Strings are limited to
- *    255 characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
+ * @param value - Can be numeric, boolean, a Date object, a string, an array of strings, an object, or an array of objects.
+ *    Strings are limited to 255 characters in length, cannot begin with a $, and can only contain alphanumeric
+ *    characters and punctuation.
  *    Passing a null value will remove this custom attribute from the user.
  * @param {function(error, result)} callback - A callback that receives the function call result.
  */
 export function setCustomUserAttribute(
   key: string,
-  value: number | boolean | string | string[] | Date | null,
+  value: number | boolean | string | string[] | Date | null | object | object[],
+  callback?: Callback<boolean>
+): void;
+
+/**
+ * Sets a custom user attribute. This can be any key/value pair and is used to collect extra information about the
+ *    user.
+ * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
+ *    a $, and can only contain alphanumeric characters and punctuation.
+ * @param value - Can be numeric, boolean, a Date object, a string, an array of strings, an object, or an array of objects.
+ *    Strings are limited to 255 characters in length, cannot begin with a $, and can only contain alphanumeric
+ *    characters and punctuation.
+ *    Passing a null value will remove this custom attribute from the user.
+ * @param merge - If the value is object, this boolean indicates if the value should be merged into the existing key.
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function setCustomUserAttribute(
+  key: string,
+  value: number | boolean | string | string[] | Date | null | object | object[],
+  merge: boolean,
   callback?: Callback<boolean>
 ): void;
 
@@ -481,6 +503,12 @@ export function logContentCardImpression(id: string): void;
 export function getContentCards(): Promise<ContentCard[]>;
 
 /**
+ * Returns the most recent Content Cards array from the cache.
+ * @returns {Promise<ContentCard[]>}
+ */
+export function getCachedContentCards(): Promise<ContentCard[]>;
+
+/**
  * @deprecated This method is a no-op on iOS.
  */
 export function getCardCountForCategories(
@@ -551,6 +579,24 @@ export function setLocationCustomAttribute(
   latitude: number,
   longitude: number,
   callback?: Callback<undefined>
+): void;
+
+/**
+ * Sets the last known location for the user. For Android, latitude and longitude are required, with altitude and horizontal accuracy being optional parameters, and vertical accuracy being a no-op.
+ * For iOS, latitude, longitude, and horizontal accuracy are required, with altitude and vertical accuracy being optional parameters.
+ * Calling this method with invalid parameters for a specific platform is a no-op. Latitude, longitude, and horizontal accuracy are the minimum required parameters to work for all platforms.
+ * @param {number} latitude - Location latitude. Required.
+ * @param {number} longitude - Location longitude. Required.
+ * @param {number} altitude - Location altitude. May be null for both platforms.
+ * @param {number} horizontalAccuracy - Location horizontal accuracy. Equivalent to accuracy for Android. May be null for Android only; required for iOS.
+ * @param {number} verticalAccuracy - Location vertical accuracy. May be null for iOS. No-op for Android.
+ */
+ export function setLastKnownLocation(
+  latitude: number,
+  longitude: number,
+  altitude?: number | null,
+  horizontalAccuracy?: number | null,
+  verticalAccuracy?: number | null
 ): void;
 
 /**
@@ -691,6 +737,13 @@ export function getFeatureFlagNumberProperty(id: string, key: string): Promise<n
  * Requests a refresh of Feature Flags from the Braze server.
  */
 export function refreshFeatureFlags(): void;
+
+/**
+ * Logs an impression for the Feature Flag with the provided ID.
+ * 
+ * @param id - The ID of the feature flag.
+ */
+export function logFeatureFlagImpression(id: string): void;
 
 export class BrazeInAppMessage {
   constructor(_data: string);

@@ -10,6 +10,7 @@ import {
   Alert,
   TextInput,
   Platform,
+  Settings,
 } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Braze, { BrazeInAppMessage } from '@braze/react-native-sdk';
@@ -17,6 +18,9 @@ import Braze, { BrazeInAppMessage } from '@braze/react-native-sdk';
 // Change to `true` to automatically log clicks, button clicks,
 // and impressions for in-app messages and content cards.
 const automaticallyInteract = false;
+
+// User Defaults keys
+const iOSPushAutoEnabledKey = "iOSPushAutoEnabled";
 
 const Space = () => {
   return <View style={styles.spacing} />;
@@ -36,6 +40,14 @@ export const BrazeProject = (): ReactElement => {
   const [featureFlagPropertyType, setFeatureFlagPropertyType] =
     useState<string>('bool');
   const [featureFlagPropertyKey, setFeatureFlagPropertyKey] = useState('');
+
+  // If key is persisted, use the value. If no key is present, default to true.
+  const [iOSPushAutoEnabled, setiOSPushAutoEnabled] = useState<boolean>(
+    () => {
+      const value = Settings.get(iOSPushAutoEnabledKey);
+      return (value != null) ? Boolean(value) : true;
+    }
+  );
 
   const subscriptionStateButtons = useMemo(
     () => [
@@ -122,13 +134,13 @@ export const BrazeProject = (): ReactElement => {
     ]);
   };
 
-  const showToast = (msg: string) => {
+  const showToast = (msg: string, duration: number = 2000) => {
     setMessage(msg);
     setToastVisible(true);
     setTimeout(() => {
       setToastVisible(false);
       setMessage('Success');
-    }, 2000);
+    }, duration);
   };
 
   useEffect(() => {
@@ -358,8 +370,18 @@ export const BrazeProject = (): ReactElement => {
     Braze.setCustomUserAttribute('intattr', 88);
     Braze.setCustomUserAttribute('booleanattr', true);
     Braze.setCustomUserAttribute('dateattr', new Date());
-    Braze.setCustomUserAttribute('arrayattr', ['a', 'b']);
+    Braze.setCustomUserAttribute('stringArrayAttr', ['a', 'b']);
+    Braze.setCustomUserAttribute('arrayOfObjectsAttr', [{ 'one': 1, 'two': 'too' }, { 'three': 3, 'four': 'fore' }]);
+    Braze.setCustomUserAttribute('objectAttr', { 'one': 1, 'two': 'too' }, false);
+    Braze.setCustomUserAttribute('badArray', ['123', { 'one': 1, 'two': 2 }]);
+    Braze.setCustomUserAttribute('badArray2', [true, 1, 'string', { 'one': 1 }]);
     showToast('Custom attributes set');
+  };
+
+  const logCustomAttributeWithMergePress = () => {
+    Braze.setCustomUserAttribute('objectAttr', { 'three': 3, 'four': 'fore' }, true);
+    Braze.setCustomUserAttribute('objectAttr', { 'two': 'updated_too' }, true);
+    showToast('NCA with merge called');
   };
 
   const logUserPropertiesPress = () => {
@@ -394,6 +416,15 @@ export const BrazeProject = (): ReactElement => {
   const refreshFeatureFlagsPress = () => {
     Braze.refreshFeatureFlags();
     showToast('Feature Flags refresh requested');
+  };
+
+  const logFeatureFlagImpressionPress = () => {
+    if (!featureFlagId) {
+      console.log('No Feature Flag ID entered. Not logging Feature Flag Impression.');
+      return;
+    }
+    Braze.logFeatureFlagImpression(featureFlagId);
+    showToast(`Feature Flag Impression logged for ID: ${featureFlagId}`);
   };
 
   const unsetCustomUserAttributePress = () => {
@@ -499,6 +530,14 @@ export const BrazeProject = (): ReactElement => {
     showToast('Geofences Requested');
   };
 
+  const setLastKnownLocation = () => {
+    Braze.setLastKnownLocation(40.7128, 74.0060, 23.0, 25.0, 19.0);
+    Braze.setLastKnownLocation(40.7128, 74.0060, null, null, null);
+    Braze.setLastKnownLocation(40.7128, 74.0060, null, 25.0, null);
+    Braze.setLastKnownLocation(40.7128, 74.0060, 23.0, 25.0, null);
+    showToast('Last known location set');
+  }
+
   const setLocationCustomAttribute = () => {
     Braze.setLocationCustomAttribute('work', 40.7128, 74.006);
     showToast('Location Set');
@@ -544,13 +583,48 @@ export const BrazeProject = (): ReactElement => {
     for (const card of cards) {
       const cardId = card.id;
       console.log(`Got content card: ${JSON.stringify(card)}`);
+
+      // Programmatically log impression, card click, and dismissal
       if (automaticallyInteract) {
         console.log('Automatically logging CC click and impression.');
         Braze.logContentCardClicked(cardId);
         Braze.logContentCardImpression(cardId);
+        // To automate card dismissal, uncomment out the code below
         // Braze.logContentCardDismissed(cardId);
       }
     }
+  };
+
+  const getCachedContentCards = async () => {
+    const cards = await Braze.getCachedContentCards();
+    console.log(`${cards.length} cached Content Cards found.`);
+    if (cards.length === 0) {
+      return;
+    }
+
+    for (const card of cards) {
+      const cardId = card.id;
+      console.log(`Got content card from cache: ${JSON.stringify(card)}`);
+
+      // Programmatically log impression, card click, and dismissal
+      if (automaticallyInteract) {
+        console.log(`Automatically logging CC click and impression for card ID: ${cardId}.`);
+        Braze.logContentCardClicked(cardId);
+        Braze.logContentCardImpression(cardId);
+        // To automate card dismissal, uncomment out the code below
+        // Braze.logContentCardDismissed(cardId);
+      }
+    }
+  };
+
+  // Update value, then store in NSUserDefaults to fetch in iOS layer
+  const toggleiOSPushAutoEnabled = () => {
+    const updatedValue = !iOSPushAutoEnabled;
+    setiOSPushAutoEnabled(updatedValue);
+    Settings.set({ iOSPushAutoEnabledKey: updatedValue });
+
+    console.log(`iOS Push Auto enabled: ${updatedValue}`);
+    showToast(`iOS Push Automation: ${updatedValue}.\n Restart your app to take effect.`, 4000);
   };
 
   const requestPushPermission = () => {
@@ -636,6 +710,7 @@ export const BrazeProject = (): ReactElement => {
       </View>
 
       {/* Events */}
+
       <View style={styles.row}>
         <TextInput
           style={styles.textInput}
@@ -719,6 +794,9 @@ export const BrazeProject = (): ReactElement => {
       <TouchableHighlight onPress={logCustomAttributePress}>
         <Text>Set Custom User Attributes</Text>
       </TouchableHighlight>
+      <TouchableHighlight onPress={logCustomAttributeWithMergePress}>
+        <Text>Set Custom User Attributes with NCA Merge</Text>
+      </TouchableHighlight>
       <TouchableHighlight onPress={unsetCustomUserAttributePress}>
         <Text>Unset Custom User Attributes</Text>
       </TouchableHighlight>
@@ -747,6 +825,9 @@ export const BrazeProject = (): ReactElement => {
       <TouchableHighlight onPress={getContentCards}>
         <Text>Get Content Cards {'&'} Log interactions</Text>
       </TouchableHighlight>
+      <TouchableHighlight onPress={getCachedContentCards}>
+        <Text>Get Cached Content Cards {'&'} Log interactions</Text>
+      </TouchableHighlight>
 
       {/* News Feed */}
 
@@ -763,6 +844,9 @@ export const BrazeProject = (): ReactElement => {
       <Space />
       <TouchableHighlight onPress={refreshFeatureFlagsPress}>
         <Text>Refresh Feature Flags</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={logFeatureFlagImpressionPress}>
+        <Text>Log Feature Flag Impression</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={getFeatureFlagsPress}>
         <Text>Get All Feature Flags</Text>
@@ -811,6 +895,9 @@ export const BrazeProject = (): ReactElement => {
       <TouchableHighlight onPress={requestGeofences}>
         <Text>Request Geofences</Text>
       </TouchableHighlight>
+      <TouchableHighlight onPress={setLastKnownLocation}>
+        <Text>Set Last Known Location</Text>
+      </TouchableHighlight>
       <TouchableHighlight onPress={setLocationCustomAttribute}>
         <Text>Set Custom Location Attribute</Text>
       </TouchableHighlight>
@@ -818,6 +905,9 @@ export const BrazeProject = (): ReactElement => {
       {/* Other */}
 
       <Space />
+      <TouchableHighlight onPress={toggleiOSPushAutoEnabled}>
+        <Text>Toggle iOS Push Automation enabled</Text>
+      </TouchableHighlight>
       <TouchableHighlight onPress={requestPushPermission}>
         <Text>Request Push Permission</Text>
       </TouchableHighlight>

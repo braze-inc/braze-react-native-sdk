@@ -52,6 +52,6 @@ android {
 }
 
 dependencies {
-  api 'com.braze:android-sdk-ui:26.3.2'
+  api 'com.braze:android-sdk-ui:27.0.1'
   api 'com.facebook.react:react-native:+'
 }

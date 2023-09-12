@@ -166,8 +166,10 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName aliasLabel:(NSString *)aliasLab
   [braze.user addAlias:aliasName label:aliasLabel];
 }
 
-RCT_EXPORT_METHOD(registerAndroidPushToken:(NSString *)token) {
-  RCTLogInfo(@"Warning: This is an Android only feature.");
+RCT_EXPORT_METHOD(registerPushToken:(NSString *)token) {
+  RCTLogInfo(@"braze registerPushToken with token %@", token);
+  NSData* tokenData = [token dataUsingEncoding:NSUTF8StringEncoding];
+  [braze.notifications registerDeviceToken:tokenData];
 }
 
 RCT_EXPORT_METHOD(setGoogleAdvertisingId:(NSString *)googleAdvertisingId adTrackingEnabled:(BOOL)adTrackingEnabled) {
@@ -408,9 +410,46 @@ RCT_EXPORT_METHOD(setIntCustomUserAttribute:(NSString *)key value:(double)value 
                        andResult:@(YES)];
 }
 
+RCT_EXPORT_METHOD(setCustomUserAttributeObject:(NSString *)key
+                  value:(NSDictionary *)value
+                  merge:(BOOL)merge
+                  callback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"braze.user setCustomUserAttributeObject:object:: =  %@", key);
+  [braze.user setNestedCustomAttributeDictionaryWithKey:key value:value merge:merge];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
+}
+
 RCT_EXPORT_METHOD(setCustomUserAttributeArray:(NSString *)key value:(NSArray *)value callback:(RCTResponseSenderBlock)callback) {
-  RCTLogInfo(@"braze.user setCustomAttributeArrayWithKey:array:: =  %@", key);
+  RCTLogInfo(@"braze.user setCustomUserAttributeArray:array:: =  %@", key);
+  for (id item in value) {
+    if (![item isKindOfClass:[NSString class]]) {
+      RCTLogInfo(@"Custom attribute array contains element that is not of type string. Aborting.");
+      [self reportResultWithCallback:callback
+                            andError:nil
+                           andResult:@(NO)];
+      return;
+    }
+  }
   [braze.user setCustomAttributeArrayWithKey:key array:value];
+  [self reportResultWithCallback:callback
+                        andError:nil
+                       andResult:@(YES)];
+}
+
+RCT_EXPORT_METHOD(setCustomUserAttributeObjectArray:(NSString *)key value:(NSArray *)value callback:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"braze.user setCustomUserAttributeObjectArray:array:: =  %@", key);
+  for (id item in value) {
+    if (![item isKindOfClass:[NSDictionary class]]) {
+      RCTLogInfo(@"Custom attribute array contains element that is not of type object. Aborting.");
+      [self reportResultWithCallback:callback
+                            andError:nil
+                           andResult:@(NO)];
+      return;
+    }
+  }
+  [braze.user setNestedCustomAttributeArrayWithKey:key value:value];
   [self reportResultWithCallback:callback
                         andError:nil
                        andResult:@(YES)];
@@ -456,6 +495,21 @@ RCT_EXPORT_METHOD(setAttributionData:(NSString *)network campaign:(NSString *)ca
                                              adGroup:adGroup
                                              creative:creative];
   [braze.user setAttributionData:attributionData];
+}
+
+RCT_EXPORT_METHOD(setLastKnownLocation:(double)latitude
+                  longitude:(double)longitude
+                   altitude:(NSNumber *)altitude
+         horizontalAccuracy:(NSNumber *)horizontalAccuracy
+                  verticalAccuracy:(NSNumber *)verticalAccuracy) {
+    RCTLogInfo(@"setLastKnownLocationWithLatitude called with latitude: %g, longitude: %g, horizontalAccuracy: %g, altitude: %g, and verticalAccuracy: %g", latitude, longitude, horizontalAccuracy.doubleValue, altitude.doubleValue, verticalAccuracy.doubleValue);
+    if (!horizontalAccuracy) {
+        RCTLogInfo(@"Horizontal accuracy is nil. This is a no-op in iOS.");
+    } else if (!altitude && !verticalAccuracy) {
+        [braze.user setLastKnownLocationWithLatitude:latitude longitude:longitude horizontalAccuracy:horizontalAccuracy.doubleValue];
+    } else {
+        [braze.user setLastKnownLocationWithLatitude:latitude longitude:longitude altitude:altitude.doubleValue horizontalAccuracy:horizontalAccuracy.doubleValue verticalAccuracy:verticalAccuracy.doubleValue];
+    }
 }
 
 #pragma mark - News Feed
@@ -580,6 +634,11 @@ RCT_EXPORT_METHOD(getContentCards:(RCTPromiseResolveBlock)resolve reject:(RCTPro
       }
       resolve(RCTFormatContentCards(cards));
     }];
+}
+
+RCT_EXPORT_METHOD(getCachedContentCards:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    RCTLogInfo(@"getCachedContentCards called");
+    resolve(RCTFormatContentCards([braze.contentCards cards]));
 }
 
 RCT_EXPORT_METHOD(logContentCardClicked:(NSString *)idString) {
@@ -826,6 +885,11 @@ RCT_EXPORT_METHOD(logInAppMessageButtonClicked:(NSString *)inAppMessageString  b
 RCT_EXPORT_METHOD(refreshFeatureFlags) {
   RCTLogInfo(@"refreshFeatureFlags called");
   [braze.featureFlags requestRefresh];
+}
+
+RCT_EXPORT_METHOD(logFeatureFlagImpression:(NSString *)flagId) {
+  RCTLogInfo(@"logFeatureFlagImpression called for ID %@", flagId);
+  [braze.featureFlags logFeatureFlagImpressionWithId:flagId];
 }
 
 RCT_EXPORT_METHOD(getFeatureFlag:(NSString *)flagId

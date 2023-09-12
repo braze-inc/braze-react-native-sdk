@@ -79,8 +79,8 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun registerAndroidPushToken(token: String?) {
-        brazeImpl.registerAndroidPushToken(token)
+    fun registerPushToken(token: String?) {
+        brazeImpl.registerPushToken(token)
     }
 
     @ReactMethod
@@ -160,8 +160,22 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun setCustomUserAttributeObjectArray(
+        key: String?,
+        value: ReadableArray?,
+        callback: Callback?
+    ) {
+        brazeImpl.setCustomUserAttributeObjectArray(key, value, callback)
+    }
+
+    @ReactMethod
     fun setDateCustomUserAttribute(key: String?, value: Double, callback: Callback?) {
         brazeImpl.setDateCustomUserAttribute(key, value.toInt(), callback)
+    }
+
+    @ReactMethod
+    fun setCustomUserAttributeObject(key: String?, value: ReadableMap, merge: Boolean, callback: Callback?) {
+        brazeImpl.setCustomUserAttributeObject(key, value, merge, callback)
     }
 
     @ReactMethod
@@ -249,6 +263,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun getCachedContentCards(promise: Promise?) {
+        brazeImpl.getCachedContentCards(promise)
+    }
+
+    @ReactMethod
     fun getCardCountForCategories(category: String?, callback: Callback?) {
         brazeImpl.getCardCountForCategories(category, callback)
     }
@@ -301,6 +320,17 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         callback: Callback?
     ) {
         brazeImpl.setLocationCustomAttribute(key, latitude, longitude, callback)
+    }
+
+    @ReactMethod
+    fun setLastKnownLocation(
+        latitude: Double, 
+        longitude: Double, 
+        altitude: Double?, 
+        horizontalAccuracy: Double?, 
+        verticalAccuracy: Double?
+    ) {
+        brazeImpl.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
     }
 
     @ReactMethod
@@ -361,6 +391,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     @ReactMethod
     fun refreshFeatureFlags() {
         brazeImpl.refreshFeatureFlags()
+    }
+
+    @ReactMethod
+    fun logFeatureFlagImpression(id: String) {
+        brazeImpl.logFeatureFlagImpression(id)
     }
 
     @ReactMethod

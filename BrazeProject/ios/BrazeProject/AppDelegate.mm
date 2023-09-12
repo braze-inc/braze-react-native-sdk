@@ -18,6 +18,9 @@ static Braze *_braze;
 static NSString *const apiKey = @"b7271277-0fec-4187-beeb-3ae6e6fbed11";
 static NSString *const endpoint = @"sondheim.braze.com";
 
+// User Defaults keys
+static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   self.moduleName = @"BrazeProject";
@@ -27,17 +30,34 @@ static NSString *const endpoint = @"sondheim.braze.com";
   BRZConfiguration *configuration = [[BRZConfiguration alloc] initWithApiKey:apiKey endpoint:endpoint];
   configuration.triggerMinimumTimeInterval = 1;
   configuration.logger.level = BRZLoggerLevelInfo;
+
+  // Default to automatically setting up push notifications
+  BOOL pushAutoEnabled = YES;
+  if ([[NSUserDefaults standardUserDefaults] objectForKey:iOSPushAutoEnabledKey]) {
+    pushAutoEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:iOSPushAutoEnabledKey];
+  }
+  if (pushAutoEnabled) {
+    NSLog(@"iOS Push Auto enabled.");
+    configuration.push.automation =
+        [[BRZConfigurationPushAutomation alloc] initEnablingAllAutomations:YES];
+  }
+
   Braze *braze = [BrazeReactBridge initBraze:configuration];
   braze.delegate = [[BrazeReactDelegate alloc] init];
   AppDelegate.braze = braze;
 
-  [self registerForPushNotifications];
+  if (!pushAutoEnabled) {
+    // If the user explicitly disables Push Auto, register for push manually
+    NSLog(@"iOS Push Auto disabled - Registering for push manually.");
+    [self registerForPushNotifications];
+  }
+
   [[BrazeReactUtils sharedInstance] populateInitialUrlFromLaunchOptions:launchOptions];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-#pragma mark - Push Notifications
+#pragma mark - Push Notifications (manual integration)
 
 - (void)registerForPushNotifications {
   UNUserNotificationCenter *center = UNUserNotificationCenter.currentNotificationCenter;

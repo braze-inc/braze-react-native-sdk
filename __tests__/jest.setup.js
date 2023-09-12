@@ -18,6 +18,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
         // Mocks the Turbo Module spec with Jest method stubs.
         NativeBrazeReactModule = {
           registerAndroidPushToken: jest.fn(),
+          registerPushToken: jest.fn(),
           setGoogleAdvertisingId: jest.fn(),
           setFirstName: jest.fn(),
           setLastName: jest.fn(),
@@ -39,6 +40,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           logNewsFeedCardImpression: jest.fn(),
           launchContentCards: jest.fn(),
           getContentCards: jest.fn(),
+          getCachedContentCards: jest.fn(),
           logContentCardClicked: jest.fn(),
           logContentCardDismissed: jest.fn(),
           logContentCardImpression: jest.fn(),
@@ -49,6 +51,8 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           wipeData: jest.fn(),
           setDateCustomUserAttribute: jest.fn(),
           setCustomUserAttributeArray: jest.fn(),
+          setCustomUserAttributeObject: jest.fn(),
+          setCustomUserAttributeObjectArray: jest.fn(),
           setBoolCustomUserAttribute: jest.fn(),
           setStringCustomUserAttribute: jest.fn(),
           setIntCustomUserAttribute: jest.fn(),
@@ -80,6 +84,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           getFeatureFlag: jest.fn(),
           getAllFeatureFlags: jest.fn(),
           refreshFeatureFlags: jest.fn(),
+          logFeatureFlagImpression: jest.fn(),
           getFeatureFlagBooleanProperty: jest.fn(),
           getFeatureFlagNumberProperty: jest.fn(),
           getFeatureFlagStringProperty: jest.fn(),

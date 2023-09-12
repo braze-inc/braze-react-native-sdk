@@ -2,6 +2,7 @@ const NativeEventEmitter = require('react-native').NativeEventEmitter;
 const NativeBrazeReactModule = require('../src/NativeBrazeReactModule').default;
 
 import Braze from '../src/index';
+import { Platform } from 'react-native';
 
 console.log = jest.fn();
 const testCallback = jest.fn();
@@ -15,8 +16,19 @@ afterEach(() => {
 test('it calls BrazeReactBridge.registerAndroidPushToken', () => {
   const token = "some_token";
   Braze.registerAndroidPushToken(token);
-  expect(NativeBrazeReactModule.registerAndroidPushToken).toBeCalledWith(token);
-  expect(NativeBrazeReactModule.registerAndroidPushToken).toBeCalledWith(token);
+  expect(NativeBrazeReactModule.registerPushToken).toBeCalledWith(token);
+});
+
+test('it calls BrazeReactBridge.registerPushToken', () => {
+  const token = "some_token";
+  Braze.registerPushToken(token);
+  expect(NativeBrazeReactModule.registerPushToken).toBeCalledWith(token);
+});
+
+test('it calls BrazeReactBridge.registerPushToken with null', () => {
+  const token = null;
+  Braze.registerPushToken(token);
+  expect(NativeBrazeReactModule.registerPushToken).toBeCalledWith(token);
 });
 
 test('it calls BrazeReactBridge.setGoogleAdvertisingId', () => {
@@ -105,6 +117,11 @@ test('it calls BrazeReactBridge.getContentCards', () => {
   expect(NativeBrazeReactModule.getContentCards).toBeCalled();
 });
 
+test('it calls BrazeReactBridge.getCachedContentCards', () => {
+  Braze.getCachedContentCards();
+  expect(NativeBrazeReactModule.getCachedContentCards).toBeCalled();
+});
+
 test('it calls BrazeReactBridge.logContentCardClicked', () => {
   const id = "1234";
   Braze.logContentCardClicked(id);
@@ -161,6 +178,46 @@ test('it calls BrazeReactBridge.setLocationCustomAttribute', () => {
   const longitude = 74.0060;
   Braze.setLocationCustomAttribute(key, latitude, longitude, testCallback);
   expect(NativeBrazeReactModule.setLocationCustomAttribute).toBeCalledWith(key, latitude, longitude, testCallback);
+});
+
+test('it calls BrazeReactBridge.setLastKnownLocation', () => {
+  const latitude = 40.7128;
+  const longitude = 74.0060;
+  const altitude = 24.0;
+  const horizontalAccuracy = 25.0;
+  const verticalAccuracy = 26.0;
+  Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+});
+
+test('it calls BrazeReactBridge.setLastKnownLocation with 3 null', () => {
+  const latitude = 40.7128;
+  const longitude = 74.0060;
+  const altitude = null;
+  const horizontalAccuracy = null;
+  const verticalAccuracy = null;
+  Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+});
+
+test('it calls BrazeReactBridge.setLastKnownLocation with 2 null', () => {
+  const latitude = 40.7128;
+  const longitude = 74.0060;
+  const altitude = null;
+  const horizontalAccuracy = 25.0;
+  const verticalAccuracy = null;
+  Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+});
+
+test('it calls BrazeReactBridge.setLastKnownLocation with 1 null', () => {
+  const latitude = 40.7128;
+  const longitude = 74.0060;
+  const altitude = 24.0;
+  const horizontalAccuracy = 25.0;
+  const verticalAccuracy = null;
+  Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
 });
 
 test('it calls BrazeReactBridge.requestContentCardsRefresh', () => {
@@ -233,6 +290,32 @@ test('it calls BrazeReactBridge.setCustomUserAttributeArray', () => {
   const array = ['a', 'b'];
   Braze.setCustomUserAttribute(key, array, testCallback);
   expect(NativeBrazeReactModule.setCustomUserAttributeArray).toBeCalledWith(key, array, testCallback);
+});
+
+test('it calls BrazeReactBridge.setCustomUserAttributeObjectArray', () => {
+  const key = "some_key";
+  const array = [{'one': 1, 'two': 2, 'three': 3}, {'eight': 8, 'nine': 9}];
+  Braze.setCustomUserAttribute(key, array, testCallback);
+  expect(NativeBrazeReactModule.setCustomUserAttributeObjectArray).toBeCalledWith(key, array, testCallback);
+});
+
+test('it calls BrazeReactBridge.setCustomUserAttributeObject 4 parameters', () => {
+  const key = "some_key";
+  const hash = {'do': 're', 'mi': 'fa'}
+  const merge = true
+  Braze.setCustomUserAttribute(key, hash, merge, testCallback);
+
+  expect(NativeBrazeReactModule.setCustomUserAttributeObject).toBeCalledWith(key, hash, merge, testCallback);
+});
+
+test('it calls BrazeReactBridge.setCustomUserAttributeObject 3 parameters', () => {
+  const key = "some_key";
+  const hash = {'do': 're', 'mi': 'fa'}
+  // When not given, merge defaults to 'false'
+  const merge = false
+  Braze.setCustomUserAttribute(key, hash, testCallback);
+
+  expect(NativeBrazeReactModule.setCustomUserAttributeObject).toBeCalledWith(key, hash, merge, testCallback);
 });
 
 test('it calls BrazeReactBridge.setBoolCustomUserAttribute', () => {
@@ -360,10 +443,12 @@ test('it calls the callback with null and logs the error if BrazeReactBridge.get
   expect(console.log).toBeCalledWith("error");
 });
 
-test('it calls the callback with null if BrazeReactBridge.getInitialUrl is not defined', () => {
-  NativeBrazeReactModule.getInitialURL = null;
+test('it calls the callback with null if BrazeReactBridge.getInitialUrl is running on Android', () => {
+  const platform = Platform.OS;
+  Platform.OS = 'android';
   Braze.getInitialURL(testCallback);
   expect(testCallback).toBeCalledWith(null);
+  Platform.OS = platform;
 });
 
 test('it calls BrazeReactBridge.subscribeToInAppMessage', () => {
@@ -537,6 +622,11 @@ test('it calls BrazeReactBridge.refreshFeatureFlags', () => {
   Braze.refreshFeatureFlags();
   expect(NativeBrazeReactModule.refreshFeatureFlags).toBeCalled();
 });
+
+test('it calls BrazeReactBridge.logFeatureFlagImpression', () => {
+  Braze.logFeatureFlagImpression('test');
+  expect(NativeBrazeReactModule.logFeatureFlagImpression).toBeCalled();
+})
 
 test('it calls BrazeReactBridge.getFeatureFlagBooleanProperty', () => {
   Braze.getFeatureFlagBooleanProperty('id', 'key');

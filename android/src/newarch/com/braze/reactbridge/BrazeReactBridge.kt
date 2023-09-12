@@ -65,8 +65,8 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.setDateOfBirth(year.toInt(), month.toInt(), day.toInt())
     }
 
-    override fun registerAndroidPushToken(token: String?) {
-        brazeImpl.registerAndroidPushToken(token)
+    override fun registerPushToken(token: String?) {
+        brazeImpl.registerPushToken(token)
     }
 
     override fun setGoogleAdvertisingId(googleAdvertisingId: String?, adTrackingEnabled: Boolean) {
@@ -133,8 +133,20 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.setCustomUserAttributeArray(key, value, callback)
     }
 
+    override fun setCustomUserAttributeObjectArray(
+        key: String?,
+        value: ReadableArray?,
+        callback: Callback?
+    ) {
+        brazeImpl.setCustomUserAttributeObjectArray(key, value, callback)
+    }
+
     override fun setDateCustomUserAttribute(key: String?, value: Double, callback: Callback?) {
         brazeImpl.setDateCustomUserAttribute(key, value.toInt(), callback)
+    }
+
+    override fun setCustomUserAttributeObject(key: String?, value: ReadableMap, merge: Boolean, callback: Callback?) {
+        brazeImpl.setCustomUserAttributeObject(key, value, merge, callback)
     }
 
     override fun addToCustomUserAttributeArray(key: String?, value: String?, callback: Callback?) {
@@ -206,6 +218,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.getContentCards(promise)
     }
 
+    override fun getCachedContentCards(promise: Promise?) {
+        brazeImpl.getCachedContentCards(promise)
+    }
+
     override fun getCardCountForCategories(category: String?, callback: Callback?) {
         brazeImpl.getCardCountForCategories(category, callback)
     }
@@ -249,6 +265,16 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         callback: Callback?
     ) {
         brazeImpl.setLocationCustomAttribute(key, latitude, longitude, callback)
+    }
+
+    override fun setLastKnownLocation(
+        latitude: Double, 
+        longitude: Double, 
+        altitude: Double?, 
+        horizontalAccuracy: Double?, 
+        verticalAccuracy: Double?
+    ) {
+        brazeImpl.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
     }
 
     override fun subscribeToInAppMessage(useBrazeUI: Boolean, callback: Callback?) {
@@ -297,6 +323,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
 
     override fun refreshFeatureFlags() {
         brazeImpl.refreshFeatureFlags()
+    }
+
+    override fun logFeatureFlagImpression(id: String) {
+        brazeImpl.logFeatureFlagImpression(id)
     }
 
     override fun addListener(eventType: String?) {
