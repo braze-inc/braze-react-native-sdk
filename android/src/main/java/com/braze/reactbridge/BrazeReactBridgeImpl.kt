@@ -76,6 +76,16 @@ class BrazeReactBridgeImpl(
 
     fun changeUser(userName: String?, sdkAuthToken: String?) = braze.changeUser(userName, sdkAuthToken)
 
+    fun getUserId(callback: Callback?) {
+        runOnUser {
+            if (it.userId.isNullOrBlank()) {
+                callback.reportResult(null, "User ID not found.")
+            } else {
+                callback.reportResult(it.userId)
+            }
+        }
+    }
+
     fun addAlias(aliasName: String?, aliasLabel: String?) {
         if (aliasName.isNullOrBlank()) {
             brazelog(W) {
@@ -787,7 +797,11 @@ class BrazeReactBridgeImpl(
     fun getFeatureFlag(id: String?, promise: Promise?) {
         if (id != null && promise != null) {
             val ff = braze.getFeatureFlag(id)
-            promise.resolve(convertFeatureFlag(ff))
+            if (ff == null) {
+                promise.resolve(null)
+            } else {
+                promise.resolve(convertFeatureFlag(ff))
+            }
         }
     }
 
@@ -801,19 +815,19 @@ class BrazeReactBridgeImpl(
 
     fun getFeatureFlagBooleanProperty(id: String?, key: String?, promise: Promise?) {
         if (id != null && key != null && promise != null) {
-            promise.resolve(braze.getFeatureFlag(id).getBooleanProperty(key))
+            promise.resolve(braze.getFeatureFlag(id)?.getBooleanProperty(key))
         }
     }
 
     fun getFeatureFlagStringProperty(id: String?, key: String?, promise: Promise?) {
         if (id != null && key != null && promise != null) {
-            promise.resolve(braze.getFeatureFlag(id).getStringProperty(key))
+            promise.resolve(braze.getFeatureFlag(id)?.getStringProperty(key))
         }
     }
 
     fun getFeatureFlagNumberProperty(id: String?, key: String?, promise: Promise?) {
         if (id != null && key != null && promise != null) {
-            promise.resolve(braze.getFeatureFlag(id).getNumberProperty(key))
+            promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
         }
     }
 

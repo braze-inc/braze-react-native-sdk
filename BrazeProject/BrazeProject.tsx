@@ -44,8 +44,12 @@ export const BrazeProject = (): ReactElement => {
   // If key is persisted, use the value. If no key is present, default to true.
   const [iOSPushAutoEnabled, setiOSPushAutoEnabled] = useState<boolean>(
     () => {
-      const value = Settings.get(iOSPushAutoEnabledKey);
-      return (value != null) ? Boolean(value) : true;
+      if (Platform.OS === 'ios') {
+        const value = Settings.get(iOSPushAutoEnabledKey);
+        return (value != null) ? Boolean(value) : true;
+      } else {
+        return false;
+      }
     }
   );
 
@@ -248,6 +252,17 @@ export const BrazeProject = (): ReactElement => {
   const changeUserPress = () => {
     Braze.changeUser(userIdText);
     showToast(`User changed to: ${userIdText}`);
+  };
+
+  const getUserIdPress = () => {
+    Braze.getUserId((err, res) => {
+      if (err) {
+        console.log(`Error getting user ID: ${err}`);
+      } else {
+        showToast(`User ID: ${res}`);
+        console.log(`User ID: ${res}`);
+      }
+    });
   };
 
   const setSignaturePress = () => {
@@ -557,7 +572,7 @@ export const BrazeProject = (): ReactElement => {
     const network = 'fakeblock';
     const campaign = 'everyone';
     const adGroup = 'adgroup1';
-    const creative = 'bigBanner';
+    const creative = 'bigImage';
     Braze.setAttributionData(network, campaign, adGroup, creative);
     showToast('Attribution Data Set');
   };
@@ -619,12 +634,14 @@ export const BrazeProject = (): ReactElement => {
 
   // Update value, then store in NSUserDefaults to fetch in iOS layer
   const toggleiOSPushAutoEnabled = () => {
-    const updatedValue = !iOSPushAutoEnabled;
-    setiOSPushAutoEnabled(updatedValue);
-    Settings.set({ iOSPushAutoEnabledKey: updatedValue });
+    if (Platform.OS === 'ios') {
+      const updatedValue = !iOSPushAutoEnabled;
+      setiOSPushAutoEnabled(updatedValue);
+      Settings.set({ iOSPushAutoEnabledKey: updatedValue });
 
-    console.log(`iOS Push Auto enabled: ${updatedValue}`);
-    showToast(`iOS Push Automation: ${updatedValue}.\n Restart your app to take effect.`, 4000);
+      console.log(`iOS Push Auto enabled: ${updatedValue}`);
+      showToast(`iOS Push Automation: ${updatedValue}.\n Restart your app to take effect.`, 4000);
+    }
   };
 
   const requestPushPermission = () => {
@@ -659,6 +676,10 @@ export const BrazeProject = (): ReactElement => {
     }
 
     const featureFlag = await Braze.getFeatureFlag(featureFlagId);
+    if (!featureFlag) {
+      console.log(`No Feature Flag Found with ID: ${featureFlagId}.`);
+      return
+    }
     console.log(`Got Feature Flag: ${JSON.stringify(featureFlag)}`);
   };
 
@@ -723,6 +744,9 @@ export const BrazeProject = (): ReactElement => {
           <Text>Set User ID</Text>
         </TouchableHighlight>
       </View>
+      <TouchableHighlight onPress={getUserIdPress}>
+        <Text>Get User ID</Text>
+      </TouchableHighlight>
       <View style={styles.row}>
         <TextInput
           style={styles.textInput}

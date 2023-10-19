@@ -67,6 +67,14 @@ export function getDeviceId(callback: Callback<string>): void;
 export function changeUser(userId: string, signature?: string): void;
 
 /**
+ * Returns a unique ID stored for the user.
+ * If the user is anonymous, there is no ID stored for the user and this method will return `null`.
+ * 
+ * @param {function(error, result)} callback - A callback that receives the function call result.
+ */
+export function getUserId(callback: Callback<string>): void;
+
+/**
  * Sets the signature to be used to authenticate the current user. You can also set the signature when calling `changeUser`.
  * This signature will only have an effect if SDK Authentication is enabled.
  *
@@ -447,8 +455,8 @@ export interface ClassicContentCard extends ContentCardBase {
   domain?: string;
 }
 
-export interface BannerContentCard extends ContentCardBase {
-  type: 'Banner';
+export interface ImageOnlyContentCard extends ContentCardBase {
+  type: 'ImageOnly';
   image: string;
   imageAspectRatio: number;
 }
@@ -464,7 +472,7 @@ export interface CaptionedContentCard extends ContentCardBase {
 
 export type ContentCard =
   | ClassicContentCard
-  | BannerContentCard
+  | ImageOnlyContentCard
   | CaptionedContentCard;
 
 /**
@@ -695,10 +703,13 @@ export class FeatureFlag {
 export function getAllFeatureFlags(): Promise<FeatureFlag[]>;
 
 /**
- * Get a feature flag by its ID
- * @returns {Promise<FeatureFlag>}
+ * Get a feature flag by its ID.
+ * 
+ * @param id - The ID of the feature flag.
+ * @returns A promise containing the feature flag.
+ *    If there is no feature flag with that ID, this method will return a null.
  */
-export function getFeatureFlag(id: string): Promise<FeatureFlag>;
+export function getFeatureFlag(id: string): Promise<FeatureFlag | null>;
 
 /**
  * Get value of a feature flag property of type boolean.
@@ -707,7 +718,8 @@ export function getFeatureFlag(id: string): Promise<FeatureFlag>;
  * @param key - The key of the property.
  *
  * @returns A promise containing the value of the property if the key is found and is of type boolean.
- *    If the key is not found or if there is a type mismatch, this method will return a null.
+ *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
+ *    this method will return a null.
  */
 export function getFeatureFlagBooleanProperty(id: string, key: string): Promise<boolean | null>;
 
@@ -718,7 +730,8 @@ export function getFeatureFlagBooleanProperty(id: string, key: string): Promise<
  * @param key - The key of the property.
  *
  * @returns A promise containing the value of the property if the key is found and is of type string.
- *    If the key is not found or if there is a type mismatch, this method will return a null.
+ *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
+ *    this method will return a null.
  */
 export function getFeatureFlagStringProperty(id: string, key: string): Promise<string | null>;
 
@@ -729,7 +742,8 @@ export function getFeatureFlagStringProperty(id: string, key: string): Promise<s
  * @param key - The key of the property.
  *
  * @returns A promise containing the value of the property if the key is found and is of type number.
- *    If the key is not found or if there is a type mismatch, this method will return a null.
+ *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
+ *    this method will return a null.
  */
 export function getFeatureFlagNumberProperty(id: string, key: string): Promise<number | null>;
 

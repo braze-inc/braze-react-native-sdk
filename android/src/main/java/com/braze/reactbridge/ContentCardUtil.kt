@@ -35,7 +35,7 @@ fun mapContentCard(card: Card): WritableMap {
     }
     mappedCard.putMap("extras", extras)
     when (card.cardType) {
-        CardType.BANNER -> mappedCard.merge(bannerImageCardToWritableMap(card as BannerImageCard))
+        CardType.IMAGE -> mappedCard.merge(imageOnlyCardToWritableMap(card as ImageOnlyCard))
         CardType.CAPTIONED_IMAGE -> mappedCard.merge(captionedImageCardToWritableMap(card as CaptionedImageCard))
         CardType.SHORT_NEWS -> mappedCard.merge(shortNewsCardToWritableMap(card as ShortNewsCard))
         CardType.TEXT_ANNOUNCEMENT -> mappedCard.merge(textAnnouncementCardToWritableMap(card as TextAnnouncementCard))
@@ -75,12 +75,12 @@ fun textAnnouncementCardToWritableMap(card: TextAnnouncementCard): WritableMap {
     return mappedCard
 }
 
-fun bannerImageCardToWritableMap(card: BannerImageCard): WritableMap {
+fun imageOnlyCardToWritableMap(card: ImageOnlyCard): WritableMap {
     val mappedCard = Arguments.createMap()
     mappedCard.putString("image", card.imageUrl)
     mappedCard.putDouble("imageAspectRatio", card.aspectRatio.toDouble())
     mappedCard.putString("domain", card.domain)
-    mappedCard.putString("type", "Banner")
+    mappedCard.putString("type", "ImageOnly")
     return mappedCard
 }
 

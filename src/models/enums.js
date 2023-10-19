@@ -25,7 +25,7 @@ export const Genders = {
 
 export const ContentCardTypes = {
   CLASSIC: 'Classic',
-  BANNER: 'Banner',
+  IMAGE_ONLY: 'ImageOnly',
   CAPTIONED: 'Captioned'
 };
 

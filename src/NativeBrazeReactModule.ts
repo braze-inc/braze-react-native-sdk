@@ -6,6 +6,7 @@ export interface Spec extends TurboModule {
   getInitialURL(callback: (deepLink: string) => void): void;
   getDeviceId(callback: (error?: Object, result?: string) => void): void;
   changeUser(userId: string, signature?: string | null): void;
+  getUserId(callback: (error?: Object, result?: string) => void): void;
   setSdkAuthenticationSignature(signature: string): void;
   addAlias(aliasName: string, aliasLabel: string): void;
   setFirstName(firstName: string): void;
@@ -185,7 +186,7 @@ export interface Spec extends TurboModule {
     permissionOptions?: Object | null,
   ): void;
   getAllFeatureFlags(): Promise<FeatureFlag[]>;
-  getFeatureFlag(flagId: string): Promise<FeatureFlag>;
+  getFeatureFlag(flagId: string): Promise<FeatureFlag | null>;
   getFeatureFlagBooleanProperty(flagId: string, key: string): Promise<boolean | null>;
   getFeatureFlagStringProperty(flagId: string, key: string): Promise<string | null>;
   getFeatureFlagNumberProperty(flagId: string, key: string): Promise<number | null>;

@@ -1,20 +1,20 @@
 PODS:
   - boost (1.76.0)
-  - braze-react-native-sdk (7.0.0):
-    - BrazeKit (~> 6.6.0)
-    - BrazeLocation (~> 6.6.0)
-    - BrazeUI (~> 6.6.0)
+  - braze-react-native-sdk (8.0.0):
+    - BrazeKit (~> 7.0.0)
+    - BrazeLocation (~> 7.0.0)
+    - BrazeUI (~> 7.0.0)
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
     - React-Core
     - ReactCommon/turbomodule/core
-  - BrazeKit (6.6.0)
-  - BrazeLocation (6.6.0):
-    - BrazeKit (= 6.6.0)
-  - BrazeUI (6.6.0):
-    - BrazeKit (= 6.6.0)
+  - BrazeKit (7.0.0)
+  - BrazeLocation (7.0.0):
+    - BrazeKit (= 7.0.0)
+  - BrazeUI (7.0.0):
+    - BrazeKit (= 7.0.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.72.3)
@@ -1259,10 +1259,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  braze-react-native-sdk: 0c255c9cf2cd2a298d1748f97617cbea8322b184
-  BrazeKit: 3c25fd2317ef39059c7305074c3662971f6373cc
-  BrazeLocation: bbf48b75305580157977e4d10466b7b849eaac83
-  BrazeUI: cdd5fef144df0acfda9c46a91ff8bc3217a5c7e1
+  braze-react-native-sdk: 3c1e873239b8c3fcccd0be76a6f0dc56c90b404c
+  BrazeKit: 0adaa8a4f92f55212ec5522bebca92e10a341c8b
+  BrazeLocation: 74faf6957b412d93ef4ee9b95e5868bcd55dcc24
+  BrazeUI: 305d8386fee0ecf95d62d514154fe71ad16c55d5
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 4cce221dd782d3ff7c4172167bba09d58af67ccb
@@ -1301,7 +1301,7 @@ SPEC CHECKSUMS:
   React-perflogger: 6bd153e776e6beed54c56b0847e1220a3ff92ba5
   React-RCTActionSheet: c0b62af44e610e69d9a2049a682f5dba4e9dff17
   React-RCTAnimation: f9bf9719258926aea9ecb8a2aa2595d3ff9a6022
-  React-RCTAppDelegate: 2c72015d97aa99eee3614880b92167632c5413d6
+  React-RCTAppDelegate: bfa7bc41b4e3d8bcdbe0556a7f110f74dee628d1
   React-RCTBlob: c4f1e69a6ef739aa42586b876d637dab4e3b5bed
   React-RCTFabric: 125e7d77057cb62f94e79ac977fd68be042a3bc5
   React-RCTImage: e5798f01aba248416c02a506cf5e6dfcba827638
@@ -1321,4 +1321,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a5a205f87842532db01e7cc5eee03c5db5604934
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.12.0

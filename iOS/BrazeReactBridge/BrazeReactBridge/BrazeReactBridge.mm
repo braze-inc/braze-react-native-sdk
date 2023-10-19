@@ -161,6 +161,17 @@ RCT_EXPORT_METHOD(changeUser:(NSString *)userId signature:(NSString *)signature)
   [braze changeUser:userId sdkAuthSignature:signature];
 }
 
+RCT_EXPORT_METHOD(getUserId:(RCTResponseSenderBlock)callback) {
+  RCTLogInfo(@"getUserId called");
+  [braze.user idWithCompletion:^(NSString * _Nullable userId) {
+    if (!userId) {
+      [self reportResultWithCallback:callback andError:@"User ID not found." andResult:userId];
+      return;
+    }
+    [self reportResultWithCallback:callback andError:nil andResult:userId];
+  }];
+}
+
 RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName aliasLabel:(NSString *)aliasLabel) {
   RCTLogInfo(@"braze.user addAlias with values %@ %@", aliasName, aliasLabel);
   [braze.user addAlias:aliasName label:aliasLabel];
@@ -701,10 +712,10 @@ static NSDictionary *RCTFormatContentCard(BRZContentCardRaw *card) {
       formattedContentCardData[@"domain"] = RCTNullIfNil(card.domain);
       formattedContentCardData[@"type"] = @"Captioned";
       break;
-    case BRZContentCardRawTypeBanner:
+    case BRZContentCardRawTypeImageOnly:
       formattedContentCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
       formattedContentCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      formattedContentCardData[@"type"] = @"Banner";
+      formattedContentCardData[@"type"] = @"ImageOnly";
       break;
     case BRZContentCardRawTypeClassic:
       formattedContentCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
@@ -897,6 +908,10 @@ RCT_EXPORT_METHOD(getFeatureFlag:(NSString *)flagId
                    reject:(RCTPromiseRejectBlock)reject) {
   RCTLogInfo(@"getFeatureFlag called for ID %@", flagId);
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  if (!featureFlag) {
+    resolve([NSNull null]);
+    return;
+  }
   NSError* error = nil;
   id flagJSON = [NSJSONSerialization JSONObjectWithData:[featureFlag json]
                                                 options:NSJSONReadingMutableContainers

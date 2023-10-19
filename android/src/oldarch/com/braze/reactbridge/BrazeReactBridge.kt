@@ -22,6 +22,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
      fun changeUser(userId: String?, signature: String?) {
         brazeImpl.changeUser(userId, signature)
     }
+    
+    @ReactMethod
+    fun getUserId(callback: Callback?) {
+        return brazeImpl.getUserId(callback)
+    }
 
     @ReactMethod
     fun setSdkAuthenticationSignature(signature: String?) {

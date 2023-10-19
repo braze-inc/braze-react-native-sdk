@@ -26,6 +26,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           setEmail: jest.fn(),
           setPhoneNumber: jest.fn(),
           changeUser: jest.fn(),
+          getUserId: jest.fn(),
           setSdkAuthenticationSignature: jest.fn(),
           addAlias: jest.fn(),
           logCustomEvent: jest.fn(),

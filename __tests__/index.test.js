@@ -13,10 +13,22 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('it calls BrazeReactBridge.registerAndroidPushToken', () => {
+test('it calls BrazeReactBridge.registerAndroidPushToken on Android', () => {
+  const platform = Platform.OS;
+  Platform.OS = 'android';
   const token = "some_token";
   Braze.registerAndroidPushToken(token);
   expect(NativeBrazeReactModule.registerPushToken).toBeCalledWith(token);
+  Platform.OS = platform;
+});
+
+test('it calls BrazeReactBridge.registerAndroidPushToken on iOS', () => {
+  const platform = Platform.OS;
+  Platform.OS = 'ios';
+  const token = "some_token";
+  Braze.registerAndroidPushToken(token);
+  expect(NativeBrazeReactModule.registerPushToken).not.toBeCalledWith(token);
+  Platform.OS = platform;
 });
 
 test('it calls BrazeReactBridge.registerPushToken', () => {
@@ -237,6 +249,22 @@ test('it calls BrazeReactBridge.changeUser', () => {
   const user_id = "some_id";
   Braze.changeUser(user_id);
   expect(NativeBrazeReactModule.changeUser).toBeCalledWith(user_id, null);
+});
+
+test('it calls BrazeReactBridge.getUserId', () => {
+  const user_id = "some_user_id";
+  Braze.changeUser(user_id);
+  NativeBrazeReactModule.getUserId.mockImplementation((callback) => {
+    callback(null, "some_user_id");
+  });
+});
+
+test('it calls BrazeReactBridge.getUserId with null', () => {
+  const user_id = null;
+  Braze.changeUser(user_id);
+  NativeBrazeReactModule.getUserId.mockImplementation((callback) => {
+    callback(null, null);
+  });
 });
 
 test('it calls BrazeReactBridge.setSdkAuthenticationSignature', () => {

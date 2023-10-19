@@ -131,6 +131,20 @@ export class Braze {
   }
 
   /**
+   * Returns a unique ID stored for the user.
+   * If the user is anonymous, there is no ID stored for the user and this method will return `null`.
+   * 
+   * @param {function(error, result)} callback - A callback that receives the function call result.
+   */
+  static getUserId(callback) {
+    callFunctionWithCallback(
+      this.bridge.getUserId,
+      [],
+      callback
+    );
+  }  
+
+  /**
    * Sets the signature to be used to authenticate the current user. You can also set the signature when calling `changeUser`.
    * This signature will only have an effect if SDK Authentication is enabled.
    *
@@ -162,7 +176,9 @@ export class Braze {
    * @deprecated This method is deprecated in favor of `registerPushToken`.
    */
   static registerAndroidPushToken(token) {
-    this.bridge.registerPushToken(token);
+    if (Platform.OS === 'android') {
+      this.bridge.registerPushToken(token);
+    }
   }
 
   /**
@@ -831,7 +847,7 @@ export class Braze {
 
   /**
    * Returns feature flag
-   * @returns {Promise<FeatureFlag>}
+   * @returns {Promise<FeatureFlag|null>}
    */
   static getFeatureFlag(id) {
     return this.bridge.getFeatureFlag(id);

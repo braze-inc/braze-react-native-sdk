@@ -1,3 +1,18 @@
+## 8.0.0
+
+##### Breaking
+- Updates the native Android bridge [from Braze Android SDK 27.0.1 to 29.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v27.0.0...v29.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Updates the native iOS bridge [from Braze Swift SDK 6.6.0 to 7.0.0](https://github.com/braze-inc/braze-swift-sdk/compare/6.6.0...7.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Renames the `Banner` Content Card type to `ImageOnly`:
+  - `BannerContentCard` → `ImageOnlyContentCard`
+  - `ContentCardTypes.BANNER` → `ContentCardTypes.IMAGE_ONLY`
+  - On Android, if the XML files in your project contain the word `banner` for Content Cards, it should be replaced with `image_only`.
+- `Braze.getFeatureFlag(id)` will now return `null` if the feature flag does not exist.
+- `Braze.Events.FEATURE_FLAGS_UPDATED` will only trigger when a refresh request completes with success or failure, and upon initial subscription if there was previously cached data from the current session.
+
+##### Added
+- Adds `Braze.getUserId()` to get the ID of the current user.
+
 ## 7.0.0
 
 ##### Breaking
