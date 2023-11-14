@@ -638,6 +638,14 @@ export class Braze {
   }
 
   /**
+   * Perform the action of a particular card.
+   * @param {string} id
+   */
+  static processContentCardClickAction(id) {
+    this.bridge.processContentCardClickAction(id);
+  }
+
+  /**
    * Requests a News Feed refresh.
    */
   static requestFeedRefresh() {
@@ -742,16 +750,27 @@ export class Braze {
   }
 
   /**
-  * Sets the last known location for the user. For Android, latitude and longitude are required, with altitude and horizontal accuracy being optional parameters, and vertical accuracy being a no-op.
-  * For iOS, latitude, longitude, and horizontal accuracy are required, with altitude and vertical accuracy being optional parameters.
-  * Calling this method with invalid parameters for a specific platform is a no-op. Latitude, longitude, and horizontal accuracy are the minimum required parameters to work for all platforms.
-  * @param {number} latitude - Location latitude. May not be null.
-  * @param {number} longitude - Location longitude. May not be null.
-  * @param {number} altitude - Location altitude. May be null for both platforms.
-  * @param {number} horizontalAccuracy - Location horizontal accuracy. Equivalent to accuracy for Android. May be null for Android only; may not be null for iOS.
-  * @param {number} verticalAccuracy - Location vertical accuracy. May be null for iOS. No-op for Android.
-  */
+   * Sets the last known location for the user.
+   * For Android, latitude and longitude are required, with altitude, horizontal accuracy, and vertical accuracy being optional parameters.
+   * For iOS, latitude, longitude, and horizontal accuracy are required, with altitude and vertical accuracy being optional parameters.
+   * Calling this method with invalid parameters for a specific platform is a no-op. Latitude, longitude, and horizontal accuracy are the minimum required parameters to work for all platforms.
+   * @param {number} latitude - Location latitude. Required.
+   * @param {number} longitude - Location longitude. Required.
+   * @param {number | null} altitude - Location altitude. May be null for both platforms. Providing an `altitude` requires a valid `verticalAccuracy` to be provided as well.
+   * @param {number | null} horizontalAccuracy - Location horizontal accuracy. Equivalent to accuracy for Android. May be null for Android only; required for iOS.
+   * @param {number | null} verticalAccuracy - Location vertical accuracy. May be null for both platforms unless `altitude` is supplied.
+   */
   static setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy) {
+    if (!horizontalAccuracy) {
+      horizontalAccuracy = -1;
+    }
+    if (!verticalAccuracy) {
+      verticalAccuracy = -1;
+    }
+    if (!altitude) {
+      verticalAccuracy = -1;
+      altitude = 0;
+    }
     this.bridge.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
   }
 
@@ -818,6 +837,27 @@ export class Braze {
       inAppMessageString,
       buttonId
     );
+  }
+
+  /**
+   * Perform the action of an in-app message button
+   * @param {InAppMessage} inAppMessage
+   * @param {number} ID of the button.
+   */
+  static performInAppMessageButtonAction(inAppMessage, buttonId) {
+    console.log('Processing In-App Message Button Action: ', inAppMessage, ' ', buttonId);
+    const inAppMessageString = inAppMessage.toString();
+    this.bridge.performInAppMessageAction(inAppMessageString, buttonId);
+  }
+
+  /**
+   * Perform the action of an in-app message
+   * @param {InAppMessage} inAppMessage
+   */
+  static performInAppMessageAction(inAppMessage) {
+    console.log('Processing In-App Message Action: ', inAppMessage);
+    const inAppMessageString = inAppMessage.toString();
+    this.bridge.performInAppMessageAction(inAppMessageString, -1);
   }
 
   /**

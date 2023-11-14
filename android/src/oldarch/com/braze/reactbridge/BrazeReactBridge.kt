@@ -263,6 +263,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun processContentCardClickAction(cardId: String?) {
+        brazeImpl.processContentCardClickAction(cardId)
+    }
+
+    @ReactMethod
     fun getContentCards(promise: Promise?) {
         brazeImpl.getContentCards(promise)
     }
@@ -329,11 +334,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun setLastKnownLocation(
-        latitude: Double, 
-        longitude: Double, 
-        altitude: Double?, 
-        horizontalAccuracy: Double?, 
-        verticalAccuracy: Double?
+        latitude: Double,
+        longitude: Double,
+        altitude: Double,
+        horizontalAccuracy: Double,
+        verticalAccuracy: Double
     ) {
         brazeImpl.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
     }
@@ -361,6 +366,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     @ReactMethod
     fun logInAppMessageButtonClicked(inAppMessageString: String?, buttonId: Double) {
         brazeImpl.logInAppMessageButtonClicked(inAppMessageString, buttonId.toInt())
+    }
+
+    @ReactMethod
+    fun performInAppMessageAction(inAppMessageString: String?, buttonId: Double) {
+        brazeImpl.performInAppMessageAction(inAppMessageString, buttonId.toInt())
     }
 
     @ReactMethod

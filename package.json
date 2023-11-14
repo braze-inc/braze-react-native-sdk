@@ -1,6 +1,6 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "8.0.0",
+  "version": "8.1.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",

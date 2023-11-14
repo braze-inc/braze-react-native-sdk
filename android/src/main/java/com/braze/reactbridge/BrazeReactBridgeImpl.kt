@@ -21,6 +21,8 @@ import com.braze.events.IFireOnceEventSubscriber
 import com.braze.models.cards.Card
 import com.braze.models.inappmessage.IInAppMessage
 import com.braze.models.inappmessage.IInAppMessageImmersive
+import com.braze.models.inappmessage.InAppMessageImmersiveBase
+import com.braze.models.inappmessage.MessageButton
 import com.braze.models.outgoing.AttributionData
 import com.braze.models.outgoing.BrazeProperties
 import com.braze.support.BrazeLogger.Priority.V
@@ -41,6 +43,12 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
+import com.braze.support.BrazeLogger
+import com.braze.ui.BrazeDeeplinkHandler
+import com.braze.enums.inappmessage.ClickAction
+import com.braze.ui.actions.NewsfeedAction
+import com.braze.support.toBundle
+import com.braze.enums.Channel
 
 @Suppress("TooManyFunctions", "LargeClass")
 class BrazeReactBridgeImpl(
@@ -520,28 +528,51 @@ class BrazeReactBridgeImpl(
             val eventData = event.notificationPayload
 
             val data = WritableNativeMap().apply {
-                putString("push_event_type", pushType)
+                putString("payload_type", pushType)
+                putString("url", eventData.deeplink)
                 putString("title", eventData.titleText)
+                putString("body", eventData.contentText)
+                putString("summary_text", eventData.summaryText)
+                eventData.notificationBadgeNumber?.let { putInt("badge_count", it) }
+                eventData.notificationExtras.getLong("braze_push_received_timestamp")
+                    .takeUnless { it == 0L }?.let {
+                        putInt("timestamp", it.toInt())
+                    }
+                putBoolean(
+                    "use_webview",
+                    eventData.notificationExtras.getString("ab_use_webview") == "true"
+                )
+                putBoolean(
+                    "is_silent", eventData.titleText == null && eventData.contentText == null
+                )
+                putBoolean(
+                    "is_braze_internal",
+                    eventData.isUninstallTrackingPush
+                            || eventData.shouldSyncGeofences
+                            || eventData.shouldRefreshFeatureFlags
+                )
+                putString("image_url", eventData.bigImageUrl)
+                putMap("android", convertToMap(eventData.notificationExtras))
+
+                // Deprecated legacy fields
+                putString("push_event_type", pushType)
                 putString("deeplink", eventData.deeplink)
                 putString("content_text", eventData.contentText)
-                putString("summary_text", eventData.summaryText)
-                putString("image_url", eventData.bigImageUrl)
                 putString("raw_android_push_data", eventData.notificationExtras.toString())
             }
 
-            // Convert the bundle into a map
-            val returnedKvpMap = WritableNativeMap()
-            val kvpData: Bundle = eventData.brazeExtras
-            kvpData.keySet()
-                // AKA "appboy_image_url"
-                .filter { it != Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY }
-                .associateWith { @Suppress("deprecation") kvpData[it] }
-                .forEach { returnedKvpMap.putString(it.key, it.value.toString()) }
+            // WritableNativeMap can only be consumed once and will be erased from memory after reading from it.
+            // Need to create two distinct maps to avoid errors after consuming the first one.
+            val returnedKvpMap =
+                convertToMap(eventData.brazeExtras, setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY))
+            val brazePropertiesMap =
+                convertToMap(eventData.brazeExtras, setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY))
+            data.putMap("braze_properties", brazePropertiesMap)
+            // Deprecated legacy field
             data.putMap("kvp_data", returnedKvpMap)
 
             brazelog { "Sending push notification event with data $data" }
-            reactApplicationContext
-                .getJSModule(RCTDeviceEventEmitter::class.java)
+            reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java)
                 .emit(PUSH_NOTIFICATION_EVENT_NAME, data)
         }
         braze.subscribeToPushNotificationEvents(pushNotificationEventSubscriber)
@@ -562,6 +593,36 @@ class BrazeReactBridgeImpl(
     fun logContentCardImpression(id: String?) {
         id?.let {
             getContentCardById(it)?.logImpression()
+        }
+    }
+
+    fun processContentCardClickAction(id: String?) {
+        brazelog(V) { "Processing content card action $id" }
+        id?.let {
+            val card = getContentCardById(it)
+            if (card == null) {
+                return
+            }
+            val extras = Bundle()
+            for (key in card.extras.keys) {
+                extras.putString(key, card.extras[key])
+            }
+            val url = card.url
+            if (url == null) {
+                brazelog(V) { "Card URL is null, returning null for getUriActionForCard" }
+                return
+            }
+
+            val action = BrazeDeeplinkHandler.getInstance().createUriActionFromUrlString(
+                url,
+                extras,
+                card.openUriInWebView,
+                card.channel
+            )
+
+            if (action != null) {
+                BrazeDeeplinkHandler.getInstance().gotoUri(reactApplicationContext, action)
+            }
         }
     }
 
@@ -678,9 +739,12 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun setLastKnownLocation(latitude: Double, longitude: Double, altitude: Double?, horizontalAccuracy: Double?, verticalAccuracy: Double?) {
+    fun setLastKnownLocation(latitude: Double, longitude: Double, altitude: Double, horizontalAccuracy: Double, verticalAccuracy: Double) {
         runOnUser {
-            it.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
+            val sanitizedHorizontalAccuracy = horizontalAccuracy.takeUnless { accuracy -> accuracy < 0 }
+            val sanitizedVerticalAccuracy = verticalAccuracy.takeUnless { accuracy -> accuracy < 0 }
+            val sanitizedAltitude = altitude.takeUnless { sanitizedVerticalAccuracy == null }
+            it.setLastKnownLocation(latitude, longitude, sanitizedAltitude, sanitizedHorizontalAccuracy, sanitizedVerticalAccuracy)
         }
     }
 
@@ -707,6 +771,79 @@ class BrazeReactBridgeImpl(
             inAppMessage.messageButtons
                 .firstOrNull { it.id == buttonId }
                 ?.let { inAppMessage.logButtonClick(it) }
+        }
+    }
+
+    fun performInAppMessageAction(inAppMessageString: String?, buttonId: Int) {
+        brazelog(V) { "Processing in-app message action $inAppMessageString" }
+        braze.deserializeInAppMessageString(inAppMessageString)?.let { inAppMessage ->
+            val activity = currentActivity
+            if (activity == null) {
+                brazelog(W) { "Can't perform click action because the cached activity is null." }
+                return
+            }
+
+            var button: MessageButton? = null
+            if (buttonId >= 0) {
+                if (inAppMessage is InAppMessageImmersiveBase) {
+                    button = inAppMessage.messageButtons.firstOrNull { it.id == buttonId }
+                } else {
+                     brazelog { "Cannot perform IAM action because button was not null but message is not InAppMessageImmersiveBase" }
+                     return
+                }
+            }
+
+            val clickAction = if (buttonId < 0) {
+                inAppMessage.clickAction
+            } else {
+                button?.clickAction
+            }
+
+            val clickUri = if (buttonId < 0) {
+                inAppMessage.uri
+            } else {
+                button?.uri
+            }
+
+            val openUriInWebView = if (buttonId < 0) {
+                inAppMessage.openUriInWebView
+            } else {
+                button?.openUriInWebview ?: false
+            }
+
+            brazelog { "GOT ACTION: $clickUri, $openUriInWebView, $clickAction" }
+
+            when (clickAction) {
+                ClickAction.NEWS_FEED -> {
+                    val newsfeedAction = NewsfeedAction(
+                        inAppMessage.extras.toBundle(),
+                        Channel.INAPP_MESSAGE
+                    )
+                    BrazeDeeplinkHandler.getInstance()
+                        .gotoNewsFeed(activity, newsfeedAction)
+                }
+                ClickAction.URI -> {
+                    if (clickUri == null) {
+                        brazelog { "clickUri is null, not performing click action" }
+                        return
+                    }
+                    val uriAction = BrazeDeeplinkHandler.getInstance().createUriActionFromUri(
+                        clickUri, inAppMessage.extras.toBundle(),
+                        openUriInWebView, Channel.INAPP_MESSAGE
+                    )
+
+                    if (reactApplicationContext == null) {
+                        brazelog { "reactApplicationContext is null, not performing click action" }
+                        return
+                    } else {
+                        brazelog(W) { "Performing gotoUri $clickUri $openUriInWebView" }
+                        BrazeDeeplinkHandler.getInstance().gotoUri(reactApplicationContext, uriAction)
+                    }
+                }
+                else -> {
+                    brazelog { "Unhandled action $clickAction" }
+                }
+            }
         }
     }
 
@@ -761,7 +898,7 @@ class BrazeReactBridgeImpl(
             contentCardsLock.withLock {
                 contentCardsUpdatedAt = event.timestampSeconds
                 contentCards.clear()
-                contentCards.addAll(event.allCards)                
+                contentCards.addAll(event.allCards)
             }
         }
     }
@@ -780,9 +917,9 @@ class BrazeReactBridgeImpl(
     private fun getNewsFeedCardById(id: String): Card? =
         newsFeedCards.firstOrNull { it.id == id }
 
-    private fun getContentCardById(id: String): Card? = 
+    private fun getContentCardById(id: String): Card? =
         contentCardsLock.withLock {
-            contentCards.firstOrNull { it.id == id }        
+            contentCards.firstOrNull { it.id == id }
         }
 
     fun getAllFeatureFlags(promise: Promise?) {
@@ -844,6 +981,15 @@ class BrazeReactBridgeImpl(
                 }
             }
         )
+    }
+
+    private fun convertToMap(bundle: Bundle, filteringKeys: Set<String> = emptySet()): ReadableMap {
+        val nativeMap = WritableNativeMap()
+        bundle.keySet()
+            .filter { !filteringKeys.contains(it) }
+            .associateWith { @Suppress("deprecation") bundle[it] }
+            .forEach { nativeMap.putString(it.key, it.value.toString()) }
+        return nativeMap
     }
 
     companion object {

@@ -186,7 +186,6 @@ export const BrazeProject = (): ReactElement => {
           Braze.logInAppMessageImpression(event.inAppMessage);
           Braze.logInAppMessageButtonClicked(event.inAppMessage, 0);
         }
-
         showToast('inAppMessage received in the React layer');
         console.log(event.inAppMessage);
       },
@@ -233,8 +232,8 @@ export const BrazeProject = (): ReactElement => {
     const pushEventSubscription = Braze.addListener(
       Braze.Events.PUSH_NOTIFICATION_EVENT,
       function (data) {
-        console.log(`Push Notification event of type ${data.push_event_type} seen.
-        Title ${data.title}\n and deeplink ${data.deeplink}`);
+        console.log(`Push Notification event of type ${data.payload_type} seen.
+        Title ${data.title}\n and deeplink ${data.url}`);
         console.log(JSON.stringify(data, undefined, 2));
       },
     );

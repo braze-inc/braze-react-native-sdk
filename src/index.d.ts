@@ -505,6 +505,12 @@ export function logContentCardDismissed(id: string): void;
 export function logContentCardImpression(id: string): void;
 
 /**
+ * Perform the action of a particular card.
+ * @param {string} id
+ */
+export function processContentCardClickAction(id: string): void;
+
+/**
  * Performs a refresh and then returns a content cards array.
  * @returns {Promise<ContentCard[]>}
  */
@@ -590,14 +596,15 @@ export function setLocationCustomAttribute(
 ): void;
 
 /**
- * Sets the last known location for the user. For Android, latitude and longitude are required, with altitude and horizontal accuracy being optional parameters, and vertical accuracy being a no-op.
+ * Sets the last known location for the user.
+ * For Android, latitude and longitude are required, with altitude, horizontal accuracy, and vertical accuracy being optional parameters.
  * For iOS, latitude, longitude, and horizontal accuracy are required, with altitude and vertical accuracy being optional parameters.
  * Calling this method with invalid parameters for a specific platform is a no-op. Latitude, longitude, and horizontal accuracy are the minimum required parameters to work for all platforms.
  * @param {number} latitude - Location latitude. Required.
  * @param {number} longitude - Location longitude. Required.
- * @param {number} altitude - Location altitude. May be null for both platforms.
- * @param {number} horizontalAccuracy - Location horizontal accuracy. Equivalent to accuracy for Android. May be null for Android only; required for iOS.
- * @param {number} verticalAccuracy - Location vertical accuracy. May be null for iOS. No-op for Android.
+ * @param {number | null} altitude - Location altitude. May be null for both platforms.
+ * @param {number | null} horizontalAccuracy - Location horizontal accuracy. Equivalent to accuracy for Android. May be null for Android only; required for iOS.
+ * @param {number | null} verticalAccuracy - Location vertical accuracy. May be null for both platforms unless `altitude` is supplied.
  */
  export function setLastKnownLocation(
   latitude: number,
@@ -649,6 +656,24 @@ export function logInAppMessageImpression(
 export function logInAppMessageButtonClicked(
   inAppMessage: BrazeInAppMessage,
   buttonId: number
+): void;
+
+/**
+ * Performs the action for an in-app message button
+ * @param {BrazeInAppMessage} inAppMessage
+ * @param {number} buttonId
+ */
+export function performInAppMessageButtonAction(
+  inAppMessage: BrazeInAppMessage,
+  buttonId: number
+): void;
+
+/**
+ * Performs the action for an in-app message
+ * @param {BrazeInAppMessage} inAppMessage
+ */
+export function performInAppMessageAction(
+  inAppMessage: BrazeInAppMessage
 ): void;
 
 type PermissionOptions = 'alert' | 'badge' | 'sound' | 'provisional';
@@ -845,13 +870,81 @@ export interface SDKAuthenticationErrorType {
 }
 
 export interface PushNotificationEvent {
-  push_event_type: string;
+  /* Notification payload type. Only `push_opened` events are supported on iOS. */
+  payload_type: string;
+
+  /* URL opened by the notification. */
+  url: string;
+
+  /* Specifies whether the URL should be opened in a modal webview. */
+  use_webview: boolean;
+
+  /* Notification title. */
   title: string;
-  deeplink: string;
-  content_text: string;
+
+  /* Notification body, or content text. */
+  body: string;
+
+  /**
+   * Notification summary text
+   *
+   * Mapped from `subtitle` on iOS.
+   */
   summary_text: string;
+
+  /* Notification badge count. */
+  badge_count: number;
+
+  /* Time at which the payload was received by the application. */
+  timestamp: number;
+
+  /**
+   * Specifies whether the payload was received silently.
+   *
+   * For details on sending Android silent push notifications, refer to [Silent push notifications](https://www.braze.com/docs/developer_guide/platform_integration_guides/android/push_notifications/android/silent_push_notifications).
+   *
+   * For details on sending iOS silent push notifications, refer to [Silent push notifications](https://www.braze.com/docs/developer_guide/platform_integration_guides/swift/push_notifications/silent_push_notifications/).
+   */
+  is_silent: boolean;
+
+  /* Specifies whether the payload is used by Braze for an internal SDK feature. */
+  is_braze_internal: boolean;
+
+  /* URL associated with the notification image. */
   image_url: string;
+
+  /* Braze properties associated with the campaign (key-value pairs). */
+  braze_properties: { [key: string]: any };
+
+  /* iOS-specific fields. */
+  ios: { [key: string]: any };
+
+  /* Android-specific fields. */
+  android: { [key: string]: any };
+
+  /**
+   * @deprecated This field is deprecated and will be removed in future versions. Use `payload_type` instead.
+   */
+  push_event_type: string;
+
+  /**
+   * @deprecated This field is deprecated and will be removed in future versions. Use `url` instead.
+   */
+  deeplink: string;
+
+  /**
+   * @deprecated This field is deprecated and will be removed in future versions. Use `body` instead.
+   */
+  content_text: string;
+
+  /**
+   * @deprecated This field is deprecated and will be removed in future versions. Use `android` instead.
+   */
   raw_android_push_data: string;
+
+  /**
+   * @deprecated This field is deprecated and will be removed in future versions. Use `braze_properties` instead.
+   */
   kvp_data: { [key: string]: any };
 }
 

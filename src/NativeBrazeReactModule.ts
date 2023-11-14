@@ -139,6 +139,7 @@ export interface Spec extends TurboModule {
   logContentCardClicked(cardId: string): void;
   logContentCardDismissed(cardId: string): void;
   logContentCardImpression(cardId: string): void;
+  processContentCardClickAction(cardId: string): void;
   getContentCards(): Promise<ContentCard[]>;
   getCachedContentCards(): Promise<ContentCard[]>;
   getCardCountForCategories(
@@ -159,9 +160,9 @@ export interface Spec extends TurboModule {
   setLastKnownLocation(
     latitude: number,
     longitude: number,
-    altitude: number | null,
-    horizontalAccuracy: number | null,
-    verticalAccuracy: number | null
+    altitude: number,
+    horizontalAccuracy: number,
+    verticalAccuracy: number
   ): void;
   setLocationCustomAttribute(
     key: string,
@@ -181,6 +182,10 @@ export interface Spec extends TurboModule {
   logInAppMessageButtonClicked(
     inAppMessageString: string,
     buttonId: number
+  ): void;
+  performInAppMessageAction(
+    inAppMessage: string,
+    buttonId: number 
   ): void;
   requestPushPermission(
     permissionOptions?: Object | null,

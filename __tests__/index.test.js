@@ -209,7 +209,7 @@ test('it calls BrazeReactBridge.setLastKnownLocation with 3 null', () => {
   const horizontalAccuracy = null;
   const verticalAccuracy = null;
   Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
-  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, 0, -1, -1);
 });
 
 test('it calls BrazeReactBridge.setLastKnownLocation with 2 null', () => {
@@ -219,7 +219,7 @@ test('it calls BrazeReactBridge.setLastKnownLocation with 2 null', () => {
   const horizontalAccuracy = 25.0;
   const verticalAccuracy = null;
   Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
-  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, 0, horizontalAccuracy, -1);
 });
 
 test('it calls BrazeReactBridge.setLastKnownLocation with 1 null', () => {
@@ -229,7 +229,7 @@ test('it calls BrazeReactBridge.setLastKnownLocation with 1 null', () => {
   const horizontalAccuracy = 25.0;
   const verticalAccuracy = null;
   Braze.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
-  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
+  expect(NativeBrazeReactModule.setLastKnownLocation).toBeCalledWith(latitude, longitude, altitude, horizontalAccuracy, -1);
 });
 
 test('it calls BrazeReactBridge.requestContentCardsRefresh', () => {

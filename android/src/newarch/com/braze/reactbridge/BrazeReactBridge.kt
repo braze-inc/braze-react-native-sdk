@@ -218,6 +218,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.logContentCardImpression(cardId)
     }
 
+    override fun processContentCardClickAction(cardId: String?) {
+        brazeImpl.processContentCardClickAction(cardId)
+    }
+
     override fun getContentCards(promise: Promise?) {
         brazeImpl.getContentCards(promise)
     }
@@ -272,11 +276,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
     }
 
     override fun setLastKnownLocation(
-        latitude: Double, 
-        longitude: Double, 
-        altitude: Double?, 
-        horizontalAccuracy: Double?, 
-        verticalAccuracy: Double?
+        latitude: Double,
+        longitude: Double,
+        altitude: Double,
+        horizontalAccuracy: Double,
+        verticalAccuracy: Double
     ) {
         brazeImpl.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
     }
@@ -299,6 +303,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
 
     override fun logInAppMessageButtonClicked(inAppMessageString: String?, buttonId: Double) {
         brazeImpl.logInAppMessageButtonClicked(inAppMessageString, buttonId.toInt())
+    }
+
+    override fun performInAppMessageAction(inAppMessageString: String?, buttonId: Double) {
+        brazeImpl.performInAppMessageAction(inAppMessageString, buttonId.toInt())
     }
 
     override fun requestPushPermission(permissionOptions: ReadableMap?) {

@@ -1,3 +1,27 @@
+## 8.1.0
+
+#### Added
+- Push notification objects are now accessible in the JavaScript layer via new fields on the `PushNotificationEvent` interface.
+  - Deprecates the following fields from the `PushNotificationEvent` interface in favor of the new names that can be used on both iOS and Android:
+    - `push_event_type` -> Use `payload_type` instead.
+    - `deeplink` -> Use `url` instead.
+    - `content_text` -> Use `body` instead.
+    - `raw_android_push_data` -> Use the `android` object instead.
+    - `kvp_data` -> Use `braze_properties` instead.
+- Adds iOS support for the listener event `Braze.Events.PUSH_NOTIFICATION_EVENT`.
+  - On iOS, only `"push_opened"` events are supported, indicating the user interacted with the received notification.
+  - The iOS event does not support the deprecated legacy fields mentioned above.
+- Adds methods to manually perform the action of an In-App Message or Content Card when using a custom UI.
+  - `Braze.performInAppMessageButtonAction(inAppMessage, buttonId)`
+  - `Braze.performInAppMessageAction(inAppMessage)`
+  - `Braze.processContentCardClickAction(id)`
+- Updates the native iOS bridge [from Braze Swift SDK 7.0.0 to 7.1.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.0.0...7.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+#### Fixed
+- Fixes the `setLastKnownLocation` method to sanitize null inputs before calling the native layer.
+  - This previously caused an issue when calling this method on the legacy React Native architecture.
+- Updates the native Android bridge [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
 ## 8.0.0
 
 ##### Breaking

@@ -23,6 +23,7 @@ static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 @property (strong, nonatomic) BRZCancellable *contentCardsSubscription;
 @property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
 @property (strong, nonatomic) BRZCancellable *newsFeedSubscription;
+@property (strong, nonatomic) BRZCancellable *notificationSubscription;
 
 @end
 
@@ -79,7 +80,13 @@ RCT_EXPORT_MODULE()
     RCTLogInfo(@"Received News Feed cards via subscription of length: %lu", [cards count]);
    [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
   }];
-  
+
+  self.notificationSubscription = [braze.notifications subscribeToUpdates:^(BRZNotificationsPayload * _Nonnull payload) {
+    RCTLogInfo(@"Received push notification via subscription");
+    NSDictionary *eventData = RCTFormatPushPayload(payload);
+    [self sendEventWithName:kPushNotificationEvent body:eventData];
+  }];
+
   // Assign a default IAM presenter delegate to publish IAM events to the JavaScript layer.
   if ([brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
     [brazeUIHandler useDefaultPresenterDelegate:braze];
@@ -510,17 +517,18 @@ RCT_EXPORT_METHOD(setAttributionData:(NSString *)network campaign:(NSString *)ca
 
 RCT_EXPORT_METHOD(setLastKnownLocation:(double)latitude
                   longitude:(double)longitude
-                   altitude:(NSNumber *)altitude
-         horizontalAccuracy:(NSNumber *)horizontalAccuracy
-                  verticalAccuracy:(NSNumber *)verticalAccuracy) {
-    RCTLogInfo(@"setLastKnownLocationWithLatitude called with latitude: %g, longitude: %g, horizontalAccuracy: %g, altitude: %g, and verticalAccuracy: %g", latitude, longitude, horizontalAccuracy.doubleValue, altitude.doubleValue, verticalAccuracy.doubleValue);
-    if (!horizontalAccuracy) {
-        RCTLogInfo(@"Horizontal accuracy is nil. This is a no-op in iOS.");
-    } else if (!altitude && !verticalAccuracy) {
-        [braze.user setLastKnownLocationWithLatitude:latitude longitude:longitude horizontalAccuracy:horizontalAccuracy.doubleValue];
-    } else {
-        [braze.user setLastKnownLocationWithLatitude:latitude longitude:longitude altitude:altitude.doubleValue horizontalAccuracy:horizontalAccuracy.doubleValue verticalAccuracy:verticalAccuracy.doubleValue];
-    }
+                  altitude:(double)altitude
+                  horizontalAccuracy:(double)horizontalAccuracy
+                  verticalAccuracy:(double)verticalAccuracy) {
+  RCTLogInfo(@"setLastKnownLocationWithLatitude called with latitude: %g, longitude: %g, horizontalAccuracy: %g, altitude: %g, and verticalAccuracy: %g", latitude, longitude, horizontalAccuracy, altitude, verticalAccuracy);
+  if (horizontalAccuracy < 0) {
+    RCTLogInfo(@"Horizontal accuracy is invalid. This is a no-op in iOS.");
+  } else if (verticalAccuracy < 0) {
+    // Having an invalid `verticalAccuracy` will automatically nullify `altitude` in the Swift SDK.
+    [braze.user setLastKnownLocationWithLatitude:latitude longitude:longitude horizontalAccuracy:horizontalAccuracy];
+  } else {
+    [braze.user setLastKnownLocationWithLatitude:latitude longitude:longitude altitude:altitude horizontalAccuracy:horizontalAccuracy verticalAccuracy:verticalAccuracy];
+  }
 }
 
 #pragma mark - News Feed
@@ -615,6 +623,48 @@ static NSDictionary *RCTFormatNewsFeedCard(BRZNewsFeedCard *card) {
   return newsFeedCardData;
 }
 
+#pragma mark - Push Notifications
+
+/// Formats the push notification payload into a JavaScript-readable object.
+static NSDictionary *RCTFormatPushPayload(BRZNotificationsPayload *payload) {
+  NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
+
+  // Uses the `"push_` prefix for consistency with Android. The Swift SDK internally uses `"opened"`.
+  eventData[@"payload_type"] = @"push_opened";
+
+  eventData[@"url"] = [payload.urlContext.url absoluteString];
+  eventData[@"use_webview"] = [NSNumber numberWithBool:payload.urlContext.useWebView];
+  eventData[@"title"] = payload.title;
+  eventData[@"body"] = payload.body;
+  eventData[@"summary_text"] = payload.subtitle;
+  eventData[@"badge_count"] = payload.badge;
+  eventData[@"timestamp"] = [NSNumber numberWithInteger:(NSInteger)[payload.date timeIntervalSince1970]];
+  eventData[@"is_silent"] = [NSNumber numberWithBool:payload.isSilent];
+  eventData[@"is_braze_internal"] = [NSNumber numberWithBool:payload.isInternal];
+  eventData[@"braze_properties"] = RCTFilterBrazeProperties(payload.userInfo);
+
+  // Attaches the image URL from the `userInfo` payload if it exists. This is a no-op otherwise.
+  eventData[@"image_url"] = payload.userInfo[@"ab"][@"att"][@"url"];
+
+  // Adds relevant iOS-specific properties.
+  NSMutableDictionary *iosProperties = [NSMutableDictionary dictionary];
+  iosProperties[@"action_identifier"] = payload.actionIdentifier;
+  iosProperties[@"aps"] = payload.userInfo[@"aps"];
+  eventData[@"ios"] = iosProperties;
+
+  return eventData;
+}
+
+/// Strips the raw payload dictionary to only include Braze key-value pairs.
+static NSDictionary *RCTFilterBrazeProperties(NSDictionary *userInfo) {
+  NSMutableDictionary *userInfoCopy = [userInfo mutableCopy];
+  userInfoCopy[@"ab"] = nil;
+  userInfoCopy[@"ab_uri"] = nil;
+  userInfoCopy[@"aps"] = nil;
+  userInfoCopy[@"ab_use_webview"] = nil;
+  return userInfoCopy;
+}
+
 #pragma mark - Content Cards
 
 /// Returns the content card for the associated id, or nil if not found.
@@ -674,6 +724,22 @@ RCT_EXPORT_METHOD(logContentCardImpression:(NSString *)idString) {
     RCTLogInfo(@"logContentCardImpression with id %@", idString);
     [cardToClick logImpressionUsing:braze];
   }
+}
+
+RCT_EXPORT_METHOD(processContentCardClickAction:(NSString *)idString) {
+  BRZContentCardRaw *cardToPerformAction = [self getContentCardById:idString];
+  if (cardToPerformAction) {
+      NSURL* url = cardToPerformAction.url;
+      BOOL useWebView = cardToPerformAction.useWebView;
+        
+      if (url != nil) {
+        RCTLogInfo(@"processContentCardClickAction trying %@", url);
+        cardToPerformAction.context = [[BRZContentCardContext alloc] initWithCardRaw:cardToPerformAction using:braze];
+        [cardToPerformAction.context processClickActionWithURL:url useWebView:useWebView];
+      }
+    } else {
+      RCTLogInfo(@"processContentCardClickAction could not parse card");
+    }
 }
 
 static NSMutableArray *RCTFormatContentCards(NSArray<BRZContentCardRaw *> *cards) {
@@ -868,6 +934,36 @@ RCT_EXPORT_METHOD(logInAppMessageImpression:(NSString *)inAppMessageString) {
   BRZInAppMessageRaw *inAppMessage = [self getInAppMessageFromString:inAppMessageString braze:braze];
   if (inAppMessage) {
     [inAppMessage logImpressionUsing:braze];
+  }
+}
+
+RCT_EXPORT_METHOD(performInAppMessageAction:(NSString *)inAppMessageString buttonId:(double)buttonId) {
+  RCTLogInfo(@"performInAppMessageAction called with value %@", inAppMessageString);
+  BRZInAppMessageRaw *inAppMessage = [self getInAppMessageFromString:inAppMessageString braze:braze];
+  if (inAppMessage) {
+    NSURL* url = nil;
+    BOOL useWebView = NO;
+    BRZInAppMessageRawClickAction clickAction = BRZInAppMessageRawClickActionURL;
+      
+    if (buttonId < 0) {
+      url = inAppMessage.url;
+      useWebView = inAppMessage.useWebView;
+      clickAction = inAppMessage.clickAction;
+    } else {
+      for(int i = 0; i < inAppMessage.buttons.count; i++) {
+        if (inAppMessage.buttons[i].identifier == buttonId) {
+          url = inAppMessage.buttons[i].url;
+          useWebView = inAppMessage.buttons[i].useWebView;
+          clickAction = inAppMessage.buttons[i].clickAction;
+        }
+      }
+    }
+      
+    RCTLogInfo(@"performInAppMessageAction trying %@", inAppMessage.url);
+    inAppMessage.context = [[BRZInAppMessageContext alloc] initWithMessageRaw:inAppMessage using:braze];
+    [inAppMessage.context processClickAction:clickAction url:url useWebView:useWebView];
+  } else {
+    RCTLogInfo(@"performInAppMessageAction could not parse inAppMessage");
   }
 }
 
