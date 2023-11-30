@@ -1,3 +1,12 @@
+## 8.2.0
+
+#### Added
+- Updates the native iOS bridge [from Braze Swift SDK 7.1.0 to 7.3.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.1.0...7.3.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - This release includes compatibility with Expo Notifications. Refer to the [push notification setup documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/push_notifications/) for more details.
+
+#### Fixed
+- Adds a missing update [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed) in the `8.1.0` release.
+
 ## 8.1.0
 
 #### Added
