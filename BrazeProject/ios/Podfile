@@ -24,16 +24,8 @@ end
 target 'BrazeProject' do
   config = use_native_modules!
 
-  # Flags change depending on the env values.
-  flags = get_default_flags()
-
   use_react_native!(
     :path => config[:reactNativePath],
-    # Hermes is now enabled by default. Disable by setting this flag to false.
-    # Upcoming versions of React Native may rely on get_default_flags(), but
-    # we make it explicit here to aid in the React Native upgrade process.
-    :hermes_enabled => flags[:hermes_enabled],
-    :fabric_enabled => flags[:fabric_enabled],
     # Enables Flipper.
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
@@ -55,7 +47,6 @@ target 'BrazeProject' do
       # necessary for Mac Catalyst builds
       :mac_catalyst_enabled => false
     )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
 
     # Fix for Xcode 14 / CocoaPods 1.11.X (see: https://github.com/CocoaPods/CocoaPods/issues/11402)
     installer.pods_project.targets.each do |target|
@@ -66,4 +57,12 @@ target 'BrazeProject' do
       end
     end
   end
+end
+
+target 'BrazeProjectRichPush' do
+  pod 'BrazeNotificationService'
+end
+
+target 'BrazeProjectPushStory' do
+  pod 'BrazePushStory'
 end

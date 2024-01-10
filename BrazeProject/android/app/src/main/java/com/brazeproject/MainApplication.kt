@@ -10,10 +10,11 @@ import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactNativeHost
+import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
 
 class MainApplication : Application(), ReactApplication {
-    private val reactNativeHost = object: DefaultReactNativeHost(this) {
+    override val reactNativeHost = object: DefaultReactNativeHost(this) {
         override fun getUseDeveloperSupport(): Boolean {
             return BuildConfig.DEBUG
         }
@@ -32,10 +33,6 @@ class MainApplication : Application(), ReactApplication {
             get() = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
         override val isHermesEnabled: Boolean
             get() = BuildConfig.IS_HERMES_ENABLED
-    }
-
-    override fun getReactNativeHost(): ReactNativeHost {
-        return reactNativeHost
     }
 
     override fun onCreate() {

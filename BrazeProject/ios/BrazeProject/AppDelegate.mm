@@ -30,6 +30,7 @@ static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
   BRZConfiguration *configuration = [[BRZConfiguration alloc] initWithApiKey:apiKey endpoint:endpoint];
   configuration.triggerMinimumTimeInterval = 1;
   configuration.logger.level = BRZLoggerLevelInfo;
+  configuration.push.appGroup = @"group.com.braze.helloreact.PushStories";
 
   // Default to automatically setting up push notifications
   BOOL pushAutoEnabled = YES;

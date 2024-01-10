@@ -1,3 +1,12 @@
+## 8.3.0
+
+#### Added
+- Adds example integrations for [Braze Rich Push Notifications](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/b2-rich-push-notifications) and [Braze Push Stories](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/b3-push-stories) to the iOS sample app.
+- Updates the native iOS bridge [from Braze Swift SDK 7.3.0 to 7.5.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.3.0...7.5.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Adds support for [React Native 0.73](https://reactnative.dev/blog/2023/12/06/0.73-debugging-improvements-stable-symlinks).
+  - Removes strict Java version dependencies in the `build.gradle` file of the Braze library.
+  - Updates the Braze sample app to use React Native version 0.73.1.
+
 ## 8.2.0
 
 #### Added
@@ -183,7 +192,7 @@
 
 ##### Changed
 - Updates the native iOS bridge to [Braze Swift SDK 5.11.2](https://github.com/braze-inc/braze-swift-sdk/blob/main/CHANGELOG.md#5112).
-- Updates the native Android bridge to [Braze Android SDK 24.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2430).
+- Updates the native Android bridge to [Braze Android SDK 24.3.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2430).
 - Updates `getContentCards` on the iOS bridge to initiate a refresh before returning the array of Content Cards. This brings parity with the Android bridge behavior.
 
 ## 2.1.0
@@ -229,7 +238,7 @@
   - `Braze.launchNewsFeed()`
   - `Braze.getCardCountForCategories()`
   - `Braze.getUnreadCardCountForCategories()`
-- Updates the native Android bridge to [Braze Android SDK 24.2.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2420).
+- Updates the native Android bridge to [Braze Android SDK 24.2.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2420).
 
 ##### Added
 - Adds the following APIs to more easily interface with the News Feed product. Thanks @swissmanu for your contribution!
@@ -244,15 +253,15 @@
 - Removed `setTwitterData()`.
 
 ##### Changed
-- Updated the native Android bridge to [Braze Android SDK 23.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2330).
+- Updated the native Android bridge to [Braze Android SDK 23.3.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2330).
 - Exposes `isControl` field for `ContentCard`.
 - Removed `kotlinVersion` gradle template variable. To override the Kotlin version used, please use a Gradle dependency `resolutionStrategy`.
 
 ## 1.40.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 23.2.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2321).
-- Updated the native iOS bridge to [Braze iOS SDK 4.5.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#451).
+- Updated the native Android bridge to [Braze Android SDK 23.2.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2321).
+- Updated the native iOS bridge to [Braze iOS SDK 4.5.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#451).
 
 ##### Changed
 - Updated the `React` podspec dependency to `React-Core`.
@@ -261,7 +270,7 @@
 
 ##### ⚠ Breaking
 - Renamed the `kotlin_version` gradle template variable to `kotlinVersion`.
-- Updated the native Android bridge to [Braze Android SDK 23.2.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2320).
+- Updated the native Android bridge to [Braze Android SDK 23.2.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2320).
 
 ##### Fixed
 - Fixed an issue that caused a NativeEventEmitter warning message to appear.
@@ -274,8 +283,8 @@
 ## 1.38.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 23.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2301).
-- Updated the native iOS bridge to [Braze iOS SDK 4.5.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#450).
+- Updated the native Android bridge to [Braze Android SDK 23.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2301).
+- Updated the native iOS bridge to [Braze iOS SDK 4.5.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#450).
 - The Braze React Native Android SDK now requires Kotlin directly for compilation. An example is included below:
   ```groovy
     buildscript {
@@ -309,8 +318,8 @@
 ## 1.36.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 21.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#2100).
-- Updated the native iOS bridge to [Braze iOS SDK 4.4.4](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#444).
+- Updated the native Android bridge to [Braze Android SDK 21.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#2100).
+- Updated the native iOS bridge to [Braze iOS SDK 4.4.4](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#444).
 - Removed `setAvatarImageUrl()`.
 - Removed `logContentCardsDisplayed`. This method was not part of the recommended Content Cards integration and can be safely removed.
 
@@ -322,7 +331,7 @@
 ## 1.35.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 4.4.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#442).
+- Updated the native iOS bridge to [Braze iOS SDK 4.4.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#442).
 - Drops support for iOS 9 and 10.
 
 ## 1.34.1
@@ -333,7 +342,7 @@
 ## 1.34.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 18.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1801).
+- Updated the native Android bridge to [Braze Android SDK 18.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1801).
 
 ##### Fixed
 - Fixed an issue with Content Card types. Thanks @jtparret!
@@ -349,8 +358,8 @@
 ## 1.33.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 16.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1600).
-- Updated the native iOS bridge to [Braze iOS SDK 4.3.4](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#434).
+- Updated the native Android bridge to [Braze Android SDK 16.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1600).
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.4](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#434).
 
 ##### Added
 - Added `ReactAppboy.addToSubscriptionGroup()` and `ReactAppboy.removeFromSubscriptionGroup()` to manage SMS/Email Subscription Groups.
@@ -359,13 +368,13 @@
 ## 1.32.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 15.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1500).
-- Updated the native iOS bridge to [Braze iOS SDK 4.3.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#432).
+- Updated the native Android bridge to [Braze Android SDK 15.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1500).
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#432).
 
 ## 1.31.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 4.3.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#431).
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#431).
 
 ##### Added
 - Added support for new SDK Authentication feature to the Javascript layer. See `setSdkAuthenticationSignature` on the `Appboy` interface, as well as the optional `signature` parameter on `ReactAppboy.changeUser`.
@@ -373,8 +382,8 @@
 ## 1.30.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 4.3.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#430), which fixes a crashing issue with Content Cards when using the default UI.
-- Updated the native Android bridge to [Braze Android SDK 14.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1401).
+- Updated the native iOS bridge to [Braze iOS SDK 4.3.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#430), which fixes a crashing issue with Content Cards when using the default UI.
+- Updated the native Android bridge to [Braze Android SDK 14.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1401).
 
 ## 1.29.1
 
@@ -390,14 +399,14 @@
 - This release contains a known issue with the Content Cards default UI on iOS, where showing a "Classic" type card with an image causes a crash. If you are using the default Content Cards UI, do not upgrade to this version.
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 14.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1400).
-- Updated the native iOS bridge to [Braze iOS SDK 4.2.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#420).
+- Updated the native Android bridge to [Braze Android SDK 14.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1400).
+- Updated the native iOS bridge to [Braze iOS SDK 4.2.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#420).
 
 ## 1.28.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 4.0.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#402).
-- Updated the native Android bridge to [Braze Android SDK 13.1.2](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1312), which contains support for Android 12.
+- Updated the native iOS bridge to [Braze iOS SDK 4.0.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#402).
+- Updated the native Android bridge to [Braze Android SDK 13.1.2](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1312), which contains support for Android 12.
 
 ##### Added
 - Added support for `ReactAppboy.setGoogleAdvertisingId()` to set the Google Advertising ID and associated ad-tracking enabled field for Android devices. This is a no-op on iOS.
@@ -408,8 +417,8 @@
 ## 1.27.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.33.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3331).
-- Updated the native Android bridge to [Braze Android SDK 13.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1300).
+- Updated the native iOS bridge to [Braze iOS SDK 3.33.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3331).
+- Updated the native Android bridge to [Braze Android SDK 13.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1300).
 
 ##### Added
 - Added support for receiving iOS push action button deep links in `ReactAppboy.getInitialURL()`. If you are using `ReactAppboy.getInitialURL()` and implement iOS push action button categories, add the following code to the beginning of your `userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:`:
@@ -420,37 +429,37 @@
 ## 1.26.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.31.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3312).
-- Updated the native Android bridge to [Braze Android SDK 12.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1200).
+- Updated the native iOS bridge to [Braze iOS SDK 3.31.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3312).
+- Updated the native Android bridge to [Braze Android SDK 12.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1200).
 
 ## 1.25.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.29.1](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3291), which adds improved support for in-app message display on iPhone 12 models.
-- Updated the native Android bridge to [Braze Android SDK 11.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1100).
+- Updated the native iOS bridge to [Braze iOS SDK 3.29.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3291), which adds improved support for in-app message display on iPhone 12 models.
+- Updated the native Android bridge to [Braze Android SDK 11.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1100).
 
 ## 1.24.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.28.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3280).
-- Updated the native Android bridge to [Braze Android SDK 10.1.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1010). Please read the Braze Android SDK changelog for details.
+- Updated the native iOS bridge to [Braze iOS SDK 3.28.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3280).
+- Updated the native Android bridge to [Braze Android SDK 10.1.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1010). Please read the Braze Android SDK changelog for details.
 
 ## 1.23.0
 
 ##### ⚠ Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.27.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#3270). This release adds support for iOS 14 and requires XCode 12. Please read the Braze iOS SDK changelog for details.
+- Updated the native iOS bridge to [Braze iOS SDK 3.27.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3270). This release adds support for iOS 14 and requires XCode 12. Please read the Braze iOS SDK changelog for details.
 
 ## 1.22.0
 
 ##### Changed
-- Updated the native Android bridge to [Braze Android SDK 8.1.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#810), which contains support for Android 11.
-- Updated the native iOS bridge to [Braze iOS SDK 3.26.1](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.26.1), which contains preliminary support for iOS 14.
+- Updated the native Android bridge to [Braze Android SDK 8.1.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#810), which contains support for Android 11.
+- Updated the native iOS bridge to [Braze iOS SDK 3.26.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3261), which contains preliminary support for iOS 14.
 
 ## 1.21.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 8.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#801).
-- Updated the native iOS bridge to [Braze iOS SDK 3.26.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.26.0).
+- Updated the native Android bridge to [Braze Android SDK 8.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#801).
+- Updated the native iOS bridge to [Braze iOS SDK 3.26.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3260).
 
 ##### Added
 - Added support for working with in-app messages in the JavaScript layer. In-App Messages can be instantiated using the `BrazeInAppMessage` class. The resulting object can be passed into the analytics methods: `logInAppMessageClicked`, `logInAppMessageImpression`, and `logInAppMessageButtonClicked` (along with the button index). See the README for additional implementation details or the `AppboyProject` sample app for an integration example.
@@ -466,7 +475,7 @@
 ## 1.20.0
 
 ##### ⚠ Breaking
-- Updated the native Android bridge to [Braze Android SDK 7.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#700).
+- Updated the native Android bridge to [Braze Android SDK 7.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#700).
 
 ##### Added
 - Added `ReactAppboy.requestGeofences()` to request a Braze Geofences update for a manually provided GPS coordinate. Automatic Braze Geofence requests must be disabled to properly use this method.
@@ -474,20 +483,20 @@
 ## 1.19.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 5.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#500).
-- Updated the native iOS bridge to [Braze iOS SDK 3.21.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.21.3).
+- Updated the native Android bridge to [Braze Android SDK 5.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#500).
+- Updated the native iOS bridge to [Braze iOS SDK 3.21.3](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3213).
 
 ## 1.18.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 3.8.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#380).
+- Updated the native Android bridge to [Braze Android SDK 3.8.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#380).
 
 ##### Fixed
 - Fixed an issue where `ReactContext.getJSModule()` could be called before the native module was initialized.
   - Thanks @tszajna0!
 
 ##### Changed
-- Updated the native iOS bridge to [Braze iOS SDK 3.20.4](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.20.4).
+- Updated the native iOS bridge to [Braze iOS SDK 3.20.4](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3204).
 
 ## 1.17.4
 
@@ -497,31 +506,31 @@
 ## 1.17.3
 
 ##### Fixed
-- Added `SDWebImage` and `Headers` pod directories to the `AppboyReactBridge` project's Header Search Paths. Thanks @tomauty and @mlazari for your contributions! See https://github.com/Appboy/appboy-react-sdk/pull/70 and https://github.com/Appboy/appboy-react-sdk/pull/69.
+- Added `SDWebImage` and `Headers` pod directories to the `AppboyReactBridge` project's Header Search Paths. Thanks @tomauty and @mlazari for your contributions! See https://github.com/braze-inc/braze-react-native-sdk/pull/70 and https://github.com/braze-inc/braze-react-native-sdk/pull/69.
 
 ##### Changed
-- Updated the native Android bridge to [Braze Android SDK 3.7.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#371).
+- Updated the native Android bridge to [Braze Android SDK 3.7.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#371).
 
 ## 1.17.2
 
-**Important:** This patch updates the Braze iOS SDK Dependency from 3.20.1 to 3.20.2, which contains important bugfixes. Integrators should upgrade to this patch version. Please see the [Braze iOS SDK Changelog](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md) for more information.
+**Important:** This patch updates the Braze iOS SDK Dependency from 3.20.1 to 3.20.2, which contains important bugfixes. Integrators should upgrade to this patch version. Please see the [Braze iOS SDK Changelog](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md) for more information.
 
 ##### Changed
-- Updated the native iOS bridge to [Braze iOS SDK 3.20.2](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.20.2).
+- Updated the native iOS bridge to [Braze iOS SDK 3.20.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3202).
 
 ## 1.17.1
 
 **Important:** This release has known issues displaying HTML in-app messages. Do not upgrade to this version and upgrade to 1.17.2 and above instead. If you are using this version, you are strongly encouraged to upgrade to 1.17.2 or above if you make use of HTML in-app messages.
 
 ##### Changed
-- Updated the native iOS bridge to [Braze iOS SDK 3.20.1](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.20.1).
+- Updated the native iOS bridge to [Braze iOS SDK 3.20.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3201).
 
 ## 1.17.0
 
 **Important:** This release has known issues displaying HTML in-app messages. Do not upgrade to this version and upgrade to 1.17.2 and above instead. If you are using this version, you are strongly encouraged to upgrade to 1.17.2 or above if you make use of HTML in-app messages.
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.20.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.20.0).
+- Updated the native iOS bridge to [Braze iOS SDK 3.20.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3200).
 - **Important:** Braze iOS SDK 3.20.0 contains updated push token registration methods. We recommend upgrading to these methods as soon as possible to ensure a smooth transition as devices upgrade to iOS 13. In `application:didRegisterForRemoteNotificationsWithDeviceToken:`, replace
 ```
 [[Appboy sharedInstance] registerPushToken:
@@ -538,8 +547,8 @@ with
 **Important** This release has known issues displaying HTML in-app messages. Do not upgrade to this version and upgrade to 1.17.2 and above instead. If you are using this version, you are strongly encouraged to upgrade to 1.17.2 or above if you make use of HTML in-app messages.
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.19.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.19.0).
-- Updated the native Android bridge to [Braze Android SDK 3.7.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#370).
+- Updated the native iOS bridge to [Braze iOS SDK 3.19.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3190).
+- Updated the native Android bridge to [Braze Android SDK 3.7.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#370).
 - Note: This Braze React SDK release updates to Braze Android SDK and Braze iOS SDK dependencies which no longer enable automatic Braze location collection by default. Please consult their respective changelogs for information on how to continue to enable automatic Braze location collection, as well as further information on breaking changes.
 - Removes the Feedback feature.
   - `submitFeedback()` and `launchFeedback()` have been removed from the `Appboy` interface.
@@ -560,18 +569,18 @@ with
         console.log('Content Cards Updated.', cards);
       })
       ```
-  - See https://github.com/Appboy/appboy-react-sdk/pull/58. Thanks @alexmbp!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/58. Thanks @alexmbp!
 
 ## 1.15.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.17.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.17.0).
+- Updated the native iOS bridge to [Braze iOS SDK 3.17.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3170).
 - Removed the `NewsFeedLaunchOptions` enum. Using these arguments with `launchNewsFeed()` had been a no-op since version 1.7.0.
 
 ## 1.14.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 3.5.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#350).
+- Updated the native Android bridge to [Braze Android SDK 3.5.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#350).
 
 ##### Fixed
 - Fixed an issue where logging custom events or purchases without event properties would cause crashes on Android, for example `logCustomEvent("event")`.
@@ -582,14 +591,14 @@ with
 ## 1.13.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.15.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.15.0).
+- Updated the native iOS bridge to [Braze iOS SDK 3.15.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3150).
   - This release of the iOS SDK added support for SDWebImage version 5.0.
   - Note that upgrading to SDWebImage 5.0 also removed the FLAnimatedImage transitive dependency.
 
 ## 1.12.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 3.3.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#330).
+- Updated the native Android bridge to [Braze Android SDK 3.3.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#330).
 
 ##### Added
 - Added `ReactAppboy.launchContentCards()` for launching the content cards UI.
@@ -598,13 +607,13 @@ with
 
 ##### Added
 - Added Typescript definitions for the `Appboy` interface.
-  - Thanks @ahanriat and @josin for your contributions! See https://github.com/Appboy/appboy-react-sdk/pull/57 and https://github.com/Appboy/appboy-react-sdk/pull/38.
+  - Thanks @ahanriat and @josin for your contributions! See https://github.com/braze-inc/braze-react-native-sdk/pull/57 and https://github.com/braze-inc/braze-react-native-sdk/pull/38.
   - Note that certain less-used parts of the API were excluded. Please file an issue if you would like specific method(s) added.
 
 ## 1.11.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 3.2.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#320).
+- Updated the native Android bridge to [Braze Android SDK 3.2.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#320).
   - Added `AppboyFirebaseMessagingService` to directly use the Firebase messaging event `com.google.firebase.MESSAGING_EVENT`. This is now the recommended way to integrate Firebase push with Braze. The `AppboyFcmReceiver` should be removed from your `AndroidManifest` and replaced with the following:
     ```
     <service android:name="com.appboy.AppboyFirebaseMessagingService">
@@ -614,7 +623,7 @@ with
     </service>
     ```
     - Also note that any `c2dm` related permissions should be removed from your manifest as Braze does not require any extra permissions for `AppboyFirebaseMessagingService` to work correctly.
-- Updated the native iOS bridge to [Braze iOS SDK 3.14.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.14.0).
+- Updated the native iOS bridge to [Braze iOS SDK 3.14.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3140).
   - Dropped support for iOS 8.
 
 ##### Added
@@ -623,7 +632,7 @@ with
 ## 1.10.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 3.1.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#310).
+- Updated the native Android bridge to [Braze Android SDK 3.1.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#310).
 
 ##### Added
 - Added `addAlias(aliasName, aliasLabel)` to the `Appboy` interface to allow aliasing users.
@@ -635,8 +644,8 @@ with
 ## 1.9.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.11.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.11.0).
-- Updated the native Android bridge to [Braze Android SDK 3.0.1](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#301).
+- Updated the native iOS bridge to [Braze iOS SDK 3.11.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3110).
+- Updated the native Android bridge to [Braze Android SDK 3.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#301).
 - Updated the Android wrapper to use `api` and `implementation` syntax in it's `build.gradle` instead of `compile`. As part of this work, the Android Gradle plugin version was updated to `3.2.1`.
 
 ##### Added
@@ -654,14 +663,14 @@ with
 ## 1.8.1
 
 ##### Changed
-- Updated the native iOS bridge to [Braze iOS SDK 3.8.4](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.8.4).
+- Updated the native iOS bridge to [Braze iOS SDK 3.8.4](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#384).
 
 ## 1.8.0
 
 ##### Breaking
-- Updated the native Android bridge to [Braze Android SDK 2.7.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#270).
+- Updated the native Android bridge to [Braze Android SDK 2.7.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#270).
   - __Important:__ Note that in Braze Android SDK 2.7.0, `AppboyGcmReceiver` was renamed to `AppboyFcmReceiver`. This receiver is intended to be used for Firebase integrations. Please update the `AppboyGcmReceiver` declaration in your `AndroidManifest.xml` to reference `AppboyFcmReceiver` and remove the `com.google.android.c2dm.intent.REGISTRATION` intent filter action.
-- Updated the native iOS bridge to [Braze iOS SDK 3.8.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.8.3).
+- Updated the native iOS bridge to [Braze iOS SDK 3.8.3](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#383).
 
 ##### Added
 - Added `setLocationCustomAttribute()` to the `Appboy` interface to allow setting of custom location attributes.
@@ -684,15 +693,15 @@ with
 ## 1.7.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.5.1](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.5.1).
-- Updated the native Android bridge to [Appboy Android SDK 2.4.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#240).
+- Updated the native iOS bridge to [Braze iOS SDK 3.5.1](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#351).
+- Updated the native Android bridge to [Appboy Android SDK 2.4.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#240).
 
 ##### Added
 - Added `Other`, `Unknown`, `Not Applicable`, and `Prefer not to Say` options for user gender.
 - Updated the `AppboyProject` sample app to use FCM instead of GCM.
 - Added toasts to provide feedback for user actions in the `AppboyProject` sample app.
 - Implemented `requiresMainQueueSetup` in `AppboyReactBridge.m` to prevent warnings in React Native 0.49+.
-  - See https://github.com/Appboy/appboy-react-sdk/pull/39. Thanks @danieldecsi!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/39. Thanks @danieldecsi!
 
 ##### Changed
 - Passing launch options into `launchNewsFeed()` is now a no-op.
@@ -700,8 +709,8 @@ with
 ## 1.6.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.3.3](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.3.3).
-- Updated the native Android bridge to [Braze Android SDK 2.2.5](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#225).
+- Updated the native iOS bridge to [Braze iOS SDK 3.3.3](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#333).
+- Updated the native Android bridge to [Braze Android SDK 2.2.5](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#225).
 
 ##### Added
 - Added support for wiping all customer data created by the Braze SDK via `Appboy.wipeData()`.
@@ -712,7 +721,7 @@ with
 
 ##### Changed
 - Removed `allowBackup` from the plugin `AndroidManifest.xml`.
-  - See https://github.com/Appboy/appboy-react-sdk/pull/34. Thanks @SMJ93!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/34. Thanks @SMJ93!
 
 ## 1.5.2
 
@@ -727,41 +736,41 @@ with
 ## 1.5.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 3.0.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/3.0.0) or later.
-- Updated the native Android bridge to [Braze Android SDK 2.2.4](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#224).
+- Updated the native iOS bridge to [Braze iOS SDK 3.0.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#300) or later.
+- Updated the native Android bridge to [Braze Android SDK 2.2.4](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#224).
 - Changed success callbacks on `submitFeedback()` on Android to always return `true` as `submitFeedback()` was changed to return `void` in the native SDK.
 
 ## 1.4.1
 
 ##### Added
 - Added support for apps that use use_frameworks in Podfile.
-  - See https://github.com/Appboy/appboy-react-sdk/commit/6db78a5bbeb31457f8a1dcf988a3265d8db9a437 and https://github.com/Appboy/appboy-react-sdk/issues/29. Thanks @jimmy-devine and @sljuka.
+  - See https://github.com/braze-inc/braze-react-native-sdk/commit/6db78a5bbeb31457f8a1dcf988a3265d8db9a437 and https://github.com/braze-inc/braze-react-native-sdk/issues/29. Thanks @jimmy-devine and @sljuka.
 
 ## 1.4.0
 
 ##### Breaking
-- Updated the native iOS bridge to [Braze iOS SDK 2.31.0](https://github.com/Appboy/appboy-ios-sdk/releases/tag/2.31.0) or later.
-- Updated the native Android bridge to [Braze Android SDK 2.1.4](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#214).
+- Updated the native iOS bridge to [Braze iOS SDK 2.31.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#2310) or later.
+- Updated the native Android bridge to [Braze Android SDK 2.1.4](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#214).
 
 ##### Added
 - Added `ReactAppboy.registerPushToken()` for registering push tokens with Braze.
-  - See https://github.com/Appboy/appboy-react-sdk/pull/13. Thanks @dcvz!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/13. Thanks @dcvz!
 - Added the local `react-native-appboy-sdk` Podspec for integrating the React Native iOS bridge via Cocoapods.
-  - See https://github.com/Appboy/appboy-react-sdk/pull/15. Thanks @pietropizzi!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/15. Thanks @pietropizzi!
 
 ## 1.3.0
 
 ##### Breaking
-- Updates the native iOS bridge to use [Braze iOS SDK 2.29.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#2290), which drops support for iOS 7.
-- Updates the native Android bridge to use [Braze Android SDK 2.0.0](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#200).
+- Updates the native iOS bridge to use [Braze iOS SDK 2.29.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#2290), which drops support for iOS 7.
+- Updates the native Android bridge to use [Braze Android SDK 2.0.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#200).
 
 ##### Added
 - Adds `ReactAppboy.requestImmediateDataFlush()` for requesting an immediate flush of any data waiting to be sent to Braze's servers.
 - Adds `ReactAppboy.requestFeedRefresh()` for requesting a refresh of the News Feed.
-  - See https://github.com/Appboy/appboy-react-sdk/pull/12. Thanks @stief510!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/12. Thanks @stief510!
 - Added the ability to pass an optional dictionary of News Feed launch options to `launchNewsFeed()`. See `NewsFeedLaunchOptions` for supported keys.
   - For more information on currently supported `NewsFeedLaunchOptions` keys, see the card width and card margin properties on [ABKFeedViewController](http://appboy.github.io/appboy-ios-sdk/docs/interface_a_b_k_feed_view_controller.html).
-  - See https://github.com/Appboy/appboy-react-sdk/pull/10. Thanks @mihalychk!
+  - See https://github.com/braze-inc/braze-react-native-sdk/pull/10. Thanks @mihalychk!
 
 ## 1.2.0
 
@@ -774,27 +783,27 @@ with
 ## 1.1.0
 
 ##### Breaking
-- **Update Required** — Fixes a bug in the [iOS bridge](https://github.com/Appboy/appboy-react-sdk/blob/master/iOS/AppboyReactBridge/AppboyReactBridge/AppboyReactBridge.m) where custom attribute dates were converted incorrectly, causing incorrect date data to be sent to Braze. As a result of the fix, `setDateCustomUserAttribute()` in the iOS React bridge may now only be called with a double.
+- **Update Required** — Fixes a bug in the [iOS bridge](https://github.com/braze-inc/braze-react-native-sdk/blob/master/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.mm) where custom attribute dates were converted incorrectly, causing incorrect date data to be sent to Braze. As a result of the fix, `setDateCustomUserAttribute()` in the iOS React bridge may now only be called with a double.
   - Note: The default Javascript Braze interface has not changed, so for most integrations this just requires updating the SDK, unless you were manually calling our iOS bridge outside of our recommended integration.
-  - See https://github.com/Appboy/appboy-react-sdk/issues/7
+  - See https://github.com/braze-inc/braze-react-native-sdk/issues/7
 
 ## 1.0.0
 
 ##### Breaking
-- **Update Required** — Updates iOS push handling in the AppboyProject sample project to be compatible with iOS 10. For more information, refer to the CHANGELOG for [Braze iOS SDK v2.24.0](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#2240).
+- **Update Required** — Updates iOS push handling in the AppboyProject sample project to be compatible with iOS 10. For more information, refer to the CHANGELOG for [Braze iOS SDK v2.24.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#2240).
 
 ##### Added
 - Adds callbacks to the native bindings to provide function call results to React Native.
 - Exposes `ReactAppboy.getCardCountForCategories()` and `ReactAppboy.getUnreadCardCountForCategories()` for retrieving News Feed card counts.
-  - See https://github.com/Appboy/appboy-react-sdk/issues/1
+  - See https://github.com/braze-inc/braze-react-native-sdk/issues/1
 - Adds `ReactAppboy.getInitialURL()` for handling deep links when an iOS application is launched from the suspended state by clicking on a push notification with a deep link. See `componentDidMount()` in `AppboyProject.js` for a sample implementation.
 - Exposes `ReactAppboy.setTwitterData()` and `ReactAppboy.setFacebookData()` for Twitter and Facebook integration.
-  - See https://github.com/Appboy/appboy-react-sdk/issues/4
+  - See https://github.com/braze-inc/braze-react-native-sdk/issues/4
 
 ##### Changed
-- Targets [Braze Android SDK version 1.15.3](https://github.com/Appboy/appboy-android-sdk/blob/master/CHANGELOG.md#1153) and [Braze iOS SDK version 2.24.2](https://github.com/Appboy/appboy-ios-sdk/blob/master/CHANGELOG.md#2242).
+- Targets [Braze Android SDK version 1.15.3](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1153) and [Braze iOS SDK version 2.24.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#2242).
 - Updates the AppboyProject sample application to React Native v0.33.0.
-- Updates the AppboyProject sample project to integrate session handling and in-app message manager registration using an [AppboyLifecycleCallbackListener](https://github.com/Appboy/appboy-android-sdk/blob/master/android-sdk-ui/src/com/appboy/AppboyLifecycleCallbackListener.java), as introduced in Braze Android SDK v1.15.0.
+- Updates the AppboyProject sample project to integrate session handling and in-app message manager registration using an [AppboyLifecycleCallbackListener](https://github.com/braze-inc/braze-android-sdk/blob/master/android-sdk-ui/src/main/java/com/braze/BrazeActivityLifecycleCallbackListener.kt), as introduced in Braze Android SDK v1.15.0.
 
 ##### Removed
 - Removes `AppboyBroadcastReceiver.java` from the AppboyProject sample project, as Braze Android SDK v1.15.0 removes the need for a custom `AppboyBroadcastReceiver` for Braze push notifications.

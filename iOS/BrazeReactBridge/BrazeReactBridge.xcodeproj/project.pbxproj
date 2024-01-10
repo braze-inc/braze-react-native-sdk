@@ -98,7 +98,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0720;
-				ORGANIZATIONNAME = Appboy;
+				ORGANIZATIONNAME = Braze;
 				TargetAttributes = {
 					E3D0A7591C668BB90027828A = {
 						CreatedOnToolsVersion = 7.2.1;
