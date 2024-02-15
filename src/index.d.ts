@@ -855,6 +855,13 @@ interface GenderTypes {
 }
 export const Genders: GenderTypes;
 
+interface BrazeContentCardTypes {
+  CLASSIC: 'Classic';
+  IMAGE_ONLY: 'ImageOnly';
+  CAPTIONED: 'Captioned';
+}
+export const ContentCardTypes: BrazeContentCardTypes;
+
 interface NotificationSubscriptionType {
   OPTED_IN: 'optedin';
   SUBSCRIBED: 'subscribed';
