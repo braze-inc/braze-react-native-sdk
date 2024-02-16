@@ -32,7 +32,7 @@ static BrazeUIHandler *brazeUIHandler;
 
 @implementation BrazeReactBridge
 
-BOOL hasListeners = NO;
+static BOOL hasListeners = NO;
 
 #pragma mark - Setup
 
