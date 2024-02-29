@@ -1,6 +1,23 @@
+## 8.4.0
+
+##### Added
+- Adds support to modify the allow list for Braze tracking properties via the following TypeScript properties and methods:
+  - `TrackingProperty` string enum
+  - `TrackingPropertyAllowList` object interface
+  - `updateTrackingPropertyAllowList` method
+  - For details, refer to the Braze [iOS Privacy Manifest documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/swift/privacy_manifest/).
+- Deprecates the `setGoogleAdvertisingId` method in favor of `setAdTrackingEnabled`.
+  - This new method will now set `adTrackingEnabled` flag on iOS and both the `adTrackingEnabled` flag and the Google Advertising ID on Android.
+- Exposes the `ContentCardTypes` enum through the public TypeScript interface in `index.d.ts`.
+- Updates the native iOS bridge [from Braze Swift SDK 7.5.0 to 7.7.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.5.0...7.7.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Fixed
+- Fixes the `hasListeners` property in the iOS native layer to prevent duplicate symbol errors with other libraries.
+- Addresses redefinition build errors when using the iOS Turbo Module with statically linked frameworks.
+
 ## 8.3.0
 
-#### Added
+##### Added
 - Adds example integrations for [Braze Rich Push Notifications](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/b2-rich-push-notifications) and [Braze Push Stories](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/b3-push-stories) to the iOS sample app.
 - Updates the native iOS bridge [from Braze Swift SDK 7.3.0 to 7.5.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.3.0...7.5.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 - Adds support for [React Native 0.73](https://reactnative.dev/blog/2023/12/06/0.73-debugging-improvements-stable-symlinks).
@@ -9,16 +26,16 @@
 
 ## 8.2.0
 
-#### Added
+##### Added
 - Updates the native iOS bridge [from Braze Swift SDK 7.1.0 to 7.3.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.1.0...7.3.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
   - This release includes compatibility with Expo Notifications. Refer to the [push notification setup documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/push_notifications/) for more details.
 
-#### Fixed
+##### Fixed
 - Adds a missing update [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed) in the `8.1.0` release.
 
 ## 8.1.0
 
-#### Added
+##### Added
 - Push notification objects are now accessible in the JavaScript layer via new fields on the `PushNotificationEvent` interface.
   - Deprecates the following fields from the `PushNotificationEvent` interface in favor of the new names that can be used on both iOS and Android:
     - `push_event_type` -> Use `payload_type` instead.
@@ -35,7 +52,7 @@
   - `Braze.processContentCardClickAction(id)`
 - Updates the native iOS bridge [from Braze Swift SDK 7.0.0 to 7.1.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.0.0...7.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
-#### Fixed
+##### Fixed
 - Fixes the `setLastKnownLocation` method to sanitize null inputs before calling the native layer.
   - This previously caused an issue when calling this method on the legacy React Native architecture.
 - Updates the native Android bridge [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).

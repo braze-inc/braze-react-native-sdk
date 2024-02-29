@@ -10,6 +10,7 @@ import {
   CardCategory,
   NotificationSubscriptionTypes,
   Genders,
+  TrackingProperty,
   ContentCardTypes,
   Events,
   ClickAction,
@@ -26,6 +27,7 @@ export class Braze {
   static CardCategory = CardCategory;
   static NotificationSubscriptionTypes = NotificationSubscriptionTypes;
   static Genders = Genders;
+  static TrackingProperty = TrackingProperty;
   static ContentCardTypes = ContentCardTypes;
   static Events = Events;
   static ClickAction = ClickAction;
@@ -199,9 +201,9 @@ export class Braze {
    * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled for the Google Advertising ID
    */
   static setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled) {
-    this.bridge.setGoogleAdvertisingId(
-      googleAdvertisingId,
-      adTrackingEnabled
+    this.bridge.setAdTrackingEnabled(
+      adTrackingEnabled,
+      googleAdvertisingId
     );
   }
 
@@ -931,7 +933,59 @@ export class Braze {
     return this.bridge.getFeatureFlagNumberProperty(id, key);
   }
 
+  /**
+   * This method informs Braze whether ad-tracking has been enabled for this device. Note that the SDK does not
+   * automatically collect this data.
+   *
+   * @param {string} adTrackingEnabled - Whether ad-tracking is enabled.
+   * @param {string} googleAdvertisingId - The Google Advertising ID. (Android only)
+   */
+  static setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId) {
+    return this.bridge.setAdTrackingEnabled(
+      adTrackingEnabled,
+      googleAdvertisingId
+    );
+  }
+
+  /**
+   * Updates the list of data types you wish to declare or remove as tracked user data.
+   *
+   * For more details, refer to Braze's [Privacy Manifest documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/swift/privacy_manifest/).
+   *
+   * No-op on Android.
+   *
+   * @param {TrackingPropertyAllowList} allowList - The list of tracking properties to update.
+   */
+  static updateTrackingPropertyAllowList(allowList) {
+    if (allowList.adding && !this.isValidTrackingPropertyArray(allowList.adding)) {
+      console.log("'adding' property must be an array of strings. Setting array to empty.");
+      allowList.adding = [];
+    }
+    if (allowList.removing && !this.isValidTrackingPropertyArray(allowList.removing)) {
+      console.log("'removing' property must be an array of strings. Setting array to empty.");
+      allowList.removing = [];
+    }
+    if (allowList.addingCustomEvents && !this.isValidTrackingPropertyArray(allowList.addingCustomEvents)) {
+      console.log("'addingCustomEvents' property must be an array of strings. Setting array to empty.");
+      allowList.addingCustomEvents = [];
+    }
+    if (allowList.removingCustomEvents && !this.isValidTrackingPropertyArray(allowList.removingCustomEvents)) {
+      console.log("'removingCustomEvents' property must be an array of strings. Setting array to empty.");
+      allowList.removingCustomEvents = [];
+    }
+    if (allowList.addingCustomAttributes && !this.isValidTrackingPropertyArray(allowList.addingCustomAttributes)) {
+      console.log("'addingCustomAttributes' property must be an array of strings. Setting array to empty.");
+      allowList.addingCustomAttributes = [];
+    }
+    if (allowList.removingCustomAttributes && !this.isValidTrackingPropertyArray(allowList.removingCustomAttributes)) {
+      console.log("'removingCustomAttributes' property must be an array of strings. Setting array to empty.");
+      allowList.removingCustomAttributes = [];
+    }
+    return this.bridge.updateTrackingPropertyAllowList(allowList);
+  }
+
   // Events
+  
   /**
    * Subscribes to the specific SDK event.
    * When you want to stop listening, call `.remove()` on the returned
@@ -944,5 +998,17 @@ export class Braze {
       this.bridge.addListener(event);
     }
     return this.eventEmitter.addListener(event, subscriber);
+  }
+
+  // Helper Functions
+
+  /**
+   * Validates an array to be processed in the `TrackingPropertyAllowList`.
+   *
+   * @param {array} array
+   * @returns Whether the array is valid according to the tracking property allow list.
+   */
+  static isValidTrackingPropertyArray(array) {
+    return Array.isArray(array) && array.every(item => typeof item === 'string');
   }
 }

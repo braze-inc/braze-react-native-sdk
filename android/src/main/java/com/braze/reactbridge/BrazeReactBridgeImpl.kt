@@ -118,12 +118,6 @@ class BrazeReactBridgeImpl(
         braze.registeredPushToken = token
     }
 
-    fun setGoogleAdvertisingId(googleAdvertisingId: String?, adTrackingEnabled: Boolean?) {
-        if (googleAdvertisingId != null && adTrackingEnabled != null) {
-            braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
-        }
-    }
-
     fun logCustomEvent(eventName: String?, eventProperties: ReadableMap?) =
         braze.logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties))
 
@@ -965,6 +959,12 @@ class BrazeReactBridgeImpl(
     fun getFeatureFlagNumberProperty(id: String?, key: String?, promise: Promise?) {
         if (id != null && key != null && promise != null) {
             promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
+        }
+    }
+
+    fun setAdTrackingEnabled(adTrackingEnabled: Boolean?, googleAdvertisingId: String?) {
+        if (googleAdvertisingId != null && adTrackingEnabled != null) {
+            braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
         }
     }
 

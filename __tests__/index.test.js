@@ -47,7 +47,14 @@ test('it calls BrazeReactBridge.setGoogleAdvertisingId', () => {
   const googleAdvertisingId = "some_ga_id";
   const adTrackingEnabled = true;
   Braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
-  expect(NativeBrazeReactModule.setGoogleAdvertisingId).toBeCalledWith(googleAdvertisingId, adTrackingEnabled);
+  expect(NativeBrazeReactModule.setAdTrackingEnabled).toBeCalledWith(adTrackingEnabled, googleAdvertisingId);
+});
+
+test('it calls BrazeReactBridge.setAdTrackingEnabled', () => {
+  const googleAdvertisingId = "some_ga_id";
+  const adTrackingEnabled = true;
+  Braze.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId);
+  expect(NativeBrazeReactModule.setAdTrackingEnabled).toBeCalledWith(adTrackingEnabled, googleAdvertisingId);
 });
 
 test('it calls BrazeReactBridge.setFirstName', () => {
@@ -669,4 +676,17 @@ test('it calls BrazeReactBridge.getFeatureFlagStringProperty', () => {
 test('it calls BrazeReactBridge.getFeatureFlagNumberProperty', () => {
   Braze.getFeatureFlagNumberProperty('id', 'key');
   expect(NativeBrazeReactModule.getFeatureFlagNumberProperty).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.updateTrackingPropertyAllowList', () => {
+  const allowList = {
+    adding: [Braze.TrackingProperty.ALL_CUSTOM_ATTRIBUTES],
+    removing: [Braze.TrackingProperty.ANALYTICS_EVENTS, Braze.TrackingProperty.EMAIL],
+    addingCustomEvents: ['123', '234'],
+    removingCustomEvents: ['233'],
+    addingCustomAttributes: ['attr-1'],
+    removingCustomAttributes: ['attr-2', 'attr3']
+  };
+  Braze.updateTrackingPropertyAllowList(allowList);
+  expect(NativeBrazeReactModule.updateTrackingPropertyAllowList).toBeCalledWith(allowList);
 });

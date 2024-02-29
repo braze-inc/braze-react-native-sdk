@@ -26,10 +26,6 @@ export interface Spec extends TurboModule {
     day: number
   ): void;
   registerPushToken(token: string): void;
-  setGoogleAdvertisingId(
-    googleAdvertisingId: string,
-    adTrackingEnabled: boolean
-  ): void;
   addToSubscriptionGroup(
     groupId: string,
     callback?: ((error?: Object, result?: boolean) => void) | null
@@ -197,6 +193,8 @@ export interface Spec extends TurboModule {
   getFeatureFlagNumberProperty(flagId: string, key: string): Promise<number | null>;
   refreshFeatureFlags(): void;
   logFeatureFlagImpression(flagId: string): void;
+  setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId: string): void;
+  updateTrackingPropertyAllowList(allowList: Object): void;
 
   // NativeEventEmitter methods for the New Architecture.
   // The implementations are handled implicitly by React Native.

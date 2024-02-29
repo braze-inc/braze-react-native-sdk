@@ -19,7 +19,6 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
         NativeBrazeReactModule = {
           registerAndroidPushToken: jest.fn(),
           registerPushToken: jest.fn(),
-          setGoogleAdvertisingId: jest.fn(),
           setFirstName: jest.fn(),
           setLastName: jest.fn(),
           setLanguage: jest.fn(),
@@ -91,6 +90,8 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           getFeatureFlagBooleanProperty: jest.fn(),
           getFeatureFlagNumberProperty: jest.fn(),
           getFeatureFlagStringProperty: jest.fn(),
+          setAdTrackingEnabled: jest.fn(),
+          updateTrackingPropertyAllowList: jest.fn()
         };
 
         return {

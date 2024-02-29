@@ -73,10 +73,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.registerPushToken(token)
     }
 
-    override fun setGoogleAdvertisingId(googleAdvertisingId: String?, adTrackingEnabled: Boolean) {
-        brazeImpl.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
-    }
-
     override fun addToSubscriptionGroup(groupId: String?, callback: Callback?) {
         brazeImpl.addToSubscriptionGroup(groupId, callback)
     }
@@ -339,6 +335,14 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
 
     override fun logFeatureFlagImpression(id: String) {
         brazeImpl.logFeatureFlagImpression(id)
+    }
+
+    override fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String?) {
+        brazeImpl.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId)
+    }
+
+    override fun updateTrackingPropertyAllowList(allowList: ReadableMap?) {
+        // iOS only
     }
 
     override fun addListener(eventType: String?) {

@@ -8,7 +8,7 @@
 #import "BrazeUIHandler.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "BrazeReactModuleSpec.h"
+#import <BrazeReactModuleSpec/BrazeReactModuleSpec.h>
 #endif
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
@@ -30,9 +30,9 @@ static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 static Braze *braze;
 static BrazeUIHandler *brazeUIHandler;
 
-@implementation BrazeReactBridge
-
-BOOL hasListeners = NO;
+@implementation BrazeReactBridge {
+  bool hasListeners;
+}
 
 #pragma mark - Setup
 
@@ -70,15 +70,15 @@ RCT_EXPORT_MODULE()
     RCTLogInfo(@"Received Content Cards array via subscription of length: %lu", [cards count]);
     NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
     eventData[@"cards"] = RCTFormatContentCards(cards);
-   [self sendEventWithName:kContentCardsUpdatedEvent body:eventData];
+    [self sendEventWithName:kContentCardsUpdatedEvent body:eventData];
   }];
   self.featureFlagsSubscription = [braze.featureFlags subscribeToUpdates:^(NSArray<BRZFeatureFlag *> * _Nonnull featureFlags) {
     RCTLogInfo(@"Received Feature Flags array via subscription of length: %lu", [featureFlags count]);
-   [self sendEventWithName:kFeatureFlagsUpdatedEvent body:RCTFormatFeatureFlags(featureFlags)];
+    [self sendEventWithName:kFeatureFlagsUpdatedEvent body:RCTFormatFeatureFlags(featureFlags)];
   }];
   self.newsFeedSubscription = [braze.newsFeed subscribeToUpdates:^(NSArray<BRZNewsFeedCard *> * _Nonnull cards) {
     RCTLogInfo(@"Received News Feed cards via subscription of length: %lu", [cards count]);
-   [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
+    [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
   }];
 
   self.notificationSubscription = [braze.notifications subscribeToUpdates:^(BRZNotificationsPayload * _Nonnull payload) {
@@ -188,10 +188,6 @@ RCT_EXPORT_METHOD(registerPushToken:(NSString *)token) {
   RCTLogInfo(@"braze registerPushToken with token %@", token);
   NSData* tokenData = [token dataUsingEncoding:NSUTF8StringEncoding];
   [braze.notifications registerDeviceToken:tokenData];
-}
-
-RCT_EXPORT_METHOD(setGoogleAdvertisingId:(NSString *)googleAdvertisingId adTrackingEnabled:(BOOL)adTrackingEnabled) {
-  RCTLogInfo(@"Warning: This is an Android only feature.");
 }
 
 RCT_EXPORT_METHOD(logCustomEvent:(NSString *)eventName
@@ -1073,6 +1069,106 @@ static NSArray *RCTFormatFeatureFlags(NSArray<BRZFeatureFlag *> *featureFlags) {
     }
   }];
   return mappedFeatureFlags;
+}
+
+#pragma mark - Privacy Tracking
+
+RCT_EXPORT_METHOD(setAdTrackingEnabled:(BOOL)adTrackingEnabled
+                  googleAdvertisingId:(NSString *)googleAdvertisingId) {
+  // Ignore `googleAdvertisingId` - relevant only for Android.
+  if (adTrackingEnabled) {
+    RCTLogInfo(@"Ad tracking enabled");
+  } else {
+    RCTLogInfo(@"Ad tracking disabled");
+  }
+  [braze setAdTrackingEnabled:adTrackingEnabled];
+}
+
+RCT_EXPORT_METHOD(updateTrackingPropertyAllowList:(NSDictionary *)allowList) {
+  NSArray<NSString *> *adding = allowList[@"adding"];
+  NSArray<NSString *> *removing = allowList[@"removing"];
+  NSArray<NSString *> *addingCustomEvents = allowList[@"addingCustomEvents"];
+  NSArray<NSString *> *removingCustomEvents = allowList[@"removingCustomEvents"];
+  NSArray<NSString *> *addingCustomAttributes = allowList[@"addingCustomAttributes"];
+  NSArray<NSString *> *removingCustomAttributes = allowList[@"removingCustomAttributes"];
+
+  NSMutableSet<BRZTrackingProperty *> *addingSet = [NSMutableSet set];
+  NSMutableSet<BRZTrackingProperty *> *removingSet = [NSMutableSet set];
+
+  if (adding.count > 0) {
+    for (NSString *propertyString in adding) {
+      [addingSet addObject:convertTrackingProperty(propertyString)];
+    }
+  }
+  if (removing.count > 0) {
+    for (NSString *propertyString in removing) {
+      [removingSet addObject:convertTrackingProperty(propertyString)];
+    }
+  }
+
+  // Parse custom strings
+  if (addingCustomEvents.count > 0) {
+    NSSet<NSString *> *customEvents = [NSSet setWithArray:addingCustomEvents];
+    [addingSet addObject:[BRZTrackingProperty customEventWithEvents:customEvents]];
+  }
+  if (removingCustomEvents.count > 0) {
+    NSSet<NSString *> *customEvents = [NSSet setWithArray:removingCustomEvents];
+    [removingSet addObject:[BRZTrackingProperty customAttributeWithAttributes:customEvents]];
+  }
+  if (addingCustomAttributes.count > 0) {
+    NSSet<NSString *> *customAttributes = [NSSet setWithArray:addingCustomAttributes];
+    [addingSet addObject:[BRZTrackingProperty customAttributeWithAttributes:customAttributes]];
+  }
+  if (removingCustomAttributes.count > 0) {
+    NSSet<NSString *> *customAttributes = [NSSet setWithArray:removingCustomAttributes];
+    [removingSet addObject:[BRZTrackingProperty customAttributeWithAttributes:customAttributes]];
+  }
+
+  RCTLogInfo(@"Updating tracking allow list by adding: %@, removing %@", addingSet, removingSet);
+  [braze updateTrackingAllowListAdding:addingSet removing:removingSet];
+}
+
+static BRZTrackingProperty *convertTrackingProperty(NSString *propertyString) {
+  if ([propertyString isEqualToString:@"all_custom_attributes"]) {
+    return BRZTrackingProperty.allCustomAttributes;
+  } else if ([propertyString isEqualToString:@"all_custom_events"]) {
+    return BRZTrackingProperty.allCustomEvents;
+  } else if ([propertyString isEqualToString:@"analytics_events"]) {
+    return BRZTrackingProperty.analyticsEvents;
+  } else if ([propertyString isEqualToString:@"attribution_data"]) {
+    return BRZTrackingProperty.attributionData;
+  } else if ([propertyString isEqualToString:@"country"]) {
+    return BRZTrackingProperty.country;
+  } else if ([propertyString isEqualToString:@"dob"]) {
+    return BRZTrackingProperty.dateOfBirth;
+  } else if ([propertyString isEqualToString:@"device_data"]) {
+    return BRZTrackingProperty.deviceData;
+  } else if ([propertyString isEqualToString:@"email"]) {
+    return BRZTrackingProperty.email;
+  } else if ([propertyString isEqualToString:@"email_subscription_state"]) {
+    return BRZTrackingProperty.emailSubscriptionState;
+  } else if ([propertyString isEqualToString:@"everything"]) {
+    return BRZTrackingProperty.everything;
+  } else if ([propertyString isEqualToString:@"first_name"]) {
+    return BRZTrackingProperty.firstName;
+  } else if ([propertyString isEqualToString:@"gender"]) {
+    return BRZTrackingProperty.gender;
+  } else if ([propertyString isEqualToString:@"home_city"]) {
+    return BRZTrackingProperty.homeCity;
+  } else if ([propertyString isEqualToString:@"language"]) {
+    return BRZTrackingProperty.language;
+  } else if ([propertyString isEqualToString:@"last_name"]) {
+    return BRZTrackingProperty.lastName;
+  } else if ([propertyString isEqualToString:@"notification_subscription_state"]) {
+    return BRZTrackingProperty.notificationSubscriptionState;
+  } else if ([propertyString isEqualToString:@"phone_number"]) {
+    return BRZTrackingProperty.phoneNumber;
+  } else if ([propertyString isEqualToString:@"push_token"]) {
+    return BRZTrackingProperty.pushToken;
+  } else {
+    RCTLogInfo(@"Invalid tracking property: %@", propertyString);
+    return nil;
+  }
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED

@@ -174,6 +174,8 @@ export function registerAndroidPushToken(token: string): void;
 export function registerPushToken(token: string): void;
 
 /**
+ * @deprecated This method is deprecated in favor of `setAdTrackingEnabled`.
+ *
  * This method sets the Google Advertising ID and associated ad-tracking enabled field for this device. Note that the
  * SDK does not automatically collect this data.
  *
@@ -186,6 +188,26 @@ export function setGoogleAdvertisingId(
   googleAdvertisingId: string,
   adTrackingEnabled: boolean
 ): void;
+
+/**
+ * This method informs Braze whether ad-tracking has been enabled for this device. Note that the SDK does not
+ * automatically collect this data.
+ *
+ * @param {string} adTrackingEnabled - Whether ad-tracking is enabled.
+ * @param {string} googleAdvertisingId - The Google Advertising ID. (Android only)
+ */
+export function setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId?: string): void;
+
+/**
+ * Updates the list of data types you wish to declare or remove as tracked user data.
+ *
+ * For more details, refer to Braze's [Privacy Manifest documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/swift/privacy_manifest/).
+ *
+ * No-op on Android.
+ *
+ * @param {TrackingPropertyAllowList} allowList - The list of tracking properties to update.
+ */
+export function updateTrackingPropertyAllowList(allowList: TrackingPropertyAllowList): void;
 
 /**
  * Adds the user to a subscription group.
@@ -835,6 +857,13 @@ interface BrazeMessageType {
 }
 export const MessageType: BrazeMessageType;
 
+interface BrazeContentCardType {
+  CLASSIC: 'Classic';
+  IMAGE_ONLY: 'ImageOnly';
+  CAPTIONED: 'Captioned';
+}
+export const ContentCardTypes: BrazeContentCardType;
+
 interface BrazeCardCategory {
   ADVERTISING: 'advertising';
   ANNOUNCEMENTS: 'announcements';
@@ -854,6 +883,48 @@ interface GenderTypes {
   UNKNOWN: 'u';
 }
 export const Genders: GenderTypes;
+
+interface BrazeTrackingProperty {
+  ALL_CUSTOM_ATTRIBUTES: 'all_custom_attributes';
+  ALL_CUSTOM_EVENTS: 'all_custom_events';
+  ANALYTICS_EVENTS: 'analytics_events';
+  ATTRIBUTION_DATA: 'attribution_data';
+  COUNTRY: 'country';
+  DATE_OF_BIRTH: 'dob';
+  DEVICE_DATA: 'device_data';
+  EMAIL: 'email';
+  EMAIL_SUBSCRIPTION_STATE: 'email_subscription_state';
+  EVERYTHING: 'everything';
+  FIRST_NAME: 'first_name';
+  GENDER: 'gender';
+  HOME_CITY: 'home_city';
+  LANGUAGE: 'language';
+  LAST_NAME: 'last_name';
+  NOTIFICATION_SUBSCRIPTION_STATE: 'notification_subscription_state';
+  PHONE_NUMBER: 'phone_number';
+  PUSH_TOKEN: 'push_token';
+}
+export const TrackingProperty: BrazeTrackingProperty;
+
+export interface TrackingPropertyAllowList {
+  /* Tracking properties you wish to add to your allowlist */
+  adding?: BrazeTrackingProperty[keyof BrazeTrackingProperty][],
+
+  /* Tracking properties you wish to remove from your allowlist */
+  removing?: BrazeTrackingProperty[keyof BrazeTrackingProperty][],
+
+  /* Custom event strings you wish to add to your current allowlist. */
+  addingCustomEvents?: string[],
+
+  /* Custom event strings you wish to remove from your current allowlist. */
+  removingCustomEvents?: string[],
+
+  /* Custom attribute strings you wish to add to your current allowlist. */
+  addingCustomAttributes?: string[],
+
+  /* Custom attribute strings you wish to remove from your current allowlist. */
+  removingCustomAttributes?: string[],
+}
 
 interface NotificationSubscriptionType {
   OPTED_IN: 'optedin';

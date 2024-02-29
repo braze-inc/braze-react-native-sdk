@@ -23,6 +23,29 @@ export const Genders = {
   UNKNOWN: 'u'
 };
 
+export const TrackingProperty = {
+  ALL_CUSTOM_ATTRIBUTES: 'all_custom_attributes',
+  ALL_CUSTOM_EVENTS: 'all_custom_events',
+  ANALYTICS_EVENTS: 'analytics_events',
+  ATTRIBUTION_DATA: 'attribution_data',
+  COUNTRY: 'country',
+  CUSTOM_ATTRIBUTE: 'custom_attribute',
+  CUSTOM_EVENT: 'custom_event',
+  DATE_OF_BIRTH: 'dob',
+  DEVICE_DATA: 'device_data',
+  EMAIL: 'email',
+  EMAIL_SUBSCRIPTION_STATE: 'email_subscription_state',
+  EVERYTHING: 'everything',
+  FIRST_NAME: 'first_name',
+  GENDER: 'gender',
+  HOME_CITY: 'home_city',
+  LANGUAGE: 'language',
+  LAST_NAME: 'last_name',
+  NOTIFICATION_SUBSCRIPTION_STATE: 'notification_subscription_state',
+  PHONE_NUMBER: 'phone_number',
+  PUSH_TOKEN: 'push_token',
+};
+
 export const ContentCardTypes = {
   CLASSIC: 'Classic',
   IMAGE_ONLY: 'ImageOnly',

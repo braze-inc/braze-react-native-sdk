@@ -89,11 +89,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setGoogleAdvertisingId(googleAdvertisingId: String?, adTrackingEnabled: Boolean) {
-        brazeImpl.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
-    }
-
-    @ReactMethod
     fun addToSubscriptionGroup(groupId: String?, callback: Callback?) {
         brazeImpl.addToSubscriptionGroup(groupId, callback)
     }
@@ -411,6 +406,16 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     @ReactMethod
     fun logFeatureFlagImpression(id: String) {
         brazeImpl.logFeatureFlagImpression(id)
+    }
+
+    @ReactMethod
+    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String?) {
+        brazeImpl.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId)
+    }
+
+    @ReactMethod
+    fun updateTrackingPropertyAllowList(allowList: ReadableMap?) {
+        // iOS only
     }
 
     @ReactMethod

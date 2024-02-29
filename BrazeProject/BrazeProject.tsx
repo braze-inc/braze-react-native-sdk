@@ -13,14 +13,14 @@ import {
   Settings,
 } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
-import Braze, { BrazeInAppMessage } from '@braze/react-native-sdk';
+import Braze from '@braze/react-native-sdk';
 
 // Change to `true` to automatically log clicks, button clicks,
 // and impressions for in-app messages and content cards.
 const automaticallyInteract = false;
 
 // User Defaults keys
-const iOSPushAutoEnabledKey = "iOSPushAutoEnabled";
+const iOSPushAutoEnabledKey = 'iOSPushAutoEnabled';
 
 const Space = () => {
   return <View style={styles.spacing} />;
@@ -42,16 +42,14 @@ export const BrazeProject = (): ReactElement => {
   const [featureFlagPropertyKey, setFeatureFlagPropertyKey] = useState('');
 
   // If key is persisted, use the value. If no key is present, default to true.
-  const [iOSPushAutoEnabled, setiOSPushAutoEnabled] = useState<boolean>(
-    () => {
-      if (Platform.OS === 'ios') {
-        const value = Settings.get(iOSPushAutoEnabledKey);
-        return (value != null) ? Boolean(value) : true;
-      } else {
-        return false;
-      }
+  const [iOSPushAutoEnabled, setiOSPushAutoEnabled] = useState<boolean>(() => {
+    if (Platform.OS === 'ios') {
+      const value = Settings.get(iOSPushAutoEnabledKey);
+      return value != null ? Boolean(value) : true;
+    } else {
+      return false;
     }
-  );
+  });
 
   const subscriptionStateButtons = useMemo(
     () => [
@@ -175,21 +173,18 @@ export const BrazeProject = (): ReactElement => {
       }
     });
 
-    Braze.subscribeToInAppMessage(
-      true,
-      (event) => {
-        if (automaticallyInteract) {
-          console.log(
-            'Automatically logging IAM click, button click `0`, and impression.',
-          );
-          Braze.logInAppMessageClicked(event.inAppMessage);
-          Braze.logInAppMessageImpression(event.inAppMessage);
-          Braze.logInAppMessageButtonClicked(event.inAppMessage, 0);
-        }
-        showToast('inAppMessage received in the React layer');
-        console.log(event.inAppMessage);
-      },
-    );
+    Braze.subscribeToInAppMessage(true, event => {
+      if (automaticallyInteract) {
+        console.log(
+          'Automatically logging IAM click, button click `0`, and impression.',
+        );
+        Braze.logInAppMessageClicked(event.inAppMessage);
+        Braze.logInAppMessageImpression(event.inAppMessage);
+        Braze.logInAppMessageButtonClicked(event.inAppMessage, 0);
+      }
+      showToast('inAppMessage received in the React layer');
+      console.log(event.inAppMessage);
+    });
 
     const inAppMessageSubscription = Braze.addListener(
       Braze.Events.IN_APP_MESSAGE_RECEIVED,
@@ -385,16 +380,23 @@ export const BrazeProject = (): ReactElement => {
     Braze.setCustomUserAttribute('booleanattr', true);
     Braze.setCustomUserAttribute('dateattr', new Date());
     Braze.setCustomUserAttribute('stringArrayAttr', ['a', 'b']);
-    Braze.setCustomUserAttribute('arrayOfObjectsAttr', [{ 'one': 1, 'two': 'too' }, { 'three': 3, 'four': 'fore' }]);
-    Braze.setCustomUserAttribute('objectAttr', { 'one': 1, 'two': 'too' }, false);
-    Braze.setCustomUserAttribute('badArray', ['123', { 'one': 1, 'two': 2 }]);
-    Braze.setCustomUserAttribute('badArray2', [true, 1, 'string', { 'one': 1 }]);
+    Braze.setCustomUserAttribute('arrayOfObjectsAttr', [
+      { one: 1, two: 'too' },
+      { three: 3, four: 'fore' },
+    ]);
+    Braze.setCustomUserAttribute('objectAttr', { one: 1, two: 'too' }, false);
+    Braze.setCustomUserAttribute('badArray', ['123', { one: 1, two: 2 }]);
+    Braze.setCustomUserAttribute('badArray2', [true, 1, 'string', { one: 1 }]);
     showToast('Custom attributes set');
   };
 
   const logCustomAttributeWithMergePress = () => {
-    Braze.setCustomUserAttribute('objectAttr', { 'three': 3, 'four': 'fore' }, true);
-    Braze.setCustomUserAttribute('objectAttr', { 'two': 'updated_too' }, true);
+    Braze.setCustomUserAttribute(
+      'objectAttr',
+      { three: 3, four: 'fore' },
+      true,
+    );
+    Braze.setCustomUserAttribute('objectAttr', { two: 'updated_too' }, true);
     showToast('NCA with merge called');
   };
 
@@ -434,7 +436,9 @@ export const BrazeProject = (): ReactElement => {
 
   const logFeatureFlagImpressionPress = () => {
     if (!featureFlagId) {
-      console.log('No Feature Flag ID entered. Not logging Feature Flag Impression.');
+      console.log(
+        'No Feature Flag ID entered. Not logging Feature Flag Impression.',
+      );
       return;
     }
     Braze.logFeatureFlagImpression(featureFlagId);
@@ -494,6 +498,16 @@ export const BrazeProject = (): ReactElement => {
     }
   };
 
+  const enableAdTracking = () => {
+    const testAdvertisingID = '123';
+    Braze.setAdTrackingEnabled(true, testAdvertisingID);
+
+    // Testing for backwards compatibility.
+    Braze.setGoogleAdvertisingId(testAdvertisingID, true);
+
+    showToast(`Ad tracking enabled with ID: ${testAdvertisingID}`);
+  };
+
   const requestImmediateDataFlush = () => {
     Braze.requestImmediateDataFlush();
     showToast('Data flushed');
@@ -545,12 +559,12 @@ export const BrazeProject = (): ReactElement => {
   };
 
   const setLastKnownLocation = () => {
-    Braze.setLastKnownLocation(40.7128, 74.0060, 23.0, 25.0, 19.0);
-    Braze.setLastKnownLocation(40.7128, 74.0060, null, null, null);
-    Braze.setLastKnownLocation(40.7128, 74.0060, null, 25.0, null);
-    Braze.setLastKnownLocation(40.7128, 74.0060, 23.0, 25.0, null);
+    Braze.setLastKnownLocation(40.7128, 74.006, 23.0, 25.0, 19.0);
+    Braze.setLastKnownLocation(40.7128, 74.006, null, null, null);
+    Braze.setLastKnownLocation(40.7128, 74.006, null, 25.0, null);
+    Braze.setLastKnownLocation(40.7128, 74.006, 23.0, 25.0, null);
     showToast('Last known location set');
-  }
+  };
 
   const setLocationCustomAttribute = () => {
     Braze.setLocationCustomAttribute('work', 40.7128, 74.006);
@@ -622,7 +636,9 @@ export const BrazeProject = (): ReactElement => {
 
       // Programmatically log impression, card click, and dismissal
       if (automaticallyInteract) {
-        console.log(`Automatically logging CC click and impression for card ID: ${cardId}.`);
+        console.log(
+          `Automatically logging CC click and impression for card ID: ${cardId}.`,
+        );
         Braze.logContentCardClicked(cardId);
         Braze.logContentCardImpression(cardId);
         // To automate card dismissal, uncomment out the code below
@@ -639,7 +655,10 @@ export const BrazeProject = (): ReactElement => {
       Settings.set({ iOSPushAutoEnabledKey: updatedValue });
 
       console.log(`iOS Push Auto enabled: ${updatedValue}`);
-      showToast(`iOS Push Automation: ${updatedValue}.\n Restart your app to take effect.`, 4000);
+      showToast(
+        `iOS Push Automation: ${updatedValue}.\n Restart your app to take effect.`,
+        4000,
+      );
     }
   };
 
@@ -677,9 +696,26 @@ export const BrazeProject = (): ReactElement => {
     const featureFlag = await Braze.getFeatureFlag(featureFlagId);
     if (!featureFlag) {
       console.log(`No Feature Flag Found with ID: ${featureFlagId}.`);
-      return
+      return;
     }
     console.log(`Got Feature Flag: ${JSON.stringify(featureFlag)}`);
+  };
+
+  const updateTrackingListPress = async () => {
+    const allowList = {
+      adding: [
+        Braze.TrackingProperty.FIRST_NAME,
+        Braze.TrackingProperty.LAST_NAME,
+      ],
+      removing: [Braze.TrackingProperty.DEVICE_DATA],
+      addingCustomEvents: ['custom-event1', 'custom-event2'],
+      removingCustomAttributes: ['attr-1'],
+    };
+    Braze.updateTrackingPropertyAllowList(allowList);
+
+    console.log(
+      `Update tracking allow list with: ${JSON.stringify(allowList)}`,
+    );
   };
 
   const getFeatureFlagPropertyPress = async () => {
@@ -831,6 +867,12 @@ export const BrazeProject = (): ReactElement => {
       </TouchableHighlight>
       <TouchableHighlight onPress={incrementCustomAttributePress}>
         <Text>Increment Custom Attribute Array</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={updateTrackingListPress}>
+        <Text>Update Tracking Properties (iOS)</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={enableAdTracking}>
+        <Text>Enable Ad Tracking</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={requestImmediateDataFlush}>
         <Text style={styles.warningText}>Flush Data ⚡️</Text>
