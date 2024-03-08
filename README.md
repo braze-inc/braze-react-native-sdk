@@ -14,6 +14,7 @@ Effective marketing automation is an essential part of successfully scaling and 
 
 | Braze Plugin | React Native | Supports New Architecture? |
 | ------------ | ------------ | -------------------------- |
+| 9.0.0+       | >= 0.71      | ✅                         |
 | 6.0.0+       | >= 0.68      | ✅ (>= 0.70.0)             |
 | 2.0.0+       | >= 0.68      | ✅                         |
 | <= 1.41.0    | <= 0.71      | ❌                         |
