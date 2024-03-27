@@ -399,33 +399,77 @@ export function setAttributionData(
  */
 export function launchNewsFeed(): void;
 
+/**
+ * [Braze News Feed](https://www.braze.com/docs/user_guide/engagement_tools/news_feed)
+ */
 export interface NewsFeedCardBase {
+  /** The card identifier. */
   id: string;
+
+  /** The card creation timestamp. */
   created: number;
+
+  /** The card last update timestamp. */
   updated: number;
+
+  /** The card viewed state. */
   viewed: boolean;
+
+  /** The card image URL. */
   url?: string;
+
+  /** The card extras dictionary (default: `[:]`) */
   extras: { [key: string]: string };
 }
 
+/**
+ * The Banner News Feed Card, extending NewsFeedCardBase.
+ */
 export interface BannerNewsFeedCard extends NewsFeedCardBase {
+  /** The News Feed Card type. */
   type: 'Banner';
+
+  /** The card image URL. */
   image: string;
+
+  /** The card image aspect ratio */
   imageAspectRatio: number;
 }
 
+/**
+ * The Captioned News Feed Card, extending NewsFeedCardBase.
+ */
 export interface CaptionedNewsFeedCard extends NewsFeedCardBase {
+  /** The News Feed Card type. */
   type: 'Captioned';
+
+  /** The card image URL. */
   image: string;
+
+  /** The card title. */
   title: string;
+
+  /** The card description. */
   cardDescription: string;
+
+  /** (Optional) The card domain. */
   domain?: string;
 }
 
+/**
+ * The Text Announcement News Feed Card, extending NewsFeedCardBase.
+ */
 export interface TextAnnouncementNewsFeedCard extends NewsFeedCardBase {
+  /** The News Feed Card type. */
   type: 'TextAnnouncement';
+
+  /** The card title. */
   title: string;
+
+  /** The card description. */
   cardDescription: string;
+
+  /** (Optional) The card domain. */
   domain?: string;
 }
 
@@ -454,41 +498,120 @@ export function logNewsFeedCardImpression(id: string): void;
 export function getNewsFeedCards(): Promise<NewsFeedCard[]>;
 
 // Content Cards
+
+/**
+ * [Braze Content Cards](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/content_cards/)
+ */
 export interface ContentCardBase {
+  /** The card's ID. */
   id: string;
+
+  /** The UNIX timestamp of the card's creation time from Braze dashboard. */
   created: number;
+
+  /** The UNIX timestamp of the card's expiration time. When the value is less than 0, it means the card never expires. */
   expiresAt: number;
+
+  /** Indicates whether the card has been read or is unread by the user. Note: This does not log analytics. */
   viewed: boolean;
+
+  /** 
+   * Indicates whether the card has been clicked by the user. 
+   * Note: Clicks are stored on disk, so subsequent instances of this card will retain its clicked state upon recreation.
+   */
   clicked: boolean;
+
+  /** Indicates whether the card is pinned. */
   pinned: boolean;
+
+  /** Indicates whether the card has been dismissed. Marking a card as dismissed that has already been dismissed will be a no-op. */
   dismissed: boolean;
+
+  /** Indicates whether the card is dismissible by the user. */
   dismissible: boolean;
+
+  /** (Optional) The url string associated with the card click action. */
   url?: string;
+
+  /**
+   * Indicates whether URLs for this card should be opened in Braze's WebView or not.
+   * When false, the URL will be opened by the OS and web URLs will be opened in an external web browser app.
+   */
   openURLInWebView: boolean;
+
+  /** Indicates whether this card is a control card. Control cards should not be displayed to the user. */
   isControl: boolean;
+
+  /** A map of key-value pair extras for this card. */
   extras: { [key: string]: string };
 }
 
+/**
+ * The Classic Content Card, extending ContentCardBase.
+ */
 export interface ClassicContentCard extends ContentCardBase {
+  /** The Content Card type. */
   type: 'Classic';
+
+  /** (Optional) The URL of the card's image. */
   image?: string;
+
+  /** The title text for the card. */
   title: string;
+
+  /** The description text for the card. */
   cardDescription: string;
+  
+  /**
+   * (Optional) The link text for the property URL, e.g., "blog.appboy.com". It can be displayed on the card's
+   * UI to indicate the action/direction of clicking on the card.
+   */
   domain?: string;
 }
 
+/**
+ * The Image Only Content Card, extending ContentCardBase.
+ */
 export interface ImageOnlyContentCard extends ContentCardBase {
+  /** The Content Card type. */
   type: 'ImageOnly';
+
+  /** The URL of the card's image. */
   image: string;
+
+  /**
+   * The aspect ratio of the card's image. It is meant to serve as a hint before image loading completes. 
+   * Note that the property may not be supplied in certain circumstances.
+   */
   imageAspectRatio: number;
 }
 
+/**
+ * The Captioned Content Card, extending ContentCardBase.
+ */
 export interface CaptionedContentCard extends ContentCardBase {
+  /** The Content Card type. */
   type: 'Captioned';
+
+  /** The URL of the card's image. */
   image: string;
+
+  /** 
+   * The aspect ratio of the card's image. It is meant to serve as a hint before image loading completes.
+   * Note that the property may not be supplied in certain circumstances.
+   */
   imageAspectRatio: number;
+
+  /** The title text for the card. */
   title: string;
+
+  /** The description text for the card. */
   cardDescription: string;
+
+  /**
+   * (Optional) The link text for the property URL, e.g., "blog.appboy.com". It can be displayed on the card's
+   * UI to indicate the action/direction of clicking on the card.
+   */
   domain?: string;
 }
 
@@ -711,27 +834,48 @@ export function requestPushPermission(
 
 /**
  * Notifies the bridge of a listener being added.
- * @param {Events} event
+ * @param {Events} event - Describes the event being added.
  */
 export function addListener(
   event: string
 ): void;
 
+/** 
+ * A Feature Flag property of type String. 
+ */
 export interface FeatureFlagStringProperty {
+  /** The type of Feature Flag property. */
   type: "string";
+
+  /** The value of the property. */
   value: string;
 }
 
+/** 
+ * A Feature Flag property of type Number. 
+ */
 export interface FeatureFlagNumberProperty {
+  /** The type of Feature Flag property. */
   type: "number";
+
+  /** The value of the property. */
   value: number;
 }
 
+/** 
+ * A Feature Flag property of type Boolean. 
+ */
 export interface FeatureFlagBooleanProperty {
+  /** The type of Feature Flag property. */
   type: "boolean";
+
+  /** The value of the property. */
   value: boolean;
 }
 
+/**
+ * [Braze Feature Flags](https://www.braze.com/docs/developer_guide/platform_wide/feature_flags)
+ */
 export class FeatureFlag {
   /** Indicates whether or not this feature flag is enabled. */
   enabled: boolean;
@@ -806,106 +950,260 @@ export function refreshFeatureFlags(): void;
  */
 export function logFeatureFlagImpression(id: string): void;
 
+/**
+ * [Braze In-App Message](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/inapp_messages/)
+ */
 export class BrazeInAppMessage {
   constructor(_data: string);
+  /** The message JSON representation. */
   inAppMessageJsonString: string;
+
+  /** The message text. */
   message: string;
+
+  /** The message header. */
   header: string;
+
+  /** The URI associated with the button click action. */
   uri: string;
+
+  /** The message image URL. */
   imageUrl: string;
+
+  /** The zipped assets prepared to display HTML content. */
   zippedAssetsUrl: string;
+
+  /** Indicates whether the button click action should redirect using a web view. */
   useWebView: boolean;
+
+  /** The message display duration. */
   duration: number;
+
+  /** The button click action. */
   clickAction: BrazeClickAction[keyof BrazeClickAction];
+
+  /** The message close type. */
   dismissType: BrazeDismissType[keyof BrazeDismissType];
+
+  /** The in-app message type supported by the SDK. */
   messageType: BrazeMessageType[keyof BrazeMessageType];
+
+  /** The message extras dictionary (default: `[:]`) */
   extras: { [key: string]: string };
+
+  /** The list of buttons on the in-app message. */
   buttons: [BrazeButton];
+
+  /** Specifies whether the message was delivered as a test send (default: `false`). */
+  isTestSend: boolean;
+
+  /** The message as a String representation. */
   toString(): string;
 }
 
+/**
+ * A button on an In-App Message.
+ */
 export class BrazeButton {
   constructor(_data: string);
+  /** The text on the button. */
   text: string;
+
+  /** The URI associated with the button click action. */
   uri: string;
+
+  /** Indicates whether the button click action should redirect using a web view. */
   useWebView: boolean;
+
+  /** The type of click action processed when the user clicks on the button. */
   clickAction: BrazeClickAction[keyof BrazeClickAction];
+
+  /** The button ID on the message. */
   id: number;
+
+  /** The button as a String representation. */
   toString(): string;
 }
 
 type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
+/**
+ * The click action type of the In-App Message.
+ */
 interface BrazeClickAction {
+  /** Opens the NewsFeed on click. */
   NEWS_FEED: 'news_feed';
+
+  /** Opens the URI on click, optionally using a web view. */
   URI: 'uri';
+
+  /** No action on click. */
   NONE: 'none';
 }
 export const ClickAction: BrazeClickAction;
 
+/**
+ * The message close type of the In-App Message.
+ */
 interface BrazeDismissType {
+  /** Dismisses the message on user swipe. */
   SWIPE: 'swipe';
+
+  /** Dismisses the message automatically */
   AUTO_DISMISS: 'auto_dismiss';
 }
 export const DismissType: BrazeDismissType;
 
+/**
+ * The In-App Message types supported by the SDK.
+ */
 interface BrazeMessageType {
+  /** The Slideup message type. */
   SLIDEUP: 'slideup';
+
+  /** The Modal message type. */
   MODAL: 'modal';
+
+  /** The Full message type. */
   FULL: 'full';
+
+  /** The HtmlFull message type. */
   HTML_FULL: 'html_full';
 }
 export const MessageType: BrazeMessageType;
 
+/**
+ * The Content Card types supported by the Braze SDK.
+ */
 interface BrazeContentCardType {
+  /** The Classic Content Card type. */
   CLASSIC: 'Classic';
+
+  /** The Image Only Content Card type. */
   IMAGE_ONLY: 'ImageOnly';
+
+  /** The Captioned Image Content Card type. */
   CAPTIONED: 'Captioned';
 }
 export const ContentCardTypes: BrazeContentCardType;
 
+/**
+ * The NewsFeed Card categories supported by the SDK.
+ */
 interface BrazeCardCategory {
+  /** The advertising category. */
   ADVERTISING: 'advertising';
+
+  /** The announcements category. */
   ANNOUNCEMENTS: 'announcements';
+
+  /** The news category. */
   NEWS: 'news';
+
+  /** The social category. */
   SOCIAL: 'social';
+
+  /** No specific category. */
   NO_CATEGORY: 'no_category';
+
+  /** All categories. */
   ALL: 'all';
 }
 export const CardCategory: BrazeCardCategory;
 
+/**
+ * The gender values supported by the Braze SDK.
+ */
 interface GenderTypes {
+  /** Male */
   MALE: 'm';
+
+  /** Female */
   FEMALE: 'f';
+
+  /** Not Applicable */
   NOT_APPLICABLE: 'n';
+
+  /** Other */
   OTHER: 'o';
+
+  /** Prefer Not To Say */
   PREFER_NOT_TO_SAY: 'p';
+
+  /** Unknown */
   UNKNOWN: 'u';
 }
 export const Genders: GenderTypes;
 
+/**
+ * The category of Braze SDK properties to be marked for user tracking.
+ */
 interface BrazeTrackingProperty {
+  /** Mark all custom attributes for tracking. */
   ALL_CUSTOM_ATTRIBUTES: 'all_custom_attributes';
+
+  /** Mark all custom events for tracking. */
   ALL_CUSTOM_EVENTS: 'all_custom_events';
+
+  /** Braze events for analytics. */
   ANALYTICS_EVENTS: 'analytics_events';
+
+  /** The user's attribution data. */
   ATTRIBUTION_DATA: 'attribution_data';
+
+  /** The user's country. */
   COUNTRY: 'country';
+
+  /** The user's date of birth. */
   DATE_OF_BIRTH: 'dob';
+
+  /** The user's device data. */
   DEVICE_DATA: 'device_data';
+
+  /** The user's email address. */
   EMAIL: 'email';
+
+  /** The user's email subscription state. */
   EMAIL_SUBSCRIPTION_STATE: 'email_subscription_state';
+
+  /**
+   * Mark every user data for tracking.
+   * 
+   * Adding this property will cause other cases to be a no-op as everything will be routed to the tracking domain.
+   */
   EVERYTHING: 'everything';
+
+  /** The user's first name. */
   FIRST_NAME: 'first_name';
+
+  /** The user's gender. */
   GENDER: 'gender';
+
+  /** The user's home city. */
   HOME_CITY: 'home_city';
+
+  /** The user's language. */
   LANGUAGE: 'language';
+
+  /** The user's last name. */
   LAST_NAME: 'last_name';
+
+  /** The user's notification subscription state. */
   NOTIFICATION_SUBSCRIPTION_STATE: 'notification_subscription_state';
+
+  /** The user's phone number. */
   PHONE_NUMBER: 'phone_number';
+
+  /** The user's push token. */
   PUSH_TOKEN: 'push_token';
 }
 export const TrackingProperty: BrazeTrackingProperty;
 
+/**
+ * The list of properties to be collected for tracking users (default: an empty list).
+ * 
+ * The SDK will route collection of any of these data into a separate tracking endpoint, which must be declared in the privacy manifest.
+ */
 export interface TrackingPropertyAllowList {
   /* Tracking properties you wish to add to your allowlist */
   adding?: BrazeTrackingProperty[keyof BrazeTrackingProperty][],
@@ -926,17 +1224,35 @@ export interface TrackingPropertyAllowList {
   removingCustomAttributes?: string[],
 }
 
+/**
+ * The possible notification subscription states supported by the Braze SDK.
+ */
 interface NotificationSubscriptionType {
+  /** Subscribed, and explicitly opted in. */
   OPTED_IN: 'optedin';
+
+  /** Subscribed, but not explicitly opted in. */
   SUBSCRIBED: 'subscribed';
+
+  /** Unsubscribed and/or explicitly opted out. */
   UNSUBSCRIBED: 'unsubscribed';
 }
 export const NotificationSubscriptionTypes: NotificationSubscriptionType;
 
+/**
+ * An SDK authentication error event.
+ */
 export interface SDKAuthenticationErrorType {
+  /** Error code describing the cause of the signature authentication failure. */
   error_code: string;
+
+  /** The External User ID on the failed request. */
   user_id: string;
+
+  /** The original SDK authentication signature. */
   original_signature: string;
+
+  /** Human-readable cause of the signature authentication failure. */
   reason: string;
 }
 
@@ -1019,10 +1335,17 @@ export interface PushNotificationEvent {
   kvp_data: { [key: string]: any };
 }
 
+/**
+ * Received an updated list of Content Cards from the Braze SDK.
+ */
 export interface ContentCardsUpdatedEvent {
+  /** A list of Content Cards in this update. */
   cards: ContentCard[];
 }
 
+/**
+ * An event received from the Braze SDK.
+ */
 interface BrazeEvent {
   /** Callback passes an object with the `cards` as of the latest refresh. */
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated';

@@ -76,6 +76,10 @@ export class InAppMessage {
         this.buttons.push(new Button(buttonJson));
       });
     }
+
+    const isTestSendJson = inAppMessageJson['is_test_send'];
+    this.isTestSend =
+      typeof isTestSendJson === 'boolean' ? isTestSendJson : false;
   }
 
   toString() {

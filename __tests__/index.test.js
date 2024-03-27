@@ -7,7 +7,7 @@ import { Platform } from 'react-native';
 console.log = jest.fn();
 const testCallback = jest.fn();
 
-const testInAppMessageJson = `{\"message\":\"body body\",\"type\":\"MODAL\",\"text_align_message\":\"CENTER\",\"click_action\":\"NONE\",\"message_close\":\"SWIPE\",\"extras\":{\"test\":\"123\",\"foo\":\"bar\"},\"header\":\"hello\",\"text_align_header\":\"CENTER\",\"image_url\":\"https:\\/\\/github.com\\/braze-inc\\/braze-react-native-sdk\\/blob\\/master\\/.github\\/assets\\/logo-dark.png?raw=true\",\"image_style\":\"TOP\",\"btns\":[{\"id\":0,\"text\":\"button 1\",\"click_action\":\"URI\",\"uri\":\"https:\\/\\/www.google.com\",\"use_webview\":true,\"bg_color\":4294967295,\"text_color\":4279990479,\"border_color\":4279990479},{\"id\":1,\"text\":\"button 2\",\"click_action\":\"NONE\",\"bg_color\":4279990479,\"text_color\":4294967295,\"border_color\":4279990479}],\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\"}`;
+const testInAppMessageJson = `{\"message\":\"body body\",\"type\":\"MODAL\",\"text_align_message\":\"CENTER\",\"click_action\":\"NONE\",\"message_close\":\"SWIPE\",\"extras\":{\"test\":\"123\",\"foo\":\"bar\"},\"header\":\"hello\",\"text_align_header\":\"CENTER\",\"image_url\":\"https:\\/\\/github.com\\/braze-inc\\/braze-react-native-sdk\\/blob\\/master\\/.github\\/assets\\/logo-dark.png?raw=true\",\"image_style\":\"TOP\",\"btns\":[{\"id\":0,\"text\":\"button 1\",\"click_action\":\"URI\",\"uri\":\"https:\\/\\/www.google.com\",\"use_webview\":true,\"bg_color\":4294967295,\"text_color\":4279990479,\"border_color\":4279990479},{\"id\":1,\"text\":\"button 2\",\"click_action\":\"NONE\",\"bg_color\":4279990479,\"text_color\":4294967295,\"border_color\":4279990479}],\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\", \"is_test_send\":false}`;
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -525,9 +525,10 @@ it('instantiates a BrazeInAppMessage object', () => {
   const testButton1 = '{\"id\":1,\"text\":\"button 2\",\"click_action\":\"NONE\",\"bg_color\":4279990479,\"text_color\":4294967295,\"border_color\":4279990479}';
   const testButtonString = `[${testButton0}, ${testButton1}]`;
   const testButtons = [];
+  const testIsTestSend = true;
   testButtons.push(new Braze.BrazeButton(JSON.parse(testButton0)));
   testButtons.push(new Braze.BrazeButton(JSON.parse(testButton1)));
-  const testJson = `{\"message\":\"${testMessageBody}\",\"type\":\"${testMessageType}\",\"text_align_message\":\"CENTER\",\"click_action\":\"${testClickAction}\",\"message_close\":\"SWIPE\",\"extras\":${testExtras},\"header\":\"${testHeader}\",\"text_align_header\":\"CENTER\",\"image_url\":\"${testImageUrl}\",\"image_style\":\"TOP\",\"btns\":${testButtonString},\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\",\"uri\":\"${testUri}\",\"zipped_assets_url\":\"${testZippedAssetsUrl}\",\"duration\":${testDuration},\"message_close\":\"${testDismissType}\",\"use_webview\":${testUseWebView}}`
+  const testJson = `{\"message\":\"${testMessageBody}\",\"type\":\"${testMessageType}\",\"text_align_message\":\"CENTER\",\"click_action\":\"${testClickAction}\",\"message_close\":\"SWIPE\",\"extras\":${testExtras},\"header\":\"${testHeader}\",\"text_align_header\":\"CENTER\",\"image_url\":\"${testImageUrl}\",\"image_style\":\"TOP\",\"btns\":${testButtonString},\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\",\"uri\":\"${testUri}\",\"zipped_assets_url\":\"${testZippedAssetsUrl}\",\"duration\":${testDuration},\"message_close\":\"${testDismissType}\",\"use_webview\":${testUseWebView}, \"is_test_send\":${testIsTestSend}}`
   const inAppMessage = new Braze.BrazeInAppMessage(testJson);
   expect(inAppMessage.message).toBe(testMessageBody);
   expect(inAppMessage.messageType).toBe(testMessageType.toLowerCase());
@@ -542,6 +543,7 @@ it('instantiates a BrazeInAppMessage object', () => {
   expect(inAppMessage.header).toBe(testHeader);
   expect(inAppMessage.inAppMessageJsonString).toBe(testJson);
   expect(inAppMessage.buttons).toEqual(testButtons);
+  expect(inAppMessage.isTestSend).toEqual(testIsTestSend);
 });
 
 it('instantiates a BrazeInAppMessage object with the desired defaults', () => {
@@ -557,6 +559,7 @@ it('instantiates a BrazeInAppMessage object with the desired defaults', () => {
   const defaultDismissType = 'AUTO_DISMISS';
   const defaultHeader = '';
   const defaultButtons = [];
+  const defaultIsTestSend = false;
   const testJson = `{}`;
   const inAppMessage = new Braze.BrazeInAppMessage(testJson);
   expect(inAppMessage.message).toBe(defaultMessageBody);
@@ -572,6 +575,7 @@ it('instantiates a BrazeInAppMessage object with the desired defaults', () => {
   expect(inAppMessage.header).toBe(defaultHeader);
   expect(inAppMessage.inAppMessageJsonString).toBe(testJson);
   expect(inAppMessage.buttons).toEqual(defaultButtons);
+  expect(inAppMessage.isTestSend).toEqual(defaultIsTestSend);
 });
 
 it('returns the original JSON when calling BrazeInAppMessage.toString()', () => {

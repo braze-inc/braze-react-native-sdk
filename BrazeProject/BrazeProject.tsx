@@ -40,6 +40,7 @@ export const BrazeProject = (): ReactElement => {
   const [featureFlagPropertyType, setFeatureFlagPropertyType] =
     useState<string>('bool');
   const [featureFlagPropertyKey, setFeatureFlagPropertyKey] = useState('');
+  const [pushToken, setPushToken] = useState('');
 
   // If key is persisted, use the value. If no key is present, default to true.
   const [iOSPushAutoEnabled, setiOSPushAutoEnabled] = useState<boolean>(() => {
@@ -755,6 +756,10 @@ export const BrazeProject = (): ReactElement => {
     );
   };
 
+  const setPushTokenPress = async () => {
+    Braze.registerPushToken(pushToken);
+  }
+
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
@@ -975,6 +980,17 @@ export const BrazeProject = (): ReactElement => {
       </TouchableHighlight>
       <TouchableHighlight onPress={requestPushPermission}>
         <Text>Request Push Permission</Text>
+      </TouchableHighlight>
+      <TextInput
+        style={styles.textInput}
+        placeholder='push token'
+        autoCorrect={false}
+        autoCapitalize="none"
+        onChangeText={setPushToken}
+        value={pushToken}
+      />
+      <TouchableHighlight onPress={setPushTokenPress}>
+        <Text>Set Push Token</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={setAttributionData}>
         <Text>Set Attribution Data</Text>

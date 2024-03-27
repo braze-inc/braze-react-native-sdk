@@ -186,7 +186,16 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName aliasLabel:(NSString *)aliasLab
 
 RCT_EXPORT_METHOD(registerPushToken:(NSString *)token) {
   RCTLogInfo(@"braze registerPushToken with token %@", token);
-  NSData* tokenData = [token dataUsingEncoding:NSUTF8StringEncoding];
+  // Convert the token (hex representation) to NSData
+  NSMutableData* tokenData = [NSMutableData data];
+  unsigned char wholeByte;
+  char byteChars[3] = {'\0','\0','\0'};
+  for (int i = 0; i < token.length / 2; i++) {
+    byteChars[0] = [token characterAtIndex:i * 2];
+    byteChars[1] = [token characterAtIndex:i * 2 + 1];
+    wholeByte = strtol(byteChars, NULL, 16);
+    [tokenData appendBytes:&wholeByte length:1];
+  }
   [braze.notifications registerDeviceToken:tokenData];
 }
 

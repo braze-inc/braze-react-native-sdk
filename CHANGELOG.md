@@ -1,3 +1,13 @@
+## 9.1.0
+
+##### Added
+- Adds the `BrazeInAppMessage.isTestSend` property, which indicates whether an in-app message was triggered as part of a test send.
+- Updates the native iOS version bindings [from Braze Swift SDK 8.1.0 to 8.2.1](https://github.com/braze-inc/braze-swift-sdk/compare/8.1.0...8.2.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Updates the native Android version bindings [from Braze Android SDK 30.1.1 to 30.3.0](https://github.com/braze-inc/braze-android-sdk/compare/v30.1.1...v30.3.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Fixed
+- Fixes the iOS implementation of `Braze.registerPushToken()` to correctly pass the device token to the native SDK.
+
 ## 9.0.0
 
 ##### Breaking
@@ -5,7 +15,7 @@
   - For further details about levels of support for each React Native release, refer to [Releases Support Policy](https://github.com/reactwg/react-native-releases#releases-support-policy) in the React Working Group.
 - Bumps the minimum required iOS version to 12.0.
 - Updates the native iOS version bindings [from Braze Swift SDK 7.5.0 to 8.1.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.5.0...8.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-- Updates the native Android version bindings [from Braze Android SDK 29.0.1 to 30.1.0](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.1...v30.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Updates the native Android version bindings [from Braze Android SDK 29.0.1 to 30.1.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.1...v30.1.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
 ## 8.4.0
 

@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70F978472BADA57F002E06BE /* BrazeUIHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 70F978462BADA57F002E06BE /* BrazeUIHandler.m */; };
 		D4DB659B1D8C973800EFA6B6 /* BrazeReactUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D4DB659A1D8C973800EFA6B6 /* BrazeReactUtils.m */; };
 		E3D0A75E1C668BB90027828A /* BrazeReactBridge.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D0A75D1C668BB90027828A /* BrazeReactBridge.h */; };
-		E3D0A7601C668BB90027828A /* BrazeReactBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D0A75F1C668BB90027828A /* BrazeReactBridge.m */; };
+		E3D0A7601C668BB90027828A /* BrazeReactBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = E3D0A75F1C668BB90027828A /* BrazeReactBridge.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,11 +27,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		70F978452BADA57F002E06BE /* BrazeUIHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrazeUIHandler.h; sourceTree = "<group>"; };
+		70F978462BADA57F002E06BE /* BrazeUIHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrazeUIHandler.m; sourceTree = "<group>"; };
 		D4DB65991D8C973800EFA6B6 /* BrazeReactUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrazeReactUtils.h; sourceTree = "<group>"; };
 		D4DB659A1D8C973800EFA6B6 /* BrazeReactUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrazeReactUtils.m; sourceTree = "<group>"; };
 		E3D0A75A1C668BB90027828A /* libBrazeReactBridge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBrazeReactBridge.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D0A75D1C668BB90027828A /* BrazeReactBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrazeReactBridge.h; sourceTree = "<group>"; };
-		E3D0A75F1C668BB90027828A /* BrazeReactBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeReactBridge.m; sourceTree = "<group>"; };
+		E3D0A75F1C668BB90027828A /* BrazeReactBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = BrazeReactBridge.mm; path = BrazeReactBridge/BrazeReactBridge.mm; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,8 +66,10 @@
 		E3D0A75C1C668BB90027828A /* BrazeReactBridge */ = {
 			isa = PBXGroup;
 			children = (
+				70F978452BADA57F002E06BE /* BrazeUIHandler.h */,
+				70F978462BADA57F002E06BE /* BrazeUIHandler.m */,
 				E3D0A75D1C668BB90027828A /* BrazeReactBridge.h */,
-				E3D0A75F1C668BB90027828A /* BrazeReactBridge.m */,
+				E3D0A75F1C668BB90027828A /* BrazeReactBridge.mm */,
 				D4DB65991D8C973800EFA6B6 /* BrazeReactUtils.h */,
 				D4DB659A1D8C973800EFA6B6 /* BrazeReactUtils.m */,
 			);
@@ -110,6 +115,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = E3D0A7511C668BB90027828A;
@@ -127,8 +133,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70F978472BADA57F002E06BE /* BrazeUIHandler.m in Sources */,
 				D4DB659B1D8C973800EFA6B6 /* BrazeReactUtils.m in Sources */,
-				E3D0A7601C668BB90027828A /* BrazeReactBridge.m in Sources */,
+				E3D0A7601C668BB90027828A /* BrazeReactBridge.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,9 +231,7 @@
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../../../../ios/Pods/Headers/**",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -242,9 +247,7 @@
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../../../../ios/Pods/Headers/**",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
