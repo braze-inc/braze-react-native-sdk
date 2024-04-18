@@ -343,6 +343,7 @@
 				EC9B92062B1F762B00C6BD5D /* Sources */,
 				EC9B92072B1F762B00C6BD5D /* Frameworks */,
 				EC9B92082B1F762B00C6BD5D /* Resources */,
+				52AFEB2430ADE005545A32A8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -524,6 +525,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		52AFEB2430ADE005545A32A8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		74F5EB337C713CD3201C3C4B /* [CP] Check Pods Manifest.lock */ = {
@@ -966,7 +984,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BrazeProjectRichPush/Info.plist;
@@ -1009,7 +1026,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BrazeProjectRichPush/Info.plist;
@@ -1050,7 +1066,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BrazeProjectPushStory/Info.plist;
@@ -1094,7 +1109,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BrazeProjectPushStory/Info.plist;

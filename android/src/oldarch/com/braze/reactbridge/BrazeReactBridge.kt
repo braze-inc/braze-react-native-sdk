@@ -9,72 +9,72 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     override fun getName() = BrazeReactBridgeImpl.NAME
 
     @ReactMethod
-    fun getInitialURL(callback: Callback?) {
+    fun getInitialURL(callback: Callback) {
         // iOS only
     }
 
     @ReactMethod
-    fun getDeviceId(callback: Callback?) {
+    fun getDeviceId(callback: Callback) {
         return brazeImpl.getDeviceId(callback)
     }
 
     @ReactMethod
-     fun changeUser(userId: String?, signature: String?) {
+    fun changeUser(userId: String, signature: String?) {
         brazeImpl.changeUser(userId, signature)
     }
-    
+
     @ReactMethod
-    fun getUserId(callback: Callback?) {
+    fun getUserId(callback: Callback) {
         return brazeImpl.getUserId(callback)
     }
 
     @ReactMethod
-    fun setSdkAuthenticationSignature(signature: String?) {
+    fun setSdkAuthenticationSignature(signature: String) {
         brazeImpl.setSdkAuthenticationSignature(signature)
     }
 
     @ReactMethod
-    fun addAlias(aliasName: String?, aliasLabel: String?) {
+    fun addAlias(aliasName: String, aliasLabel: String) {
         brazeImpl.addAlias(aliasName, aliasLabel)
     }
 
     @ReactMethod
-    fun setFirstName(firstName: String?) {
+    fun setFirstName(firstName: String) {
         brazeImpl.setFirstName(firstName)
     }
 
     @ReactMethod
-    fun setLastName(lastName: String?) {
+    fun setLastName(lastName: String) {
         brazeImpl.setLastName(lastName)
     }
 
     @ReactMethod
-    fun setEmail(email: String?) {
+    fun setEmail(email: String) {
         brazeImpl.setEmail(email)
     }
 
     @ReactMethod
-    fun setGender(gender: String?, callback: Callback?) {
+    fun setGender(gender: String, callback: Callback?) {
         brazeImpl.setGender(gender, callback)
     }
 
     @ReactMethod
-    fun setLanguage(language: String?) {
+    fun setLanguage(language: String) {
         brazeImpl.setLanguage(language)
     }
 
     @ReactMethod
-    fun setCountry(country: String?) {
+    fun setCountry(country: String) {
         brazeImpl.setCountry(country)
     }
 
     @ReactMethod
-    fun setHomeCity(homeCity: String?) {
+    fun setHomeCity(homeCity: String) {
         brazeImpl.setHomeCity(homeCity)
     }
 
     @ReactMethod
-    fun setPhoneNumber(phoneNumber: String?) {
+    fun setPhoneNumber(phoneNumber: String) {
         brazeImpl.setPhoneNumber(phoneNumber)
     }
 
@@ -84,23 +84,23 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun registerPushToken(token: String?) {
+    fun registerPushToken(token: String) {
         brazeImpl.registerPushToken(token)
     }
 
     @ReactMethod
-    fun addToSubscriptionGroup(groupId: String?, callback: Callback?) {
+    fun addToSubscriptionGroup(groupId: String, callback: Callback?) {
         brazeImpl.addToSubscriptionGroup(groupId, callback)
     }
 
     @ReactMethod
-    fun removeFromSubscriptionGroup(groupId: String?, callback: Callback?) {
+    fun removeFromSubscriptionGroup(groupId: String, callback: Callback?) {
         brazeImpl.removeFromSubscriptionGroup(groupId, callback)
     }
 
     @ReactMethod
     fun setPushNotificationSubscriptionType(
-        notificationSubscriptionType: String?,
+        notificationSubscriptionType: String,
         callback: Callback?
     ) {
         brazeImpl.setPushNotificationSubscriptionType(notificationSubscriptionType, callback)
@@ -108,22 +108,22 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun setEmailNotificationSubscriptionType(
-        notificationSubscriptionType: String?,
+        notificationSubscriptionType: String,
         callback: Callback?
     ) {
         brazeImpl.setEmailNotificationSubscriptionType(notificationSubscriptionType, callback)
     }
 
     @ReactMethod
-    fun logCustomEvent(eventName: String?, eventProperties: ReadableMap?) {
+    fun logCustomEvent(eventName: String, eventProperties: ReadableMap?) {
         brazeImpl.logCustomEvent(eventName, eventProperties)
     }
 
     @ReactMethod
     fun logPurchase(
-        productId: String?,
-        price: String?,
-        currencyCode: String?,
+        productId: String,
+        price: String,
+        currencyCode: String,
         quantity: Double,
         purchaseProperties: ReadableMap?
     ) {
@@ -131,29 +131,29 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setIntCustomUserAttribute(key: String?, value: Double, callback: Callback?) {
+    fun setIntCustomUserAttribute(key: String, value: Double, callback: Callback?) {
         brazeImpl.setIntCustomUserAttribute(key, value.toInt(), callback)
     }
 
     @ReactMethod
-    fun setDoubleCustomUserAttribute(key: String?, value: Double, callback: Callback?) {
+    fun setDoubleCustomUserAttribute(key: String, value: Double, callback: Callback?) {
         brazeImpl.setDoubleCustomUserAttribute(key, value.toFloat(), callback)
     }
 
     @ReactMethod
-    fun setBoolCustomUserAttribute(key: String?, value: Boolean, callback: Callback?) {
+    fun setBoolCustomUserAttribute(key: String, value: Boolean, callback: Callback?) {
         brazeImpl.setBoolCustomUserAttribute(key, value, callback)
     }
 
     @ReactMethod
-    fun setStringCustomUserAttribute(key: String?, value: String?, callback: Callback?) {
+    fun setStringCustomUserAttribute(key: String, value: String, callback: Callback?) {
         brazeImpl.setStringCustomUserAttribute(key, value, callback)
     }
 
     @ReactMethod
     fun setCustomUserAttributeArray(
-        key: String?,
-        value: ReadableArray?,
+        key: String,
+        value: ReadableArray,
         callback: Callback?
     ) {
         brazeImpl.setCustomUserAttributeArray(key, value, callback)
@@ -161,44 +161,44 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun setCustomUserAttributeObjectArray(
-        key: String?,
-        value: ReadableArray?,
+        key: String,
+        value: ReadableArray,
         callback: Callback?
     ) {
         brazeImpl.setCustomUserAttributeObjectArray(key, value, callback)
     }
 
     @ReactMethod
-    fun setDateCustomUserAttribute(key: String?, value: Double, callback: Callback?) {
+    fun setDateCustomUserAttribute(key: String, value: Double, callback: Callback?) {
         brazeImpl.setDateCustomUserAttribute(key, value.toInt(), callback)
     }
 
     @ReactMethod
-    fun setCustomUserAttributeObject(key: String?, value: ReadableMap, merge: Boolean, callback: Callback?) {
+    fun setCustomUserAttributeObject(key: String?, value: ReadableMap?, merge: Boolean, callback: Callback?) {
         brazeImpl.setCustomUserAttributeObject(key, value, merge, callback)
     }
 
     @ReactMethod
-    fun addToCustomUserAttributeArray(key: String?, value: String?, callback: Callback?) {
+    fun addToCustomUserAttributeArray(key: String, value: String, callback: Callback?) {
         brazeImpl.addToCustomAttributeArray(key, value, callback)
     }
 
     @ReactMethod
     fun removeFromCustomUserAttributeArray(
-        key: String?,
-        value: String?,
+        key: String,
+        value: String,
         callback: Callback?
     ) {
         brazeImpl.removeFromCustomAttributeArray(key, value, callback)
     }
 
     @ReactMethod
-    fun unsetCustomUserAttribute(key: String?, callback: Callback?) {
+    fun unsetCustomUserAttribute(key: String, callback: Callback?) {
         brazeImpl.unsetCustomUserAttribute(key, callback)
     }
 
     @ReactMethod
-    fun incrementCustomUserAttribute(key: String?, value: Double, callback: Callback?) {
+    fun incrementCustomUserAttribute(key: String, value: Double, callback: Callback?) {
         brazeImpl.incrementCustomUserAttribute(key, value.toInt(), callback)
     }
 
@@ -218,17 +218,17 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun logNewsFeedCardClicked(cardId: String?) {
+    fun logNewsFeedCardClicked(cardId: String) {
         brazeImpl.logNewsFeedCardClicked(cardId)
     }
 
     @ReactMethod
-    fun logNewsFeedCardImpression(cardId: String?) {
+    fun logNewsFeedCardImpression(cardId: String) {
         brazeImpl.logNewsFeedCardImpression(cardId)
     }
 
     @ReactMethod
-    fun getNewsFeedCards(promise: Promise?) {
+    fun getNewsFeedCards(promise: Promise) {
         brazeImpl.getNewsFeedCards(promise)
     }
 
@@ -243,42 +243,42 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun logContentCardClicked(cardId: String?) {
+    fun logContentCardClicked(cardId: String) {
         brazeImpl.logContentCardClicked(cardId)
     }
 
     @ReactMethod
-    fun logContentCardDismissed(cardId: String?) {
+    fun logContentCardDismissed(cardId: String) {
         brazeImpl.logContentCardDismissed(cardId)
     }
 
     @ReactMethod
-    fun logContentCardImpression(cardId: String?) {
+    fun logContentCardImpression(cardId: String) {
         brazeImpl.logContentCardImpression(cardId)
     }
 
     @ReactMethod
-    fun processContentCardClickAction(cardId: String?) {
+    fun processContentCardClickAction(cardId: String) {
         brazeImpl.processContentCardClickAction(cardId)
     }
 
     @ReactMethod
-    fun getContentCards(promise: Promise?) {
+    fun getContentCards(promise: Promise) {
         brazeImpl.getContentCards(promise)
     }
 
     @ReactMethod
-    fun getCachedContentCards(promise: Promise?) {
+    fun getCachedContentCards(promise: Promise) {
         brazeImpl.getCachedContentCards(promise)
     }
 
     @ReactMethod
-    fun getCardCountForCategories(category: String?, callback: Callback?) {
+    fun getCardCountForCategories(category: String, callback: Callback?) {
         brazeImpl.getCardCountForCategories(category, callback)
     }
 
     @ReactMethod
-    fun getUnreadCardCountForCategories(category: String?, callback: Callback?) {
+    fun getUnreadCardCountForCategories(category: String, callback: Callback?) {
         brazeImpl.getUnreadCardCountForCategories(category, callback)
     }
 
@@ -319,7 +319,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
 
     @ReactMethod
     fun setLocationCustomAttribute(
-        key: String?,
+        key: String,
         latitude: Double,
         longitude: Double,
         callback: Callback?
@@ -349,22 +349,22 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun logInAppMessageClicked(inAppMessageString: String?) {
+    fun logInAppMessageClicked(inAppMessageString: String) {
         brazeImpl.logInAppMessageClicked(inAppMessageString)
     }
 
     @ReactMethod
-    fun logInAppMessageImpression(inAppMessageString: String?) {
+    fun logInAppMessageImpression(inAppMessageString: String) {
         brazeImpl.logInAppMessageImpression(inAppMessageString)
     }
 
     @ReactMethod
-    fun logInAppMessageButtonClicked(inAppMessageString: String?, buttonId: Double) {
+    fun logInAppMessageButtonClicked(inAppMessageString: String, buttonId: Double) {
         brazeImpl.logInAppMessageButtonClicked(inAppMessageString, buttonId.toInt())
     }
 
     @ReactMethod
-    fun performInAppMessageAction(inAppMessageString: String?, buttonId: Double) {
+    fun performInAppMessageAction(inAppMessageString: String, buttonId: Double) {
         brazeImpl.performInAppMessageAction(inAppMessageString, buttonId.toInt())
     }
 
@@ -374,27 +374,27 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun getAllFeatureFlags(promise: Promise?) {
+    fun getAllFeatureFlags(promise: Promise) {
         brazeImpl.getAllFeatureFlags(promise)
     }
 
     @ReactMethod
-    fun getFeatureFlag(flagId: String?, promise: Promise?) {
+    fun getFeatureFlag(flagId: String, promise: Promise) {
         brazeImpl.getFeatureFlag(flagId, promise)
     }
 
     @ReactMethod
-    fun getFeatureFlagBooleanProperty(flagId: String?, key: String?, promise: Promise?) {
+    fun getFeatureFlagBooleanProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagBooleanProperty(flagId, key, promise)
     }
 
     @ReactMethod
-    fun getFeatureFlagStringProperty(flagId: String?, key: String?, promise: Promise?) {
+    fun getFeatureFlagStringProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagStringProperty(flagId, key, promise)
     }
 
     @ReactMethod
-    fun getFeatureFlagNumberProperty(flagId: String?, key: String?, promise: Promise?) {
+    fun getFeatureFlagNumberProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagNumberProperty(flagId, key, promise)
     }
 
@@ -409,20 +409,18 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String?) {
+    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String) {
         brazeImpl.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId)
     }
 
     @ReactMethod
-    fun updateTrackingPropertyAllowList(allowList: ReadableMap?) {
+    fun updateTrackingPropertyAllowList(allowList: ReadableMap) {
         // iOS only
     }
 
     @ReactMethod
-    fun addListener(eventType: String?) {
-        eventType?.let {
-            brazeImpl.addListener(it)
-        }
+    fun addListener(eventType: String) {
+        brazeImpl.addListener(eventType)
     }
 
     @ReactMethod

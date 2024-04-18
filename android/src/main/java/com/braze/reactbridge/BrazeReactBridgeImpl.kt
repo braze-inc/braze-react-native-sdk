@@ -82,11 +82,11 @@ class BrazeReactBridgeImpl(
 
     fun requestImmediateDataFlush() = braze.requestImmediateDataFlush()
 
-    fun changeUser(userName: String?, sdkAuthToken: String?) = braze.changeUser(userName, sdkAuthToken)
+    fun changeUser(userName: String, sdkAuthToken: String?) = braze.changeUser(userName, sdkAuthToken)
 
-    fun getUserId(callback: Callback?) {
+    fun getUserId(callback: Callback) {
         runOnUser {
-            if (it.userId.isNullOrBlank()) {
+            if (it.userId.isBlank()) {
                 callback.reportResult(null, "User ID not found.")
             } else {
                 callback.reportResult(it.userId)
@@ -94,17 +94,17 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun addAlias(aliasName: String?, aliasLabel: String?) {
-        if (aliasName.isNullOrBlank()) {
+    fun addAlias(aliasName: String, aliasLabel: String) {
+        if (aliasName.isBlank()) {
             brazelog(W) {
-                "Invalid alias parameter: alias is required to be non-null and non-empty. " +
+                "Invalid alias parameter: alias is required to be non-empty. " +
                     "Not adding alias."
             }
             return
         }
-        if (aliasLabel.isNullOrBlank()) {
+        if (aliasLabel.isBlank()) {
             brazelog(W) {
-                "Invalid label parameter: label is required to be non-null and non-empty. " +
+                "Invalid label parameter: label is required to be non-empty. " +
                     "Not adding alias."
             }
             return
@@ -114,17 +114,17 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun registerPushToken(token: String?) {
+    fun registerPushToken(token: String) {
         braze.registeredPushToken = token
     }
 
-    fun logCustomEvent(eventName: String?, eventProperties: ReadableMap?) =
+    fun logCustomEvent(eventName: String, eventProperties: ReadableMap?) =
         braze.logCustomEvent(eventName, populateEventPropertiesFromReadableMap(eventProperties))
 
     fun logPurchase(
-        productIdentifier: String?,
-        price: String?,
-        currencyCode: String?,
+        productIdentifier: String,
+        price: String,
+        currencyCode: String,
         quantity: Int,
         eventProperties: ReadableMap?
     ) =
@@ -136,100 +136,56 @@ class BrazeReactBridgeImpl(
             populateEventPropertiesFromReadableMap(eventProperties)
         )
 
-    fun setStringCustomUserAttribute(key: String?, value: String?, callback: Callback?) {
-        if (key == null || value == null) {
-            brazelog { "Key or value was null. Not logging custom user attribute." }
-            return
-        }
+    fun setStringCustomUserAttribute(key: String, value: String, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.setCustomUserAttribute(key, value))
         }
     }
 
-    fun setBoolCustomUserAttribute(key: String?, value: Boolean?, callback: Callback?) {
-        if (key == null || value == null) {
-            brazelog { "Key or value was null. Not logging custom user attribute." }
-            return
-        }
+    fun setBoolCustomUserAttribute(key: String, value: Boolean, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.setCustomUserAttribute(key, value))
         }
     }
 
-    fun setIntCustomUserAttribute(key: String?, value: Int, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key or value was null. Not logging custom user attribute." }
-            return
-        }
+    fun setIntCustomUserAttribute(key: String, value: Int, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.setCustomUserAttribute(key, value))
         }
     }
 
-    fun setDoubleCustomUserAttribute(key: String?, value: Float, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key or value was null. Not logging custom user attribute." }
-            return
-        }
+    fun setDoubleCustomUserAttribute(key: String, value: Float, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.setCustomUserAttribute(key, value))
         }
     }
 
-    fun setDateCustomUserAttribute(key: String?, timeStamp: Int, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key or value was null. Not logging custom user attribute." }
-            return
-        }
+    fun setDateCustomUserAttribute(key: String, timeStamp: Int, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.setCustomUserAttributeToSecondsFromEpoch(key, timeStamp.toLong()))
         }
     }
 
-    fun incrementCustomUserAttribute(key: String?, incrementValue: Int, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key or value was null. Not logging incrementCustomUserAttribute." }
-            return
-        }
+    fun incrementCustomUserAttribute(key: String, incrementValue: Int, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.incrementCustomUserAttribute(key, incrementValue))
         }
     }
 
-    fun unsetCustomUserAttribute(key: String?, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key or value was null. Not logging unsetCustomUserAttribute." }
-            return
-        }
+    fun unsetCustomUserAttribute(key: String, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.unsetCustomUserAttribute(key))
         }
     }
 
-    fun setCustomUserAttributeObjectArray(key: String?, value: ReadableArray?, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key was null. Not logging setCustomUserAttributeObjectArray." }
-            return
-        }
-        if (value == null) {
-            brazelog { "Value was null. Not logging setCustomUserAttributeObjectArray." }
-            return
-        }
+    fun setCustomUserAttributeObjectArray(key: String, value: ReadableArray, callback: Callback?) {
         val attributeArray = JSONArray(parseReadableArray(value))
         runOnUser {
             callback.reportResult(it.setCustomUserAttribute(key, attributeArray))
         }
     }
 
-    fun setCustomUserAttributeArray(key: String?, value: ReadableArray?, callback: Callback?) {
-        if (key == null) {
-            brazelog { "Key was null. Not logging setCustomUserAttributeArray." }
-            return
-        }
-        if (value == null) {
-            brazelog { "Value was null. Not logging setCustomUserAttributeArray." }
-            return
-        }
+    fun setCustomUserAttributeArray(key: String, value: ReadableArray, callback: Callback?) {
         val size = value.size()
         val attributeArray = arrayOfNulls<String>(size)
         for (i in 0 until size) {
@@ -240,9 +196,13 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun setCustomUserAttributeObject(key: String?, value: ReadableMap, merge: Boolean, callback: Callback?) {
+    fun setCustomUserAttributeObject(key: String?, value: ReadableMap?, merge: Boolean, callback: Callback?) {
         if (key == null) {
             brazelog { "Key was null. Not logging setCustomUserAttributeObject." }
+            return
+        }
+        if (value == null) {
+            brazelog { "Value was null. Not logging setCustomUserAttributeObject." }
             return
         }
         val json = JSONObject(parseReadableMap(value))
@@ -251,34 +211,26 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun addToCustomAttributeArray(key: String?, value: String?, callback: Callback?) {
-        if (key == null || value == null) {
-            brazelog { "Key or value was null. Not logging custom user attribute." }
-            return
-        }
+    fun addToCustomAttributeArray(key: String, value: String, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.addToCustomAttributeArray(key, value))
         }
     }
 
-    fun removeFromCustomAttributeArray(key: String?, value: String?, callback: Callback?) {
-        if (key == null || value == null) {
-            brazelog { "Key or value was null. Not logging removeFromCustomAttributeArray" }
-            return
-        }
+    fun removeFromCustomAttributeArray(key: String, value: String, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.removeFromCustomAttributeArray(key, value))
         }
     }
 
-    fun setFirstName(firstName: String?) = runOnUser { it.setFirstName(firstName) }
+    fun setFirstName(firstName: String) = runOnUser { it.setFirstName(firstName) }
 
-    fun setLastName(lastName: String?) = runOnUser { it.setLastName(lastName) }
+    fun setLastName(lastName: String) = runOnUser { it.setLastName(lastName) }
 
-    fun setEmail(email: String?) = runOnUser { it.setEmail(email) }
+    fun setEmail(email: String) = runOnUser { it.setEmail(email) }
 
-    fun setGender(gender: String?, callback: Callback?) {
-        val genderValue = Gender.getGender(gender?.lowercase(Locale.US) ?: "")
+    fun setGender(gender: String, callback: Callback?) {
+        val genderValue = Gender.getGender(gender.lowercase(Locale.US))
         if (genderValue == null) {
             callback.reportResult(error = "Invalid input $gender. Gender not set.")
             return
@@ -293,40 +245,32 @@ class BrazeReactBridgeImpl(
             }
         }
 
-    fun setCountry(country: String?) = runOnUser { it.setCountry(country) }
+    fun setCountry(country: String) = runOnUser { it.setCountry(country) }
 
-    fun setHomeCity(homeCity: String?) = runOnUser { it.setHomeCity(homeCity) }
+    fun setHomeCity(homeCity: String) = runOnUser { it.setHomeCity(homeCity) }
 
-    fun setPhoneNumber(phoneNumber: String?) = runOnUser { it.setPhoneNumber(phoneNumber) }
+    fun setPhoneNumber(phoneNumber: String) = runOnUser { it.setPhoneNumber(phoneNumber) }
 
-    fun setLanguage(language: String?) = runOnUser { it.setLanguage(language) }
+    fun setLanguage(language: String) = runOnUser { it.setLanguage(language) }
 
-    fun addToSubscriptionGroup(groupId: String?, callback: Callback?) {
-        if (groupId == null) {
-            brazelog { "groupId was null. Not logging addToSubscriptionGroup." }
-            return
-        }
+    fun addToSubscriptionGroup(groupId: String, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.addToSubscriptionGroup(groupId))
         }
     }
 
-    fun removeFromSubscriptionGroup(groupId: String?, callback: Callback?) {
-        if (groupId == null) {
-            brazelog { "groupId was null. Not logging removeFromSubscriptionGroup." }
-            return
-        }
+    fun removeFromSubscriptionGroup(groupId: String, callback: Callback?) {
         runOnUser {
             callback.reportResult(it.removeFromSubscriptionGroup(groupId))
         }
     }
 
-    fun setPushNotificationSubscriptionType(subscriptionType: String?, callback: Callback?) {
+    fun setPushNotificationSubscriptionType(subscriptionType: String, callback: Callback?) {
         val subscriptionValue = subscriptionType.parseNotificationSubscriptionType()
         if (subscriptionValue == null) {
             callback.reportResult(
                 error = "Invalid subscription type $subscriptionType." +
-                    " Push notification subscription type not set."
+                        " Push notification subscription type not set."
             )
             return
         }
@@ -335,12 +279,12 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun setEmailNotificationSubscriptionType(subscriptionType: String?, callback: Callback?) {
+    fun setEmailNotificationSubscriptionType(subscriptionType: String, callback: Callback?) {
         val subscriptionValue = subscriptionType.parseNotificationSubscriptionType()
         if (subscriptionValue == null) {
             callback.reportResult(
                 error = "Invalid subscription type $subscriptionType." +
-                    " Email notification subscription type not set."
+                        " Email notification subscription type not set."
             )
             return
         }
@@ -359,24 +303,20 @@ class BrazeReactBridgeImpl(
         braze.requestFeedRefresh()
     }
 
-    fun getNewsFeedCards(promise: Promise?) {
+    fun getNewsFeedCards(promise: Promise) {
         braze.subscribeToFeedUpdates(IFireOnceEventSubscriber {
-            promise?.resolve(mapContentCards(it.feedCards))
+            promise.resolve(mapContentCards(it.feedCards))
             updateNewsFeedCardsIfNeeded(it)
         })
         braze.requestFeedRefresh()
     }
 
-    fun logNewsFeedCardClicked(id: String?) {
-        id?.let {
-            getNewsFeedCardById(it)?.logClick()
-        }
+    fun logNewsFeedCardClicked(id: String) {
+        getNewsFeedCardById(id)?.logClick()
     }
 
-    fun logNewsFeedCardImpression(id: String?) {
-        id?.let {
-            getNewsFeedCardById(it)?.logImpression()
-        }
+    fun logNewsFeedCardImpression(id: String) {
+        getNewsFeedCardById(id)?.logImpression()
     }
 
     fun launchContentCards() {
@@ -389,24 +329,22 @@ class BrazeReactBridgeImpl(
         braze.requestContentCardsRefresh()
     }
 
-    fun getContentCards(promise: Promise?) {
+    fun getContentCards(promise: Promise) {
         braze.subscribeToContentCardsUpdates(IFireOnceEventSubscriber { message ->
-            promise?.resolve(mapContentCards(message.allCards))
+            promise.resolve(mapContentCards(message.allCards))
             updateContentCardsIfNeeded(message)
         })
         braze.requestContentCardsRefresh()
     }
 
-    fun getCachedContentCards(promise: Promise?) {
+    fun getCachedContentCards(promise: Promise) {
         contentCardsLock.withLock {
-            promise?.resolve(mapContentCards(contentCards))
+            promise.resolve(mapContentCards(contentCards))
         }
     }
 
-    fun setSdkAuthenticationSignature(token: String?) {
-        if (token != null) {
-            braze.setSdkAuthenticationSignature(token)
-        }
+    fun setSdkAuthenticationSignature(token: String) {
+        braze.setSdkAuthenticationSignature(token)
     }
 
     @Suppress("UnusedPrivateMember")
@@ -572,51 +510,38 @@ class BrazeReactBridgeImpl(
         braze.subscribeToPushNotificationEvents(pushNotificationEventSubscriber)
     }
 
-    fun logContentCardDismissed(id: String?) {
-        id?.let {
-            getContentCardById(it)?.isDismissed = true
-        }
+    fun logContentCardDismissed(id: String) {
+        getContentCardById(id)?.isDismissed = true
     }
 
-    fun logContentCardClicked(id: String?) {
-        id?.let {
-            getContentCardById(it)?.logClick()
-        }
+    fun logContentCardClicked(id: String) {
+        getContentCardById(id)?.logClick()
     }
 
-    fun logContentCardImpression(id: String?) {
-        id?.let {
-            getContentCardById(it)?.logImpression()
-        }
+    fun logContentCardImpression(id: String) {
+        getContentCardById(id)?.logImpression()
     }
 
-    fun processContentCardClickAction(id: String?) {
+    fun processContentCardClickAction(id: String) {
         brazelog(V) { "Processing content card action $id" }
-        id?.let {
-            val card = getContentCardById(it)
-            if (card == null) {
-                return
-            }
-            val extras = Bundle()
-            for (key in card.extras.keys) {
-                extras.putString(key, card.extras[key])
-            }
-            val url = card.url
-            if (url == null) {
-                brazelog(V) { "Card URL is null, returning null for getUriActionForCard" }
-                return
-            }
-
-            val action = BrazeDeeplinkHandler.getInstance().createUriActionFromUrlString(
-                url,
-                extras,
-                card.openUriInWebView,
-                card.channel
-            )
-
-            if (action != null) {
-                BrazeDeeplinkHandler.getInstance().gotoUri(reactApplicationContext, action)
-            }
+        val card = getContentCardById(id) ?: return
+        val extras = Bundle()
+        for (key in card.extras.keys) {
+            extras.putString(key, card.extras[key])
+        }
+        val url = card.url
+        if (url == null) {
+            brazelog(V) { "Card URL is null, returning null for getUriActionForCard" }
+            return
+        }
+        val action = BrazeDeeplinkHandler.getInstance().createUriActionFromUrlString(
+            url,
+            extras,
+            card.openUriInWebView,
+            card.channel
+        )
+        if (action != null) {
+            BrazeDeeplinkHandler.getInstance().gotoUri(reactApplicationContext, action)
         }
     }
 
@@ -635,7 +560,7 @@ class BrazeReactBridgeImpl(
         if (category == null || cardCategory == null && category != "all") {
             callback.reportResult(
                 error = "Invalid card category $category," +
-                    " could not retrieve$cardCountTag"
+                        " could not retrieve$cardCountTag"
             )
             return
         }
@@ -693,10 +618,10 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun getCardCountForCategories(category: String?, callback: Callback?) =
+    fun getCardCountForCategories(category: String, callback: Callback?) =
         getCardCountForTag(category, callback, CARD_COUNT_TAG)
 
-    fun getUnreadCardCountForCategories(category: String?, callback: Callback?) =
+    fun getUnreadCardCountForCategories(category: String, callback: Callback?) =
         getCardCountForTag(category, callback, UNREAD_CARD_COUNT_TAG)
 
     fun wipeData() = Braze.wipeData(reactApplicationContext)
@@ -707,24 +632,9 @@ class BrazeReactBridgeImpl(
 
     fun requestLocationInitialization() = braze.requestLocationInitialization()
 
-    fun requestGeofences(latitude: Double?, longitude: Double?) {
-        if (latitude == null ||
-            longitude == null
-        ) {
-            brazelog { "requestGeofences arguments were null. Not requesting." }
-            return
-        }
-        braze.requestGeofences(latitude, longitude)
-    }
+    fun requestGeofences(latitude: Double, longitude: Double) = braze.requestGeofences(latitude, longitude)
 
-    fun setLocationCustomAttribute(key: String?, latitude: Double?, longitude: Double?, callback: Callback?) {
-        if (key == null ||
-            latitude == null ||
-            longitude == null
-        ) {
-            brazelog { "setLocationCustomAttribute arguments were null. Not logging." }
-            return
-        }
+    fun setLocationCustomAttribute(key: String, latitude: Double, longitude: Double, callback: Callback?) {
         runOnUser {
             it.setLocationCustomAttribute(key, latitude, longitude)
             // Always return true as Android doesn't support
@@ -753,13 +663,13 @@ class BrazeReactBridgeImpl(
 
     fun hideCurrentInAppMessage() = BrazeInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true)
 
-    fun logInAppMessageClicked(inAppMessageString: String?) {
+    fun logInAppMessageClicked(inAppMessageString: String) {
         braze.deserializeInAppMessageString(inAppMessageString)?.logClick()
     }
 
-    fun logInAppMessageImpression(inAppMessageString: String?) = braze.deserializeInAppMessageString(inAppMessageString)?.logImpression()
+    fun logInAppMessageImpression(inAppMessageString: String) = braze.deserializeInAppMessageString(inAppMessageString)?.logImpression()
 
-    fun logInAppMessageButtonClicked(inAppMessageString: String?, buttonId: Int) {
+    fun logInAppMessageButtonClicked(inAppMessageString: String, buttonId: Int) {
         val inAppMessage = braze.deserializeInAppMessageString(inAppMessageString)
         if (inAppMessage is IInAppMessageImmersive) {
             inAppMessage.messageButtons
@@ -768,7 +678,7 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun performInAppMessageAction(inAppMessageString: String?, buttonId: Int) {
+    fun performInAppMessageAction(inAppMessageString: String, buttonId: Int) {
         brazelog(V) { "Processing in-app message action $inAppMessageString" }
         braze.deserializeInAppMessageString(inAppMessageString)?.let { inAppMessage ->
             val activity = currentActivity
@@ -782,8 +692,8 @@ class BrazeReactBridgeImpl(
                 if (inAppMessage is InAppMessageImmersiveBase) {
                     button = inAppMessage.messageButtons.firstOrNull { it.id == buttonId }
                 } else {
-                     brazelog { "Cannot perform IAM action because button was not null but message is not InAppMessageImmersiveBase" }
-                     return
+                    brazelog { "Cannot perform IAM action because button was not null but message is not InAppMessageImmersiveBase" }
+                    return
                 }
             }
 
@@ -826,8 +736,8 @@ class BrazeReactBridgeImpl(
                         openUriInWebView, Channel.INAPP_MESSAGE
                     )
 
-                    if (reactApplicationContext == null) {
-                        brazelog { "reactApplicationContext is null, not performing click action" }
+                    if (!reactApplicationContext.hasActiveReactInstance()) {
+                        brazelog { "reactApplicationContext instance not active, not performing click action" }
                         return
                     } else {
                         brazelog(W) { "Performing gotoUri $clickUri $openUriInWebView" }
@@ -857,7 +767,7 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun getDeviceId(callback: Callback?) = braze.getDeviceIdAsync { callback.reportResult(it) }
+    fun getDeviceId(callback: Callback) = braze.getDeviceIdAsync { callback.reportResult(it) }
 
     private fun runOnUser(block: (user: BrazeUser) -> Unit) {
         braze.getCurrentUser {
@@ -916,23 +826,21 @@ class BrazeReactBridgeImpl(
             contentCards.firstOrNull { it.id == id }
         }
 
-    fun getAllFeatureFlags(promise: Promise?) {
+    fun getAllFeatureFlags(promise: Promise) {
         val ffs = braze.getAllFeatureFlags()
         val data = Arguments.createArray()
         ffs.forEach {
             data.pushMap(convertFeatureFlag(it))
         }
-        promise?.resolve(data)
+        promise.resolve(data)
     }
 
-    fun getFeatureFlag(id: String?, promise: Promise?) {
-        if (id != null && promise != null) {
-            val ff = braze.getFeatureFlag(id)
-            if (ff == null) {
-                promise.resolve(null)
-            } else {
-                promise.resolve(convertFeatureFlag(ff))
-            }
+    fun getFeatureFlag(id: String, promise: Promise) {
+        val ff = braze.getFeatureFlag(id)
+        if (ff == null) {
+            promise.resolve(null)
+        } else {
+            promise.resolve(convertFeatureFlag(ff))
         }
     }
 
@@ -944,28 +852,20 @@ class BrazeReactBridgeImpl(
         braze.logFeatureFlagImpression(id)
     }
 
-    fun getFeatureFlagBooleanProperty(id: String?, key: String?, promise: Promise?) {
-        if (id != null && key != null && promise != null) {
-            promise.resolve(braze.getFeatureFlag(id)?.getBooleanProperty(key))
-        }
+    fun getFeatureFlagBooleanProperty(id: String, key: String, promise: Promise) {
+        promise.resolve(braze.getFeatureFlag(id)?.getBooleanProperty(key))
     }
 
-    fun getFeatureFlagStringProperty(id: String?, key: String?, promise: Promise?) {
-        if (id != null && key != null && promise != null) {
-            promise.resolve(braze.getFeatureFlag(id)?.getStringProperty(key))
-        }
+    fun getFeatureFlagStringProperty(id: String, key: String, promise: Promise) {
+        promise.resolve(braze.getFeatureFlag(id)?.getStringProperty(key))
     }
 
-    fun getFeatureFlagNumberProperty(id: String?, key: String?, promise: Promise?) {
-        if (id != null && key != null && promise != null) {
-            promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
-        }
+    fun getFeatureFlagNumberProperty(id: String, key: String, promise: Promise) {
+        promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
     }
 
-    fun setAdTrackingEnabled(adTrackingEnabled: Boolean?, googleAdvertisingId: String?) {
-        if (googleAdvertisingId != null && adTrackingEnabled != null) {
-            braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
-        }
+    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String) {
+        braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
     }
 
     private fun setDefaultInAppMessageListener() {

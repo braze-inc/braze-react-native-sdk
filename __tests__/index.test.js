@@ -336,8 +336,8 @@ test('it calls BrazeReactBridge.setCustomUserAttributeObjectArray', () => {
 
 test('it calls BrazeReactBridge.setCustomUserAttributeObject 4 parameters', () => {
   const key = "some_key";
-  const hash = {'do': 're', 'mi': 'fa'}
-  const merge = true
+  const hash = {'do': 're', 'mi': 'fa'};
+  const merge = true;
   Braze.setCustomUserAttribute(key, hash, merge, testCallback);
 
   expect(NativeBrazeReactModule.setCustomUserAttributeObject).toBeCalledWith(key, hash, merge, testCallback);
@@ -345,9 +345,19 @@ test('it calls BrazeReactBridge.setCustomUserAttributeObject 4 parameters', () =
 
 test('it calls BrazeReactBridge.setCustomUserAttributeObject 3 parameters', () => {
   const key = "some_key";
-  const hash = {'do': 're', 'mi': 'fa'}
+  const hash = {'do': 're', 'mi': 'fa'};
   // When not given, merge defaults to 'false'
-  const merge = false
+  const merge = false;
+  Braze.setCustomUserAttribute(key, hash, testCallback);
+
+  expect(NativeBrazeReactModule.setCustomUserAttributeObject).toBeCalledWith(key, hash, merge, testCallback);
+});
+
+test('it calls BrazeReactBridge.setCustomUserAttributeObject with null value', () => {
+  const key = "some_key";
+  const hash = null;
+  // When not given, merge defaults to 'false'
+  const merge = false;
   Braze.setCustomUserAttribute(key, hash, testCallback);
 
   expect(NativeBrazeReactModule.setCustomUserAttributeObject).toBeCalledWith(key, hash, merge, testCallback);

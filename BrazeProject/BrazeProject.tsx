@@ -388,6 +388,7 @@ export const BrazeProject = (): ReactElement => {
     Braze.setCustomUserAttribute('objectAttr', { one: 1, two: 'too' }, false);
     Braze.setCustomUserAttribute('badArray', ['123', { one: 1, two: 2 }]);
     Braze.setCustomUserAttribute('badArray2', [true, 1, 'string', { one: 1 }]);
+    Braze.setCustomUserAttribute('nullValueAttr', null);
     showToast('Custom attributes set');
   };
 

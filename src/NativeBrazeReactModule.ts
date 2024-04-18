@@ -78,7 +78,7 @@ export interface Spec extends TurboModule {
   // `merge` indicates whether to override the existing value (false) or combine its fields (true).
   setCustomUserAttributeObject(
     key: string,
-    value: Object,
+    value: Object | null,
     merge: boolean,
     callback?: ((error?: Object, result?: boolean) => void) | null
   ): void;
