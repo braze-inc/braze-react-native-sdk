@@ -273,6 +273,7 @@
     ```
     let braze = BrazePlugin.initBraze(configuration)
     ```
+  - This migration requires re-identifying users. To do so, you must call the `changeUser` method on the Braze instance for non-anonymous users. You can read more about it [here](https://braze-inc.github.io/braze-swift-sdk/documentation/braze/appboy-migration-guide/#Re-identify-users).
   - To continue using `SDWebImage` as a dependency, add this line to your project's `/ios/Podfile`:
     ```
     pod 'SDWebImage', :modular_headers => true
@@ -281,7 +282,6 @@
   - To use the default In-App Message UI, make sure to call `subscribeToInAppMessage()` or else follow [these instructions](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/c1-inappmessageui) to add it to your app.
   - For sample code to help with the migration, reference our sample app and [`AppDelegate.mm`](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/AppDelegate.mm) file.
   - If you are integrating this SDK with an application that uses only Objective-C, create an empty Swift file to ensure that all the relevant Swift runtime libraries are linked. Reference [this file](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/empty-file.swift) from our sample app.
-  - This migration requires re-identifying users. To do so, you must call the `changeUser` method on the Braze instance for non-anonymous users. You can read more about it [here](https://braze-inc.github.io/braze-swift-sdk/documentation/braze/appboy-migration-guide/#Re-identify-users).
 - The following methods for News Feed are now no-ops on iOS:
   - `Braze.launchNewsFeed()`
   - `Braze.getCardCountForCategories()`
