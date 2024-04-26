@@ -1,3 +1,5 @@
+⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
+
 ## 9.2.0
 
 ##### Added
@@ -279,6 +281,7 @@
   - To use the default In-App Message UI, make sure to call `subscribeToInAppMessage()` or else follow [these instructions](https://braze-inc.github.io/braze-swift-sdk/tutorials/braze/c1-inappmessageui) to add it to your app.
   - For sample code to help with the migration, reference our sample app and [`AppDelegate.mm`](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/AppDelegate.mm) file.
   - If you are integrating this SDK with an application that uses only Objective-C, create an empty Swift file to ensure that all the relevant Swift runtime libraries are linked. Reference [this file](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/ios/BrazeProject/empty-file.swift) from our sample app.
+  - This migration requires re-identifying users. To do so, you must call the `changeUser` method on the Braze instance for non-anonymous users. You can read more about it [here](https://github.com/braze-inc/braze-swift-sdk).
 - The following methods for News Feed are now no-ops on iOS:
   - `Braze.launchNewsFeed()`
   - `Braze.getCardCountForCategories()`
