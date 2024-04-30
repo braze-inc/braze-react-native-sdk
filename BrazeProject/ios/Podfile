@@ -60,9 +60,9 @@ target 'BrazeProject' do
 end
 
 target 'BrazeProjectRichPush' do
-  pod 'BrazeNotificationService', '~> 8.4.0'
+  pod 'BrazeNotificationService', '~> 9.0.0'
 end
 
 target 'BrazeProjectPushStory' do
-  pod 'BrazePushStory', '~> 8.4.0'
+  pod 'BrazePushStory', '~> 9.0.0'
 end
