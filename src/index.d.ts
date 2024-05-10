@@ -1355,7 +1355,7 @@ interface BrazeEvent {
   IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived';
   /** Callback that triggers when Feature Flags have received an update in the latest refresh. */
   FEATURE_FLAGS_UPDATED: 'featureFlagsUpdated';
-  /** Only supported on Android. */
+  /** Callback passes a `PushNotificationEvent` object whenever a push event has been detected. */
   PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent';
 }
 export const Events: BrazeEvent;

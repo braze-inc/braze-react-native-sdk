@@ -468,7 +468,9 @@ class BrazeReactBridgeImpl(
                 eventData.notificationBadgeNumber?.let { putInt("badge_count", it) }
                 eventData.notificationExtras.getLong("braze_push_received_timestamp")
                     .takeUnless { it == 0L }?.let {
-                        putInt("timestamp", it.toInt())
+                        // Convert to Double when passing to JS layer since timestamp can't fit in a 32-bit
+                        // int and WriteableNativeMap doesn't support long's bc of language limitations
+                        putDouble("timestamp", it.toDouble())
                     }
                 putBoolean(
                     "use_webview",
