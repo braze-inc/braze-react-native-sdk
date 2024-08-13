@@ -705,7 +705,6 @@ export function disableSDK(): void;
 
 /**
  * Enables the Braze SDK after a previous call to disableSDK().
- * On iOS, the SDK will be enabled only after a subsequent call to startWithApiKey().
  */
 export function enableSDK(): void;
 
@@ -874,6 +873,39 @@ export interface FeatureFlagBooleanProperty {
 }
 
 /**
+ * A Feature Flag timestamp property of type Number.
+ */
+export interface FeatureFlagTimestampProperty {
+  /** The type of Feature Flag property. */
+  type: "timestamp";
+
+  /** The value of the property. */
+  value: number;
+}
+
+/**
+ * A Feature Flag JSON property of type Object.
+ */
+export interface FeatureFlagJSONProperty {
+  /** The type of Feature Flag property. */
+  type: "jsonobject";
+
+  /** The value of the property. */
+  value: object;
+}
+
+/**
+ * A Feature Flag image property of type String.
+ */
+export interface FeatureFlagImageProperty {
+  /** The type of Feature Flag property. */
+  type: "image";
+
+  /** The value of the property. */
+  value: string;
+}
+
+/**
  * [Braze Feature Flags](https://www.braze.com/docs/developer_guide/platform_wide/feature_flags)
  */
 export class FeatureFlag {
@@ -881,7 +913,7 @@ export class FeatureFlag {
   enabled: boolean;
 
   /** Properties of this feature flag, listed as key-value pairs. */
-  properties: Partial<Record<string, FeatureFlagStringProperty | FeatureFlagNumberProperty | FeatureFlagBooleanProperty>>;
+  properties: Partial<Record<string, FeatureFlagStringProperty | FeatureFlagNumberProperty | FeatureFlagBooleanProperty | FeatureFlagTimestampProperty | FeatureFlagJSONProperty | FeatureFlagImageProperty>>;
 
   /** The ID for this feature flag. */
   id: string;
@@ -937,6 +969,42 @@ export function getFeatureFlagStringProperty(id: string, key: string): Promise<s
  *    this method will return a null.
  */
 export function getFeatureFlagNumberProperty(id: string, key: string): Promise<number | null>;
+
+/**
+ * Get value of a feature flag timestamp property of type number.
+ *
+ * @param id - The ID of the feature flag.
+ * @param key - The key of the property.
+ *
+ * @returns A promise containing the value of the property if the key is found and is of type number.
+ *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
+ *    this method will return a null.
+ */
+export function getFeatureFlagTimestampProperty(id: string, key: string): Promise<number | null>;
+
+/**
+ * Get value of a feature flag JSON object property of type string.
+ *
+ * @param id - The ID of the feature flag.
+ * @param key - The key of the property.
+ *
+ * @returns A promise containing the value of the property if the key is found and is of type number.
+ *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
+ *    this method will return a null.
+ */
+export function getFeatureFlagJSONProperty(id: string, key: string): Promise<string | null>;
+
+/**
+ * Get value of a feature flag image property of type string.
+ *
+ * @param id - The ID of the feature flag.
+ * @param key - The key of the property.
+ *
+ * @returns A promise containing the value of the property if the key is found and is of type number.
+ *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
+ *    this method will return a null.
+ */
+export function getFeatureFlagImageProperty(id: string, key: string): Promise<string | null>;
 
 /**
  * Requests a refresh of Feature Flags from the Braze server.
@@ -1257,7 +1325,7 @@ export interface SDKAuthenticationErrorType {
 }
 
 export interface PushNotificationEvent {
-  /* Notification payload type. Only `push_opened` events are supported on iOS. */
+  /* Notification payload type. */
   payload_type: string;
 
   /* URL opened by the notification. */

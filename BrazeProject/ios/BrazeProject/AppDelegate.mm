@@ -150,6 +150,10 @@ static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
+  return [self bundleURL];
+}
+
+- (NSURL *)bundleURL {
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 }
 

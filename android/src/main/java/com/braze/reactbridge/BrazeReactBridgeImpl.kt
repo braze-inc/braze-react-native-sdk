@@ -43,7 +43,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
-import com.braze.support.BrazeLogger
 import com.braze.ui.BrazeDeeplinkHandler
 import com.braze.enums.inappmessage.ClickAction
 import com.braze.ui.actions.NewsfeedAction
@@ -866,6 +865,21 @@ class BrazeReactBridgeImpl(
         promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
     }
 
+    fun getFeatureFlagTimestampProperty(id: String, key: String, promise: Promise) {
+        // Convert timestamp to double because the React Native translation layer doesn't support `long`
+        val convertedTimestamp = braze.getFeatureFlag(id)?.getTimestampProperty(key)?.toDouble()
+        promise.resolve(convertedTimestamp)
+    }
+
+    fun getFeatureFlagJSONProperty(id: String, key: String, promise: Promise) {
+        val jsonMap = braze.getFeatureFlag(id)?.getJSONProperty(key)?.let { jsonToNativeMap(it) }
+        promise.resolve(jsonMap)
+    }
+
+    fun getFeatureFlagImageProperty(id: String, key: String, promise: Promise) {
+        promise.resolve(braze.getFeatureFlag(id)?.getImageProperty(key))
+    }
+
     fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String) {
         braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
     }
@@ -921,6 +935,47 @@ class BrazeReactBridgeImpl(
             } else {
                 brazelog(W) { "Warning: BrazeReactBridge callback was null." }
             }
+        }
+
+        /**
+         * Parses a `JSONObject` to a React Native map object.
+         * The cases for each type follows all supported types of the `ReadableMap` class.
+         */
+        private fun jsonToNativeMap(jsonObject: JSONObject): ReadableMap {
+            val nativeMap = WritableNativeMap()
+            jsonObject.keys().forEach { key ->
+                when (val value = jsonObject.get(key)) {
+                    is JSONObject -> nativeMap.putMap(key, jsonToNativeMap(value))
+                    is JSONArray -> nativeMap.putArray(key, jsonToNativeArray(value))
+                    is Boolean -> nativeMap.putBoolean(key, value)
+                    is Int -> nativeMap.putInt(key, value)
+                    is Double -> nativeMap.putDouble(key, value)
+                    is String -> nativeMap.putString(key, value)
+                    JSONObject.NULL -> nativeMap.putNull(key)
+                }
+            }
+            return nativeMap
+        }
+
+        /**
+         * Parses a `JSONArray` to a React Native array object.
+         * The cases for each type follows all supported types of the `ReadableArray` class.
+         */
+        private fun jsonToNativeArray(jsonArray: JSONArray): ReadableArray {
+            val nativeArray = WritableNativeArray()
+            for (i in 0 until jsonArray.length()) {
+                when (val value = jsonArray.opt(i)) {
+                    is JSONObject -> nativeArray.pushMap(jsonToNativeMap(value))
+                    is JSONArray -> nativeArray.pushArray(jsonToNativeArray(value))
+                    is Boolean -> nativeArray.pushBoolean(value)
+                    is Int -> nativeArray.pushInt(value)
+                    is Double -> nativeArray.pushDouble(value)
+                    is String -> nativeArray.pushString(value)
+                    JSONObject.NULL -> nativeArray.pushNull()
+                    else -> nativeArray.pushString(value.toString())
+                }
+            }
+            return nativeArray
         }
 
         private fun populateEventPropertiesFromReadableMap(eventProperties: ReadableMap?): BrazeProperties? {

@@ -191,6 +191,9 @@ export interface Spec extends TurboModule {
   getFeatureFlagBooleanProperty(flagId: string, key: string): Promise<boolean | null>;
   getFeatureFlagStringProperty(flagId: string, key: string): Promise<string | null>;
   getFeatureFlagNumberProperty(flagId: string, key: string): Promise<number | null>;
+  getFeatureFlagTimestampProperty(flagId: string, key: string): Promise<number | null>;
+  getFeatureFlagJSONProperty(flagId: string, key: string): Promise<Object | null>;
+  getFeatureFlagImageProperty(flagId: string, key: string): Promise<string | null>;
   refreshFeatureFlags(): void;
   logFeatureFlagImpression(flagId: string): void;
   setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId: string): void;

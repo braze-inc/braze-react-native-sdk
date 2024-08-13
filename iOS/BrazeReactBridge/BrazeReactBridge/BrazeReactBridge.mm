@@ -634,8 +634,15 @@ static NSDictionary *RCTFormatNewsFeedCard(BRZNewsFeedCard *card) {
 static NSDictionary *RCTFormatPushPayload(BRZNotificationsPayload *payload) {
   NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
 
-  // Uses the `"push_` prefix for consistency with Android. The Swift SDK internally uses `"opened"`.
-  eventData[@"payload_type"] = @"push_opened";
+  // Uses the `"push_` prefix for consistency with Android.
+  switch (payload.type) {
+    case BRZNotificationsPayloadTypeOpened:
+      eventData[@"payload_type"] = @"push_opened";
+      break;
+    case BRZNotificationsPayloadTypeReceived:
+      eventData[@"payload_type"] = @"push_received";
+      break;
+  }
 
   eventData[@"url"] = [payload.urlContext.url absoluteString];
   eventData[@"use_webview"] = [NSNumber numberWithBool:payload.urlContext.useWebView];
@@ -1062,6 +1069,36 @@ RCT_EXPORT_METHOD(getFeatureFlagNumberProperty:(NSString *)flagId
   NSNumber *numberProperty = [featureFlag numberPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
   resolve(numberProperty ? numberProperty : [NSNull null]);
+}
+
+RCT_EXPORT_METHOD(getFeatureFlagJSONProperty:(NSString *)flagId
+                               key:(NSString *)key
+                           resolve:(RCTPromiseResolveBlock)resolve
+                            reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagJSONProperty called for key %@", key);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSDictionary *jsonProperty = RCTJSONClean([featureFlag jsonPropertyForKey:key]);
+  resolve(jsonProperty ? jsonProperty : [NSNull null]);
+}
+
+RCT_EXPORT_METHOD(getFeatureFlagTimestampProperty:(NSString *)flagId
+                               key:(NSString *)key
+                           resolve:(RCTPromiseResolveBlock)resolve
+                            reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagTimestampProperty called for key %@", key);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSNumber *timestampProperty = [featureFlag timestampPropertyForKey:key];
+  resolve(timestampProperty ? timestampProperty : [NSNull null]);
+}
+
+RCT_EXPORT_METHOD(getFeatureFlagImageProperty:(NSString *)flagId
+                               key:(NSString *)key
+                           resolve:(RCTPromiseResolveBlock)resolve
+                            reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"getFeatureFlagImageProperty called for key %@", key);
+  BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
+  NSString *imageProperty = [featureFlag imagePropertyForKey:key];
+  resolve(imageProperty ? imageProperty : [NSNull null]);
 }
 
 static NSArray *RCTFormatFeatureFlags(NSArray<BRZFeatureFlag *> *featureFlags) {

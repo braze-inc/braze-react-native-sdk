@@ -1,5 +1,18 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 12.0.0
+
+##### Breaking
+- Updates the native iOS version bindings [from Braze Swift SDK 9.0.0 to 10.0.0](https://github.com/braze-inc/braze-swift-sdk/compare/9.0.0...10.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - When subscribing to push notification events, the subscription will be triggered on iOS for both `"push_received"` and `"push_opened"`, instead of only for `"push_opened"` events.
+
+##### Added
+- Updates the Braze sample app to use React Native version 0.74.1.
+- Adds support for 3 new Feature Flag property types and various APIs for accessing them:
+  - `getFeatureFlagTimestampProperty(id, key)` for accessing Int Unix UTC millisecond timestamps as `number`s.
+  - `getFeatureFlagImageProperty(id, key)` for accessing image URLs as `string`s.
+  - `getFeatureFlagJSONProperty(id, key)` for accessing JSON objects as `object` types.
+
 ## 11.0.0
 
 ##### Breaking

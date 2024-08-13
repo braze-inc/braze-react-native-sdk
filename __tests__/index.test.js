@@ -692,6 +692,21 @@ test('it calls BrazeReactBridge.getFeatureFlagNumberProperty', () => {
   expect(NativeBrazeReactModule.getFeatureFlagNumberProperty).toBeCalled();
 });
 
+test('it calls BrazeReactBridge.getFeatureFlagTimestampProperty', () => {
+  Braze.getFeatureFlagTimestampProperty('id', 'key');
+  expect(NativeBrazeReactModule.getFeatureFlagTimestampProperty).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.getFeatureFlagJSONProperty', () => {
+  Braze.getFeatureFlagJSONProperty('id', 'key');
+  expect(NativeBrazeReactModule.getFeatureFlagJSONProperty).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.getFeatureFlagImageProperty', () => {
+  Braze.getFeatureFlagImageProperty('id', 'key');
+  expect(NativeBrazeReactModule.getFeatureFlagImageProperty).toBeCalled();
+});
+
 test('it calls BrazeReactBridge.updateTrackingPropertyAllowList', () => {
   const allowList = {
     adding: [Braze.TrackingProperty.ALL_CUSTOM_ATTRIBUTES],

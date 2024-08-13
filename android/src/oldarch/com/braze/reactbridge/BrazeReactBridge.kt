@@ -399,6 +399,21 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun getFeatureFlagTimestampProperty(flagId: String, key: String, promise: Promise) {
+        brazeImpl.getFeatureFlagTimestampProperty(flagId, key, promise)
+    }
+
+    @ReactMethod
+    fun getFeatureFlagJSONProperty(flagId: String, key: String, promise: Promise) {
+        brazeImpl.getFeatureFlagJSONProperty(flagId, key, promise)
+    }
+
+    @ReactMethod
+    fun getFeatureFlagImageProperty(flagId: String, key: String, promise: Promise) {
+        brazeImpl.getFeatureFlagImageProperty(flagId, key, promise)
+    }
+
+    @ReactMethod
     fun refreshFeatureFlags() {
         brazeImpl.refreshFeatureFlags()
     }

@@ -1,6 +1,6 @@
 <p align="center">
-  <img width="480" src=".github/assets/logo-light.png#gh-light-mode-only" />
-  <img width="480" src=".github/assets/logo-dark.png#gh-dark-mode-only" />
+  <img width="480" alt="Braze Logo" src=".github/assets/logo-light.png#gh-light-mode-only" />
+  <img width="480" alt="Braze Logo" src=".github/assets/logo-dark.png#gh-dark-mode-only" />
 </p>
 
 # Braze React SDK

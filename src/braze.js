@@ -709,7 +709,6 @@ export class Braze {
 
   /**
    * Enables the Braze SDK after a previous call to disableSDK().
-   * On iOS, the SDK will be enabled only after a subsequent call to startWithApiKey().
    */
   static enableSDK() {
     this.bridge.enableSDK();
@@ -776,7 +775,6 @@ export class Braze {
     this.bridge.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy);
   }
 
-  // Refresh Content Cards
   /**
    * Requests a refresh of the content cards from Braze's servers.
    */
@@ -931,6 +929,30 @@ export class Braze {
    */
   static getFeatureFlagNumberProperty(id, key) {
     return this.bridge.getFeatureFlagNumberProperty(id, key);
+  }
+
+  /**
+   * Returns the timestamp property for the given feature flag ID.
+   * @returns {Promise<number|null>}
+   */
+  static getFeatureFlagTimestampProperty(id, key) {
+    return this.bridge.getFeatureFlagTimestampProperty(id, key);
+  }
+
+  /**
+   * Returns the JSON property for the given feature flag ID.
+   * @returns {Promise<object|null>}
+   */
+  static getFeatureFlagJSONProperty(id, key) {
+    return this.bridge.getFeatureFlagJSONProperty(id, key);
+  }
+
+  /**
+   * Returns the image property for the given feature flag ID.
+   * @returns {Promise<string|null>}
+   */
+  static getFeatureFlagImageProperty(id, key) {
+    return this.bridge.getFeatureFlagImageProperty(id, key);
   }
 
   /**

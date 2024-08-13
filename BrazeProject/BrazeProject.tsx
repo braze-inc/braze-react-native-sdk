@@ -126,6 +126,21 @@ export const BrazeProject = (): ReactElement => {
         label: 'String',
         value: 'string',
       },
+      {
+        id: 'timestamp',
+        label: 'Timestamp',
+        value: 'timestamp',
+      },
+      {
+        id: 'json',
+        label: 'JSON Object',
+        value: 'json',
+      },
+      {
+        id: 'image',
+        label: 'Image',
+        value: 'image',
+      },
     ],
     [],
   );
@@ -228,8 +243,13 @@ export const BrazeProject = (): ReactElement => {
     const pushEventSubscription = Braze.addListener(
       Braze.Events.PUSH_NOTIFICATION_EVENT,
       function (data) {
-        console.log(`Push Notification event of type ${data.payload_type} seen.
-        Title ${data.title}\n and deeplink ${data.url}`);
+        console.log(
+          `Push notification subscription triggered:
+            - type: ${data.payload_type}
+            - title: ${data.title}
+            - is_silent: ${data.is_silent}
+          `
+        );
         console.log(JSON.stringify(data, undefined, 2));
       },
     );
@@ -751,6 +771,25 @@ export const BrazeProject = (): ReactElement => {
           featureFlagPropertyKey,
         );
         break;
+      case 'timestamp':
+        property = await Braze.getFeatureFlagTimestampProperty(
+          featureFlagId,
+          featureFlagPropertyKey,
+        );
+        break;
+      case 'json':
+        property = await Braze.getFeatureFlagJSONProperty(
+          featureFlagId,
+          featureFlagPropertyKey,
+        );
+        property = JSON.stringify(property);
+        break;
+      case 'image':
+        property = await Braze.getFeatureFlagImageProperty(
+          featureFlagId,
+          featureFlagPropertyKey,
+        );
+        break;
     }
     console.log(
       `Got Feature Flag ${featureFlagPropertyType} Property:${property}`,
@@ -759,7 +798,7 @@ export const BrazeProject = (): ReactElement => {
 
   const setPushTokenPress = async () => {
     Braze.registerPushToken(pushToken);
-  }
+  };
 
   return (
     <ScrollView
