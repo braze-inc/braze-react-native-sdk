@@ -233,8 +233,8 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun launchContentCards() {
-        brazeImpl.launchContentCards()
+    fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean) {
+        brazeImpl.launchContentCards(dismissAutomaticallyOnCardClick)
     }
 
     @ReactMethod

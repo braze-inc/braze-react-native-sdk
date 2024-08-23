@@ -248,7 +248,7 @@ export const BrazeProject = (): ReactElement => {
             - type: ${data.payload_type}
             - title: ${data.title}
             - is_silent: ${data.is_silent}
-          `
+          `,
         );
         console.log(JSON.stringify(data, undefined, 2));
       },
@@ -448,7 +448,7 @@ export const BrazeProject = (): ReactElement => {
   };
 
   const launchContentCardsPress = () => {
-    Braze.launchContentCards();
+    Braze.launchContentCards(true);
   };
 
   const refreshFeatureFlagsPress = () => {

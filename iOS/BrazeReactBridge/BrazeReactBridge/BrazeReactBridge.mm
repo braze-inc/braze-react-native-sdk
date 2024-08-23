@@ -690,9 +690,10 @@ static NSDictionary *RCTFilterBrazeProperties(NSDictionary *userInfo) {
   return nil;
 }
 
-RCT_EXPORT_METHOD(launchContentCards) {
+RCT_EXPORT_METHOD(launchContentCards:(BOOL)dismissAutomaticallyOnCardClick) {
   RCTLogInfo(@"launchContentCards called");
-  [brazeUIHandler launchContentCards:braze];
+  [brazeUIHandler launchContentCards:braze
+                dismissAutomatically:dismissAutomaticallyOnCardClick];
 }
 
 RCT_EXPORT_METHOD(getContentCards:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

@@ -130,7 +130,7 @@ export interface Spec extends TurboModule {
   logNewsFeedCardClicked(cardId: string): void;
   logNewsFeedCardImpression(cardId: string): void;
   getNewsFeedCards(): Promise<NewsFeedCard[]>;
-  launchContentCards(): void;
+  launchContentCards(dismissAutomaticallyOnCardClick: boolean): void;
   requestContentCardsRefresh(): void;
   logContentCardClicked(cardId: string): void;
   logContentCardDismissed(cardId: string): void;

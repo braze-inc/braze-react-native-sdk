@@ -126,9 +126,17 @@ test('it calls BrazeReactBridge.logNewsFeedCardImpression', () => {
   expect(NativeBrazeReactModule.logNewsFeedCardImpression).toBeCalledWith(id);
 });
 
-test('it calls BrazeReactBridge.launchContentCards', () => {
+test('it calls BrazeReactBridge.launchContentCards without parameters', () => {
   Braze.launchContentCards();
-  expect(NativeBrazeReactModule.launchContentCards).toBeCalled();
+  expect(NativeBrazeReactModule.launchContentCards).toBeCalledWith(false);
+});
+
+test('it calls BrazeReactBridge.launchContentCards with parameters', () => {
+  Braze.launchContentCards(true);
+  expect(NativeBrazeReactModule.launchContentCards).toBeCalledWith(true);
+
+  Braze.launchContentCards(false);
+  expect(NativeBrazeReactModule.launchContentCards).toBeCalledWith(false);
 });
 
 test('it calls BrazeReactBridge.getContentCards', () => {

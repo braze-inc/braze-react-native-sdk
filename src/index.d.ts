@@ -622,8 +622,12 @@ export type ContentCard =
 
 /**
  * Launches the Content Cards UI element.
+ *
+ * @param {boolean | undefined} dismissAutomaticallyOnCardClick
+ *  When enabled, the feed UI will automatically dismiss on scheme-based deep link clicks.
+ *  This setting is a no-op on Android, which already removes the Content Cards feed when opening a deep link.
  */
-export function launchContentCards(): void;
+export function launchContentCards(dismissAutomaticallyOnCardClick?: boolean): void;
 
 /**
  * Requests a refresh of the content cards from Braze's servers.

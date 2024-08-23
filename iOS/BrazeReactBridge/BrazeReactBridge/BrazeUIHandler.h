@@ -15,6 +15,6 @@
 - (void)useDefaultPresenterDelegate:(Braze *)braze;
 - (void)deinitPresenterDelegate:(Braze *)braze;
 - (void)dismissInAppMessage:(Braze *)braze;
-- (void)launchContentCards:(Braze *)braze;
+- (void)launchContentCards:(Braze *)braze dismissAutomatically:(BOOL)dismissAutomatically;
 
 @end

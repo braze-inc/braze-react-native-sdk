@@ -194,8 +194,8 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.getNewsFeedCards(promise)
     }
 
-    override fun launchContentCards() {
-        brazeImpl.launchContentCards()
+    override fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean) {
+        brazeImpl.launchContentCards(dismissAutomaticallyOnCardClick)
     }
 
     override fun requestContentCardsRefresh() {

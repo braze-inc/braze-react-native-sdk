@@ -3,7 +3,10 @@
 @import BrazeKit;
 @import BrazeUI;
 
-@interface BrazeUIHandler () <BrazeInAppMessageUIDelegate>
+@interface BrazeUIHandler () <BrazeInAppMessageUIDelegate, BrazeContentCardUIViewControllerDelegate>
+
+@property (nonatomic) BOOL dismissFeedOnContentCardClick;
+
 @end
 
 @implementation BrazeUIHandler
@@ -41,12 +44,18 @@
   ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = nil;
 }
 
-- (void)launchContentCards:(Braze *)braze {
-  BRZContentCardUIModalViewController *contentCardsModal = [[BRZContentCardUIModalViewController alloc] initWithBraze:braze];
-  contentCardsModal.navigationItem.title = @"Content Cards";
+- (void)launchContentCards:(Braze *)braze dismissAutomatically:(BOOL)dismissAutomatically {
   UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
   UIViewController *mainViewController = keyWindow.rootViewController;
-  [mainViewController presentViewController:contentCardsModal animated:YES completion:nil];
+  self.dismissFeedOnContentCardClick = dismissAutomatically;
+
+  if (![mainViewController.presentedViewController isKindOfClass:[BRZContentCardUIModalViewController class]]) {
+    BRZContentCardUIModalViewController *contentCardsModal = [[BRZContentCardUIModalViewController alloc] initWithBraze:braze];
+    contentCardsModal.navigationItem.title = @"Content Cards";
+    contentCardsModal.viewController.delegate = self;
+
+    [mainViewController presentViewController:contentCardsModal animated:YES completion:nil];
+  }
 }
 
 - (void)dismissInAppMessage:(Braze *)braze {
@@ -71,6 +80,19 @@
   } else {
     return BRZInAppMessageUIDisplayChoiceDiscard;
   }
+}
+
+#pragma mark - `BrazeContentCardUIViewControllerDelegate`
+
+- (BOOL)contentCardController:(BRZContentCardUIViewController *)controller
+                shouldProcess:(NSURL *)url
+                         card:(BRZContentCardRaw *)card {
+  // In-app web view presentation requires the base modal to be available, so we don't want to dismiss it here.
+  BOOL isSchemeBased = ![url.scheme isEqual:@"https"] && ![url.scheme isEqual:@"http"];
+  if (!card.useWebView && self.dismissFeedOnContentCardClick && isSchemeBased) {
+    [controller dismissViewControllerAnimated:YES completion:nil];
+  }
+  return YES;
 }
 
 @end

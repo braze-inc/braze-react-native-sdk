@@ -318,7 +318,7 @@ class BrazeReactBridgeImpl(
         getNewsFeedCardById(id)?.logImpression()
     }
 
-    fun launchContentCards() {
+    fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean) {
         val intent = Intent(currentActivity, ContentCardsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         this.reactApplicationContext.startActivity(intent)
