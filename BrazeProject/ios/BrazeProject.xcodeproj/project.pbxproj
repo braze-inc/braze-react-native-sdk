@@ -17,6 +17,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D49243504D0CC62449E7A753 /* libPods-BrazeProject-BrazeProjectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6966516151504FECB8343E39 /* libPods-BrazeProject-BrazeProjectTests.a */; };
 		D971B4B9DCDC97E7B7B30086 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */; };
+		EC8E1B432C93543400F4A255 /* BrazeReactGIFHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8E1B422C93543400F4A255 /* BrazeReactGIFHelper.m */; };
 		EC9B91F32B1F698600C6BD5D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B91F22B1F698600C6BD5D /* NotificationService.swift */; };
 		EC9B91F72B1F698600C6BD5D /* BrazeProjectRichPush.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EC9B91F02B1F698500C6BD5D /* BrazeProjectRichPush.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EC9B92012B1F6B0C00C6BD5D /* BrazeNotificationService.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC9B92002B1F6B0C00C6BD5D /* BrazeNotificationService.xcframework */; };
@@ -73,7 +74,7 @@
 		00E356EE1AD99517003FC87E /* BrazeProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrazeProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* BrazeProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeProjectTests.m; sourceTree = "<group>"; };
-		0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = BrazeProject/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = BrazeProject/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* BrazeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrazeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BrazeProject/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = BrazeProject/AppDelegate.mm; sourceTree = "<group>"; };
@@ -93,6 +94,8 @@
 		C0056B0412B5353A45812729 /* Pods-BrazeProjectRichPush.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.debug.xcconfig"; sourceTree = "<group>"; };
 		CCCAA9B93114DFE83F9097D0 /* libPods-BrazeProjectPushStory.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectPushStory.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE52AA7479C52FDF496B15 /* Pods-BrazeProjectRichPush.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.release.xcconfig"; sourceTree = "<group>"; };
+		EC8E1B412C93542A00F4A255 /* BrazeReactGIFHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrazeReactGIFHelper.h; sourceTree = "<group>"; };
+		EC8E1B422C93543400F4A255 /* BrazeReactGIFHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeReactGIFHelper.m; sourceTree = "<group>"; };
 		EC9B91F02B1F698500C6BD5D /* BrazeProjectRichPush.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BrazeProjectRichPush.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9B91F22B1F698600C6BD5D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		EC9B91F42B1F698600C6BD5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -177,6 +180,8 @@
 				ECE697AC2A3CBE680060A95D /* BrazeProject.entitlements */,
 				ECE697AD2A3CC0000060A95D /* BrazeReactDelegate.h */,
 				ECE697AF2A3CC00B0060A95D /* BrazeReactDelegate.m */,
+				EC8E1B412C93542A00F4A255 /* BrazeReactGIFHelper.h */,
+				EC8E1B422C93543400F4A255 /* BrazeReactGIFHelper.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -663,6 +668,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				ECE697B02A3CC00B0060A95D /* BrazeReactDelegate.m in Sources */,
+				EC8E1B432C93543400F4A255 /* BrazeReactGIFHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -893,6 +899,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				USE_HERMES = true;
 			};
 			name = Debug;

@@ -13,6 +13,10 @@ if (isNewArchitectureEnabled()) {
   apply plugin: 'com.facebook.react'
 }
 
+def shouldImportBrazeLocationLibrary() {
+ return project.hasProperty("importBrazeLocationLibrary") && project.importBrazeLocationLibrary == "true"
+}  
+
 android {
   compileSdk safeExtGet('compileSdkVersion', 33)
   def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
@@ -49,6 +53,12 @@ android {
 }
 
 dependencies {
-  api 'com.braze:android-sdk-ui:31.1.0'
   api 'com.facebook.react:react-native:+'
+
+  def wrapper_braze_sdk_version = "31.1.0"
+  api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
+  
+  if (shouldImportBrazeLocationLibrary()) {
+      api "com.braze:android-sdk-location:${wrapper_braze_sdk_version}"
+  }
 }

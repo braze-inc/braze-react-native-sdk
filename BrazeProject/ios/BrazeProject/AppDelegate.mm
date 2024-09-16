@@ -10,6 +10,7 @@
 #import "BrazeReactDelegate.h"
 
 #import <BrazeKit/BrazeKit-Swift.h>
+#import "BrazeReactGIFHelper.h"
 
 @implementation AppDelegate
 
@@ -46,6 +47,10 @@ static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
   Braze *braze = [BrazeReactBridge initBraze:configuration];
   braze.delegate = [[BrazeReactDelegate alloc] init];
   AppDelegate.braze = braze;
+  
+  // Use SDWebImage as the GIF provider.
+  // GIFs are non-animating by default until overridden with a provider.
+  [BrazeReactGIFHelper setGIFProvider];
 
   if (!pushAutoEnabled) {
     // If the user explicitly disables Push Auto, register for push manually

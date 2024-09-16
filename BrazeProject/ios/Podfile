@@ -18,6 +18,8 @@ target 'BrazeProject' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  
+  pod 'SDWebImage'
 
   target 'BrazeProjectTests' do
     inherit! :complete
@@ -45,9 +47,9 @@ target 'BrazeProject' do
 end
 
 target 'BrazeProjectRichPush' do
-  pod 'BrazeNotificationService', '~> 10.1.0'
+  pod 'BrazeNotificationService', '~> 10.3.0'
 end
 
 target 'BrazeProjectPushStory' do
-  pod 'BrazePushStory', '~> 10.1.0'
+  pod 'BrazePushStory', '~> 10.3.0'
 end
