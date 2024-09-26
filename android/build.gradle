@@ -55,7 +55,7 @@ android {
 dependencies {
   api 'com.facebook.react:react-native:+'
 
-  def wrapper_braze_sdk_version = "31.1.0"
+  def wrapper_braze_sdk_version = "32.1.0"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
   
   if (shouldImportBrazeLocationLibrary()) {
