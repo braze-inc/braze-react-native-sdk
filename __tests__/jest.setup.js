@@ -70,6 +70,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           getCardCountForCategories: jest.fn(),
           getUnreadCardCountForCategories: jest.fn(),
           getInitialURL: jest.fn(),
+          getInitialPushPayload: jest.fn(),
           getDeviceId: jest.fn(),
           requestLocationInitialization: jest.fn(),
           requestGeofences: jest.fn(),

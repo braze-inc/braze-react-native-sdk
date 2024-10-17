@@ -1,6 +1,23 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 13.1.0
+
+##### Fixed
+- Updates the iOS sample app to properly retain the `BrazeReactDelegate` instance. Internally, the Braze SDK uses a weak reference to the delegate, which could be deallocated if not retained by the app. This change ensures the delegate is retained for the lifecycle of the app.
+
+##### Added
+- Updates the native iOS version bindings [from Braze Swift SDK 11.0.0 to 11.1.1](https://github.com/braze-inc/braze-swift-sdk/compare/11.0.0...11.1.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Adds the method `Braze.getInitialPushPayload()` to get the push notification payload when opening the app via notification click while the application was in a terminated state.
+  - `Braze.getInitialURL()` is now deprecated in favor of `Braze.getInitialPushPayload()`. To access the initial URL, use the new method to receive the push notification payload, and access the value of the `url` key.
+  - If you are using `Braze.getInitialPushPayload()`, add the following code to your `application:didFinishLaunchingWithOptions:launchOptions:`:
+  ```
+  [[BrazeReactUtils sharedInstance] populateInitialPayloadFromLaunchOptions:launchOptions];
+  ```
+  This replaces `populateInitialUrlFromLaunchOptions`, which is now deprecated.
+
 ## 13.0.0
+
+⚠️ **Important:** This version includes a Swift SDK version with a known issue related to push subscription status. Upgrade to version `13.1.0` instead.
 
 ##### Breaking
 - Updates the native Android version bindings [from Braze Android SDK 31.1.0 to 32.1.0](https://github.com/braze-inc/braze-android-sdk/compare/v31.1.0...v32.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).

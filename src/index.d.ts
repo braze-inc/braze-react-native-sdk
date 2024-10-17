@@ -4,14 +4,21 @@
 import { EmitterSubscription } from 'react-native';
 
 /**
- * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
- * support handling deep links embedded in push notifications. This is due to a race condition on startup between
- * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
- * If an application is launched from a push notification click, we return any Braze deep links in the push payload.
- * @param {function(string)} callback - A callback that retuns the deep link as a string. If there is no deep link,
- * returns null.
+ * @deprecated This method is deprecated in favor of `getInitialPushPayload`.
+ *
+ * To get the initial URL, call `getInitialPushPayload` and get the `url` key from the payload object.
  */
 export function getInitialURL(callback: (deepLink: string) => void): void;
+
+/**
+ * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
+ * support handling push notifications and deep links in the payload. This is due to a race condition on startup between
+ * the call to `addListener` and React's loading of its JavaScript. This function provides a workaround:
+ * If an application is launched from a push notification click, we return the full push payload.
+ * @param {function(string)} callback - A callback that returns the formatted Braze push notification as a PushNotificationEvent.
+ * If there is no push payload, returns null.
+ */
+export function getInitialPushPayload(callback: (pushPayload: PushNotificationEvent) => void): void;
 
 /**
  * @deprecated This method is deprecated in favor of `getDeviceId`.

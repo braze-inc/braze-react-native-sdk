@@ -12,6 +12,13 @@
 #import <BrazeKit/BrazeKit-Swift.h>
 #import "BrazeReactGIFHelper.h"
 
+@interface AppDelegate ()
+
+// Keep a strong reference to the BrazeDelegate to ensure it is not deallocated.
+@property (nonatomic, strong) BrazeReactDelegate *brazeDelegate;
+
+@end
+
 @implementation AppDelegate
 
 static Braze *_braze;
@@ -45,7 +52,8 @@ static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
   }
 
   Braze *braze = [BrazeReactBridge initBraze:configuration];
-  braze.delegate = [[BrazeReactDelegate alloc] init];
+  self.brazeDelegate = [[BrazeReactDelegate alloc] init];
+  braze.delegate = self.brazeDelegate;
   AppDelegate.braze = braze;
   
   // Use SDWebImage as the GIF provider.
@@ -58,7 +66,7 @@ static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
     [self registerForPushNotifications];
   }
 
-  [[BrazeReactUtils sharedInstance] populateInitialUrlFromLaunchOptions:launchOptions];
+  [[BrazeReactUtils sharedInstance] populateInitialPayloadFromLaunchOptions:launchOptions];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

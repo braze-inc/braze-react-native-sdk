@@ -13,6 +13,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         // iOS only
     }
 
+    override fun getInitialPushPayload(callback: Callback) {
+        // iOS only
+    }
+
     override fun getDeviceId(callback: Callback) {
         return brazeImpl.getDeviceId(callback)
     }

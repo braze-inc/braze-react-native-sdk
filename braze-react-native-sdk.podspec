@@ -20,9 +20,9 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  s.dependency 'BrazeKit', '~> 11.0.0'
-  s.dependency 'BrazeLocation', '~> 11.0.0'
-  s.dependency 'BrazeUI', '~> 11.0.0'
+  s.dependency 'BrazeKit', '~> 11.1.1'
+  s.dependency 'BrazeLocation', '~> 11.1.1'
+  s.dependency 'BrazeUI', '~> 11.1.1'
 
   # Swift/Objective-C compatibility
   s.pod_target_xcconfig = {

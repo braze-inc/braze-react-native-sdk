@@ -83,7 +83,7 @@ RCT_EXPORT_MODULE()
 
   self.notificationSubscription = [braze.notifications subscribeToUpdates:^(BRZNotificationsPayload * _Nonnull payload) {
     RCTLogInfo(@"Received push notification via subscription");
-    NSDictionary *eventData = RCTFormatPushPayload(payload);
+    NSDictionary *eventData = [[BrazeReactUtils sharedInstance] formatPushPayload:payload withLaunchOptions:nil];
     [self sendEventWithName:kPushNotificationEvent body:eventData];
   }];
 
@@ -100,6 +100,7 @@ RCT_EXPORT_MODULE()
   self.contentCardsSubscription = nil;
   self.newsFeedSubscription = nil;
   self.featureFlagsSubscription = nil;
+  self.notificationSubscription = nil;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -148,11 +149,21 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - Bridge bindings
 
-// Returns push deep links from cold app starts.
+// (Deprecated) Returns push deep links from cold app starts.
 // For more context see getInitialURL() in index.js
 RCT_EXPORT_METHOD(getInitialURL:(RCTResponseSenderBlock)callback) {
   if ([BrazeReactUtils sharedInstance].initialUrlString != nil) {
     [self reportResultWithCallback:callback andError:nil andResult:[BrazeReactUtils sharedInstance].initialUrlString];
+  } else {
+    [self reportResultWithCallback:callback andError:nil andResult:nil];
+  }
+}
+
+// Returns push payload from cold app starts.
+// For more context see getInitialPushPayload() in index.js.
+RCT_EXPORT_METHOD(getInitialPushPayload:(RCTResponseSenderBlock)callback) {
+  if ([BrazeReactUtils sharedInstance].initialPushPayload != nil) {
+    [self reportResultWithCallback:callback andError:nil andResult:[BrazeReactUtils sharedInstance].initialPushPayload];
   } else {
     [self reportResultWithCallback:callback andError:nil andResult:nil];
   }
@@ -626,55 +637,6 @@ static NSDictionary *RCTFormatNewsFeedCard(BRZNewsFeedCard *card) {
       newsFeedCardData[@"type"] = @"TextAnnouncement";
   }
   return newsFeedCardData;
-}
-
-#pragma mark - Push Notifications
-
-/// Formats the push notification payload into a JavaScript-readable object.
-static NSDictionary *RCTFormatPushPayload(BRZNotificationsPayload *payload) {
-  NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
-
-  // Uses the `"push_` prefix for consistency with Android.
-  switch (payload.type) {
-    case BRZNotificationsPayloadTypeOpened:
-      eventData[@"payload_type"] = @"push_opened";
-      break;
-    case BRZNotificationsPayloadTypeReceived:
-      eventData[@"payload_type"] = @"push_received";
-      break;
-  }
-
-  eventData[@"url"] = [payload.urlContext.url absoluteString];
-  eventData[@"use_webview"] = [NSNumber numberWithBool:payload.urlContext.useWebView];
-  eventData[@"title"] = payload.title;
-  eventData[@"body"] = payload.body;
-  eventData[@"summary_text"] = payload.subtitle;
-  eventData[@"badge_count"] = payload.badge;
-  eventData[@"timestamp"] = [NSNumber numberWithInteger:(NSInteger)[payload.date timeIntervalSince1970]];
-  eventData[@"is_silent"] = [NSNumber numberWithBool:payload.isSilent];
-  eventData[@"is_braze_internal"] = [NSNumber numberWithBool:payload.isInternal];
-  eventData[@"braze_properties"] = RCTFilterBrazeProperties(payload.userInfo);
-
-  // Attaches the image URL from the `userInfo` payload if it exists. This is a no-op otherwise.
-  eventData[@"image_url"] = payload.userInfo[@"ab"][@"att"][@"url"];
-
-  // Adds relevant iOS-specific properties.
-  NSMutableDictionary *iosProperties = [NSMutableDictionary dictionary];
-  iosProperties[@"action_identifier"] = payload.actionIdentifier;
-  iosProperties[@"aps"] = payload.userInfo[@"aps"];
-  eventData[@"ios"] = iosProperties;
-
-  return eventData;
-}
-
-/// Strips the raw payload dictionary to only include Braze key-value pairs.
-static NSDictionary *RCTFilterBrazeProperties(NSDictionary *userInfo) {
-  NSMutableDictionary *userInfoCopy = [userInfo mutableCopy];
-  userInfoCopy[@"ab"] = nil;
-  userInfoCopy[@"ab_uri"] = nil;
-  userInfoCopy[@"aps"] = nil;
-  userInfoCopy[@"ab_use_webview"] = nil;
-  return userInfoCopy;
 }
 
 #pragma mark - Content Cards

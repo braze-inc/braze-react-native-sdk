@@ -14,6 +14,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun getInitialPushPayload(callback: Callback) {
+        // iOS only
+    }
+
+    @ReactMethod
     fun getDeviceId(callback: Callback) {
         return brazeImpl.getDeviceId(callback)
     }

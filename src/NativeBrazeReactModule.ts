@@ -4,6 +4,7 @@ import type { FeatureFlag, NewsFeedCard, ContentCard } from './index';
 
 export interface Spec extends TurboModule {
   getInitialURL(callback: (deepLink: string) => void): void;
+  getInitialPushPayload(callback: (pushPayload: Object) => void): void;
   getDeviceId(callback: (error?: Object, result?: string) => void): void;
   changeUser(userId: string, signature?: string | null): void;
   getUserId(callback: (error?: Object, result?: string) => void): void;

@@ -40,13 +40,11 @@ export class Braze {
     android: DeviceEventEmitter
   });
 
-  /**
-   * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
-   * support handling deep links embedded in push notifications. This is due to a race condition on startup between
-   * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
-   * If an application is launched from a push notification click, we return any Braze deep links in the push payload.
-   * @param {function(string)} callback - A callback that retuns the deep link as a string. If there is no deep link, returns null.
-   */
+/**
+ * @deprecated This method is deprecated in favor of `getInitialPushPayload`.
+ *
+ * To get the initial URL, call `getInitialPushPayload` and get the `url` key from the payload object.
+ */
   static getInitialURL(callback) {
     if (Platform.OS === 'ios') {
       this.bridge.getInitialURL((err, res) => {
@@ -59,6 +57,30 @@ export class Braze {
       });
     } else {
       // BrazeReactBridge.getInitialUrl not implemented on Android
+      callback(null);
+    }
+  }
+
+  /**
+   * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
+   * support handling push notifications and deep links in the payload. This is due to a race condition on startup between
+   * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
+   * If an application is launched from a push notification click, we return the full push payload.
+   * @param {function(string)} callback - A callback that retuns the push notification as an Object. If there is no push payload,
+   * returns null.
+   */
+  static getInitialPushPayload(callback) {
+    if (Platform.OS === 'ios') {
+      this.bridge.getInitialPushPayload((err, res) => {
+        if (err) {
+          console.log(err);
+          callback(null);
+        } else {
+          callback(res);
+        }
+      });
+    } else {
+      // BrazeReactBridge.getInitialPushPayload not implemented on Android
       callback(null);
     }
   }

@@ -9,6 +9,28 @@ const testCallback = jest.fn();
 
 const testInAppMessageJson = `{\"message\":\"body body\",\"type\":\"MODAL\",\"text_align_message\":\"CENTER\",\"click_action\":\"NONE\",\"message_close\":\"SWIPE\",\"extras\":{\"test\":\"123\",\"foo\":\"bar\"},\"header\":\"hello\",\"text_align_header\":\"CENTER\",\"image_url\":\"https:\\/\\/github.com\\/braze-inc\\/braze-react-native-sdk\\/blob\\/master\\/.github\\/assets\\/logo-dark.png?raw=true\",\"image_style\":\"TOP\",\"btns\":[{\"id\":0,\"text\":\"button 1\",\"click_action\":\"URI\",\"uri\":\"https:\\/\\/www.google.com\",\"use_webview\":true,\"bg_color\":4294967295,\"text_color\":4279990479,\"border_color\":4279990479},{\"id\":1,\"text\":\"button 2\",\"click_action\":\"NONE\",\"bg_color\":4279990479,\"text_color\":4294967295,\"border_color\":4279990479}],\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\", \"is_test_send\":false}`;
 
+const testPushPayloadJson = {
+  "use_webview": false,
+  "is_silent": false,
+  "ios": {
+    "aps": {
+      "alert": {
+        "title": "Test Message",
+        "body": "Hello World"
+      },
+      "interruption-level": "active"
+    },
+    "action_identifier": "com.apple.UNNotificationDefaultActionIdentifier"
+  },
+  "payload_type": "push_opened",
+  "title": "Test Message",
+  "braze_properties": {},
+  "is_braze_internal": false,
+  "body": "Hello World",
+  "timestamp": 1728060077,
+  "url": "www.braze.com"
+};
+
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -470,11 +492,20 @@ test('it calls BrazeReactBridge.getUnreadCardCountForCategories', () => {
 
 test('it calls BrazeReactBridge.getInitialURL if defined', () => {
   NativeBrazeReactModule.getInitialURL.mockImplementation((callback) => {
-    callback(null, "some_data");
+    callback(null, testPushPayloadJson["url"]);
   });
   Braze.getInitialURL(testCallback);
   expect(NativeBrazeReactModule.getInitialURL).toBeCalled();
-  expect(testCallback).toBeCalledWith("some_data");
+  expect(testCallback).toBeCalledWith(testPushPayloadJson["url"]);
+});
+
+test('it calls BrazeReactBridge.getInitialPushPayload if defined', () => {
+  NativeBrazeReactModule.getInitialPushPayload.mockImplementation((callback) => {
+    callback(null, testPushPayloadJson);
+  });
+  Braze.getInitialPushPayload(testCallback);
+  expect(NativeBrazeReactModule.getInitialPushPayload).toBeCalled();
+  expect(testCallback).toBeCalledWith(testPushPayloadJson);
 });
 
 test('it calls BrazeReactBridge.getDeviceId', () => {
@@ -496,10 +527,28 @@ test('it calls the callback with null and logs the error if BrazeReactBridge.get
   expect(console.log).toBeCalledWith("error");
 });
 
+test('it calls the callback with null and logs the error if BrazeReactBridge.getInitialPushPayload returns an error', () => {
+  NativeBrazeReactModule.getInitialPushPayload.mockImplementation((callback) => {
+    callback("error", null);
+  });
+  Braze.getInitialPushPayload(testCallback);
+  expect(NativeBrazeReactModule.getInitialPushPayload).toBeCalled();
+  expect(testCallback).toBeCalledWith(null);
+  expect(console.log).toBeCalledWith("error");
+});
+
 test('it calls the callback with null if BrazeReactBridge.getInitialUrl is running on Android', () => {
   const platform = Platform.OS;
   Platform.OS = 'android';
   Braze.getInitialURL(testCallback);
+  expect(testCallback).toBeCalledWith(null);
+  Platform.OS = platform;
+});
+
+test('it calls the callback with null if BrazeReactBridge.getInitialPushPayload is running on Android', () => {
+  const platform = Platform.OS;
+  Platform.OS = 'android';
+  Braze.getInitialPushPayload(testCallback);
   expect(testCallback).toBeCalledWith(null);
   Platform.OS = platform;
 });
