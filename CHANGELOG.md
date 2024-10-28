@@ -1,5 +1,10 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 13.1.1
+
+##### Fixed
+- Resolves an iOS issue that would deallocate existing references of `braze.delegate` when performing a hot reload of the app.
+
 ## 13.1.0
 
 ##### Fixed

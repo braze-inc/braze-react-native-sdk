@@ -95,7 +95,7 @@ RCT_EXPORT_MODULE()
 
 - (void)stopObserving {
   hasListeners = NO;
-  braze.delegate = nil;
+  braze.sdkAuthDelegate = nil;
   [brazeUIHandler deinitPresenterDelegate:braze];
   self.contentCardsSubscription = nil;
   self.newsFeedSubscription = nil;
