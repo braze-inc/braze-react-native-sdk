@@ -1,0 +1,26 @@
+diff --git a/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.h b/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.h
+index 5cd9088..24798ed 100644
+--- a/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.h
++++ b/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.h
+@@ -16,4 +16,6 @@
+ ///   - configuration: The customizable configuration from the host app.
+ + (Braze *)initBraze:(BRZConfiguration *)configuration;
+ 
+++(void)deinitBraze;
++
+ @end
+diff --git a/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.mm b/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.mm
+index 793b43b..43dea8a 100644
+--- a/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.mm
++++ b/node_modules/@braze/react-native-sdk/iOS/BrazeReactBridge/BrazeReactBridge/BrazeReactBridge.mm
+@@ -36,6 +36,10 @@ @implementation BrazeReactBridge {
+ 
+ #pragma mark - Setup
+ 
+++(void)deinitBraze {
++    braze = nil;
++}
++
+ + (Braze *)initBraze:(BRZConfiguration *)configuration {
+   [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnative]];
+   #ifdef RCT_NEW_ARCH_ENABLED
