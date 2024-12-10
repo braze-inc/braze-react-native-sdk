@@ -15,6 +15,9 @@ import {
 import RadioGroup from 'react-native-radio-buttons-group';
 import Braze from '@braze/react-native-sdk';
 
+import { useConfigLoader } from './hooks/useConfigLoader';
+import { useCountrySelector } from './hooks/useCountrySelector';
+
 // Change to `true` to automatically log clicks, button clicks,
 // and impressions for in-app messages and content cards.
 const automaticallyInteract = false;
@@ -807,6 +810,25 @@ export const BrazeProject = (): ReactElement => {
     Braze.registerPushToken(pushToken);
   };
 
+  const [isLoading, setLoading] = useState(true);
+  const { loadConfig } = useConfigLoader();
+  const {
+    onSelectROIPress,
+    onSelectUKPress
+  } = useCountrySelector();
+
+  useEffect(() => {
+    setLoading(true);
+    
+    loadConfig().then(() => {
+      setLoading(false)
+    })
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
@@ -1000,6 +1022,16 @@ export const BrazeProject = (): ReactElement => {
       </View>
 
       {/* Location */}
+
+      <Space />
+
+      <TouchableHighlight onPress={onSelectROIPress}>
+          <Text>Select ROI</Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight onPress={onSelectUKPress}>
+          <Text>Select UK</Text>
+      </TouchableHighlight>
 
       <Space />
       {Platform.OS === 'android' ? (

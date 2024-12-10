@@ -131,6 +131,8 @@ android {
 dependencies {
     implementation "com.google.firebase:firebase-messaging:22.0.0"
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
+
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
