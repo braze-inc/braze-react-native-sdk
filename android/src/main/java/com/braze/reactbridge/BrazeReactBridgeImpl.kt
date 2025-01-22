@@ -1023,10 +1023,9 @@ class BrazeReactBridgeImpl(
         private fun parseReadableArray(readableArray: ReadableArray): List<*> {
             val parsedList = readableArray.toArrayList()
             for (i in 0 until readableArray.size()) {
-
                 when (readableArray.getType(i)) {
                     ReadableType.Map -> {
-                        val mapValue = readableArray.getMap(i)
+                        val mapValue = readableArray.getMap(i) ?: continue
                         if (mapValue.hasKey("type")
                             && mapValue.getType("type") == ReadableType.String
                             && mapValue.getString("type") == "UNIX_timestamp"
@@ -1034,11 +1033,13 @@ class BrazeReactBridgeImpl(
                             val unixTimestamp = mapValue.getDouble("value")
                             parsedList[i] = Date(unixTimestamp.toLong())
                         } else {
-                            parsedList[i] = parseReadableMap(readableArray.getMap(i))
+                            parsedList[i] = parseReadableMap(mapValue)
                         }
                     }
                     ReadableType.Array -> {
-                        parsedList[i] = parseReadableArray(readableArray.getArray(i))
+                        readableArray.getArray(i)?.let {
+                            parsedList[i] = parseReadableArray(it)
+                        }
                     }
                     else -> {}
                 }
