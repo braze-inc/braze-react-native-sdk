@@ -29,6 +29,7 @@ static BrazeReactUtils *sharedInstance;
     NSLog(@"Initial iOS push payload set to %@.", sharedInstance.initialPushPayload);
   } else {
     sharedInstance.initialPushPayload = nil;
+    RCTLogInfo(@"No push notification found in launchOptions. Not setting initialPushPayload.");
   }
 
   return sharedInstance.initialPushPayload;

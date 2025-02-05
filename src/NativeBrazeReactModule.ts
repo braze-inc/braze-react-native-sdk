@@ -198,6 +198,8 @@ export interface Spec extends TurboModule {
   refreshFeatureFlags(): void;
   logFeatureFlagImpression(flagId: string): void;
   setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId: string): void;
+  setIdentifierForAdvertiser(identifierForAdvertiser: string): void;
+  setIdentifierForVendor(identifierForVendor: string): void;
   updateTrackingPropertyAllowList(allowList: Object): void;
 
   // NativeEventEmitter methods for the New Architecture.

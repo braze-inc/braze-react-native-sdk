@@ -434,6 +434,16 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun setIdentifierForAdvertiser(identifierForAdvertiser: String) {
+        // iOS only
+    }
+
+    @ReactMethod
+    fun setIdentifierForVendor(identifierForVendor: String) {
+        // iOS only
+    }
+
+    @ReactMethod
     fun updateTrackingPropertyAllowList(allowList: ReadableMap) {
         // iOS only
     }

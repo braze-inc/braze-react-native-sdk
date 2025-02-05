@@ -997,6 +997,26 @@ export class Braze {
   }
 
   /**
+   * This method passes the Identifier For Advertiser (IDFA) to Braze for iOS. It is a no-op on Android.
+   *
+   * See Apple's docs on [App Tracking Transparency](https://apple.co/3LM7mm2) for more information.
+   *
+   * @param {string} identifierForAdvertiser - The IDFA.
+   */
+  static setIdentifierForAdvertiser(identifierForAdvertiser) {
+    return this.bridge.setIdentifierForAdvertiser(identifierForAdvertiser);
+  }
+
+  /**
+   * This method passes the Identifier For Vendor (IDFV) to Braze for iOS. It is a no-op on Android.
+   *
+   * @param {string} identifierForVendor - The IDFV.
+   */
+  static setIdentifierForVendor(identifierForVendor) {
+    return this.bridge.setIdentifierForVendor(identifierForVendor);
+  }
+
+  /**
    * Updates the list of data types you wish to declare or remove as tracked user data.
    *
    * For more details, refer to Braze's [Privacy Manifest documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/swift/privacy_manifest/).

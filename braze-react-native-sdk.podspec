@@ -1,6 +1,7 @@
 require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
+braze_swift_version = '11.2.0'
 
 Pod::Spec.new do |s|
   s.name           = 'braze-react-native-sdk'
@@ -20,9 +21,9 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  s.dependency 'BrazeKit', '~> 11.1.1'
-  s.dependency 'BrazeLocation', '~> 11.1.1'
-  s.dependency 'BrazeUI', '~> 11.1.1'
+  s.dependency 'BrazeKit', "~> #{braze_swift_version}"
+  s.dependency 'BrazeLocation', "~> #{braze_swift_version}"
+  s.dependency 'BrazeUI', "~> #{braze_swift_version}"
 
   # Swift/Objective-C compatibility
   s.pod_target_xcconfig = {

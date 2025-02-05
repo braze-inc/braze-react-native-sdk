@@ -528,14 +528,26 @@ export const BrazeProject = (): ReactElement => {
   };
 
   const enableAdTracking = () => {
-    const testAdvertisingID = '123';
+    const testAdvertisingID = 'some_idfa_123';
     Braze.setAdTrackingEnabled(true, testAdvertisingID);
+    Braze.setIdentifierForAdvertiser(testAdvertisingID);
 
     // Testing for backwards compatibility.
     Braze.setGoogleAdvertisingId(testAdvertisingID, true);
 
     showToast(`Ad tracking enabled with ID: ${testAdvertisingID}`);
   };
+
+  const setIDFV = () => {
+    const testIDFV = 'some_idfv';
+    Braze.setIdentifierForVendor(testIDFV);
+
+    if (Platform.OS === 'ios') {
+      showToast(`iOS IDFV set to: ${testIDFV}`);
+    } else if (Platform.OS === 'android') {
+      showToast('IDFV is not supported on Android');
+    }
+  }
 
   const requestImmediateDataFlush = () => {
     Braze.requestImmediateDataFlush();
@@ -819,6 +831,7 @@ export const BrazeProject = (): ReactElement => {
 
       {/* Events */}
 
+      <View style={[styles.row, { marginTop: styles.toastView.height }]}></View>
       <View style={styles.row}>
         <TextInput
           style={styles.textInput}
@@ -925,6 +938,9 @@ export const BrazeProject = (): ReactElement => {
       </TouchableHighlight>
       <TouchableHighlight onPress={enableAdTracking}>
         <Text>Enable Ad Tracking</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={setIDFV}>
+        <Text>Set iOS IDFV</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={requestImmediateDataFlush}>
         <Text style={styles.warningText}>Flush Data ⚡️</Text>

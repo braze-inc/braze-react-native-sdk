@@ -1,5 +1,13 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 13.2.0
+
+##### Added
+- Updates the native iOS version bindings [from Braze Swift SDK 11.1.1 to 11.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/11.1.1...11.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Updates the Android bridge to add compatibility with React Native version 0.77.0.
+  - Updates the Braze sample app to use React Native version 0.77.0.
+- Adds the `setIdentifierForAdvertiser` and `setIdentifierForVendor` methods to set the [IDFA](https://braze-inc.github.io/braze-swift-sdk/documentation/brazekit/braze/set(identifierforadvertiser:)/) and [IDFV](https://braze-inc.github.io/braze-swift-sdk/documentation/brazekit/braze/set(identifierforvendor:)/), respectively (iOS only). This is a no-op on Android.
+
 ## 13.1.1
 
 ##### Fixed
@@ -667,7 +675,7 @@ with
 ##### Breaking
 - Updated the native iOS bridge to [Braze iOS SDK 3.19.0](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#3190).
 - Updated the native Android bridge to [Braze Android SDK 3.7.0](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#370).
-- Note: This Braze React SDK release updates to Braze Android SDK and Braze iOS SDK dependencies which no longer enable automatic Braze location collection by default. Please consult their respective changelogs for information on how to continue to enable automatic Braze location collection, as well as further information on breaking changes.
+- Note: This Braze React Native SDK release updates to Braze Android SDK and Braze iOS SDK dependencies which no longer enable automatic Braze location collection by default. Please consult their respective changelogs for information on how to continue to enable automatic Braze location collection, as well as further information on breaking changes.
 - Removes the Feedback feature.
   - `submitFeedback()` and `launchFeedback()` have been removed from the `Appboy` interface.
 

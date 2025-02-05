@@ -95,6 +95,8 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           getFeatureFlagJSONProperty: jest.fn(),
           getFeatureFlagImageProperty: jest.fn(),
           setAdTrackingEnabled: jest.fn(),
+          setIdentifierForAdvertiser: jest.fn(),
+          setIdentifierForVendor: jest.fn(),
           updateTrackingPropertyAllowList: jest.fn()
         };
 

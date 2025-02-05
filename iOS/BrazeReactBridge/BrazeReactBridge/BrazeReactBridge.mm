@@ -163,8 +163,10 @@ RCT_EXPORT_METHOD(getInitialURL:(RCTResponseSenderBlock)callback) {
 // For more context see getInitialPushPayload() in index.js.
 RCT_EXPORT_METHOD(getInitialPushPayload:(RCTResponseSenderBlock)callback) {
   if ([BrazeReactUtils sharedInstance].initialPushPayload != nil) {
+    RCTLogInfo(@"getInitialPushPayload() called with initialPushPayload: %@", [BrazeReactUtils sharedInstance].initialPushPayload);
     [self reportResultWithCallback:callback andError:nil andResult:[BrazeReactUtils sharedInstance].initialPushPayload];
   } else {
+    RCTLogInfo(@"getInitialPushPayload() called but `initialPushPayload` is null. To fix this, use populateInitialPayloadFromLaunchOptions() to populate the initial payload value.");
     [self reportResultWithCallback:callback andError:nil andResult:nil];
   }
 }
@@ -1091,6 +1093,16 @@ RCT_EXPORT_METHOD(setAdTrackingEnabled:(BOOL)adTrackingEnabled
     RCTLogInfo(@"Ad tracking disabled");
   }
   [braze setAdTrackingEnabled:adTrackingEnabled];
+}
+
+RCT_EXPORT_METHOD(setIdentifierForAdvertiser:(NSString *)identifierForAdvertiser) {
+  RCTLogInfo(@"setIdentifierForAdvertiser called with value: %@", identifierForAdvertiser);
+  [braze setIdentifierForAdvertiser:identifierForAdvertiser];
+}
+
+RCT_EXPORT_METHOD(setIdentifierForVendor:(NSString *)identifierForVendor) {
+  RCTLogInfo(@"setIdentifierForVendor called with value: %@", identifierForVendor);
+  [braze setIdentifierForVendor:identifierForVendor];
 }
 
 RCT_EXPORT_METHOD(updateTrackingPropertyAllowList:(NSDictionary *)allowList) {

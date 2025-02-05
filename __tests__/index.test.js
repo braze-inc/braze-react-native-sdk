@@ -79,6 +79,18 @@ test('it calls BrazeReactBridge.setAdTrackingEnabled', () => {
   expect(NativeBrazeReactModule.setAdTrackingEnabled).toBeCalledWith(adTrackingEnabled, googleAdvertisingId);
 });
 
+test('it calls BrazeReactBridge.setIdentifierForVendor', () => {
+  const idfv = "some_idfv";
+  Braze.setIdentifierForVendor(idfv);
+  expect(NativeBrazeReactModule.setIdentifierForVendor).toBeCalledWith(idfv);
+});
+
+test('it calls BrazeReactBridge.setIdentifierForAdvertiser', () => {
+  const idfa = "some_idfa";
+  Braze.setIdentifierForAdvertiser(idfa);
+  expect(NativeBrazeReactModule.setIdentifierForAdvertiser).toBeCalledWith(idfa);
+});
+
 test('it calls BrazeReactBridge.setFirstName', () => {
   const first_name = "some_name";
   Braze.setFirstName(first_name);

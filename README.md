@@ -3,14 +3,18 @@
   <img width="480" alt="Braze Logo" src=".github/assets/logo-dark.png#gh-dark-mode-only" />
 </p>
 
-# Braze React SDK
+# Braze React Native SDK
 
 Effective marketing automation is an essential part of successfully scaling and managing your business. Braze empowers you to build better customer relationships through a seamless, multi-channel approach that addresses all aspects of the user life cycle Braze helps you engage your users on an ongoing basis.
 
+- [Braze React Native `npm` package](https://www.npmjs.com/package/@braze/react-native-sdk)
 - [Braze User Guide](https://www.braze.com/docs/user_guide/introduction)
-- [Initial React Native SDK Setup](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/react_sdk_setup/)
+- [Initial React Native SDK Setup](https://www.braze.com/docs/developer_guide/platforms/react_native/sdk_integration)
 
 ## Version Support
+
+> [!NOTE]
+> This SDK has been tested with React Native version **0.77.0**.
 
 | Braze Plugin | React Native | Supports New Architecture? |
 | ------------ | ------------ | -------------------------- |
@@ -18,6 +22,10 @@ Effective marketing automation is an essential part of successfully scaling and 
 | 6.0.0+       | >= 0.68      | ✅ (>= 0.70.0)             |
 | 2.0.0+       | >= 0.68      | ✅                         |
 | <= 1.41.0    | <= 0.71      | ❌                         |
+
+This SDK additionally inherits the requirements of its underlying Braze native SDKs. Be sure to also adhere to the lists below:
+* [Android SDK requirements](https://github.com/braze-inc/braze-android-sdk?tab=readme-ov-file#version-information)
+* [Swift SDK requirements](https://github.com/braze-inc/braze-swift-sdk?tab=readme-ov-file#version-information)
 
 ## Braze Expo Plugin
 
@@ -62,5 +70,5 @@ npx react-native run-android
 - We use [eslint](http://eslint.org/) as our linter. From the root directory, run `npm run lint` to list errors or `npm run lint-fix` to automatically fix errors. To override the rules in the [`standard-react`](https://github.com/feross/eslint-config-standard-react) config, add `"rules"` in `.eslintrc.json`.
 
 ## Testing
-- We use [jest](https://facebook.github.io/jest/) for testing the React SDK.
+- We use [jest](https://facebook.github.io/jest/) for testing the React Native SDK.
 - Run the tests and code coverage report using `npm test`

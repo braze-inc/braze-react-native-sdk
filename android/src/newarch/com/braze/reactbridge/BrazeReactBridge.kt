@@ -357,6 +357,14 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId)
     }
 
+    override fun setIdentifierForAdvertiser(identifierForAdvertiser: String) {
+        // iOS only
+    }
+
+    override fun setIdentifierForVendor(identifierForVendor: String) {
+        // iOS only
+    }
+
     override fun updateTrackingPropertyAllowList(allowList: ReadableMap) {
         // iOS only
     }
