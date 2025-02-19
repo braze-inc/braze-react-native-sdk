@@ -26,11 +26,11 @@ export function getInitialPushPayload(callback: (pushPayload: PushNotificationEv
 export function getInstallTrackingId(callback: Callback<string>): void;
 
 /**
- * Returns a unique ID stored on the device.
- *
- * On Android, a randomly generated, app specific ID that is stored on the device. A new ID will be generated if the user
+ * Returns a unique ID stored on the device. 
+ * 
+ * On Android, a randomly generated, app specific ID that is stored on the device. A new ID will be generated if the user 
  * clears the data for the app or removes/re-installs the app. The ID will persist across Braze.changeUser calls.
- *
+ * 
  * On iOS, this ID is generated from the IDFV. This behavior will be updated in the next major version.
  * @param {function(error, result)} callback - A callback that receives the function call result.
  */
@@ -76,7 +76,7 @@ export function changeUser(userId: string, signature?: string): void;
 /**
  * Returns a unique ID stored for the user.
  * If the user is anonymous, there is no ID stored for the user and this method will return `null`.
- *
+ * 
  * @param {function(error, result)} callback - A callback that receives the function call result.
  */
 export function getUserId(callback: Callback<string>): void;
@@ -538,8 +538,8 @@ export interface ContentCardBase {
   /** Indicates whether the card has been read or is unread by the user. Note: This does not log analytics. */
   viewed: boolean;
 
-  /**
-   * Indicates whether the card has been clicked by the user.
+  /** 
+   * Indicates whether the card has been clicked by the user. 
    * Note: Clicks are stored on disk, so subsequent instances of this card will retain its clicked state upon recreation.
    */
   clicked: boolean;
@@ -584,7 +584,7 @@ export interface ClassicContentCard extends ContentCardBase {
 
   /** The description text for the card. */
   cardDescription: string;
-
+  
   /**
    * (Optional) The link text for the property URL, e.g., "blog.appboy.com". It can be displayed on the card's
    * UI to indicate the action/direction of clicking on the card.
@@ -603,7 +603,7 @@ export interface ImageOnlyContentCard extends ContentCardBase {
   image: string;
 
   /**
-   * The aspect ratio of the card's image. It is meant to serve as a hint before image loading completes.
+   * The aspect ratio of the card's image. It is meant to serve as a hint before image loading completes. 
    * Note that the property may not be supplied in certain circumstances.
    */
   imageAspectRatio: number;
@@ -619,7 +619,7 @@ export interface CaptionedContentCard extends ContentCardBase {
   /** The URL of the card's image. */
   image: string;
 
-  /**
+  /** 
    * The aspect ratio of the card's image. It is meant to serve as a hint before image loading completes.
    * Note that the property may not be supplied in certain circumstances.
    */
@@ -866,8 +866,8 @@ export function addListener(
   event: string
 ): void;
 
-/**
- * A Feature Flag property of type String.
+/** 
+ * A Feature Flag property of type String. 
  */
 export interface FeatureFlagStringProperty {
   /** The type of Feature Flag property. */
@@ -877,8 +877,8 @@ export interface FeatureFlagStringProperty {
   value: string;
 }
 
-/**
- * A Feature Flag property of type Number.
+/** 
+ * A Feature Flag property of type Number. 
  */
 export interface FeatureFlagNumberProperty {
   /** The type of Feature Flag property. */
@@ -888,8 +888,8 @@ export interface FeatureFlagNumberProperty {
   value: number;
 }
 
-/**
- * A Feature Flag property of type Boolean.
+/** 
+ * A Feature Flag property of type Boolean. 
  */
 export interface FeatureFlagBooleanProperty {
   /** The type of Feature Flag property. */
@@ -954,7 +954,7 @@ export function getAllFeatureFlags(): Promise<FeatureFlag[]>;
 
 /**
  * Get a feature flag by its ID.
- *
+ * 
  * @param id - The ID of the feature flag.
  * @returns A promise containing the feature flag.
  *    If there is no feature flag with that ID, this method will return a null.
@@ -963,7 +963,7 @@ export function getFeatureFlag(id: string): Promise<FeatureFlag | null>;
 
 /**
  * Get value of a feature flag property of type boolean.
- *
+ * 
  * @param id - The ID of the feature flag.
  * @param key - The key of the property.
  *
@@ -1040,7 +1040,7 @@ export function refreshFeatureFlags(): void;
 
 /**
  * Logs an impression for the Feature Flag with the provided ID.
- *
+ * 
  * @param id - The ID of the feature flag.
  */
 export function logFeatureFlagImpression(id: string): void;
@@ -1263,7 +1263,7 @@ interface BrazeTrackingProperty {
 
   /**
    * Mark every user data for tracking.
-   *
+   * 
    * Adding this property will cause other cases to be a no-op as everything will be routed to the tracking domain.
    */
   EVERYTHING: 'everything';
@@ -1296,7 +1296,7 @@ export const TrackingProperty: BrazeTrackingProperty;
 
 /**
  * The list of properties to be collected for tracking users (default: an empty list).
- *
+ * 
  * The SDK will route collection of any of these data into a separate tracking endpoint, which must be declared in the privacy manifest.
  */
 export interface TrackingPropertyAllowList {
