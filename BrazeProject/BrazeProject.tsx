@@ -40,6 +40,14 @@ export const BrazeProject = (): ReactElement => {
   const [featureFlagPropertyType, setFeatureFlagPropertyType] =
     useState<string>('bool');
   const [featureFlagPropertyKey, setFeatureFlagPropertyKey] = useState('');
+
+  // A comma-separated string of banner placement IDs.
+  const [requestedBannerPlacements, setRequestedBannerPlacements] = useState('placement_1, placement_2');
+
+  const [bannerPlacementId, setBannerPlacementId] = useState('');
+  const [bannerHeight, setBannerHeight] = useState(0);
+  const [displayedPlacement, setDisplayedPlacement] = useState('sdk-test-2');
+  const [displayedPlacementPlaceholder, setDisplayedPlacementPlaceholder] = useState('');
   const [pushToken, setPushToken] = useState('');
 
   // If key is persisted, use the value. If no key is present, default to true.
@@ -175,6 +183,13 @@ export const BrazeProject = (): ReactElement => {
   };
 
   useEffect(() => {
+    // On launch, pre-populate the text field with the current user ID, if available.
+    Braze.getUserId((_err, userId) => {
+      if (userId) {
+        setUserIdText(userId);
+      }
+    });
+
     // Listen to the `url` event to handle incoming deep links
     const listener = Linking.addEventListener('url', handleOpenUrl);
 
@@ -236,6 +251,19 @@ export const BrazeProject = (): ReactElement => {
       },
     );
 
+    const bannerCardsSubscription = Braze.addListener(
+      Braze.Events.BANNER_CARDS_UPDATED,
+      data => {
+        const banners = data.banners;
+        console.log(
+          `Received ${banners.length} Banner Cards with placement IDs:`,
+          banners.map(banner => banner.placementId),
+        );
+      },
+    );
+    // Perform an immediate refresh for default placements on app launch.
+    Braze.requestBannersRefresh(['placement_1', 'placement_2', 'sdk-test-2']);
+
     const featureFlagsSubscription = Braze.addListener(
       Braze.Events.FEATURE_FLAGS_UPDATED,
       flags => {
@@ -265,6 +293,7 @@ export const BrazeProject = (): ReactElement => {
       listener.remove();
       inAppMessageSubscription.remove();
       contentCardsSubscription.remove();
+      bannerCardsSubscription.remove();
       featureFlagsSubscription.remove();
       sdkAuthErrorSubscription.remove();
       pushEventSubscription.remove();
@@ -688,6 +717,40 @@ export const BrazeProject = (): ReactElement => {
     }
   };
 
+  const getBannerByIdPress = async () => {
+    if (!bannerPlacementId) {
+      showToast('No Banner placement ID entered');
+      return;
+    }
+
+    const banner = await Braze.getBanner(bannerPlacementId);
+    if (!banner) {
+      showToast(`No Banner Card with placement ID: ${bannerPlacementId}`);
+      return;
+    }
+    showToast(`Found Banner Card. Check the console logs for details.`);
+    console.log(`Got Banner Card: ${JSON.stringify(banner, null, '\t')}`);
+  };
+
+  const requestBannersRefreshPress = () => {
+    if (!requestedBannerPlacements) {
+      console.log('No placement IDs entered for Banners refresh');
+      return;
+    }
+    // Split and trim the comma-separated string of placement IDs.
+    const bannerPlacements = requestedBannerPlacements.split(',').map(idString=>idString.trim());
+    Braze.requestBannersRefresh(bannerPlacements);
+    showToast('Banner Cards Refreshed');
+  };
+
+  const changeDisplayedBannerPress = async () => {
+    setDisplayedPlacement(displayedPlacementPlaceholder);
+    const banner = await Braze.getBanner(displayedPlacementPlaceholder);
+    if (!banner) {
+      showToast(`No banner found for placement: ${displayedPlacementPlaceholder}`);
+    }
+  };
+
   // Update value, then store in NSUserDefaults to fetch in iOS layer
   const toggleiOSPushAutoEnabled = () => {
     if (Platform.OS === 'ios') {
@@ -962,6 +1025,62 @@ export const BrazeProject = (): ReactElement => {
         <Text>Get Cached Content Cards {'&'} Log interactions</Text>
       </TouchableHighlight>
 
+      {/* Banner Cards */}
+      <Space />
+      <View style={styles.row}>
+        <TextInput
+          style={styles.textInput}
+          placeholder='Placement IDs (comma-separated)'
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={setRequestedBannerPlacements}
+          value={requestedBannerPlacements}
+        />
+        <TouchableHighlight onPress={requestBannersRefreshPress}>
+          <Text>Request Banners Refresh</Text>
+        </TouchableHighlight>
+      </View>
+      <View style={styles.row}>
+        <TextInput
+          style={styles.textInput}
+          placeholder='Placement ID'
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={setBannerPlacementId}
+          value={bannerPlacementId}
+        />
+        <TouchableHighlight onPress={getBannerByIdPress}>
+          <Text>Get Banner Card by Placement ID</Text>
+        </TouchableHighlight>
+      </View>
+      <View style={styles.row}>
+        <TextInput
+          style={styles.textInput}
+          placeholder='Placement ID'
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={(text) => setDisplayedPlacementPlaceholder(text)}
+          value={displayedPlacementPlaceholder}
+        />
+        <TouchableHighlight onPress={changeDisplayedBannerPress}>
+          <Text>Change Displayed Banner</Text>
+        </TouchableHighlight>
+      </View>
+      <Braze.BrazeBannerView
+        placementID={displayedPlacement}
+
+        // Uncomment the properties below for optional style overrides.
+        //
+        // In the simplest integration, only `placementID` is required.
+        // Dynamic height sizing is handled implicitly by the component without needing `onHeightChanged`.
+
+        // style={[styles.banner, { height: bannerHeight }]}
+        // onHeightChanged={height => {
+        //   console.log(`Banner height changed to: ${height}`);
+        //   setBannerHeight(height);
+        // }}
+      />
+
       {/* News Feed */}
 
       <Space />
@@ -987,6 +1106,7 @@ export const BrazeProject = (): ReactElement => {
       <View style={styles.row}>
         <TextInput
           style={styles.textInput}
+          placeholder='Flag ID'
           autoCorrect={false}
           autoCapitalize="none"
           onChangeText={setFeatureFlagId}
@@ -1005,6 +1125,7 @@ export const BrazeProject = (): ReactElement => {
         />
         <TextInput
           style={styles.textInput}
+          placeholder='Property Key'
           autoCorrect={false}
           autoCapitalize="none"
           onChangeText={setFeatureFlagPropertyKey}
@@ -1046,7 +1167,7 @@ export const BrazeProject = (): ReactElement => {
       </TouchableHighlight>
       <TextInput
         style={styles.textInput}
-        placeholder='push token'
+        placeholder='Push Token'
         autoCorrect={false}
         autoCapitalize="none"
         onChangeText={setPushToken}
@@ -1085,6 +1206,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
     paddingBottom: 100,
+  },
+  banner: {
+    width: '100%',
   },
   textInput: {
     height: 40,

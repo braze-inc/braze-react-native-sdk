@@ -1,5 +1,5 @@
 const NativeEventEmitter = require('react-native').NativeEventEmitter;
-const NativeBrazeReactModule = require('../src/NativeBrazeReactModule').default;
+const NativeBrazeReactModule = require('../src/specs/NativeBrazeReactModule').default;
 
 import Braze from '../src/index';
 import { Platform } from 'react-native';
@@ -136,6 +136,16 @@ test('it calls BrazeReactBridge.setPhoneNumber', () => {
 test('it calls BrazeReactBridge.requestFeedRefresh', () => {
   Braze.requestFeedRefresh();
   expect(NativeBrazeReactModule.requestFeedRefresh).toBeCalled();
+});
+
+test('it calls BrazeReactBridge.getBanner', () => {
+  Braze.getBanner("some_banner_id");
+  expect(NativeBrazeReactModule.getBanner).toBeCalledWith("some_banner_id");
+});
+
+test('it calls BrazeReactBridge.requestBannersRefresh', () => {
+  Braze.requestBannersRefresh(["sdk-test-1", "sdk-test-2"]);
+  expect(NativeBrazeReactModule.requestBannersRefresh).toBeCalledWith(["sdk-test-1", "sdk-test-2"]);
 });
 
 test('it calls BrazeReactBridge.launchNewsFeed', () => {

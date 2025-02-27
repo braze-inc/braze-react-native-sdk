@@ -17,12 +17,14 @@ import {
   DismissType,
   MessageType
 } from './models/enums';
+import BannerView from './ui/braze-banner-view';
 
 import { callFunctionWithCallback, parseNestedProperties } from './helpers';
 
 export class Braze {
   static BrazeButton = Button;
   static BrazeInAppMessage = InAppMessage;
+  static BrazeBannerView = BannerView;
 
   static CardCategory = CardCategory;
   static NotificationSubscriptionTypes = NotificationSubscriptionTypes;
@@ -34,7 +36,7 @@ export class Braze {
   static DismissType = DismissType;
   static MessageType = MessageType;
 
-  static bridge = require('./NativeBrazeReactModule').default; 
+  static bridge = require('./specs/NativeBrazeReactModule').default;
   static eventEmitter = Platform.select({
     ios: new NativeEventEmitter(this.bridge),
     android: DeviceEventEmitter
@@ -709,6 +711,15 @@ export class Braze {
       [category],
       callback
     );
+  }
+
+  // Banner Cards
+  static getBanner(placementId) {
+    return this.bridge.getBanner(placementId);
+  }
+
+  static requestBannersRefresh(placementIds) {
+    this.bridge.requestBannersRefresh(placementIds);
   }
 
   // Flush Controls

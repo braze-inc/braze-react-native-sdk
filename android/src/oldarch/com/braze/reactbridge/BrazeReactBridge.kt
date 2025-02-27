@@ -293,6 +293,16 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun getBanner(placementId: String, promise: Promise) {
+        brazeImpl.getBanner(placementId, promise)
+    }
+
+    @ReactMethod
+    fun requestBannersRefresh(placementIds: ReadableArray) {
+        brazeImpl.requestBannersRefresh(placementIds)
+    }
+
+    @ReactMethod
     fun requestImmediateDataFlush() {
         brazeImpl.requestImmediateDataFlush()
     }

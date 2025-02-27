@@ -1,5 +1,26 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 14.0.0
+
+##### Breaking
+- Resolves an Android issue with `setDateOfBirth(year, month, day)` introduced in `1.38.0`, where the month was indexed 0-11 instead of 1-12. The months are now indexed from 1-12 on both Android and iOS.
+  - The previous behavior on Android would assign `setDateOfBirth(1970, 1, 1)` to the month of February instead of the intended month of January, and `setDateOfBirth(1970, 12, 1)` to `null` instead of the intended month of December.
+  - Customers who wish to retroactively rectify this are recommended to ask their users to confirm their dates of birth and call `setDateOfBirth` with these values.
+- Updates the native Android version bindings [from Braze Android SDK 32.1.0 to 35.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v32.1.0...v35.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - The minimum required Android SDK version is 25. See more details [here](https://github.com/braze-inc/braze-android-sdk?tab=readme-ov-file#version-information).
+- The `NativeBrazeReactModule.ts` file has been moved into a sub-directory called `specs`.
+  - If your project contains direct references to this file, you will need to update the relative path of your imports to `/specs/NativeBrazeReactModule`.
+  - For an example, refer to the sample test setup [here](https://github.com/braze-inc/braze-react-native-sdk/tree/master/__tests__).
+
+##### Added
+- Updates the native iOS version bindings [from Braze Swift SDK 11.2.0 to 11.7.0](https://github.com/braze-inc/braze-swift-sdk/compare/11.2.0...11.7.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Adds support for the Braze Banner Cards product and APIs to utilize them.
+  - `Braze.requestBannersRefresh(placementIds)` - to request a refresh of the banners associated with the provided placement IDs. On iOS only, failures will be logged if unsuccessful.
+  - `Braze.getBanner(placementId)` - to get a banner with the provided placement ID if available in cache, otherwise returns null.
+  - `Braze.Events.BANNER_CARDS_UPDATED` event for `Braze.addListener` - to subscribe to banners updates.
+- Adds the default UI components for Braze Banner Cards.
+  - To use this feature, insert the `Braze.BrazeBannerView` component into your view hierarchy with the required `placementID` property.
+
 ## 13.2.0
 
 ##### Added

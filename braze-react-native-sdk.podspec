@@ -1,7 +1,7 @@
 require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
-braze_swift_version = '11.2.0'
+braze_swift_version = '11.7.0'
 
 Pod::Spec.new do |s|
   s.name           = 'braze-react-native-sdk'
@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
     s.pod_target_xcconfig = {
       'DEFINES_MODULE' => 'YES',
       'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) COCOAPODS=1 RCT_NEW_ARCH_ENABLED=1',
-      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
+      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\" \"${PODS_ROOT}/Headers/Private/Yoga\"",
       "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
     }
   end

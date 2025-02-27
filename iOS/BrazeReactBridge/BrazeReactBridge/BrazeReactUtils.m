@@ -3,6 +3,7 @@
 
 @implementation BrazeReactUtils
 
+static Braze *sharedBraze;
 static BrazeReactUtils *sharedInstance;
 
 - (instancetype)init {
@@ -17,6 +18,14 @@ static BrazeReactUtils *sharedInstance;
     sharedInstance = [[BrazeReactUtils alloc] init];
   }
   return sharedInstance;
+}
+
++ (void)setBraze:(Braze *)braze {
+  sharedBraze = braze;
+}
+
++ (Braze *)braze {
+  return sharedBraze;
 }
 
 - (BOOL)populateInitialPayloadFromLaunchOptions:(NSDictionary *)launchOptions {

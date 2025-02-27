@@ -12,6 +12,7 @@
 #endif
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
+static NSString *const kBannerCardsUpdatedEvent = @"bannerCardsUpdated";
 static NSString *const kNewsFeedCardsUpdatedEvent = @"newsFeedCardsUpdated";
 static NSString *const kFeatureFlagsUpdatedEvent = @"featureFlagsUpdated";
 static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
@@ -21,6 +22,7 @@ static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 @interface BrazeReactBridge () <BrazeSDKAuthDelegate>
 
 @property (strong, nonatomic) BRZCancellable *contentCardsSubscription;
+@property (strong, nonatomic) BRZCancellable *bannersSubscription;
 @property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
 @property (strong, nonatomic) BRZCancellable *newsFeedSubscription;
 @property (strong, nonatomic) BRZCancellable *notificationSubscription;
@@ -46,6 +48,7 @@ static BrazeUIHandler *brazeUIHandler;
   braze = instance;
   brazeUIHandler = [[BrazeUIHandler alloc] init];
   [brazeUIHandler setDefaultInAppMessagePresenter:braze];
+  [BrazeReactUtils setBraze:braze];
   return instance;
 }
 
@@ -71,6 +74,12 @@ RCT_EXPORT_MODULE()
     NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
     eventData[@"cards"] = RCTFormatContentCards(cards);
     [self sendEventWithName:kContentCardsUpdatedEvent body:eventData];
+  }];
+  self.bannersSubscription = [braze.banners subscribeToUpdates:^(NSDictionary<NSString *,BRZBanner *> * _Nonnull banners) {
+    RCTLogInfo(@"Received Banner Cards array via subscription of length: %lu", [banners count]);
+    NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
+    eventData[@"banners"] = RCTFormatBanners(banners);
+    [self sendEventWithName:kBannerCardsUpdatedEvent body:eventData];
   }];
   self.featureFlagsSubscription = [braze.featureFlags subscribeToUpdates:^(NSArray<BRZFeatureFlag *> * _Nonnull featureFlags) {
     RCTLogInfo(@"Received Feature Flags array via subscription of length: %lu", [featureFlags count]);
@@ -98,6 +107,7 @@ RCT_EXPORT_MODULE()
   braze.sdkAuthDelegate = nil;
   [brazeUIHandler deinitPresenterDelegate:braze];
   self.contentCardsSubscription = nil;
+  self.bannersSubscription = nil;
   self.newsFeedSubscription = nil;
   self.featureFlagsSubscription = nil;
   self.notificationSubscription = nil;
@@ -106,6 +116,7 @@ RCT_EXPORT_MODULE()
 - (NSArray<NSString *> *)supportedEvents {
   return @[
     kContentCardsUpdatedEvent,
+    kBannerCardsUpdatedEvent,
     kNewsFeedCardsUpdatedEvent,
     kFeatureFlagsUpdatedEvent,
     kSdkAuthenticationErrorEvent,
@@ -773,6 +784,56 @@ static NSDictionary *RCTFormatContentCard(BRZContentCardRaw *card) {
   }
 
   return formattedContentCardData;
+}
+
+#pragma mark - Banner Cards
+
+RCT_EXPORT_METHOD(getBanner:(NSString *)placementId
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+  [braze.banners getBannerFor:placementId completion:^(BRZBanner * _Nullable banner) {
+    if (!banner) {
+      NSLog(@"No banner found for placementId: %@", placementId);
+      resolve([NSNull null]);
+      return;
+    }
+    resolve(RCTFormatBanner(banner));
+  }];
+}
+
+RCT_EXPORT_METHOD(requestBannersRefresh:(NSArray *)placementIds) {
+  [braze.banners requestBannersRefreshForPlacementIds:placementIds
+                                           completion:^(NSDictionary<NSString *,BRZBanner *> * _Nullable banners, NSError * _Nullable error) {
+    if (error) {
+      // Use `RCTLogInfo` instead of `RCTLogError` to avoid throwing a hard error.
+      RCTLogInfo(@"Error refreshing banners: %@", error);
+    } else if (banners) {
+      RCTLogInfo(@"Refreshed Banners.");
+    }
+  }];
+}
+
+static NSArray *RCTFormatBanners(NSDictionary<NSString *, BRZBanner *> *banners) {
+  NSMutableArray *mappedBanners = [NSMutableArray arrayWithCapacity:[banners count]];
+  [banners.allValues enumerateObjectsUsingBlock:^(BRZBanner *banner,
+                                                  NSUInteger idx,
+                                                  BOOL *stop) {
+    [mappedBanners addObject:RCTFormatBanner(banner)];
+  }];
+  return mappedBanners;
+}
+
+static NSDictionary *RCTFormatBanner(BRZBanner *banner) {
+  NSMutableDictionary *formattedBannerData = [NSMutableDictionary dictionary];
+
+  formattedBannerData[@"trackingId"] = banner.identifier;
+  formattedBannerData[@"placementId"] = banner.placementId;
+  formattedBannerData[@"isTestSend"] = @(banner.isTestSend);
+  formattedBannerData[@"isControl"] = @(banner.isControl);
+  formattedBannerData[@"html"] = banner.html;
+  formattedBannerData[@"expiresAt"] = @(banner.expiresAt);
+
+  return formattedBannerData;
 }
 
 #pragma mark - Other bindings

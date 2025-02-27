@@ -15,6 +15,10 @@ class BrazeReactBridgePackage : TurboReactPackage() {
         }
     }
 
+    override fun createViewManagers(
+        reactContext: ReactApplicationContext
+    ) = listOf(BrazeBannerManager(reactContext))
+
     override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
         return ReactModuleInfoProvider {
             val moduleInfos: MutableMap<String, ReactModuleInfo> = HashMap()

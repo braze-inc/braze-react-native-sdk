@@ -1,6 +1,6 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "13.2.0",
+  "version": "14.0.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -59,8 +59,8 @@
   },
   "codegenConfig": {
     "name": "BrazeReactModuleSpec",
-    "type": "modules",
-    "jsSrcsDir": "src",
+    "type": "all",
+    "jsSrcsDir": "src/specs",
     "android": {
       "javaPackageName": "com.braze.reactbridge"
     }

@@ -710,6 +710,49 @@ export function getUnreadCardCountForCategories(
   callback: Callback<number>
 ): void;
 
+// Banner Cards
+
+/**
+ * Braze Banner Cards
+ */
+export interface Banner {
+  /** The campaign and message variation IDs. */
+  trackingId: string;
+
+  /** The placement ID this banner is matched to. */
+  placementId: string;
+
+  /** Whether the banner is from a test send. */
+  isTestSend: boolean;
+
+  /** Whether the banner is a control banner. */
+  isControl: boolean;
+
+  /** The HTML to display for the banner. */
+  html: string;
+
+  /** A Unix timestamp of the expiration date and time. A value of -1 means the banner never expires. */
+  expiresAt: number;
+}
+
+/**
+ * Gets a banner with the provided placement ID if available in cache, otherwise returns null.
+ *
+ * @param placementId - The placement ID of the requested banner.
+ *
+ * @returns {Promise<Banner | null>}
+ */
+export function getBanner(placementId: string): Promise<Banner | null>;
+
+/**
+ * Requests a refresh of the banners associated with the provided placement IDs.
+ *
+ * If the banners are unsuccessfully refreshed, a failure will be logged on iOS only.
+ *
+ * @param placementIds -  The list of placement IDs requested.
+ */
+export function requestBannersRefresh(placementIds: string[]): void;
+
 /**
  * Requests a News Feed refresh.
  */
@@ -1437,6 +1480,13 @@ export interface ContentCardsUpdatedEvent {
   /** A list of Content Cards in this update. */
   cards: ContentCard[];
 }
+/**
+ * Received an updated list of Banner Cards from the Braze SDK.
+ */
+export interface BannerCardsUpdatedEvent {
+  /** A list of Banner Cards in this update. */
+  banners: Banner[];
+}
 
 /**
  * An event received from the Braze SDK.
@@ -1444,6 +1494,8 @@ export interface ContentCardsUpdatedEvent {
 interface BrazeEvent {
   /** Callback passes an object with the `cards` as of the latest refresh. */
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated';
+  /** Callback passes an object with the `banners` as of the latest refresh. */
+  BANNER_CARDS_UPDATED: 'bannerCardsUpdated';
   /** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError';
   /** Callback passes the BrazeInAppMessage object. */
@@ -1457,6 +1509,8 @@ export const Events: BrazeEvent;
 
 /** Callback passes an object with the `cards` as of the latest refresh. */
 export function addListener(event: "contentCardsUpdated", callback: (update: ContentCardsUpdatedEvent) => void): EmitterSubscription;
+/** Callback passes an object with the `banners` as of the latest refresh. */
+export function addListener(event: "bannerCardsUpdated", callback: (update: BannerCardsUpdatedEvent) => void): EmitterSubscription;
 /** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
 export function addListener(event: "sdkAuthenticationError", callback: (sdkAuthenticationError: SDKAuthenticationErrorType) => void): EmitterSubscription;
 /** Callback passes the BrazeInAppMessage object. */

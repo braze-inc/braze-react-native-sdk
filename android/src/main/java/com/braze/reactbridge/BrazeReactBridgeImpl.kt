@@ -48,6 +48,7 @@ import com.braze.enums.inappmessage.ClickAction
 import com.braze.ui.actions.NewsfeedAction
 import com.braze.support.toBundle
 import com.braze.enums.Channel
+import com.braze.events.BannersUpdatedEvent
 
 @Suppress("TooManyFunctions", "LargeClass")
 class BrazeReactBridgeImpl(
@@ -64,6 +65,7 @@ class BrazeReactBridgeImpl(
     private var newsFeedCardsUpdatedAt: Long = 0
     private var inAppMessageDisplayOperation: InAppMessageOperation = InAppMessageOperation.DISPLAY_NOW
     private lateinit var contentCardsUpdatedSubscriber: IEventSubscriber<ContentCardsUpdatedEvent>
+    private lateinit var bannersUpdatedSubscriber: IEventSubscriber<BannersUpdatedEvent>
     private lateinit var newsFeedCardsUpdatedSubscriber: IEventSubscriber<FeedUpdatedEvent>
     private lateinit var sdkAuthErrorSubscriber: IEventSubscriber<BrazeSdkAuthenticationErrorEvent>
     private lateinit var pushNotificationEventSubscriber: IEventSubscriber<BrazePushEvent>
@@ -71,6 +73,7 @@ class BrazeReactBridgeImpl(
 
     init {
         subscribeToContentCardsUpdatedEvent()
+        subscribeToBannersUpdatedEvent()
         subscribeToNewsFeedCardsUpdatedEvent()
         subscribeToSdkAuthenticationErrorEvents()
         subscribeToFeatureFlagsUpdatedEvent()
@@ -239,8 +242,15 @@ class BrazeReactBridgeImpl(
 
     fun setDateOfBirth(year: Int, month: Int, day: Int) =
         runOnUser {
-            getMonth(month)?.let { monthEnum ->
+            // Month is 0-indexed in the Android SDK, so we need to subtract 1 from the month value
+            val monthEnum = getMonth(month - 1)
+            if (monthEnum != null) {
                 it.setDateOfBirth(year, monthEnum, day)
+            } else {
+                brazelog(W) {
+                    "Invalid date of birth parameter: month is required to be within specified range. " +
+                            "Not setting date of birth."
+                }
             }
         }
 
@@ -300,6 +310,17 @@ class BrazeReactBridgeImpl(
 
     fun requestFeedRefresh() {
         braze.requestFeedRefresh()
+    }
+
+    fun getBanner(placementId: String, promise: Promise) {
+        braze.getBanner(placementId)?.let {
+            promise.resolve(mapBanner(it))
+        } ?: promise.resolve(null)
+    }
+
+    fun requestBannersRefresh(placementIds: ReadableArray) {
+        val convertedPlacementIds = placementIds.toArrayList().map { it.toString() }
+        braze.requestBannersRefresh(convertedPlacementIds)
     }
 
     fun getNewsFeedCards(promise: Promise) {
@@ -369,6 +390,26 @@ class BrazeReactBridgeImpl(
         }
 
         braze.subscribeToContentCardsUpdates(contentCardsUpdatedSubscriber)
+    }
+
+    private fun subscribeToBannersUpdatedEvent() {
+        if (this::bannersUpdatedSubscriber.isInitialized) {
+            braze.removeSingleSubscription(
+                bannersUpdatedSubscriber,
+                BannersUpdatedEvent::class.java
+            )
+        }
+        bannersUpdatedSubscriber = IEventSubscriber { event ->
+            val eventData = Arguments.createMap()
+            eventData.putArray("banners", mapBanners(event.banners))
+            if (reactApplicationContext.hasActiveReactInstance()) {
+                reactApplicationContext
+                    .getJSModule(RCTDeviceEventEmitter::class.java)
+                    .emit(BANNER_CARDS_UPDATED_EVENT_NAME, eventData)
+            }
+        }
+
+        braze.subscribeToBannersUpdates(bannersUpdatedSubscriber)
     }
 
     private fun subscribeToNewsFeedCardsUpdatedEvent() {
@@ -913,6 +954,7 @@ class BrazeReactBridgeImpl(
         private const val CARD_COUNT_TAG = "card count"
         private const val UNREAD_CARD_COUNT_TAG = "unread card count"
         private const val CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated"
+        private const val BANNER_CARDS_UPDATED_EVENT_NAME = "bannerCardsUpdated"
         private const val FEATURE_FLAGS_UPDATED_EVENT_NAME = "featureFlagsUpdated"
         private const val NEWS_FEED_CARDS_UPDATED_EVENT_NAME = "newsFeedCardsUpdated"
         private const val SDK_AUTH_ERROR_EVENT_NAME = "sdkAuthenticationError"

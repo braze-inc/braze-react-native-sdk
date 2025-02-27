@@ -11,12 +11,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1C1F39C39078CBA3B1D4BA6B /* libPods-BrazeProjectRichPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F097B316BD83D92ECEDB44 /* libPods-BrazeProjectRichPush.a */; };
-		566709436C351B31403D41A4 /* libPods-BrazeProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A1CCEF5F00EE40BE7DCA27D /* libPods-BrazeProject.a */; };
+		736A8AF07EA1767FB7AD4AA2 /* libPods-BrazeProjectPushStory.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 838CF81DA3EB2D219F72D896 /* libPods-BrazeProjectPushStory.a */; };
 		7FFA3C438F6ECE230980EE95 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D49243504D0CC62449E7A753 /* libPods-BrazeProject-BrazeProjectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6966516151504FECB8343E39 /* libPods-BrazeProject-BrazeProjectTests.a */; };
+		BD48CA7B92CBEB0DCC27BAB6 /* libPods-BrazeProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B94B785D37027A821A290516 /* libPods-BrazeProject.a */; };
 		D971B4B9DCDC97E7B7B30086 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */; };
+		EAEFDBAC015418CD5F8D1295 /* libPods-BrazeProject-BrazeProjectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B2EC5E5776DDA449A8E3D2 /* libPods-BrazeProject-BrazeProjectTests.a */; };
 		EC8E1B432C93543400F4A255 /* BrazeReactGIFHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8E1B422C93543400F4A255 /* BrazeReactGIFHelper.m */; };
 		EC9B91F32B1F698600C6BD5D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B91F22B1F698600C6BD5D /* NotificationService.swift */; };
 		EC9B91F72B1F698600C6BD5D /* BrazeProjectRichPush.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EC9B91F02B1F698500C6BD5D /* BrazeProjectRichPush.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -28,7 +28,7 @@
 		EC9B92172B1F762C00C6BD5D /* BrazeProjectPushStory.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EC9B920A2B1F762B00C6BD5D /* BrazeProjectPushStory.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EC9B921B2B1F76AC00C6BD5D /* BrazePushStory.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC9B91FC2B1F6A3B00C6BD5D /* BrazePushStory.xcframework */; };
 		ECE697B02A3CC00B0060A95D /* BrazeReactDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE697AF2A3CC00B0060A95D /* BrazeReactDelegate.m */; };
-		F2FEB37853C2F04522A0B900 /* libPods-BrazeProjectPushStory.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCCAA9B93114DFE83F9097D0 /* libPods-BrazeProjectPushStory.a */; };
+		EEF120E9873ED765E1BA4C80 /* libPods-BrazeProjectRichPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F8590DA9F25DFD05DFA27D /* libPods-BrazeProjectRichPush.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,25 +75,24 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* BrazeProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeProjectTests.m; sourceTree = "<group>"; };
 		0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = BrazeProject/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		09540364EBF55C5C8BEC6C88 /* Pods-BrazeProjectRichPush.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* BrazeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrazeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BrazeProject/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = BrazeProject/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = BrazeProject/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = BrazeProject/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BrazeProject/main.m; sourceTree = "<group>"; };
-		2ECB3E5F5BEE26EEEDB750E8 /* Pods-BrazeProject-BrazeProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject-BrazeProjectTests.release.xcconfig"; path = "Target Support Files/Pods-BrazeProject-BrazeProjectTests/Pods-BrazeProject-BrazeProjectTests.release.xcconfig"; sourceTree = "<group>"; };
-		31F097B316BD83D92ECEDB44 /* libPods-BrazeProjectRichPush.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectRichPush.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A1CCEF5F00EE40BE7DCA27D /* libPods-BrazeProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C59986EA080ACA50322D9B0 /* Pods-BrazeProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.release.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.release.xcconfig"; sourceTree = "<group>"; };
-		3E17AC915C58761FC9DF4169 /* Pods-BrazeProject-BrazeProjectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject-BrazeProjectTests.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProject-BrazeProjectTests/Pods-BrazeProject-BrazeProjectTests.debug.xcconfig"; sourceTree = "<group>"; };
-		52B425D39391ED776FA0CAD0 /* Pods-BrazeProjectPushStory.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectPushStory.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory.debug.xcconfig"; sourceTree = "<group>"; };
-		6966516151504FECB8343E39 /* libPods-BrazeProject-BrazeProjectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProject-BrazeProjectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58F8590DA9F25DFD05DFA27D /* libPods-BrazeProjectRichPush.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectRichPush.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		65B2EC5E5776DDA449A8E3D2 /* libPods-BrazeProject-BrazeProjectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProject-BrazeProjectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BrazeProject/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A247AC1D6385A958A85E8432 /* Pods-BrazeProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.debug.xcconfig"; sourceTree = "<group>"; };
-		A92FD10FA370AE4861599BA4 /* Pods-BrazeProjectPushStory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectPushStory.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory.release.xcconfig"; sourceTree = "<group>"; };
-		C0056B0412B5353A45812729 /* Pods-BrazeProjectRichPush.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.debug.xcconfig"; sourceTree = "<group>"; };
-		CCCAA9B93114DFE83F9097D0 /* libPods-BrazeProjectPushStory.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectPushStory.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E5BE52AA7479C52FDF496B15 /* Pods-BrazeProjectRichPush.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.release.xcconfig"; sourceTree = "<group>"; };
+		838CF81DA3EB2D219F72D896 /* libPods-BrazeProjectPushStory.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectPushStory.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A4E8BFBE2923E8812002929 /* Pods-BrazeProject-BrazeProjectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject-BrazeProjectTests.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProject-BrazeProjectTests/Pods-BrazeProject-BrazeProjectTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9516524E14EA3F3784559B05 /* Pods-BrazeProject-BrazeProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject-BrazeProjectTests.release.xcconfig"; path = "Target Support Files/Pods-BrazeProject-BrazeProjectTests/Pods-BrazeProject-BrazeProjectTests.release.xcconfig"; sourceTree = "<group>"; };
+		B94B785D37027A821A290516 /* libPods-BrazeProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9DF6294360E23EE8D8DFDF7 /* Pods-BrazeProjectRichPush.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.debug.xcconfig"; sourceTree = "<group>"; };
+		DA60BA8AFB5C5AAF9CBAE724 /* Pods-BrazeProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.release.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.release.xcconfig"; sourceTree = "<group>"; };
+		E137F0A71009E43161872B66 /* Pods-BrazeProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.debug.xcconfig"; sourceTree = "<group>"; };
+		EC8BEB9CA8CF5F027DDBCD74 /* Pods-BrazeProjectPushStory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectPushStory.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory.release.xcconfig"; sourceTree = "<group>"; };
 		EC8E1B412C93542A00F4A255 /* BrazeReactGIFHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrazeReactGIFHelper.h; sourceTree = "<group>"; };
 		EC8E1B422C93543400F4A255 /* BrazeReactGIFHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeReactGIFHelper.m; sourceTree = "<group>"; };
 		EC9B91F02B1F698500C6BD5D /* BrazeProjectRichPush.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BrazeProjectRichPush.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +110,7 @@
 		ECE697AD2A3CC0000060A95D /* BrazeReactDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrazeReactDelegate.h; sourceTree = "<group>"; };
 		ECE697AF2A3CC00B0060A95D /* BrazeReactDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeReactDelegate.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FDE2F12975F976E82290F6F0 /* Pods-BrazeProjectPushStory.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectPushStory.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FFA3C438F6ECE230980EE95 /* BuildFile in Frameworks */,
-				D49243504D0CC62449E7A753 /* libPods-BrazeProject-BrazeProjectTests.a in Frameworks */,
+				EAEFDBAC015418CD5F8D1295 /* libPods-BrazeProject-BrazeProjectTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				566709436C351B31403D41A4 /* libPods-BrazeProject.a in Frameworks */,
+				BD48CA7B92CBEB0DCC27BAB6 /* libPods-BrazeProject.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,7 +137,7 @@
 			files = (
 				EC9B92012B1F6B0C00C6BD5D /* BrazeNotificationService.xcframework in Frameworks */,
 				EC9B92052B1F6B1400C6BD5D /* UserNotifications.framework in Frameworks */,
-				1C1F39C39078CBA3B1D4BA6B /* libPods-BrazeProjectRichPush.a in Frameworks */,
+				EEF120E9873ED765E1BA4C80 /* libPods-BrazeProjectRichPush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,7 +148,7 @@
 				EC9B920D2B1F762C00C6BD5D /* UserNotificationsUI.framework in Frameworks */,
 				EC9B920B2B1F762B00C6BD5D /* UserNotifications.framework in Frameworks */,
 				EC9B921B2B1F76AC00C6BD5D /* BrazePushStory.xcframework in Frameworks */,
-				F2FEB37853C2F04522A0B900 /* libPods-BrazeProjectPushStory.a in Frameworks */,
+				736A8AF07EA1767FB7AD4AA2 /* libPods-BrazeProjectPushStory.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,10 +199,10 @@
 				EC9B91FC2B1F6A3B00C6BD5D /* BrazePushStory.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				EC9B920C2B1F762B00C6BD5D /* UserNotificationsUI.framework */,
-				3A1CCEF5F00EE40BE7DCA27D /* libPods-BrazeProject.a */,
-				6966516151504FECB8343E39 /* libPods-BrazeProject-BrazeProjectTests.a */,
-				CCCAA9B93114DFE83F9097D0 /* libPods-BrazeProjectPushStory.a */,
-				31F097B316BD83D92ECEDB44 /* libPods-BrazeProjectRichPush.a */,
+				B94B785D37027A821A290516 /* libPods-BrazeProject.a */,
+				65B2EC5E5776DDA449A8E3D2 /* libPods-BrazeProject-BrazeProjectTests.a */,
+				838CF81DA3EB2D219F72D896 /* libPods-BrazeProjectPushStory.a */,
+				58F8590DA9F25DFD05DFA27D /* libPods-BrazeProjectRichPush.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -245,14 +245,14 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				A247AC1D6385A958A85E8432 /* Pods-BrazeProject.debug.xcconfig */,
-				3C59986EA080ACA50322D9B0 /* Pods-BrazeProject.release.xcconfig */,
-				3E17AC915C58761FC9DF4169 /* Pods-BrazeProject-BrazeProjectTests.debug.xcconfig */,
-				2ECB3E5F5BEE26EEEDB750E8 /* Pods-BrazeProject-BrazeProjectTests.release.xcconfig */,
-				52B425D39391ED776FA0CAD0 /* Pods-BrazeProjectPushStory.debug.xcconfig */,
-				A92FD10FA370AE4861599BA4 /* Pods-BrazeProjectPushStory.release.xcconfig */,
-				C0056B0412B5353A45812729 /* Pods-BrazeProjectRichPush.debug.xcconfig */,
-				E5BE52AA7479C52FDF496B15 /* Pods-BrazeProjectRichPush.release.xcconfig */,
+				E137F0A71009E43161872B66 /* Pods-BrazeProject.debug.xcconfig */,
+				DA60BA8AFB5C5AAF9CBAE724 /* Pods-BrazeProject.release.xcconfig */,
+				8A4E8BFBE2923E8812002929 /* Pods-BrazeProject-BrazeProjectTests.debug.xcconfig */,
+				9516524E14EA3F3784559B05 /* Pods-BrazeProject-BrazeProjectTests.release.xcconfig */,
+				FDE2F12975F976E82290F6F0 /* Pods-BrazeProjectPushStory.debug.xcconfig */,
+				EC8BEB9CA8CF5F027DDBCD74 /* Pods-BrazeProjectPushStory.release.xcconfig */,
+				C9DF6294360E23EE8D8DFDF7 /* Pods-BrazeProjectRichPush.debug.xcconfig */,
+				09540364EBF55C5C8BEC6C88 /* Pods-BrazeProjectRichPush.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -283,12 +283,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BrazeProjectTests" */;
 			buildPhases = (
-				185265B1A630FA7026EF97F7 /* [CP] Check Pods Manifest.lock */,
+				3F0522C1746B5E91B4E2FCB8 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				EB44B7B0F168B9CD30957E6B /* [CP] Embed Pods Frameworks */,
-				2C25A5E8010C9F5872DB39B0 /* [CP] Copy Pods Resources */,
+				E6FB97510242ED8B16216385 /* [CP] Embed Pods Frameworks */,
+				11AB1D87720F82C83CA2E064 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -304,15 +304,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BrazeProject" */;
 			buildPhases = (
-				74F5EB337C713CD3201C3C4B /* [CP] Check Pods Manifest.lock */,
+				F2C74BC2447021D7DC16EE4E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				EC9B91F82B1F698600C6BD5D /* Embed Foundation Extensions */,
-				5228C6CA6564FEA073051C42 /* [CP] Embed Pods Frameworks */,
-				A3E678E7FFE96EB18D084B2F /* [CP] Copy Pods Resources */,
+				B758238CAB633F43492B7BC0 /* [CP] Embed Pods Frameworks */,
+				2D805406B02B8B9CF778E190 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -329,7 +329,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EC9B91FB2B1F698600C6BD5D /* Build configuration list for PBXNativeTarget "BrazeProjectRichPush" */;
 			buildPhases = (
-				8835B8E1FD5D1C190F9970F4 /* [CP] Check Pods Manifest.lock */,
+				1623F1C21392D0FDF598E216 /* [CP] Check Pods Manifest.lock */,
 				EC9B91EC2B1F698500C6BD5D /* Sources */,
 				EC9B91ED2B1F698500C6BD5D /* Frameworks */,
 				EC9B91EE2B1F698500C6BD5D /* Resources */,
@@ -347,11 +347,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EC9B92182B1F762C00C6BD5D /* Build configuration list for PBXNativeTarget "BrazeProjectPushStory" */;
 			buildPhases = (
-				4361D270D876F59D11E75F4E /* [CP] Check Pods Manifest.lock */,
+				C01DC95AA52EBD0769066D13 /* [CP] Check Pods Manifest.lock */,
 				EC9B92062B1F762B00C6BD5D /* Sources */,
 				EC9B92072B1F762B00C6BD5D /* Frameworks */,
 				EC9B92082B1F762B00C6BD5D /* Resources */,
-				52AFEB2430ADE005545A32A8 /* [CP] Copy Pods Resources */,
+				2AFE0DDA00668496F236B791 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -458,29 +458,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		185265B1A630FA7026EF97F7 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrazeProject-BrazeProjectTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2C25A5E8010C9F5872DB39B0 /* [CP] Copy Pods Resources */ = {
+		11AB1D87720F82C83CA2E064 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -497,85 +475,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProject-BrazeProjectTests/Pods-BrazeProject-BrazeProjectTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4361D270D876F59D11E75F4E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrazeProjectPushStory-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5228C6CA6564FEA073051C42 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		52AFEB2430ADE005545A32A8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		74F5EB337C713CD3201C3C4B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BrazeProject-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8835B8E1FD5D1C190F9970F4 /* [CP] Check Pods Manifest.lock */ = {
+		1623F1C21392D0FDF598E216 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -597,7 +497,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A3E678E7FFE96EB18D084B2F /* [CP] Copy Pods Resources */ = {
+		2AFE0DDA00668496F236B791 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D805406B02B8B9CF778E190 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -614,7 +531,68 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EB44B7B0F168B9CD30957E6B /* [CP] Embed Pods Frameworks */ = {
+		3F0522C1746B5E91B4E2FCB8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BrazeProject-BrazeProjectTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B758238CAB633F43492B7BC0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProject/Pods-BrazeProject-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C01DC95AA52EBD0769066D13 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BrazeProjectPushStory-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E6FB97510242ED8B16216385 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -629,6 +607,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BrazeProject-BrazeProjectTests/Pods-BrazeProject-BrazeProjectTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F2C74BC2447021D7DC16EE4E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BrazeProject-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -711,7 +711,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E17AC915C58761FC9DF4169 /* Pods-BrazeProject-BrazeProjectTests.debug.xcconfig */;
+			baseConfigurationReference = 8A4E8BFBE2923E8812002929 /* Pods-BrazeProject-BrazeProjectTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
@@ -739,7 +739,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2ECB3E5F5BEE26EEEDB750E8 /* Pods-BrazeProject-BrazeProjectTests.release.xcconfig */;
+			baseConfigurationReference = 9516524E14EA3F3784559B05 /* Pods-BrazeProject-BrazeProjectTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -764,7 +764,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A247AC1D6385A958A85E8432 /* Pods-BrazeProject.debug.xcconfig */;
+			baseConfigurationReference = E137F0A71009E43161872B66 /* Pods-BrazeProject.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -773,6 +773,70 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/RCT-Folly\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTDeprecation\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTTypeSafety\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Fabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricComponents\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-ImageManager\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Mapbuffer\"",
+					"\"${PODS_ROOT}/Headers/Public/React-NativeModulesApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAnimation\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAppDelegate\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTFabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeCore\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeHermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-callinvoker\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-debug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-defaultsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-domnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflags\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflagsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-graphics\"",
+					"\"${PODS_ROOT}/Headers/Public/React-hermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-idlecallbacksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jserrorhandler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/React-logger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-microtasksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-nativeconfig\"",
+					"\"${PODS_ROOT}/Headers/Public/React-perflogger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-performancetimeline\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererconsistency\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererdebug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimeexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimescheduler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-timing\"",
+					"\"${PODS_ROOT}/Headers/Public/React-utils\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCodegen\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCommon\"",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"\"${PODS_ROOT}/Headers/Public/SocketRocket\"",
+					"\"${PODS_ROOT}/Headers/Public/Yoga\"",
+					"\"${PODS_ROOT}/Headers/Public/boost\"",
+					"\"${PODS_ROOT}/Headers/Public/braze-react-native-sdk\"",
+					"\"${PODS_ROOT}/Headers/Public/fmt\"",
+					"\"${PODS_ROOT}/Headers/Public/glog\"",
+					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
+					"\"$(PODS_ROOT)/DoubleConversion\"",
+					"\"$(PODS_ROOT)/boost\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Private/Yoga\"",
+				);
 				INFOPLIST_FILE = BrazeProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -794,7 +858,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3C59986EA080ACA50322D9B0 /* Pods-BrazeProject.release.xcconfig */;
+			baseConfigurationReference = DA60BA8AFB5C5AAF9CBAE724 /* Pods-BrazeProject.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -802,6 +866,70 @@
 				CODE_SIGN_ENTITLEMENTS = BrazeProject/BrazeProject.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5GLZKGNWQ3;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/RCT-Folly\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTDeprecation\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTTypeSafety\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Fabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricComponents\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-ImageManager\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Mapbuffer\"",
+					"\"${PODS_ROOT}/Headers/Public/React-NativeModulesApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAnimation\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAppDelegate\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTFabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeCore\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeHermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-callinvoker\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-debug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-defaultsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-domnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflags\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflagsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-graphics\"",
+					"\"${PODS_ROOT}/Headers/Public/React-hermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-idlecallbacksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jserrorhandler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/React-logger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-microtasksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-nativeconfig\"",
+					"\"${PODS_ROOT}/Headers/Public/React-perflogger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-performancetimeline\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererconsistency\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererdebug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimeexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimescheduler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-timing\"",
+					"\"${PODS_ROOT}/Headers/Public/React-utils\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCodegen\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCommon\"",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"\"${PODS_ROOT}/Headers/Public/SocketRocket\"",
+					"\"${PODS_ROOT}/Headers/Public/Yoga\"",
+					"\"${PODS_ROOT}/Headers/Public/boost\"",
+					"\"${PODS_ROOT}/Headers/Public/braze-react-native-sdk\"",
+					"\"${PODS_ROOT}/Headers/Public/fmt\"",
+					"\"${PODS_ROOT}/Headers/Public/glog\"",
+					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
+					"\"$(PODS_ROOT)/DoubleConversion\"",
+					"\"$(PODS_ROOT)/boost\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Private/Yoga\"",
+				);
 				INFOPLIST_FILE = BrazeProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -982,7 +1110,7 @@
 		};
 		EC9B91F92B1F698600C6BD5D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0056B0412B5353A45812729 /* Pods-BrazeProjectRichPush.debug.xcconfig */;
+			baseConfigurationReference = C9DF6294360E23EE8D8DFDF7 /* Pods-BrazeProjectRichPush.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1023,7 +1151,7 @@
 		};
 		EC9B91FA2B1F698600C6BD5D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E5BE52AA7479C52FDF496B15 /* Pods-BrazeProjectRichPush.release.xcconfig */;
+			baseConfigurationReference = 09540364EBF55C5C8BEC6C88 /* Pods-BrazeProjectRichPush.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1063,7 +1191,7 @@
 		};
 		EC9B92192B1F762C00C6BD5D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52B425D39391ED776FA0CAD0 /* Pods-BrazeProjectPushStory.debug.xcconfig */;
+			baseConfigurationReference = FDE2F12975F976E82290F6F0 /* Pods-BrazeProjectPushStory.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1105,7 +1233,7 @@
 		};
 		EC9B921A2B1F762C00C6BD5D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A92FD10FA370AE4861599BA4 /* Pods-BrazeProjectPushStory.release.xcconfig */;
+			baseConfigurationReference = EC8BEB9CA8CF5F027DDBCD74 /* Pods-BrazeProjectPushStory.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;

@@ -242,6 +242,14 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.requestFeedRefresh()
     }
 
+    override fun getBanner(placementId: String, promise: Promise) {
+        brazeImpl.getBanner(placementId, promise)
+    }
+
+    override fun requestBannersRefresh(placementIds: ReadableArray) {
+        brazeImpl.requestBannersRefresh(placementIds)
+    }
+
     override fun requestImmediateDataFlush() {
         brazeImpl.requestImmediateDataFlush()
     }

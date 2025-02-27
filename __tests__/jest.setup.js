@@ -12,7 +12,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
     getEnforcing: function (name) {
       if (name === 'BrazeReactBridge') {
         let NativeBrazeReactModule = jest.requireActual(
-          '../src/NativeBrazeReactModule'
+          '../src/specs/NativeBrazeReactModule'
         );
 
         // Mocks the Turbo Module spec with Jest method stubs.
@@ -46,6 +46,8 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           logContentCardImpression: jest.fn(),
           processContentCardClickAction: jest.fn(),
           requestFeedRefresh: jest.fn(),
+          getBanner: jest.fn(),
+          requestBannersRefresh: jest.fn(),
           requestImmediateDataFlush: jest.fn(),
           enableSDK: jest.fn(),
           disableSDK: jest.fn(),

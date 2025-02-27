@@ -9,6 +9,10 @@
 #import "BrazeReactBridge.h"
 #import "BrazeReactDelegate.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "BrazeBannerView.h"
+#endif
+
 #import <BrazeKit/BrazeKit-Swift.h>
 #import "BrazeReactGIFHelper.h"
 
@@ -169,5 +173,14 @@ static NSString *const iOSPushAutoEnabledKey = @"iOSPushAutoEnabled";
 - (NSURL *)bundleURL {
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 }
+
+#ifdef RCT_NEW_ARCH_ENABLED
+/// Register the `BrazeBannerView` for use as a Fabric component.
+- (NSDictionary<NSString *,Class<RCTComponentViewProtocol>> *)thirdPartyFabricComponents {
+  NSMutableDictionary * dictionary = [super thirdPartyFabricComponents].mutableCopy;
+  dictionary[@"BrazeBannerView"] = [BrazeBannerView class];
+  return dictionary;
+}
+#endif
 
 @end

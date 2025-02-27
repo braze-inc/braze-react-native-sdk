@@ -1,6 +1,6 @@
 import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
 import { TurboModuleRegistry } from 'react-native';
-import type { FeatureFlag, NewsFeedCard, ContentCard } from './index';
+import type { FeatureFlag, NewsFeedCard, ContentCard, Banner } from './index';
 
 export interface Spec extends TurboModule {
   getInitialURL(callback: (deepLink: string) => void): void;
@@ -148,6 +148,8 @@ export interface Spec extends TurboModule {
     callback: ((error?: Object, result?: number) => void) | null
   ): void;
   requestFeedRefresh(): void;
+  getBanner(placementId: string): Promise<Banner | null>;
+  requestBannersRefresh(placementIds: string[]): void;
   requestImmediateDataFlush(): void;
   wipeData(): void;
   disableSDK(): void;

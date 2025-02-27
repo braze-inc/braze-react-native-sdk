@@ -6,6 +6,9 @@
 
 + (BrazeReactUtils *)sharedInstance;
 
++ (Braze *)braze;
++ (void)setBraze:(Braze *)braze;
+
 /**
  * This method should be called in the app delegate's `application:didFinishLaunchingWithOptions:` method.
  * If the push dictionary from `launchOptions` has a Braze push, we store it in `initialPushPayload`.
