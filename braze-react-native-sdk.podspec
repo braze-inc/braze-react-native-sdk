@@ -1,7 +1,7 @@
 require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
-braze_swift_version = '11.7.0'
+braze_swift_version = '11.9.0'
 
 Pod::Spec.new do |s|
   s.name           = 'braze-react-native-sdk'
@@ -19,8 +19,6 @@ Pod::Spec.new do |s|
   s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js'
   s.source_files   = 'iOS/**/*.{h,m,mm,swift}'
 
-  install_modules_dependencies(s)
-
   s.dependency 'BrazeKit', "~> #{braze_swift_version}"
   s.dependency 'BrazeLocation', "~> #{braze_swift_version}"
   s.dependency 'BrazeUI', "~> #{braze_swift_version}"
@@ -30,12 +28,16 @@ Pod::Spec.new do |s|
     'DEFINES_MODULE' => 'YES'
   }
 
-  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
-    s.pod_target_xcconfig = {
-      'DEFINES_MODULE' => 'YES',
-      'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) COCOAPODS=1 RCT_NEW_ARCH_ENABLED=1',
-      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\" \"${PODS_ROOT}/Headers/Private/Yoga\"",
-      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
-    }
+  if respond_to?(:install_modules_dependencies, true)
+    install_modules_dependencies(s)
+  else
+    if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
+      s.pod_target_xcconfig = {
+        'DEFINES_MODULE' => 'YES',
+        'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) COCOAPODS=1 RCT_NEW_ARCH_ENABLED=1',
+        "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\" \"${PODS_ROOT}/Headers/Private/Yoga\"",
+        "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+      }
+    end
   end
 end

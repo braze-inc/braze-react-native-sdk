@@ -1,5 +1,19 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 14.1.0
+
+##### Added
+- Updates the native iOS version bindings [from Braze Swift SDK 11.7.0 to 11.9.0](https://github.com/braze-inc/braze-swift-sdk/compare/11.7.0...11.9.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Fixed
+- Updates the internal implementations of the following methods to use non-deprecated methods from the native Swift SDK:
+  - `getUserId` now uses `braze.user.identifier` instead of `[braze.user idWithCompletion:]`, which was deprecated in Swift SDK [11.5.0](https://github.com/braze-inc/braze-swift-sdk/releases/tag/11.5.0).
+  - `Banner.trackingId` now uses the underlying `banner.trackingId` instead of `banner.identifier`, which was deprecated in Swift SDK [11.4.0](https://github.com/braze-inc/braze-swift-sdk/releases/tag/11.4.0).
+  - These deprecations do not have any impacts to functionality.
+- Fixes the callback signature of `getInitialPushPayload` to indicate that `null` can be returned when there is no payload object available.
+- Fixes the relative path reference to various Braze data models in the `NativeBrazeReactModuleSpec`.
+- Resolves a build failure in the `BrazeBannerView` class introduced in `14.0.0`, which would occur under certain iOS project configurations.
+
 ## 14.0.0
 
 ##### Breaking

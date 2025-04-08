@@ -194,13 +194,12 @@ RCT_EXPORT_METHOD(changeUser:(NSString *)userId signature:(NSString *)signature)
 
 RCT_EXPORT_METHOD(getUserId:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"getUserId called");
-  [braze.user idWithCompletion:^(NSString * _Nullable userId) {
-    if (!userId) {
-      [self reportResultWithCallback:callback andError:@"User ID not found." andResult:userId];
-      return;
-    }
+  NSString *userId = braze.user.identifier;
+  if (!userId) {
+    [self reportResultWithCallback:callback andError:@"User ID not found." andResult:userId];
+  } else {
     [self reportResultWithCallback:callback andError:nil andResult:userId];
-  }];
+  }
 }
 
 RCT_EXPORT_METHOD(addAlias:(NSString *)aliasName aliasLabel:(NSString *)aliasLabel) {
@@ -826,7 +825,7 @@ static NSArray *RCTFormatBanners(NSDictionary<NSString *, BRZBanner *> *banners)
 static NSDictionary *RCTFormatBanner(BRZBanner *banner) {
   NSMutableDictionary *formattedBannerData = [NSMutableDictionary dictionary];
 
-  formattedBannerData[@"trackingId"] = banner.identifier;
+  formattedBannerData[@"trackingId"] = banner.trackingId;
   formattedBannerData[@"placementId"] = banner.placementId;
   formattedBannerData[@"isTestSend"] = @(banner.isTestSend);
   formattedBannerData[@"isControl"] = @(banner.isControl);

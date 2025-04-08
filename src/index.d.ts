@@ -15,10 +15,10 @@ export function getInitialURL(callback: (deepLink: string) => void): void;
  * support handling push notifications and deep links in the payload. This is due to a race condition on startup between
  * the call to `addListener` and React's loading of its JavaScript. This function provides a workaround:
  * If an application is launched from a push notification click, we return the full push payload.
- * @param {function(string)} callback - A callback that returns the formatted Braze push notification as a PushNotificationEvent.
+ * @param {function(PushNotificationEvent | null)} callback - A callback that returns the formatted Braze push notification as a PushNotificationEvent.
  * If there is no push payload, returns null.
  */
-export function getInitialPushPayload(callback: (pushPayload: PushNotificationEvent) => void): void;
+export function getInitialPushPayload(callback: (pushPayload: PushNotificationEvent | null) => void): void;
 
 /**
  * @deprecated This method is deprecated in favor of `getDeviceId`.

@@ -1,10 +1,10 @@
 import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
 import { TurboModuleRegistry } from 'react-native';
-import type { FeatureFlag, NewsFeedCard, ContentCard, Banner } from './index';
+import type { FeatureFlag, NewsFeedCard, ContentCard, Banner } from '../index';
 
 export interface Spec extends TurboModule {
   getInitialURL(callback: (deepLink: string) => void): void;
-  getInitialPushPayload(callback: (pushPayload: Object) => void): void;
+  getInitialPushPayload(callback: (pushPayload: Object | null) => void): void;
   getDeviceId(callback: (error?: Object, result?: string) => void): void;
   changeUser(userId: string, signature?: string | null): void;
   getUserId(callback: (error?: Object, result?: string) => void): void;

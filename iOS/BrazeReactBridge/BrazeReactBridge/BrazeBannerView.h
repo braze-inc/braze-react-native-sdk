@@ -7,7 +7,7 @@
 
 @interface BrazeBannerView : RCTViewComponentView
 #else
-#import "RCTView.h"
+#import <React/RCTView.h>
 @interface BrazeBannerView : RCTView
 #endif
 

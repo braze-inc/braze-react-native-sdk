@@ -1,9 +1,9 @@
 PODS:
   - boost (1.84.0)
-  - braze-react-native-sdk (14.0.0):
-    - BrazeKit (~> 11.7.0)
-    - BrazeLocation (~> 11.7.0)
-    - BrazeUI (~> 11.7.0)
+  - braze-react-native-sdk (14.1.0):
+    - BrazeKit (~> 11.9.0)
+    - BrazeLocation (~> 11.9.0)
+    - BrazeUI (~> 11.9.0)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -24,13 +24,13 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - BrazeKit (11.7.0)
-  - BrazeLocation (11.7.0):
-    - BrazeKit (= 11.7.0)
-  - BrazeNotificationService (11.7.0)
-  - BrazePushStory (11.7.0)
-  - BrazeUI (11.7.0):
-    - BrazeKit (= 11.7.0)
+  - BrazeKit (11.9.0)
+  - BrazeLocation (11.9.0):
+    - BrazeKit (= 11.9.0)
+  - BrazeNotificationService (11.9.0)
+  - BrazePushStory (11.9.0)
+  - BrazeUI (11.9.0):
+    - BrazeKit (= 11.9.0)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
   - FBLazyVector (0.77.0)
@@ -1539,8 +1539,8 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - "braze-react-native-sdk (from `../node_modules/@braze/react-native-sdk`)"
-  - BrazeNotificationService (~> 11.7.0)
-  - BrazePushStory (~> 11.7.0)
+  - BrazeNotificationService (~> 11.9.0)
+  - BrazePushStory (~> 11.9.0)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1759,12 +1759,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  braze-react-native-sdk: 0a8eb476687dfd1a19b1c1acc034309bb5da3acc
-  BrazeKit: e45207b0242e1497e0f0579b50e492490d93fe72
-  BrazeLocation: 0954ba69e8a28d306ae65551f9f5c2e78c254e56
-  BrazeNotificationService: ce6e4dc67878c3f66ecccf957d6f7f09645c7646
-  BrazePushStory: d2c9f99bad244b742715f4356fb032037ae86967
-  BrazeUI: 29525f36e0620097f78612cd150be5abedfa75cc
+  braze-react-native-sdk: 12d4300316e0b52eed2d97b36aeba44edeb719e0
+  BrazeKit: b21335426470a4e80b0a21fdeec69bdbe6852222
+  BrazeLocation: 03848efc27e835646013aa297868707111a1e715
+  BrazeNotificationService: c27a59d27ae46a05340a62ac5fea017d04e46841
+  BrazePushStory: 2d3fd065c85832050874df6aaafaab1622e8a369
+  BrazeUI: 913416d6420606c18e81de9ee0195813b1de4a66
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 2bc03a5cf64e29c611bbc5d7eb9d9f7431f37ee6
@@ -1833,6 +1833,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 
-PODFILE CHECKSUM: a87805802ccd49c88b4cf3514ea96aa8dc3dc2a5
+PODFILE CHECKSUM: 50798db13b6bfe67fe1bd36c762a32618a536ea6
 
 COCOAPODS: 1.16.2
