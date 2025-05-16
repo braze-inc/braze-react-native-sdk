@@ -102,7 +102,12 @@ static BrazeReactUtils *sharedInstance;
   eventData[@"body"] = payload.body;
   eventData[@"summary_text"] = payload.subtitle;
   eventData[@"badge_count"] = payload.badge;
-  eventData[@"timestamp"] = [NSNumber numberWithInteger:(NSInteger)[payload.date timeIntervalSince1970]];
+
+  // Convert the timestamp to milliseconds.
+  double timestamp = [payload.date timeIntervalSince1970];
+  NSInteger timestampInMilliseconds = (NSInteger)(timestamp * 1000.0);
+  eventData[@"timestamp"] = [NSNumber numberWithInteger:timestampInMilliseconds];
+
   eventData[@"is_silent"] = [NSNumber numberWithBool:payload.isSilent];
   eventData[@"is_braze_internal"] = [NSNumber numberWithBool:payload.isInternal];
   eventData[@"braze_properties"] = filterBrazeProperties(payload.userInfo);
