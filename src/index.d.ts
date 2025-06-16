@@ -1,7 +1,5 @@
-// Definitions by: ahanriat <https://github.com/ahanriat>
-// TypeScript Version: 3.0
-
-import { EmitterSubscription } from 'react-native';
+import { ComponentType } from 'react';
+import { EmitterSubscription, StyleProp, ViewStyle } from 'react-native';
 
 /**
  * @deprecated This method is deprecated in favor of `getInitialPushPayload`.
@@ -710,10 +708,10 @@ export function getUnreadCardCountForCategories(
   callback: Callback<number>
 ): void;
 
-// Banner Cards
+// Banners
 
 /**
- * Braze Banner Cards
+ * Braze Banners
  */
 export interface Banner {
   /** The campaign and message variation IDs. */
@@ -752,6 +750,34 @@ export function getBanner(placementId: string): Promise<Banner | null>;
  * @param placementIds -  The list of placement IDs requested.
  */
 export function requestBannersRefresh(placementIds: string[]): void;
+
+/**
+ * The configuration properties associated with the Banner view.
+ */
+export interface BrazeBannerViewProps {
+  /** The placement ID for this Banner view. */
+  placementID: string;
+
+  /**
+   * Optional custom styles to be applied to the Banner view.
+   *
+   * If you override the `height` style property, you will need to implement the {@link onHeightChanged}
+   * callback to handle dynamic size changes.
+   */
+  style?: StyleProp<ViewStyle>;
+
+  /**
+   * An optional callback function that is invoked whenever the height of the Banner changes.
+   *
+   * @param height - The new height of the Banner in pixels.
+   */
+  onHeightChanged?: (height: number) => void;
+}
+
+/**
+ * The default Braze Banner view component.
+ */
+export const BrazeBannerView: ComponentType<BrazeBannerViewProps>;
 
 /**
  * Requests a News Feed refresh.
@@ -1343,22 +1369,22 @@ export const TrackingProperty: BrazeTrackingProperty;
  * The SDK will route collection of any of these data into a separate tracking endpoint, which must be declared in the privacy manifest.
  */
 export interface TrackingPropertyAllowList {
-  /* Tracking properties you wish to add to your allowlist */
+  /** Tracking properties you wish to add to your allowlist */
   adding?: BrazeTrackingProperty[keyof BrazeTrackingProperty][],
 
-  /* Tracking properties you wish to remove from your allowlist */
+  /** Tracking properties you wish to remove from your allowlist */
   removing?: BrazeTrackingProperty[keyof BrazeTrackingProperty][],
 
-  /* Custom event strings you wish to add to your current allowlist. */
+  /** Custom event strings you wish to add to your current allowlist. */
   addingCustomEvents?: string[],
 
-  /* Custom event strings you wish to remove from your current allowlist. */
+  /** Custom event strings you wish to remove from your current allowlist. */
   removingCustomEvents?: string[],
 
-  /* Custom attribute strings you wish to add to your current allowlist. */
+  /** Custom attribute strings you wish to add to your current allowlist. */
   addingCustomAttributes?: string[],
 
-  /* Custom attribute strings you wish to remove from your current allowlist. */
+  /** Custom attribute strings you wish to remove from your current allowlist. */
   removingCustomAttributes?: string[],
 }
 
@@ -1395,19 +1421,19 @@ export interface SDKAuthenticationErrorType {
 }
 
 export interface PushNotificationEvent {
-  /* Notification payload type. */
+  /** Notification payload type. */
   payload_type: string;
 
-  /* URL opened by the notification. */
+  /** URL opened by the notification. */
   url: string;
 
-  /* Specifies whether the URL should be opened in a modal webview. */
+  /** Specifies whether the URL should be opened in a modal webview. */
   use_webview: boolean;
 
-  /* Notification title. */
+  /** Notification title. */
   title: string;
 
-  /* Notification body, or content text. */
+  /** Notification body, or content text. */
   body: string;
 
   /**
@@ -1417,10 +1443,10 @@ export interface PushNotificationEvent {
    */
   summary_text: string;
 
-  /* Notification badge count. */
+  /** Notification badge count. */
   badge_count: number;
 
-  /* Time at which the payload was received by the application. */
+  /** Time at which the payload was received by the application. */
   timestamp: number;
 
   /**
@@ -1432,19 +1458,19 @@ export interface PushNotificationEvent {
    */
   is_silent: boolean;
 
-  /* Specifies whether the payload is used by Braze for an internal SDK feature. */
+  /** Specifies whether the payload is used by Braze for an internal SDK feature. */
   is_braze_internal: boolean;
 
-  /* URL associated with the notification image. */
+  /** URL associated with the notification image. */
   image_url: string;
 
-  /* Braze properties associated with the campaign (key-value pairs). */
+  /** Braze properties associated with the campaign (key-value pairs). */
   braze_properties: { [key: string]: any };
 
-  /* iOS-specific fields. */
+  /** iOS-specific fields. */
   ios: { [key: string]: any };
 
-  /* Android-specific fields. */
+  /** Android-specific fields. */
   android: { [key: string]: any };
 
   /**
@@ -1481,10 +1507,10 @@ export interface ContentCardsUpdatedEvent {
   cards: ContentCard[];
 }
 /**
- * Received an updated list of Banner Cards from the Braze SDK.
+ * Received an updated list of Banners from the Braze SDK.
  */
 export interface BannerCardsUpdatedEvent {
-  /** A list of Banner Cards in this update. */
+  /** A list of Banners in this update. */
   banners: Banner[];
 }
 

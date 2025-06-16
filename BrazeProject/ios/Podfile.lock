@@ -1,6 +1,6 @@
 PODS:
   - boost (1.84.0)
-  - braze-react-native-sdk (15.0.0):
+  - braze-react-native-sdk (15.0.1):
     - BrazeKit (~> 12.0.0)
     - BrazeLocation (~> 12.0.0)
     - BrazeUI (~> 12.0.0)
@@ -1530,9 +1530,9 @@ PODS:
     - React-logger (= 0.77.0)
     - React-perflogger (= 0.77.0)
     - React-utils (= 0.77.0)
-  - SDWebImage (5.21.0):
-    - SDWebImage/Core (= 5.21.0)
-  - SDWebImage/Core (5.21.0)
+  - SDWebImage (5.21.1):
+    - SDWebImage/Core (= 5.21.1)
+  - SDWebImage/Core (5.21.1)
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
@@ -1759,7 +1759,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  braze-react-native-sdk: 140d746b1362c59cfad139e18d70a1aa0980e8fa
+  braze-react-native-sdk: 8b6304e9d4f6962ab97d8a4d2569cf450305fe81
   BrazeKit: cd259b7f3afa6b51dbff349a09aaef14a0ef0f0a
   BrazeLocation: c19eb4504dcf5ee409197ff0288272bdf4016a06
   BrazeNotificationService: cde3114c1300c0e4f3caf9278379550c4968bf06
@@ -1829,7 +1829,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 3d947e9d62f351c06c71497e1be897e6006dc303
   ReactCodegen: 1baa534318b19e95fb0f02db0a1ae1e3c271944d
   ReactCommon: 6014af4276bb2debc350e2620ef1bd856b4d981c
-  SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
+  SDWebImage: f29024626962457f3470184232766516dee8dfea
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 

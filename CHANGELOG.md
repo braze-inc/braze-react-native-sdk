@@ -1,5 +1,12 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 15.0.1
+
+##### Fixed
+- Improves the TypeScript declarations in the following areas:
+  - Adds missing TypeScript definitions for the `BrazeBannerView` component and its children properties.
+  - Usage comments that were previously missing for properties on `PushNotificationEvent` and `TrackingPropertyAllowList` will now appear in the TypeScript auto-complete descriptions.
+
 ## 15.0.0
 
 > [!IMPORTANT]

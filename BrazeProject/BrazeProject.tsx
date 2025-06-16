@@ -160,7 +160,7 @@ export const BrazeProject = (): ReactElement => {
     ]);
   };
 
-  const handlePushPayload = (pushPayload) => {
+  const handlePushPayload = (pushPayload: Braze.PushNotificationEvent) => {
     if (pushPayload) {
       console.log(
         `Received push notification payload:
