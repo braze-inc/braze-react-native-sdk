@@ -10,17 +10,17 @@ export interface Spec extends TurboModule {
   getUserId(callback: (error?: Object, result?: string) => void): void;
   setSdkAuthenticationSignature(signature: string): void;
   addAlias(aliasName: string, aliasLabel: string): void;
-  setFirstName(firstName: string): void;
-  setLastName(lastName: string): void;
-  setEmail(email: string): void;
+  setFirstName(firstName: string | null): void;
+  setLastName(lastName: string | null): void;
+  setEmail(email: string | null): void;
   setGender(
-    gender: string,
+    gender: string | null,
     callback?: ((error?: Object, result?: boolean) => void) | null
   ): void;
-  setLanguage(language: string): void;
-  setCountry(country: string): void;
-  setHomeCity(homeCity: string): void;
-  setPhoneNumber(phoneNumber: string): void;
+  setLanguage(language: string | null): void;
+  setCountry(country: string | null): void;
+  setHomeCity(homeCity: string | null): void;
+  setPhoneNumber(phoneNumber: string | null): void;
   setDateOfBirth(
     year: number,
     month: number,

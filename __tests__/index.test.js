@@ -97,10 +97,20 @@ test('it calls BrazeReactBridge.setFirstName', () => {
   expect(NativeBrazeReactModule.setFirstName).toBeCalledWith(first_name);
 });
 
+test('it calls BrazeReactBrige.setFirstNameWithNull', () => {
+  Braze.setFirstName(null);
+  expect(NativeBrazeReactModule.setFirstName).toBeCalledWith(null);
+});
+
 test('it calls BrazeReactBridge.setLastName', () => {
   const last_name = "some_name";
   Braze.setLastName(last_name);
   expect(NativeBrazeReactModule.setLastName).toBeCalledWith(last_name);
+});
+
+test('it calls BrazeReactBrige.setLastNameWithNull', () => {
+  Braze.setLastName(null);
+  expect(NativeBrazeReactModule.setLastName).toBeCalledWith(null);
 });
 
 test('it calls BrazeReactBridge.setLanguage', () => {
@@ -109,10 +119,20 @@ test('it calls BrazeReactBridge.setLanguage', () => {
   expect(NativeBrazeReactModule.setLanguage).toBeCalledWith(language);
 });
 
+test('it calls BrazeReactBrige.setLanguageWithNull', () => {
+  Braze.setLanguage(null);
+  expect(NativeBrazeReactModule.setLanguage).toBeCalledWith(null);
+});
+
 test('it calls BrazeReactBridge.setEmail', () => {
   const email = "some_email";
   Braze.setEmail(email);
   expect(NativeBrazeReactModule.setEmail).toBeCalledWith(email);
+});
+
+test('it calls BrazeReactBrige.setEmailWithNull', () => {
+  Braze.setEmail(null);
+  expect(NativeBrazeReactModule.setEmail).toBeCalledWith(null);
 });
 
 test('it calls BrazeReactBridge.setCountry', () => {
@@ -121,16 +141,31 @@ test('it calls BrazeReactBridge.setCountry', () => {
   expect(NativeBrazeReactModule.setCountry).toBeCalledWith(country);
 });
 
+test('it calls BrazeReactBrige.setCountryWithNull', () => {
+  Braze.setCountry(null);
+  expect(NativeBrazeReactModule.setCountry).toBeCalledWith(null);
+});
+
 test('it calls BrazeReactBridge.setHomeCity', () => {
   const city = "some_city";
   Braze.setHomeCity(city);
   expect(NativeBrazeReactModule.setHomeCity).toBeCalledWith(city);
 });
 
+test('it calls BrazeReactBrige.setHomeCityWithNull', () => {
+  Braze.setHomeCity(null);
+  expect(NativeBrazeReactModule.setHomeCity).toBeCalledWith(null);
+});
+
 test('it calls BrazeReactBridge.setPhoneNumber', () => {
   const number = "555-867-5309";
   Braze.setPhoneNumber(number);
   expect(NativeBrazeReactModule.setPhoneNumber).toBeCalledWith(number);
+});
+
+test('it calls BrazeReactBrige.setPhoneNumberWithNull', () => {
+  Braze.setPhoneNumber(null);
+  expect(NativeBrazeReactModule.setPhoneNumber).toBeCalledWith(null);
 });
 
 test('it calls BrazeReactBridge.requestFeedRefresh', () => {
@@ -454,6 +489,11 @@ test('it calls BrazeReactBridge.setGender', () => {
   const gender = "male";
   Braze.setGender(gender, testCallback);
   expect(NativeBrazeReactModule.setGender).toBeCalledWith(gender, testCallback);
+});
+
+test('it calls BrazeReactBrige.setGenderWithNull', () => {
+  Braze.setGender(null, testCallback);
+  expect(NativeBrazeReactModule.setGender).toBeCalledWith(null, testCallback);
 });
 
 test('it calls BrazeReactBridge.addToSubscriptionGroup', () => {

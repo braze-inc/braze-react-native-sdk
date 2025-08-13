@@ -1,9 +1,14 @@
 package com.braze.reactbridge
 
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Callback
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 
-class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactModuleSpec(reactContext) {
-    val brazeImpl = BrazeReactBridgeImpl(reactContext, currentActivity)
+@Suppress("TooManyFunctions")
+class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReactModuleSpec(reactContext) {
+    val brazeImpl = BrazeReactBridgeImpl(reactContext, reactContext.currentActivity)
 
     override fun getName(): String {
         return BrazeReactBridgeImpl.NAME
@@ -37,35 +42,35 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
         brazeImpl.addAlias(aliasName, aliasLabel)
     }
 
-    override fun setFirstName(firstName: String) {
+    override fun setFirstName(firstName: String?) {
         brazeImpl.setFirstName(firstName)
     }
 
-    override fun setLastName(lastName: String) {
+    override fun setLastName(lastName: String?) {
         brazeImpl.setLastName(lastName)
     }
 
-    override fun setEmail(email: String) {
+    override fun setEmail(email: String?) {
         brazeImpl.setEmail(email)
     }
 
-    override fun setGender(gender: String, callback: Callback?) {
+    override fun setGender(gender: String?, callback: Callback?) {
         brazeImpl.setGender(gender, callback)
     }
 
-    override fun setLanguage(language: String) {
+    override fun setLanguage(language: String?) {
         brazeImpl.setLanguage(language)
     }
 
-    override fun setCountry(country: String) {
+    override fun setCountry(country: String?) {
         brazeImpl.setCountry(country)
     }
 
-    override fun setHomeCity(homeCity: String) {
+    override fun setHomeCity(homeCity: String?) {
         brazeImpl.setHomeCity(homeCity)
     }
 
-    override fun setPhoneNumber(phoneNumber: String) {
+    override fun setPhoneNumber(phoneNumber: String?) {
         brazeImpl.setPhoneNumber(phoneNumber)
     }
 
@@ -384,5 +389,4 @@ class BrazeReactBridge(reactContext: ReactApplicationContext): NativeBrazeReactM
     override fun removeListeners(count: Double) {
         brazeImpl.removeListeners(count.toInt())
     }
-
 }

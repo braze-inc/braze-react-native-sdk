@@ -14,7 +14,7 @@ Effective marketing automation is an essential part of successfully scaling and 
 ## Version Support
 
 > [!NOTE]
-> This SDK has been tested with React Native version **0.77.0**.
+> This SDK has been tested with React Native version **0.80.0**.
 
 | Braze Plugin | React Native | Supports New Architecture? |
 | ------------ | ------------ | -------------------------- |

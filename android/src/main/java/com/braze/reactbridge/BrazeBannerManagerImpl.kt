@@ -18,7 +18,7 @@ object BrazeBannerManagerImpl {
         surfaceId: Int,
         viewId: Int,
         private val payload: WritableMap
-    ): Event<BannerDimensionsEvent>(surfaceId, viewId) {
+    ) : Event<BannerDimensionsEvent>(surfaceId, viewId) {
         override fun getEventName(): String = EVENT_HEIGHT_CHANGED
         override fun getEventData(): WritableMap? = payload
     }

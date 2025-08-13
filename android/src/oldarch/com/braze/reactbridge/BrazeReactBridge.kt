@@ -1,3 +1,5 @@
+@file:Suppress("WildcardImport")
+
 package com.braze.reactbridge
 
 import com.facebook.react.bridge.*
@@ -9,12 +11,12 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     override fun getName() = BrazeReactBridgeImpl.NAME
 
     @ReactMethod
-    fun getInitialURL(callback: Callback) {
+    fun getInitialURL(@Suppress("UNUSED_PARAMETER") callback: Callback) {
         // iOS only
     }
 
     @ReactMethod
-    fun getInitialPushPayload(callback: Callback) {
+    fun getInitialPushPayload(@Suppress("UNUSED_PARAMETER") callback: Callback) {
         // iOS only
     }
 
@@ -44,42 +46,42 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setFirstName(firstName: String) {
+    fun setFirstName(firstName: String?) {
         brazeImpl.setFirstName(firstName)
     }
 
     @ReactMethod
-    fun setLastName(lastName: String) {
+    fun setLastName(lastName: String?) {
         brazeImpl.setLastName(lastName)
     }
 
     @ReactMethod
-    fun setEmail(email: String) {
+    fun setEmail(email: String?) {
         brazeImpl.setEmail(email)
     }
 
     @ReactMethod
-    fun setGender(gender: String, callback: Callback?) {
+    fun setGender(gender: String?, callback: Callback?) {
         brazeImpl.setGender(gender, callback)
     }
 
     @ReactMethod
-    fun setLanguage(language: String) {
+    fun setLanguage(language: String?) {
         brazeImpl.setLanguage(language)
     }
 
     @ReactMethod
-    fun setCountry(country: String) {
+    fun setCountry(country: String?) {
         brazeImpl.setCountry(country)
     }
 
     @ReactMethod
-    fun setHomeCity(homeCity: String) {
+    fun setHomeCity(homeCity: String?) {
         brazeImpl.setHomeCity(homeCity)
     }
 
     @ReactMethod
-    fun setPhoneNumber(phoneNumber: String) {
+    fun setPhoneNumber(phoneNumber: String?) {
         brazeImpl.setPhoneNumber(phoneNumber)
     }
 
@@ -354,7 +356,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun subscribeToInAppMessage(useBrazeUI: Boolean, callback: Callback?) {
+    fun subscribeToInAppMessage(useBrazeUI: Boolean, @Suppress("UNUSED_PARAMETER") callback: Callback?) {
         brazeImpl.subscribeToInAppMessage(useBrazeUI)
     }
 
@@ -444,17 +446,17 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setIdentifierForAdvertiser(identifierForAdvertiser: String) {
+    fun setIdentifierForAdvertiser(@Suppress("UNUSED_PARAMETER") identifierForAdvertiser: String) {
         // iOS only
     }
 
     @ReactMethod
-    fun setIdentifierForVendor(identifierForVendor: String) {
+    fun setIdentifierForVendor(@Suppress("UNUSED_PARAMETER") identifierForVendor: String) {
         // iOS only
     }
 
     @ReactMethod
-    fun updateTrackingPropertyAllowList(allowList: ReadableMap) {
+    fun updateTrackingPropertyAllowList(@Suppress("UNUSED_PARAMETER") allowList: ReadableMap) {
         // iOS only
     }
 

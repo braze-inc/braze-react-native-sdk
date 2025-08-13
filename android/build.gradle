@@ -54,8 +54,12 @@ android {
 
 dependencies {
   api 'com.facebook.react:react-native:+'
+  testImplementation 'androidx.test:core-ktx:1.6.1'
+  testImplementation "junit:junit:4.13.2"
+  testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
+  testImplementation "org.robolectric:robolectric:4.15.1"
 
-  def wrapper_braze_sdk_version = "36.0.0"
+  def wrapper_braze_sdk_version = "37.0.0"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
   
   if (shouldImportBrazeLocationLibrary()) {

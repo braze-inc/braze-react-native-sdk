@@ -2,7 +2,9 @@ package com.braze.reactbridge
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.annotation.VisibleForTesting
 import com.braze.Braze
 import com.braze.BrazeUser
 import com.braze.Constants
@@ -17,12 +19,9 @@ import com.braze.events.ContentCardsUpdatedEvent
 import com.braze.events.FeatureFlagsUpdatedEvent
 import com.braze.events.FeedUpdatedEvent
 import com.braze.events.IEventSubscriber
-import com.braze.events.IFireOnceEventSubscriber
 import com.braze.models.cards.Card
 import com.braze.models.inappmessage.IInAppMessage
-import com.braze.models.inappmessage.IInAppMessageImmersive
 import com.braze.models.inappmessage.InAppMessageImmersiveBase
-import com.braze.models.inappmessage.MessageButton
 import com.braze.models.outgoing.AttributionData
 import com.braze.models.outgoing.BrazeProperties
 import com.braze.support.BrazeLogger.Priority.V
@@ -34,7 +33,15 @@ import com.braze.ui.activities.ContentCardsActivity
 import com.braze.ui.inappmessage.BrazeInAppMessageManager
 import com.braze.ui.inappmessage.InAppMessageOperation
 import com.braze.ui.inappmessage.listeners.DefaultInAppMessageManagerListener
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Callback
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.json.JSONArray
 import org.json.JSONObject
@@ -49,6 +56,9 @@ import com.braze.ui.actions.NewsfeedAction
 import com.braze.support.toBundle
 import com.braze.enums.Channel
 import com.braze.events.BannersUpdatedEvent
+import com.braze.models.push.BrazeNotificationPayload
+import com.facebook.react.bridge.ReadableType
+import com.facebook.react.bridge.WritableNativeArray
 
 @Suppress("TooManyFunctions", "LargeClass")
 class BrazeReactBridgeImpl(
@@ -79,8 +89,10 @@ class BrazeReactBridgeImpl(
         subscribeToFeatureFlagsUpdatedEvent()
     }
 
-    private val braze: Braze
-        get() = Braze.getInstance(reactApplicationContext)
+    @VisibleForTesting
+    internal var brazeTestingMock: Braze? = null
+    val braze: Braze
+        get() = brazeTestingMock ?: Braze.getInstance(reactApplicationContext)
 
     fun requestImmediateDataFlush() = braze.requestImmediateDataFlush()
 
@@ -225,18 +237,14 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun setFirstName(firstName: String) = runOnUser { it.setFirstName(firstName) }
+    fun setFirstName(firstName: String?) = runOnUser { it.setFirstName(firstName) }
 
-    fun setLastName(lastName: String) = runOnUser { it.setLastName(lastName) }
+    fun setLastName(lastName: String?) = runOnUser { it.setLastName(lastName) }
 
-    fun setEmail(email: String) = runOnUser { it.setEmail(email) }
+    fun setEmail(email: String?) = runOnUser { it.setEmail(email) }
 
-    fun setGender(gender: String, callback: Callback?) {
-        val genderValue = Gender.getGender(gender.lowercase(Locale.US))
-        if (genderValue == null) {
-            callback.reportResult(error = "Invalid input $gender. Gender not set.")
-            return
-        }
+    fun setGender(gender: String?, callback: Callback?) {
+        val genderValue = Gender.getGender(gender?.lowercase(Locale.US))
         runOnUser { callback.reportResult(it.setGender(genderValue)) }
     }
 
@@ -249,18 +257,18 @@ class BrazeReactBridgeImpl(
             } else {
                 brazelog(W) {
                     "Invalid date of birth parameter: month is required to be within specified range. " +
-                            "Not setting date of birth."
+                        "Not setting date of birth."
                 }
             }
         }
 
-    fun setCountry(country: String) = runOnUser { it.setCountry(country) }
+    fun setCountry(country: String?) = runOnUser { it.setCountry(country) }
 
-    fun setHomeCity(homeCity: String) = runOnUser { it.setHomeCity(homeCity) }
+    fun setHomeCity(homeCity: String?) = runOnUser { it.setHomeCity(homeCity) }
 
-    fun setPhoneNumber(phoneNumber: String) = runOnUser { it.setPhoneNumber(phoneNumber) }
+    fun setPhoneNumber(phoneNumber: String?) = runOnUser { it.setPhoneNumber(phoneNumber) }
 
-    fun setLanguage(language: String) = runOnUser { it.setLanguage(language) }
+    fun setLanguage(language: String?) = runOnUser { it.setLanguage(language) }
 
     fun addToSubscriptionGroup(groupId: String, callback: Callback?) {
         runOnUser {
@@ -279,7 +287,7 @@ class BrazeReactBridgeImpl(
         if (subscriptionValue == null) {
             callback.reportResult(
                 error = "Invalid subscription type $subscriptionType." +
-                        " Push notification subscription type not set."
+                    " Push notification subscription type not set."
             )
             return
         }
@@ -293,7 +301,7 @@ class BrazeReactBridgeImpl(
         if (subscriptionValue == null) {
             callback.reportResult(
                 error = "Invalid subscription type $subscriptionType." +
-                        " Email notification subscription type not set."
+                    " Email notification subscription type not set."
             )
             return
         }
@@ -304,7 +312,9 @@ class BrazeReactBridgeImpl(
 
     fun launchNewsFeed() {
         val intent = Intent(currentActivity, BrazeFeedActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+            Intent.FLAG_ACTIVITY_SINGLE_TOP
         this.reactApplicationContext.startActivity(intent)
     }
 
@@ -324,7 +334,7 @@ class BrazeReactBridgeImpl(
     }
 
     fun getNewsFeedCards(promise: Promise) {
-        braze.subscribeToFeedUpdates(IFireOnceEventSubscriber {
+        braze.subscribeToFeedUpdates(IEventSubscriber {
             promise.resolve(mapContentCards(it.feedCards))
             updateNewsFeedCardsIfNeeded(it)
         })
@@ -339,9 +349,11 @@ class BrazeReactBridgeImpl(
         getNewsFeedCardById(id)?.logImpression()
     }
 
-    fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean) {
+    fun launchContentCards(@Suppress("UNUSED_PARAMETER") dismissAutomaticallyOnCardClick: Boolean) {
         val intent = Intent(currentActivity, ContentCardsActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+            Intent.FLAG_ACTIVITY_SINGLE_TOP
         this.reactApplicationContext.startActivity(intent)
     }
 
@@ -350,7 +362,7 @@ class BrazeReactBridgeImpl(
     }
 
     fun getContentCards(promise: Promise) {
-        braze.subscribeToContentCardsUpdates(IFireOnceEventSubscriber { message ->
+        braze.subscribeToContentCardsUpdates(IEventSubscriber { message ->
             promise.resolve(mapContentCards(message.allCards))
             updateContentCardsIfNeeded(message)
         })
@@ -492,64 +504,82 @@ class BrazeReactBridgeImpl(
         }
 
         pushNotificationEventSubscriber = IEventSubscriber { event ->
-            val pushType = when (event.eventType) {
-                BrazePushEventType.NOTIFICATION_RECEIVED -> "push_received"
-                BrazePushEventType.NOTIFICATION_OPENED -> "push_opened"
-                else -> return@IEventSubscriber
-            }
+            val pushType = getPushEventType(event.eventType) ?: return@IEventSubscriber
             val eventData = event.notificationPayload
-
-            val data = WritableNativeMap().apply {
-                putString("payload_type", pushType)
-                putString("url", eventData.deeplink)
-                putString("title", eventData.titleText)
-                putString("body", eventData.contentText)
-                putString("summary_text", eventData.summaryText)
-                eventData.notificationBadgeNumber?.let { putInt("badge_count", it) }
-                eventData.notificationExtras.getLong("braze_push_received_timestamp")
-                    .takeUnless { it == 0L }?.let {
-                        // Convert to Double when passing to JS layer since timestamp can't fit in a 32-bit
-                        // int and WriteableNativeMap doesn't support long's bc of language limitations
-                        putDouble("timestamp", it.toDouble())
-                    }
-                putBoolean(
-                    "use_webview",
-                    eventData.notificationExtras.getString("ab_use_webview") == "true"
-                )
-                putBoolean(
-                    "is_silent", eventData.titleText == null && eventData.contentText == null
-                )
-                putBoolean(
-                    "is_braze_internal",
-                    eventData.isUninstallTrackingPush
-                            || eventData.shouldSyncGeofences
-                            || eventData.shouldRefreshFeatureFlags
-                )
-                putString("image_url", eventData.bigImageUrl)
-                putMap("android", convertToMap(eventData.notificationExtras))
-
-                // Deprecated legacy fields
-                putString("push_event_type", pushType)
-                putString("deeplink", eventData.deeplink)
-                putString("content_text", eventData.contentText)
-                putString("raw_android_push_data", eventData.notificationExtras.toString())
-            }
-
-            // WritableNativeMap can only be consumed once and will be erased from memory after reading from it.
-            // Need to create two distinct maps to avoid errors after consuming the first one.
-            val returnedKvpMap =
-                convertToMap(eventData.brazeExtras, setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY))
-            val brazePropertiesMap =
-                convertToMap(eventData.brazeExtras, setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY))
-            data.putMap("braze_properties", brazePropertiesMap)
-            // Deprecated legacy field
-            data.putMap("kvp_data", returnedKvpMap)
+            val data = createPushNotificationData(eventData, pushType)
+            addBrazePropertiesToData(data, eventData)
 
             brazelog { "Sending push notification event with data $data" }
             reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java)
                 .emit(PUSH_NOTIFICATION_EVENT_NAME, data)
         }
         braze.subscribeToPushNotificationEvents(pushNotificationEventSubscriber)
+    }
+
+    private fun getPushEventType(eventType: BrazePushEventType): String? {
+        return when (eventType) {
+            BrazePushEventType.NOTIFICATION_RECEIVED -> "push_received"
+            BrazePushEventType.NOTIFICATION_OPENED -> "push_opened"
+            else -> null
+        }
+    }
+
+    private fun createPushNotificationData(
+        eventData: BrazeNotificationPayload,
+        pushType: String
+    ): WritableNativeMap {
+        return WritableNativeMap().apply {
+            putString("payload_type", pushType)
+            putString("url", eventData.deeplink)
+            putString("title", eventData.titleText)
+            putString("body", eventData.contentText)
+            putString("summary_text", eventData.summaryText)
+            eventData.notificationBadgeNumber?.let { putInt("badge_count", it) }
+            eventData.notificationExtras.getLong(Constants.BRAZE_PUSH_RECEIVED_TIMESTAMP_MILLIS)
+                .takeUnless { it == 0L }?.let {
+                    // Convert to Double when passing to JS layer since timestamp can't fit in a 32-bit
+                    // int and WriteableNativeMap doesn't support longs bc of language limitations
+                    putDouble("timestamp", it.toDouble())
+                }
+            putBoolean(
+                "use_webview",
+                eventData.notificationExtras.getString(Constants.BRAZE_PUSH_OPEN_URI_IN_WEBVIEW_KEY) == "true"
+            )
+            putBoolean(
+                "is_silent", eventData.titleText == null && eventData.contentText == null
+            )
+            putBoolean(
+                "is_braze_internal",
+                eventData.isUninstallTrackingPush || eventData.shouldRefreshFeatureFlags
+            )
+            putString("image_url", eventData.bigImageUrl)
+            putMap("android", convertToMap(eventData.notificationExtras))
+
+            // Deprecated legacy fields
+            putString("push_event_type", pushType)
+            putString("deeplink", eventData.deeplink)
+            putString("content_text", eventData.contentText)
+            putString("raw_android_push_data", eventData.notificationExtras.toString())
+        }
+    }
+
+    private fun addBrazePropertiesToData(
+        data: WritableNativeMap,
+        eventData: BrazeNotificationPayload
+    ) {
+        // WritableNativeMap can only be consumed once and will be erased from memory after reading from it.
+        // Need to create two distinct maps to avoid errors after consuming the first one.
+        val returnedKvpMap = convertToMap(
+            eventData.brazeExtras,
+            setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY)
+        )
+        val brazePropertiesMap = convertToMap(
+            eventData.brazeExtras,
+            setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY)
+        )
+        data.putMap("braze_properties", brazePropertiesMap)
+        // Deprecated legacy field
+        data.putMap("kvp_data", returnedKvpMap)
     }
 
     fun logContentCardDismissed(id: String) {
@@ -602,7 +632,7 @@ class BrazeReactBridgeImpl(
         if (category == null || cardCategory == null && category != "all") {
             callback.reportResult(
                 error = "Invalid card category $category," +
-                        " could not retrieve$cardCountTag"
+                    " could not retrieve$cardCountTag"
             )
             return
         }
@@ -632,6 +662,7 @@ class BrazeReactBridgeImpl(
                 }
                 requestingNewsFeedUpdateFromCache = true
             }
+
             UNREAD_CARD_COUNT_TAG -> {
                 // getUnreadCardCount
                 newsFeedUpdatedSubscriber = IEventSubscriber { newsFeedUpdatedEvent ->
@@ -685,12 +716,24 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun setLastKnownLocation(latitude: Double, longitude: Double, altitude: Double, horizontalAccuracy: Double, verticalAccuracy: Double) {
+    fun setLastKnownLocation(
+        latitude: Double,
+        longitude: Double,
+        altitude: Double,
+        horizontalAccuracy: Double,
+        verticalAccuracy: Double
+    ) {
         runOnUser {
             val sanitizedHorizontalAccuracy = horizontalAccuracy.takeUnless { accuracy -> accuracy < 0 }
             val sanitizedVerticalAccuracy = verticalAccuracy.takeUnless { accuracy -> accuracy < 0 }
             val sanitizedAltitude = altitude.takeUnless { sanitizedVerticalAccuracy == null }
-            it.setLastKnownLocation(latitude, longitude, sanitizedAltitude, sanitizedHorizontalAccuracy, sanitizedVerticalAccuracy)
+            it.setLastKnownLocation(
+                latitude,
+                longitude,
+                sanitizedAltitude,
+                sanitizedHorizontalAccuracy,
+                sanitizedVerticalAccuracy
+            )
         }
     }
 
@@ -703,17 +746,19 @@ class BrazeReactBridgeImpl(
         setDefaultInAppMessageListener()
     }
 
-    fun hideCurrentInAppMessage() = BrazeInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true)
+    fun hideCurrentInAppMessage() =
+        BrazeInAppMessageManager.getInstance().hideCurrentlyDisplayingInAppMessage(true)
 
     fun logInAppMessageClicked(inAppMessageString: String) {
         braze.deserializeInAppMessageString(inAppMessageString)?.logClick()
     }
 
-    fun logInAppMessageImpression(inAppMessageString: String) = braze.deserializeInAppMessageString(inAppMessageString)?.logImpression()
+    fun logInAppMessageImpression(inAppMessageString: String) =
+        braze.deserializeInAppMessageString(inAppMessageString)?.logImpression()
 
     fun logInAppMessageButtonClicked(inAppMessageString: String, buttonId: Int) {
         val inAppMessage = braze.deserializeInAppMessageString(inAppMessageString)
-        if (inAppMessage is IInAppMessageImmersive) {
+        if (inAppMessage is InAppMessageImmersiveBase) {
             inAppMessage.messageButtons
                 .firstOrNull { it.id == buttonId }
                 ?.let { inAppMessage.logButtonClick(it) }
@@ -722,76 +767,110 @@ class BrazeReactBridgeImpl(
 
     fun performInAppMessageAction(inAppMessageString: String, buttonId: Int) {
         brazelog(V) { "Processing in-app message action $inAppMessageString" }
-        braze.deserializeInAppMessageString(inAppMessageString)?.let { inAppMessage ->
-            val activity = currentActivity
+        val inAppMessage = braze.deserializeInAppMessageString(inAppMessageString)
+        val activity = currentActivity
+        var actionData: InAppMessageActionData? = null
+        if (inAppMessage != null && activity != null) {
+            actionData = getInAppMessageActionData(inAppMessage, buttonId)
+        }
+        if (inAppMessage == null || activity == null || actionData == null) {
             if (activity == null) {
                 brazelog(W) { "Can't perform click action because the cached activity is null." }
-                return
+            }
+            return
+        }
+        executeInAppMessageAction(actionData, inAppMessage, activity)
+    }
+
+    private fun getInAppMessageActionData(
+        inAppMessage: IInAppMessage,
+        buttonId: Int
+    ): InAppMessageActionData? {
+        var result: InAppMessageActionData? = null
+        if (buttonId < 0) {
+            result = InAppMessageActionData(
+                clickAction = inAppMessage.clickAction,
+                clickUri = inAppMessage.uri,
+                openUriInWebView = inAppMessage.openUriInWebView
+            )
+        } else if (inAppMessage is InAppMessageImmersiveBase) {
+            val button = inAppMessage.messageButtons.firstOrNull { it.id == buttonId }
+            result = InAppMessageActionData(
+                clickAction = button?.clickAction,
+                clickUri = button?.uri,
+                openUriInWebView = button?.openUriInWebview ?: false
+            )
+        } else {
+            brazelog {
+                "Cannot perform IAM action because " +
+                    "button was not null but message " +
+                    "is not InAppMessageImmersiveBase"
+            }
+        }
+        return result
+    }
+
+    private fun executeInAppMessageAction(
+        actionData: InAppMessageActionData,
+        inAppMessage: IInAppMessage,
+        activity: Activity
+    ) {
+        brazelog {
+            "GOT ACTION: ${actionData.clickUri}, ${actionData.openUriInWebView}, ${actionData.clickAction}"
+        }
+
+        when (actionData.clickAction) {
+            ClickAction.NEWS_FEED -> {
+                val newsfeedAction = NewsfeedAction(
+                    inAppMessage.extras.toBundle(),
+                    Channel.INAPP_MESSAGE
+                )
+                BrazeDeeplinkHandler.getInstance()
+                    .gotoNewsFeed(activity, newsfeedAction)
             }
 
-            var button: MessageButton? = null
-            if (buttonId >= 0) {
-                if (inAppMessage is InAppMessageImmersiveBase) {
-                    button = inAppMessage.messageButtons.firstOrNull { it.id == buttonId }
-                } else {
-                    brazelog { "Cannot perform IAM action because button was not null but message is not InAppMessageImmersiveBase" }
-                    return
-                }
+            ClickAction.URI -> {
+                executeUriAction(actionData, inAppMessage)
             }
 
-            val clickAction = if (buttonId < 0) {
-                inAppMessage.clickAction
-            } else {
-                button?.clickAction
-            }
-
-            val clickUri = if (buttonId < 0) {
-                inAppMessage.uri
-            } else {
-                button?.uri
-            }
-
-            val openUriInWebView = if (buttonId < 0) {
-                inAppMessage.openUriInWebView
-            } else {
-                button?.openUriInWebview ?: false
-            }
-
-            brazelog { "GOT ACTION: $clickUri, $openUriInWebView, $clickAction" }
-
-            when (clickAction) {
-                ClickAction.NEWS_FEED -> {
-                    val newsfeedAction = NewsfeedAction(
-                        inAppMessage.extras.toBundle(),
-                        Channel.INAPP_MESSAGE
-                    )
-                    BrazeDeeplinkHandler.getInstance()
-                        .gotoNewsFeed(activity, newsfeedAction)
-                }
-                ClickAction.URI -> {
-                    if (clickUri == null) {
-                        brazelog { "clickUri is null, not performing click action" }
-                        return
-                    }
-                    val uriAction = BrazeDeeplinkHandler.getInstance().createUriActionFromUri(
-                        clickUri, inAppMessage.extras.toBundle(),
-                        openUriInWebView, Channel.INAPP_MESSAGE
-                    )
-
-                    if (!reactApplicationContext.hasActiveReactInstance()) {
-                        brazelog { "reactApplicationContext instance not active, not performing click action" }
-                        return
-                    } else {
-                        brazelog(W) { "Performing gotoUri $clickUri $openUriInWebView" }
-                        BrazeDeeplinkHandler.getInstance().gotoUri(reactApplicationContext, uriAction)
-                    }
-                }
-                else -> {
-                    brazelog { "Unhandled action $clickAction" }
-                }
+            else -> {
+                brazelog { "Unhandled action ${actionData.clickAction}" }
             }
         }
     }
+
+    private fun executeUriAction(actionData: InAppMessageActionData, inAppMessage: IInAppMessage) {
+        val clickUri = actionData.clickUri ?: run {
+            brazelog { "clickUri is null, not performing click action" }
+            return
+        }
+
+        val uriAction = BrazeDeeplinkHandler.getInstance().createUriActionFromUri(
+            clickUri,
+            inAppMessage.extras.toBundle(),
+            actionData.openUriInWebView,
+            Channel.INAPP_MESSAGE
+        )
+
+        if (!reactApplicationContext.hasActiveReactInstance()) {
+            brazelog { "reactApplicationContext instance not active, not performing click action" }
+            return
+        }
+
+        brazelog(W) {
+            "Performing gotoUri $clickUri ${actionData.openUriInWebView}"
+        }
+        BrazeDeeplinkHandler.getInstance().gotoUri(
+            reactApplicationContext,
+            uriAction
+        )
+    }
+
+    private data class InAppMessageActionData(
+        val clickAction: ClickAction?,
+        val clickUri: Uri?,
+        val openUriInWebView: Boolean
+    )
 
     fun setAttributionData(network: String?, campaign: String?, adGroup: String?, creative: String?) {
         @Suppress("ComplexCondition")
@@ -823,8 +902,10 @@ class BrazeReactBridgeImpl(
                 brazelog { "Adding push notification event listener $eventName" }
                 subscribeToPushNotificationEvents()
             }
+
             IN_APP_MESSAGE_RECEIVED_EVENT_NAME -> {
-                if (BrazeInAppMessageManager.getInstance().inAppMessageManagerListener is DefaultInAppMessageManagerListener) {
+                val listener = BrazeInAppMessageManager.getInstance().inAppMessageManagerListener
+                if (listener is DefaultInAppMessageManagerListener) {
                     brazelog { "Adding in-app message event listener $eventName" }
                     setDefaultInAppMessageListener()
                 }
@@ -926,18 +1007,19 @@ class BrazeReactBridgeImpl(
     }
 
     private fun setDefaultInAppMessageListener() {
-        BrazeInAppMessageManager.getInstance().setCustomInAppMessageManagerListener(
-            object : DefaultInAppMessageManagerListener() {
-                override fun beforeInAppMessageDisplayed(inAppMessage: IInAppMessage): InAppMessageOperation {
-                    val parameters: WritableMap = WritableNativeMap()
-                    parameters.putString("inAppMessage", inAppMessage.forJsonPut().toString())
-                    reactApplicationContext
-                        .getJSModule(RCTDeviceEventEmitter::class.java)
-                        .emit(IN_APP_MESSAGE_RECEIVED_EVENT_NAME, parameters)
-                    return inAppMessageDisplayOperation
+        BrazeInAppMessageManager.getInstance()
+            .setCustomInAppMessageManagerListener(
+                object : DefaultInAppMessageManagerListener() {
+                    override fun beforeInAppMessageDisplayed(inAppMessage: IInAppMessage): InAppMessageOperation {
+                        val parameters: WritableMap = WritableNativeMap()
+                        parameters.putString("inAppMessage", inAppMessage.forJsonPut().toString())
+                        reactApplicationContext
+                            .getJSModule(RCTDeviceEventEmitter::class.java)
+                            .emit(IN_APP_MESSAGE_RECEIVED_EVENT_NAME, parameters)
+                        return inAppMessageDisplayOperation
+                    }
                 }
-            }
-        )
+            )
     }
 
     private fun convertToMap(bundle: Bundle, filteringKeys: Set<String> = emptySet()): ReadableMap {
@@ -1026,6 +1108,7 @@ class BrazeReactBridgeImpl(
                 JSONObject.NULL -> {
                     BrazeProperties()
                 }
+
                 else -> {
                     BrazeProperties(JSONObject(parseReadableMap(eventProperties)))
                 }
@@ -1051,11 +1134,13 @@ class BrazeReactBridgeImpl(
                             parsedMap[key] = parseReadableMap(mapValue)
                         }
                     }
+
                     ReadableType.Array -> {
                         readableMap.getArray(key)?.let {
                             parsedMap[key] = parseReadableArray(it)
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -1078,11 +1163,13 @@ class BrazeReactBridgeImpl(
                             parsedList[i] = parseReadableMap(mapValue)
                         }
                     }
+
                     ReadableType.Array -> {
                         readableArray.getArray(i)?.let {
                             parsedList[i] = parseReadableArray(it)
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -1094,6 +1181,7 @@ class BrazeReactBridgeImpl(
                 "subscribed" -> {
                     NotificationSubscriptionType.SUBSCRIBED
                 }
+
                 "unsubscribed" -> {
                     NotificationSubscriptionType.UNSUBSCRIBED
                 }
@@ -1101,6 +1189,7 @@ class BrazeReactBridgeImpl(
                 "optedin" -> {
                     NotificationSubscriptionType.OPTED_IN
                 }
+
                 else -> null
             }
 

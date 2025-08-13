@@ -1,5 +1,20 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 16.0.0
+
+##### Breaking
+- Updates the native Android SDK version bindings [from Braze Android SDK 36.0.0 to 37.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v36.0.0...v37.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 12.0.0 to 13.0.0](https://github.com/braze-inc/braze-swift-sdk/compare/12.0.0...13.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - The `"sdkAuthenticationError"` event will now trigger for both "Required" __and "Optional"__ authentication errors.
+
+##### Added
+- Updates the Braze sample app to use React Native version [`0.80.0`](https://reactnative.dev/blog/2025/06/12/react-native-0.80). This change validates SDK compatibility with the latest version of React Native.
+- Adds ability to unset user first name, last name, phone number, email, gender, language, home city, and country by setting these values to `null`.
+
+##### Fixed
+- Fixes the iOS implementation of `setDateOfBirth` to correctly report dates using the Gregorian calendar instead of the user's device calendar.
+  - Previously, the SDK would re-format the input date components with the device's calendar settings if they were non-Gregorian.
+
 ## 15.0.1
 
 ##### Fixed

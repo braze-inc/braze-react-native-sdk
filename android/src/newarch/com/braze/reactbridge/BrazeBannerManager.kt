@@ -1,6 +1,5 @@
 package com.braze.reactbridge
 
-import android.view.View
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.annotations.ReactModule
@@ -11,7 +10,9 @@ import com.facebook.react.viewmanagers.BrazeBannerViewManagerDelegate
 import com.facebook.react.viewmanagers.BrazeBannerViewManagerInterface
 
 @ReactModule(name = BrazeBannerManagerImpl.NAME)
-class BrazeBannerManager(context: ReactApplicationContext) : SimpleViewManager<BannerContainer>(), BrazeBannerViewManagerInterface<BannerContainer> {
+class BrazeBannerManager(context: ReactApplicationContext) :
+    SimpleViewManager<BannerContainer>(),
+    BrazeBannerViewManagerInterface<BannerContainer> {
 
     private val delegate: BrazeBannerViewManagerDelegate<BannerContainer, BrazeBannerManager> =
         BrazeBannerViewManagerDelegate(this)

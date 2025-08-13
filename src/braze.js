@@ -379,32 +379,32 @@ export class Braze {
   }
 
   /**
-   * Sets the first name of the user.
-   * @param {string} firstName - Limited to 255 characters in length.
+   * Sets the first name of the user. A null value will unset the first name for this user.
+   * @param {string | null} firstName - Limited to 255 characters in length.
    */
   static setFirstName(firstName) {
     this.bridge.setFirstName(firstName);
   }
 
   /**
-   * Sets the last name of the user.
-   * @param {string} lastName - Limited to 255 characters in length.
+   * Sets the last name of the user. A null value will unset the last name for this user.
+   * @param {string | null} lastName - Limited to 255 characters in length.
    */
   static setLastName(lastName) {
     this.bridge.setLastName(lastName);
   }
 
   /**
-   * Sets the email address of the user.
-   * @param {string} email - Must pass RFC-5322 email address validation.
+   * Sets the email address of the user. A null value will unset the email for this user.
+   * @param {string | null} email - Must pass RFC-5322 email address validation.
    */
   static setEmail(email) {
     this.bridge.setEmail(email);
   }
 
   /**
-   * Sets the gender of the user.
-   * @param {Genders} gender - Options: f = female, m = male, n = N/A, o = other, p = prefer not to say, u = unknown
+   * Sets the gender of the user. A null value will unset the gender for this user.
+   * @param {Genders | null} gender - Options: f = female, m = male, n = N/A, o = other, p = prefer not to say, u = unknown
    * @param {function(error, result)} callback - A callback that receives the function call result.
    */
   static setGender(gender, callback) {
@@ -416,32 +416,32 @@ export class Braze {
   }
 
   /**
-   * Sets the language for the user.
-   * @param {string} language - Should be valid ISO 639-1 language code.
+   * Sets the language for the user. A null value will unset the language for this user.
+   * @param {string | null} language - Should be valid ISO 639-1 language code.
    */
   static setLanguage(language) {
     this.bridge.setLanguage(language);
   }
 
   /**
-   * Sets the country for the user.
-   * @param {string} country - Limited to 255 characters in length.
+   * Sets the country for the user. A null value will unset the country for this user.
+   * @param {string | null} country - Limited to 255 characters in length.
    */
   static setCountry(country) {
     this.bridge.setCountry(country);
   }
 
   /**
-   * Sets the home city for the user.
-   * @param {string} homeCity - Limited to 255 characters in length.
+   * Sets the home city for the user. A null value will unset the home city for this user.
+   * @param {string | null} homeCity - Limited to 255 characters in length.
    */
   static setHomeCity(homeCity) {
     this.bridge.setHomeCity(homeCity);
   }
 
   /**
-   * Sets the phone number of the user.
-   * @param {string} phoneNumber - A phone number is considered valid if it is no more than 255 characters in length and
+   * Sets the phone number of the user. A null value will unset the phone number for this user.
+   * @param {string | null} phoneNumber - A phone number is considered valid if it is no more than 255 characters in length and
    *    contains only numbers, whitespace, and the following special characters +.-()
    */
   static setPhoneNumber(phoneNumber) {

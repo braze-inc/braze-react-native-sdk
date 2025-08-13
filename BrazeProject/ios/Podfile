@@ -1,5 +1,9 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
@@ -18,38 +22,25 @@ target 'BrazeProject' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  
-  pod 'SDWebImage'
 
-  target 'BrazeProjectTests' do
-    inherit! :complete
-    # Pods for testing
-  end
+  # For Swift compatibility, SDWebImage must be installed either with modular headers enabled or as a static framework.
+  pod 'SDWebImage', :modular_headers => true
 
   post_install do |installer|
+    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
-      # Set `mac_catalyst_enabled` to `true` in order to apply patches
-      # necessary for Mac Catalyst builds
+      config[:reactNativePath],
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
-
-    # Fix for Xcode 14 / CocoaPods 1.11.X (see: https://github.com/CocoaPods/CocoaPods/issues/11402)
-    installer.pods_project.targets.each do |target|
-      if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
-        target.build_configurations.each do |config|
-            config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-        end
-      end
-    end
   end
 end
 
 target 'BrazeProjectRichPush' do
-  pod 'BrazeNotificationService', '~> 12.0.0'
+  pod 'BrazeNotificationService', '~> 13.0.0'
 end
 
 target 'BrazeProjectPushStory' do
-  pod 'BrazePushStory', '~> 12.0.0'
+  pod 'BrazePushStory', '~> 13.0.0'
 end

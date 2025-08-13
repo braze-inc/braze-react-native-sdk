@@ -26,10 +26,10 @@ class BrazeReactBridgePackage : TurboReactPackage() {
             moduleInfos[BrazeReactBridgeImpl.NAME] = ReactModuleInfo(
                 BrazeReactBridgeImpl.NAME,
                 BrazeReactBridgeImpl.NAME,
-                false,  // canOverrideExistingModule
-                false,  // needsEagerInit
-                true,  // hasConstants
-                false,  // isCxxModule
+                false, // canOverrideExistingModule
+                false, // needsEagerInit
+                true, // hasConstants
+                false, // isCxxModule
                 isTurboModule // isTurboModule
             )
             moduleInfos

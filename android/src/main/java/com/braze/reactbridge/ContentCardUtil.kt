@@ -1,7 +1,11 @@
 package com.braze.reactbridge
 
 import com.braze.enums.CardType
-import com.braze.models.cards.*
+import com.braze.models.cards.Card
+import com.braze.models.cards.CaptionedImageCard
+import com.braze.models.cards.ImageOnlyCard
+import com.braze.models.cards.ShortNewsCard
+import com.braze.models.cards.TextAnnouncementCard
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap

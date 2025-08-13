@@ -103,60 +103,63 @@ export function setSdkAuthenticationSignature(signature: string): void;
 export function addAlias(aliasName: string, aliasLabel: string): void;
 
 /**
- * Sets the first name of the user.
- * @param {string} firstName - Limited to 255 characters in length.
+ * Sets the first name of the user. A null value will unset the first name for this user.
+ * @param {string | null} firstName - Limited to 255 characters in length.
  */
-export function setFirstName(firstName: string): void;
+export function setFirstName(firstName: string | null): void;
 
 /**
- * Sets the last name of the user.
- * @param {string} lastName - Limited to 255 characters in length.
+ * Sets the last name of the user. A null value will unset the last name for this user.
+ * @param {string | null} lastName - Limited to 255 characters in length.
  */
-export function setLastName(lastName: string): void;
+export function setLastName(lastName: string | null): void;
 
 /**
- * Sets the email address of the user.
- * @param {string} email - Must pass RFC-5322 email address validation.
+ * Sets the email address of the user. A null value will unset the email for this user.
+ * @param {string | null} email - Must pass RFC-5322 email address validation.
  */
-export function setEmail(email: string): void;
+export function setEmail(email: string | null): void;
 
 /**
- * Sets the gender of the user.
- * @param {Genders} gender - Limited to m, n, o, p, u or f
+ * Sets the gender of the user. A null value will unset the gender for this user.
+ * @param {Genders | null} gender - Limited to m, n, o, p, u, f, or null.
  * @param {function(error, result)} callback - A callback that receives the export function call result.
  */
 export function setGender(
-  gender: GenderTypes[keyof GenderTypes],
+  gender: GenderTypes[keyof GenderTypes] | null,
   callback?: Callback<boolean>
 ): void;
 
 /**
- * Sets the language for the user.
- * @param {string} language - Should be valid ISO 639-1 language code.
+ * Sets the language for the user. A null value will unset the language for this user.
+ * @param {string | null} language - Should be valid ISO 639-1 language code.
  */
-export function setLanguage(language: string): void;
+export function setLanguage(language: string | null): void;
 
 /**
- * Sets the country for the user.
- * @param {string} country - Limited to 255 characters in length.
+ * Sets the country for the user. A null value will unset the country for this user.
+ * @param {string | null} country - Limited to 255 characters in length.
  */
-export function setCountry(country: string): void;
+export function setCountry(country: string | null): void;
 
 /**
- * Sets the home city for the user.
- * @param {string} homeCity - Limited to 255 characters in length.
+ * Sets the home city for the user. A null value will unset the home city for this user.
+ * @param {string | null} homeCity - Limited to 255 characters in length.
  */
-export function setHomeCity(homeCity: string): void;
+export function setHomeCity(homeCity: string | null): void;
 
 /**
- * Sets the phone number of the user.
- * @param {string} phoneNumber - A phone number is considered valid if it is no more than 255 characters in length and
+ * Sets the phone number of the user. A null value will unset the phone number for this user.
+ * @param {string | null} phoneNumber - A phone number is considered valid if it is no more than 255 characters in length and
  *    contains only numbers, whitespace, and the following special characters +.-()
  */
-export function setPhoneNumber(phoneNumber: string): void;
+export function setPhoneNumber(phoneNumber: string | null): void;
 
 /**
  * Sets the date of birth of the user.
+ * 
+ * This value will be reported to the Braze platform using the
+ * Gregorian calendar, regardless of the user's device settings.
  * @param {number} year
  * @param {MonthsAsNumber} month - 1-12
  * @param {number} day

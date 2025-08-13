@@ -310,14 +310,20 @@ RCT_EXPORT_METHOD(setEmail:(NSString *)email) {
 }
 
 RCT_EXPORT_METHOD(setDateOfBirth:(double)year month:(double)month day:(double)day) {
-  RCTLogInfo(@"braze.user.dateOfBirth =  %@", @"date");
-  NSCalendar *calendar = [NSCalendar currentCalendar];
+  // Use the Gregorian calendar to standardize the input regardless of user's device settings.
+  NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
   NSDateComponents *components = [[NSDateComponents alloc] init];
   [components setDay:day];
   [components setMonth:month];
   [components setYear:year];
   NSDate *dateOfBirth = [calendar dateFromComponents:components];
   [braze.user setDateOfBirth:dateOfBirth];
+
+  // Format the NSDate to NSString before logging
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+  NSString *dateString = [dateFormatter stringFromDate:dateOfBirth];
+  RCTLogInfo(@"braze.user.dateOfBirth = %@", dateString);
 }
 
 RCT_EXPORT_METHOD(setCountry:(NSString *)country) {
@@ -332,7 +338,12 @@ RCT_EXPORT_METHOD(setHomeCity:(NSString *)homeCity) {
 
 RCT_EXPORT_METHOD(setGender:(NSString *)gender callback:(RCTResponseSenderBlock)callback) {
   RCTLogInfo(@"braze.gender =  %@", gender);
-  if ([[gender capitalizedString] hasPrefix:@"F"]) {
+  if (!gender) {
+    [braze.user setGender:nil];
+    [self reportResultWithCallback:callback
+                          andError:nil
+                         andResult:@(YES)];
+  } else if ([[gender capitalizedString] hasPrefix:@"F"]) {
     [braze.user setGender:BRZUserGender.female];
     [self reportResultWithCallback:callback
                           andError:nil
@@ -397,7 +408,7 @@ RCT_EXPORT_METHOD(removeFromSubscriptionGroup:(NSString *)groupId callback:(RCTR
 }
 
 RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(NSString *)notificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
-  RCTLogInfo(@"braze.user.emailNotificationSubscriptionType =  %@", @"enum");
+  RCTLogInfo(@"braze.user.emailNotificationSubscriptionType =  %@", notificationSubscriptionType);
   BRZUserSubscriptionState emailNotificationSubscriptionType = [self userSubscriptionStateFrom:notificationSubscriptionType];
   [braze.user setEmailSubscriptionState:emailNotificationSubscriptionType];
   [self reportResultWithCallback:callback
@@ -406,7 +417,7 @@ RCT_EXPORT_METHOD(setEmailNotificationSubscriptionType:(NSString *)notificationS
 }
 
 RCT_EXPORT_METHOD(setPushNotificationSubscriptionType:(NSString *)notificationSubscriptionType callback:(RCTResponseSenderBlock)callback) {
-  RCTLogInfo(@"braze.pushNotificationSubscriptionType =  %@", @"enum");
+  RCTLogInfo(@"braze.pushNotificationSubscriptionType =  %@", notificationSubscriptionType);
   BRZUserSubscriptionState pushNotificationSubscriptionType = [self userSubscriptionStateFrom:notificationSubscriptionType];
   [braze.user setPushNotificationSubscriptionState:pushNotificationSubscriptionType];
   [self reportResultWithCallback:callback

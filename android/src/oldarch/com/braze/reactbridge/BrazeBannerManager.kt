@@ -1,12 +1,11 @@
 package com.braze.reactbridge
 
-import android.view.View
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 
-class BrazeBannerManager(private val callerContext: ReactApplicationContext) :
+class BrazeBannerManager(@Suppress("UNUSED_PARAMETER") private val callerContext: ReactApplicationContext) :
     SimpleViewManager<BannerContainer>() {
 
     override fun getName() = BrazeBannerManagerImpl.NAME

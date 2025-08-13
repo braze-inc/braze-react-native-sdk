@@ -12,12 +12,37 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath "com.google.gms:google-services:4.3.4"
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.23.8"
+}
+
+dependencies {
+  detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
+}
+
+detekt {
+    // This is the root directory of the public/android project with the bridge logic
+    def publicAndroidFileRootDirectory = rootProject.file("../../android")
+    println("publicAndroidFileRootDirectory for detekt: $publicAndroidFileRootDirectory")
+
+    source = files(
+        "src/main/kotlin",
+        // We could get more specific here, but the runtime is the same time since most files are Kotlin anyway
+        new File(publicAndroidFileRootDirectory, "src"),
+    )
+
+    source.each {
+        println(it)
     }
 }
 

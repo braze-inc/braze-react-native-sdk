@@ -113,6 +113,11 @@ export const BrazeProject = (): ReactElement => {
         label: 'Unknown',
         value: 'u',
       },
+      {
+        id: 'null',
+        label: 'Unset from Profile',
+        value: 'null',
+      },
     ],
     [],
   );
@@ -413,6 +418,10 @@ export const BrazeProject = (): ReactElement => {
         Braze.setGender(Braze.Genders.UNKNOWN);
         showToast('User gender set to "unknown"');
         break;
+      case 'null':
+        Braze.setGender(null);
+        showToast('User gender set to null and will be removed from the profile.');
+        break;
     }
   };
 
@@ -458,7 +467,7 @@ export const BrazeProject = (): ReactElement => {
     showToast('NCA with merge called');
   };
 
-  const logUserPropertiesPress = () => {
+  const logUserAttributesPress = () => {
     Braze.setFirstName('Brian');
     Braze.setLastName('Wheeler');
     Braze.setEmail('brian+react@braze.com');
@@ -473,6 +482,7 @@ export const BrazeProject = (): ReactElement => {
       }
     });
     Braze.setPhoneNumber('9085555555');
+    Braze.setLanguage('cs');
     Braze.setEmailNotificationSubscriptionType(
       Braze.NotificationSubscriptionTypes.UNSUBSCRIBED,
     );
@@ -480,7 +490,25 @@ export const BrazeProject = (): ReactElement => {
       Braze.NotificationSubscriptionTypes.SUBSCRIBED,
     );
     Braze.addAlias('arrayattr', 'alias-label-1');
-    showToast('User properties set');
+    showToast('User attributes set.');
+  };
+
+  const unsetUserAttributesPress = () => {
+    Braze.setFirstName(null);
+    Braze.setLastName(null);
+    Braze.setEmail(null);
+    Braze.setCountry(null);
+    Braze.setHomeCity(null);
+    Braze.setGender(null, (err, res) => {
+      if (err) {
+        console.log('Example callback error is ' + err);
+      } else {
+        console.log('Example callback result is ' + res);
+      }
+    });
+    Braze.setPhoneNumber(null);
+    Braze.setLanguage(null);
+    showToast('User attributes unset.');
   };
 
   const launchContentCardsPress = () => {
@@ -975,8 +1003,11 @@ export const BrazeProject = (): ReactElement => {
           <Text>Set Gender</Text>
         </TouchableHighlight>
       </View>
-      <TouchableHighlight onPress={logUserPropertiesPress}>
-        <Text>Set User Properties</Text>
+      <TouchableHighlight onPress={logUserAttributesPress}>
+        <Text>Set User Attributes</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={unsetUserAttributesPress}>
+        <Text>Unset User Attributes</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={logCustomAttributePress}>
         <Text>Set Custom User Attributes</Text>
