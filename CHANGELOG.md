@@ -1,5 +1,15 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 16.1.0
+
+##### Added
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 13.0.0 to 13.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/13.0.0...13.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - This includes Xcode 26 support.
+
+##### Fixed
+- Fixes a missing symbol error when compiling for Android on the React Native legacy bridge architecture on `0.81`.
+  - This change is backwards compatible with prior versions of React Native.
+
 ## 16.0.0
 
 ##### Breaking

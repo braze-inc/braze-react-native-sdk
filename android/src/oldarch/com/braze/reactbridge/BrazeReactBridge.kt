@@ -6,7 +6,7 @@ import com.facebook.react.bridge.*
 
 @Suppress("TooManyFunctions", "LargeClass")
 class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBaseJavaModule(reactContext) {
-    private val brazeImpl = BrazeReactBridgeImpl(reactContext!!, currentActivity)
+    private val brazeImpl = BrazeReactBridgeImpl(reactContext!!, reactContext.currentActivity)
 
     override fun getName() = BrazeReactBridgeImpl.NAME
 

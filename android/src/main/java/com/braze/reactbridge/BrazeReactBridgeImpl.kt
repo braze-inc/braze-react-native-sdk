@@ -516,7 +516,8 @@ class BrazeReactBridgeImpl(
         braze.subscribeToPushNotificationEvents(pushNotificationEventSubscriber)
     }
 
-    private fun getPushEventType(eventType: BrazePushEventType): String? {
+    @VisibleForTesting
+    internal fun getPushEventType(eventType: BrazePushEventType): String? {
         return when (eventType) {
             BrazePushEventType.NOTIFICATION_RECEIVED -> "push_received"
             BrazePushEventType.NOTIFICATION_OPENED -> "push_opened"

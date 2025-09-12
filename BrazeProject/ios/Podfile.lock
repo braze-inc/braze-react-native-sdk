@@ -1,10 +1,10 @@
 PODS:
   - boost (1.84.0)
-  - braze-react-native-sdk (16.0.0):
+  - braze-react-native-sdk (16.1.0):
     - boost
-    - BrazeKit (~> 13.0.0)
-    - BrazeLocation (~> 13.0.0)
-    - BrazeUI (~> 13.0.0)
+    - BrazeKit (~> 13.2.0)
+    - BrazeLocation (~> 13.2.0)
+    - BrazeUI (~> 13.2.0)
     - DoubleConversion
     - fast_float
     - fmt
@@ -32,13 +32,13 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - BrazeKit (13.0.0)
-  - BrazeLocation (13.0.0):
-    - BrazeKit (= 13.0.0)
-  - BrazeNotificationService (13.0.0)
-  - BrazePushStory (13.0.0)
-  - BrazeUI (13.0.0):
-    - BrazeKit (= 13.0.0)
+  - BrazeKit (13.2.0)
+  - BrazeLocation (13.2.0):
+    - BrazeKit (= 13.2.0)
+  - BrazeNotificationService (13.2.0)
+  - BrazePushStory (13.2.0)
+  - BrazeUI (13.2.0):
+    - BrazeKit (= 13.2.0)
   - DoubleConversion (1.1.6)
   - fast_float (8.0.0)
   - FBLazyVector (0.80.0)
@@ -2161,17 +2161,17 @@ PODS:
     - React-perflogger (= 0.80.0)
     - React-utils (= 0.80.0)
     - SocketRocket
-  - SDWebImage (5.21.1):
-    - SDWebImage/Core (= 5.21.1)
-  - SDWebImage/Core (5.21.1)
+  - SDWebImage (5.21.2):
+    - SDWebImage/Core (= 5.21.2)
+  - SDWebImage/Core (5.21.2)
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - "braze-react-native-sdk (from `../node_modules/@braze/react-native-sdk`)"
-  - BrazeNotificationService (~> 13.0.0)
-  - BrazePushStory (~> 13.0.0)
+  - BrazeNotificationService (~> 13.2.0)
+  - BrazePushStory (~> 13.2.0)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -2408,12 +2408,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  braze-react-native-sdk: 49c42b730aaef899da24135c9e87f8d5fe228fbc
-  BrazeKit: e0f43a59ad4577d8853911eb158cd8b5969e4f4b
-  BrazeLocation: 630e57428dce296643d115ab65be1168b16c3dad
-  BrazeNotificationService: 3145d7f3df5050041c13e0b711b082afccdb4737
-  BrazePushStory: 601b1c1613f28323fa518f2ed9885c25d62701a4
-  BrazeUI: c397c47ecde65ca165f816910c2c80057394ed95
+  braze-react-native-sdk: 995656ca8b095532cf6f6eed52082e978e732b2b
+  BrazeKit: 6c9464e6131f01aa2a5436603dc71c4e533d1485
+  BrazeLocation: 1ebe9bbd109400c20bdec621647dc650530189cd
+  BrazeNotificationService: 3e496f17f6bb2f8704fdcc640163ebaf2b4715c9
+  BrazePushStory: bbc27b7c826667f485a3667893e477b11e789a52
+  BrazeUI: 276521dcfe8d4fd7f529e7109c2dea54f2ff4cd0
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: 778b815a6fb3fa1599f581ffb9a5e85fad313c1d
@@ -2484,10 +2484,10 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: cd55f820247d424280ae0b94e1ffb38963410c01
   ReactCodegen: 304f881dea867b659e4ba479608ec06f8117e0c5
   ReactCommon: 658874decaf8c4fd76cfa3a878b94a869db85b1c
-  SDWebImage: f29024626962457f3470184232766516dee8dfea
+  SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 0c4b7d2aacc910a1f702694fa86be830386f4ceb
 
-PODFILE CHECKSUM: 99efd46e21d9f29c47abda516de25094a2262a1c
+PODFILE CHECKSUM: 4d7f89fb45a7c0de6f19a7f02dbd8879fb686c67
 
 COCOAPODS: 1.16.2

@@ -14,8 +14,8 @@ if (isNewArchitectureEnabled()) {
 }
 
 def shouldImportBrazeLocationLibrary() {
- return project.hasProperty("importBrazeLocationLibrary") && project.importBrazeLocationLibrary == "true"
-}  
+  return project.hasProperty("importBrazeLocationLibrary") && project.importBrazeLocationLibrary == "true"
+}
 
 android {
   compileSdk safeExtGet('compileSdkVersion', 33)
@@ -45,6 +45,9 @@ android {
         res.srcDirs += ['src/oldarch/res']
       }
     }
+    test {
+      java.srcDirs += ['src/debug/kotlin']
+    }
   }
 
   kotlinOptions {
@@ -58,11 +61,23 @@ dependencies {
   testImplementation "junit:junit:4.13.2"
   testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
   testImplementation "org.robolectric:robolectric:4.15.1"
+  testImplementation "org.mockito:mockito-inline:5.2.0"
+
+  debugImplementation 'androidx.test:core-ktx:1.6.1'
+  debugImplementation "junit:junit:4.13.2"
+  debugImplementation "org.robolectric:robolectric:4.15.1"
 
   def wrapper_braze_sdk_version = "37.0.0"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
-  
+
   if (shouldImportBrazeLocationLibrary()) {
-      api "com.braze:android-sdk-location:${wrapper_braze_sdk_version}"
+    api "com.braze:android-sdk-location:${wrapper_braze_sdk_version}"
+  }
+}
+
+configurations {
+  debugRuntimeClasspath {
+    exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
+    exclude group: 'org.jspecify', module: 'jspecify'
   }
 }
