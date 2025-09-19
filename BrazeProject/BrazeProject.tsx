@@ -881,7 +881,7 @@ export const BrazeProject = (): ReactElement => {
           featureFlagPropertyKey,
         );
         break;
-      case 'timestamp':
+      case 'datetime':
         property = await Braze.getFeatureFlagTimestampProperty(
           featureFlagId,
           featureFlagPropertyKey,

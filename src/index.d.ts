@@ -976,7 +976,7 @@ export interface FeatureFlagBooleanProperty {
  */
 export interface FeatureFlagTimestampProperty {
   /** The type of Feature Flag property. */
-  type: "timestamp";
+  type: 'datetime';
 
   /** The value of the property. */
   value: number;
