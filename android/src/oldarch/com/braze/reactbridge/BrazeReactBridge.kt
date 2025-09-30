@@ -4,7 +4,7 @@ package com.braze.reactbridge
 
 import com.facebook.react.bridge.*
 
-@Suppress("TooManyFunctions", "LargeClass")
+@Suppress("TooManyFunctions", "LargeClass", "UnusedParameter")
 class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBaseJavaModule(reactContext) {
     private val brazeImpl = BrazeReactBridgeImpl(reactContext!!, reactContext.currentActivity)
 
@@ -220,26 +220,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun launchNewsFeed() {
-        brazeImpl.launchNewsFeed()
-    }
-
-    @ReactMethod
-    fun logNewsFeedCardClicked(cardId: String) {
-        brazeImpl.logNewsFeedCardClicked(cardId)
-    }
-
-    @ReactMethod
-    fun logNewsFeedCardImpression(cardId: String) {
-        brazeImpl.logNewsFeedCardImpression(cardId)
-    }
-
-    @ReactMethod
-    fun getNewsFeedCards(promise: Promise) {
-        brazeImpl.getNewsFeedCards(promise)
-    }
-
-    @ReactMethod
     fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean) {
         brazeImpl.launchContentCards(dismissAutomaticallyOnCardClick)
     }
@@ -277,21 +257,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     @ReactMethod
     fun getCachedContentCards(promise: Promise) {
         brazeImpl.getCachedContentCards(promise)
-    }
-
-    @ReactMethod
-    fun getCardCountForCategories(category: String, callback: Callback?) {
-        brazeImpl.getCardCountForCategories(category, callback)
-    }
-
-    @ReactMethod
-    fun getUnreadCardCountForCategories(category: String, callback: Callback?) {
-        brazeImpl.getUnreadCardCountForCategories(category, callback)
-    }
-
-    @ReactMethod
-    fun requestFeedRefresh() {
-        brazeImpl.requestFeedRefresh()
     }
 
     @ReactMethod
@@ -400,31 +365,37 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
         brazeImpl.getFeatureFlag(flagId, promise)
     }
 
+    @Deprecated("Use getBooleanProperty instead")
     @ReactMethod
     fun getFeatureFlagBooleanProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagBooleanProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getStringProperty instead")
     @ReactMethod
     fun getFeatureFlagStringProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagStringProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getNumberProperty instead")
     @ReactMethod
     fun getFeatureFlagNumberProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagNumberProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getTimestampProperty instead")
     @ReactMethod
     fun getFeatureFlagTimestampProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagTimestampProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getJSONProperty instead")
     @ReactMethod
     fun getFeatureFlagJSONProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagJSONProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getImageProperty instead")
     @ReactMethod
     fun getFeatureFlagImageProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagImageProperty(flagId, key, promise)
@@ -441,7 +412,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String) {
+    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String?) {
         brazeImpl.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId)
     }
 

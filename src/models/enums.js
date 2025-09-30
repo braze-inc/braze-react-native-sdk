@@ -1,13 +1,4 @@
 // Enums
-export const CardCategory = {
-  ADVERTISING: 'advertising',
-  ANNOUNCEMENTS: 'announcements',
-  NEWS: 'news',
-  SOCIAL: 'social',
-  NO_CATEGORY: 'no_category',
-  ALL: 'all'
-};
-
 export const NotificationSubscriptionTypes = {
   OPTED_IN: 'optedin',
   SUBSCRIBED: 'subscribed',
@@ -55,7 +46,6 @@ export const ContentCardTypes = {
 export const Events = {
   CONTENT_CARDS_UPDATED: 'contentCardsUpdated',
   BANNER_CARDS_UPDATED: 'bannerCardsUpdated',
-  NEWS_FEED_CARDS_UPDATED: 'newsFeedCardsUpdated',
   SDK_AUTHENTICATION_ERROR: 'sdkAuthenticationError',
   IN_APP_MESSAGE_RECEIVED: 'inAppMessageReceived',
   PUSH_NOTIFICATION_EVENT: 'pushNotificationEvent',
@@ -63,7 +53,7 @@ export const Events = {
 };
 
 export const ClickAction = {
-  NEWS_FEED: 'news_feed',
+  NEWS_FEED: 'news_feed', // This is a no-op since News Feed is not supported
   URI: 'uri',
   NONE: 'none'
 };

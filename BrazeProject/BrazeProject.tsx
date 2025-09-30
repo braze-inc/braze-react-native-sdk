@@ -45,6 +45,8 @@ export const BrazeProject = (): ReactElement => {
   const [requestedBannerPlacements, setRequestedBannerPlacements] = useState('placement_1, placement_2');
 
   const [bannerPlacementId, setBannerPlacementId] = useState('');
+  const [bannerPropertyType, setBannerPropertyType] = useState<string>('bool');
+  const [bannerPropertyKey, setBannerPropertyKey] = useState('');
   const [bannerHeight, setBannerHeight] = useState(0);
   const [displayedPlacement, setDisplayedPlacement] = useState('sdk-test-2');
   const [displayedPlacementPlaceholder, setDisplayedPlacementPlaceholder] = useState('');
@@ -123,38 +125,12 @@ export const BrazeProject = (): ReactElement => {
   );
 
   const featureFlagPropertyButtons = useMemo(
-    () => [
-      {
-        id: 'bool',
-        label: 'Boolean',
-        value: 'bool',
-      },
-      {
-        id: 'num',
-        label: 'Number',
-        value: 'num',
-      },
-      {
-        id: 'string',
-        label: 'String',
-        value: 'string',
-      },
-      {
-        id: 'timestamp',
-        label: 'Timestamp',
-        value: 'timestamp',
-      },
-      {
-        id: 'json',
-        label: 'JSON Object',
-        value: 'json',
-      },
-      {
-        id: 'image',
-        label: 'Image',
-        value: 'image',
-      },
-    ],
+    () => propertyButtonsOptions,
+    [],
+  );
+
+  const bannerPropertyButtons = useMemo(
+    () => propertyButtonsOptions,
     [],
   );
 
@@ -552,38 +528,6 @@ export const BrazeProject = (): ReactElement => {
     showToast('Attribute incremented');
   };
 
-  const requestNewsFeedRefresh = () => {
-    Braze.requestFeedRefresh();
-    showToast('News Feed refreshed');
-  };
-
-  const logNewsFeedInteractions = async () => {
-    let cards;
-    try {
-      cards = await Braze.getNewsFeedCards();
-    } catch {
-      console.log('News Feed Cards Promise Rejected');
-      return;
-    }
-
-    if (cards == null || cards.length === 0) {
-      console.log('No cached News Feed cards Found.');
-      return;
-    }
-
-    console.log(`${cards.length} cached News Feed cards found.`);
-    for (const card of cards) {
-      const cardId = card.id;
-      console.log(
-        `Logging click and impression for News Feed card: ${JSON.stringify(
-          card,
-        )}`,
-      );
-      Braze.logNewsFeedCardClicked(cardId);
-      Braze.logNewsFeedCardImpression(cardId);
-    }
-  };
-
   const enableAdTracking = () => {
     const testAdvertisingID = 'some_idfa_123';
     Braze.setAdTrackingEnabled(true, testAdvertisingID);
@@ -760,6 +704,51 @@ export const BrazeProject = (): ReactElement => {
     console.log(`Got Banner Card: ${JSON.stringify(banner, null, '\t')}`);
   };
 
+  const getBannerPropertyPress = async () => {
+    if (!bannerPlacementId) {
+      console.log('No Banner Placement ID entered');
+      return;
+    }
+
+    if (!bannerPropertyKey) {
+      console.log('No Banner property key entered');
+      return;
+    }
+
+    const banner = await Braze.getBanner(bannerPlacementId);
+    if (!banner) {
+      console.log(`No Banner Found with placement ID: ${bannerPlacementId}.`);
+      return;
+    }
+    
+    let property;
+    switch (bannerPropertyType) {
+      case 'bool':
+        property = banner.getBooleanProperty(bannerPropertyKey);
+        break;
+      case 'num':
+        property = banner.getNumberProperty(bannerPropertyKey);
+        break;
+      case 'string':
+        property = banner.getStringProperty(bannerPropertyKey);
+        break;
+      case 'timestamp':
+        property = banner.getTimestampProperty(bannerPropertyKey);
+        break;
+      case 'json':
+        property = JSON.stringify(banner.getJSONProperty(bannerPropertyKey));
+        break;
+      case 'image':
+        property = banner.getImageProperty(bannerPropertyKey);
+        break;
+      default:
+        console.warn(`Unknown bannerPropertyType: ${bannerPropertyType}`);
+        property = null;
+        break;
+    }
+    console.log(`Got Banner ${bannerPropertyType} Property: ${property}`);
+  };
+
   const requestBannersRefreshPress = () => {
     if (!requestedBannerPlacements) {
       console.log('No placement IDs entered for Banners refresh');
@@ -831,6 +820,9 @@ export const BrazeProject = (): ReactElement => {
       return;
     }
     console.log(`Got Feature Flag: ${JSON.stringify(featureFlag)}`);
+    console.log(`Feature Flag ID: ${featureFlag.id}`);
+    console.log(`Feature Flag Enabled: ${featureFlag.enabled}`);
+    console.log(`Feature Flag Properties: ${JSON.stringify(featureFlag.properties, null, 2)}`);
   };
 
   const updateTrackingListPress = async () => {
@@ -861,44 +853,33 @@ export const BrazeProject = (): ReactElement => {
       return;
     }
 
+    const featureFlag = await Braze.getFeatureFlag(featureFlagId);
+
+    if (!featureFlag) {
+      console.log(`No Feature Flag Found with ID: ${featureFlagId}.`);
+      return;
+    }
+
     let property;
+    
     switch (featureFlagPropertyType) {
       case 'bool':
-        property = await Braze.getFeatureFlagBooleanProperty(
-          featureFlagId,
-          featureFlagPropertyKey,
-        );
+        property = featureFlag.getBooleanProperty(featureFlagPropertyKey);
         break;
       case 'num':
-        property = await Braze.getFeatureFlagNumberProperty(
-          featureFlagId,
-          featureFlagPropertyKey,
-        );
+        property = featureFlag.getNumberProperty(featureFlagPropertyKey);
         break;
       case 'string':
-        property = await Braze.getFeatureFlagStringProperty(
-          featureFlagId,
-          featureFlagPropertyKey,
-        );
+        property = featureFlag.getStringProperty(featureFlagPropertyKey);
         break;
       case 'timestamp':
-        property = await Braze.getFeatureFlagTimestampProperty(
-          featureFlagId,
-          featureFlagPropertyKey,
-        );
+        property = featureFlag.getTimestampProperty(featureFlagPropertyKey);
         break;
       case 'json':
-        property = await Braze.getFeatureFlagJSONProperty(
-          featureFlagId,
-          featureFlagPropertyKey,
-        );
-        property = JSON.stringify(property);
+        property = featureFlag.getJSONProperty(featureFlagPropertyKey);
         break;
       case 'image':
-        property = await Braze.getFeatureFlagImageProperty(
-          featureFlagId,
-          featureFlagPropertyKey,
-        );
+        property = featureFlag.getImageProperty(featureFlagPropertyKey);
         break;
     }
     console.log(
@@ -1084,6 +1065,25 @@ export const BrazeProject = (): ReactElement => {
           <Text>Get Banner Card by Placement ID</Text>
         </TouchableHighlight>
       </View>
+      <View style={styles.container}>
+        <RadioGroup
+          containerStyle={styles.radioGroup}
+          radioButtons={bannerPropertyButtons}
+          selectedId={bannerPropertyType}
+          onPress={setBannerPropertyType}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder='Property Key'
+          autoCorrect={false}
+          autoCapitalize="none"
+          onChangeText={setBannerPropertyKey}
+          value={bannerPropertyKey}
+        />
+        <TouchableHighlight onPress={getBannerPropertyPress}>
+          <Text>Get Banner Property</Text>
+        </TouchableHighlight>
+      </View>
       <View style={styles.row}>
         <TextInput
           style={styles.textInput}
@@ -1111,16 +1111,6 @@ export const BrazeProject = (): ReactElement => {
         //   setBannerHeight(height);
         // }}
       />
-
-      {/* News Feed */}
-
-      <Space />
-      <TouchableHighlight onPress={requestNewsFeedRefresh}>
-        <Text>Request News Feed Refresh</Text>
-      </TouchableHighlight>
-      <TouchableHighlight onPress={logNewsFeedInteractions}>
-        <Text>Log interactions on News Feed cards</Text>
-      </TouchableHighlight>
 
       {/* Feature Flags */}
 
@@ -1280,3 +1270,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+const propertyButtonsOptions = [
+  { id: 'bool', label: 'Boolean', value: 'bool' },
+  { id: 'num', label: 'Number', value: 'num' },
+  { id: 'string', label: 'String', value: 'string' },
+  { id: 'timestamp', label: 'Timestamp', value: 'timestamp' },
+  { id: 'json', label: 'JSON Object', value: 'json' },
+  { id: 'image', label: 'Image', value: 'image' },
+];

@@ -3,13 +3,91 @@
   <img width="480" alt="Braze Logo" src=".github/assets/logo-dark.png#gh-dark-mode-only" />
 </p>
 
-# Braze React Native SDK
+# Braze React Native SDK [![latest](https://img.shields.io/github/v/tag/braze-inc/braze-react-native-sdk?label=latest%20release&color=300266)](https://github.com/braze-inc/braze-react-native-sdk/releases) 
 
-Effective marketing automation is an essential part of successfully scaling and managing your business. Braze empowers you to build better customer relationships through a seamless, multi-channel approach that addresses all aspects of the user life cycle Braze helps you engage your users on an ongoing basis.
+- [Braze User Guide](https://www.braze.com/docs/user_guide/introduction/ "Braze User Guide")
+- [Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=swift "Braze Developer Guide")
 
-- [Braze React Native `npm` package](https://www.npmjs.com/package/@braze/react-native-sdk)
-- [Braze User Guide](https://www.braze.com/docs/user_guide/introduction)
-- [Initial React Native SDK Setup](https://www.braze.com/docs/developer_guide/platforms/react_native/sdk_integration)
+## Quickstart
+
+``` shell
+npm install @braze/react-native-sdk
+// yarn add @braze/react-native-sdk
+```
+
+### Android
+
+``` groovy
+// build.gradle
+// ...
+    dependencies {
+        ...
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
+    } 
+// ...
+```
+
+``` xml
+<!-- res/values/braze.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string translatable="false" name="com_braze_api_key">YOU_APP_IDENTIFIER_API_KEY</string>
+  <string translatable="false" name="com_braze_custom_endpoint">YOUR_CUSTOM_ENDPOINT_OR_CLUSTER</string>
+</resources>
+```
+
+``` xml
+<!-- AndroidManifest.xml -->
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+```
+
+### iOS
+
+``` shell
+cd ios && pod install
+```
+
+``` swift
+// AppDelegate.swift
+import BrazeKit
+import braze_plugin
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  static var braze: Braze? = nil
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+  ) -> Bool {
+    // Setup Braze
+    let configuration = Braze.Configuration(
+      apiKey: "<BRAZE_API_KEY>",
+      endpoint: "<BRAZE_ENDPOINT>"
+    )
+    // - Enable logging or customize configuration here
+    configuration.logger.level = .info
+    let braze = BrazeReactBridge.perform(
+      #selector(BrazeReactBridge.initBraze(_:)),
+      with: configuration
+    ).takeUnretainedValue() as! Braze
+
+    AppDelegate.braze = braze
+
+    return true
+  }
+}
+```
+
+### Typescript
+
+``` typescript
+import Braze from "@braze/react-native-sdk";
+
+Braze.changeUser("Jane Doe")
+```
+
+See [the Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=react%20native) for advanced integration options.
 
 ## Version Support
 
@@ -72,3 +150,7 @@ npx react-native run-android
 ## Testing
 - We use [jest](https://facebook.github.io/jest/) for testing the React Native SDK.
 - Run the tests and code coverage report using `npm test`
+
+## Contact
+
+If you have questions, please contact [support@braze.com](mailto:support@braze.com).

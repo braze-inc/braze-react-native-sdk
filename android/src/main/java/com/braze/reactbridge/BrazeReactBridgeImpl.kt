@@ -11,13 +11,11 @@ import com.braze.Constants
 import com.braze.enums.BrazePushEventType
 import com.braze.events.BrazePushEvent
 import com.braze.events.BrazeSdkAuthenticationErrorEvent
-import com.braze.enums.CardCategory
 import com.braze.enums.Gender
 import com.braze.enums.Month.Companion.getMonth
 import com.braze.enums.NotificationSubscriptionType
 import com.braze.events.ContentCardsUpdatedEvent
 import com.braze.events.FeatureFlagsUpdatedEvent
-import com.braze.events.FeedUpdatedEvent
 import com.braze.events.IEventSubscriber
 import com.braze.models.cards.Card
 import com.braze.models.inappmessage.IInAppMessage
@@ -28,7 +26,6 @@ import com.braze.support.BrazeLogger.Priority.V
 import com.braze.support.BrazeLogger.Priority.W
 import com.braze.support.BrazeLogger.brazelog
 import com.braze.support.requestPushPermissionPrompt
-import com.braze.ui.activities.BrazeFeedActivity
 import com.braze.ui.activities.ContentCardsActivity
 import com.braze.ui.inappmessage.BrazeInAppMessageManager
 import com.braze.ui.inappmessage.InAppMessageOperation
@@ -47,36 +44,28 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigDecimal
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import com.braze.ui.BrazeDeeplinkHandler
 import com.braze.enums.inappmessage.ClickAction
-import com.braze.ui.actions.NewsfeedAction
 import com.braze.support.toBundle
 import com.braze.enums.Channel
 import com.braze.events.BannersUpdatedEvent
+import com.braze.events.IValueCallback
 import com.braze.models.push.BrazeNotificationPayload
 import com.facebook.react.bridge.ReadableType
-import com.facebook.react.bridge.WritableNativeArray
 
 @Suppress("TooManyFunctions", "LargeClass")
 class BrazeReactBridgeImpl(
     val reactApplicationContext: ReactApplicationContext,
     val currentActivity: Activity?
 ) {
-    private val callbackCallLock = Any()
     private val contentCards = mutableListOf<Card>()
-    private val newsFeedCards = mutableListOf<Card>()
-    private val newsFeedSubscriberMap: MutableMap<Callback, IEventSubscriber<FeedUpdatedEvent>?> = ConcurrentHashMap()
-    private val callbackCallMap = ConcurrentHashMap<Callback, Boolean?>()
     private val contentCardsLock = ReentrantLock()
     private var contentCardsUpdatedAt: Long = 0
-    private var newsFeedCardsUpdatedAt: Long = 0
     private var inAppMessageDisplayOperation: InAppMessageOperation = InAppMessageOperation.DISPLAY_NOW
     private lateinit var contentCardsUpdatedSubscriber: IEventSubscriber<ContentCardsUpdatedEvent>
     private lateinit var bannersUpdatedSubscriber: IEventSubscriber<BannersUpdatedEvent>
-    private lateinit var newsFeedCardsUpdatedSubscriber: IEventSubscriber<FeedUpdatedEvent>
     private lateinit var sdkAuthErrorSubscriber: IEventSubscriber<BrazeSdkAuthenticationErrorEvent>
     private lateinit var pushNotificationEventSubscriber: IEventSubscriber<BrazePushEvent>
     private lateinit var featureFlagsUpdatedSubscriber: IEventSubscriber<FeatureFlagsUpdatedEvent>
@@ -84,7 +73,6 @@ class BrazeReactBridgeImpl(
     init {
         subscribeToContentCardsUpdatedEvent()
         subscribeToBannersUpdatedEvent()
-        subscribeToNewsFeedCardsUpdatedEvent()
         subscribeToSdkAuthenticationErrorEvents()
         subscribeToFeatureFlagsUpdatedEvent()
     }
@@ -310,18 +298,6 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun launchNewsFeed() {
-        val intent = Intent(currentActivity, BrazeFeedActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-            Intent.FLAG_ACTIVITY_CLEAR_TOP or
-            Intent.FLAG_ACTIVITY_SINGLE_TOP
-        this.reactApplicationContext.startActivity(intent)
-    }
-
-    fun requestFeedRefresh() {
-        braze.requestFeedRefresh()
-    }
-
     fun getBanner(placementId: String, promise: Promise) {
         braze.getBanner(placementId)?.let {
             promise.resolve(mapBanner(it))
@@ -333,23 +309,7 @@ class BrazeReactBridgeImpl(
         braze.requestBannersRefresh(convertedPlacementIds)
     }
 
-    fun getNewsFeedCards(promise: Promise) {
-        braze.subscribeToFeedUpdates(IEventSubscriber {
-            promise.resolve(mapContentCards(it.feedCards))
-            updateNewsFeedCardsIfNeeded(it)
-        })
-        braze.requestFeedRefresh()
-    }
-
-    fun logNewsFeedCardClicked(id: String) {
-        getNewsFeedCardById(id)?.logClick()
-    }
-
-    fun logNewsFeedCardImpression(id: String) {
-        getNewsFeedCardById(id)?.logImpression()
-    }
-
-    fun launchContentCards(@Suppress("UNUSED_PARAMETER") dismissAutomaticallyOnCardClick: Boolean) {
+    fun launchContentCards(@Suppress("UNUSED_PARAMETER") dismissAutomaticallyOnCardClick: Boolean?) {
         val intent = Intent(currentActivity, ContentCardsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
             Intent.FLAG_ACTIVITY_CLEAR_TOP or
@@ -422,26 +382,6 @@ class BrazeReactBridgeImpl(
         }
 
         braze.subscribeToBannersUpdates(bannersUpdatedSubscriber)
-    }
-
-    private fun subscribeToNewsFeedCardsUpdatedEvent() {
-        if (this::newsFeedCardsUpdatedSubscriber.isInitialized) {
-            braze.removeSingleSubscription(
-                newsFeedCardsUpdatedSubscriber,
-                FeedUpdatedEvent::class.java
-            )
-        }
-        newsFeedCardsUpdatedSubscriber = IEventSubscriber { event ->
-            val updated = event.lastUpdatedInSecondsFromEpoch() > contentCardsUpdatedAt
-            if (updated && reactApplicationContext.hasActiveReactInstance()) {
-                reactApplicationContext
-                    .getJSModule(RCTDeviceEventEmitter::class.java)
-                    .emit(NEWS_FEED_CARDS_UPDATED_EVENT_NAME, updated)
-            }
-            updateNewsFeedCardsIfNeeded(event)
-        }
-
-        braze.subscribeToFeedUpdates(newsFeedCardsUpdatedSubscriber)
     }
 
     private fun subscribeToFeatureFlagsUpdatedEvent() {
@@ -611,92 +551,12 @@ class BrazeReactBridgeImpl(
             url,
             extras,
             card.openUriInWebView,
-            card.channel
+            Channel.CONTENT_CARD
         )
         if (action != null) {
             BrazeDeeplinkHandler.getInstance().gotoUri(reactApplicationContext, action)
         }
     }
-
-    /**
-     * Registers a short-lived FeedUpdatedEvent subscriber, requests
-     * a feed refresh from cache, and and returns the
-     * requested card count in the callback
-     */
-    private fun getCardCountForTag(category: String?, callback: Callback?, cardCountTag: String) {
-        if (callback == null) {
-            return
-        }
-
-        val cardCategory = getCardCategoryFromString(category)
-        // Note that Android does not have a CardCategory.ALL enum, while iOS does
-        if (category == null || cardCategory == null && category != "all") {
-            callback.reportResult(
-                error = "Invalid card category $category," +
-                    " could not retrieve$cardCountTag"
-            )
-            return
-        }
-
-        // Register FeedUpdatedEvent subscriber
-        var newsFeedUpdatedSubscriber: IEventSubscriber<FeedUpdatedEvent>? = null
-        var requestingNewsFeedUpdateFromCache = false
-
-        // Callback blocks (error or result) may only be invoked once, else React Native throws an error.
-        when (cardCountTag) {
-            CARD_COUNT_TAG -> {
-                // getCardCount
-                newsFeedUpdatedSubscriber = IEventSubscriber { newsFeedUpdatedEvent ->
-                    synchronized(callbackCallLock) {
-                        if (callbackCallMap[callback] == null) {
-                            callbackCallMap[callback] = true
-                            if (category == "all") {
-                                callback.reportResult(newsFeedUpdatedEvent.cardCount)
-                            } else {
-                                callback.reportResult(newsFeedUpdatedEvent.getCardCount(cardCategory))
-                            }
-                        }
-                    }
-                    // Remove this listener from the feed subscriber map and from Braze
-                    braze.removeSingleSubscription(newsFeedSubscriberMap[callback], FeedUpdatedEvent::class.java)
-                    newsFeedSubscriberMap.remove(callback)
-                }
-                requestingNewsFeedUpdateFromCache = true
-            }
-
-            UNREAD_CARD_COUNT_TAG -> {
-                // getUnreadCardCount
-                newsFeedUpdatedSubscriber = IEventSubscriber { newsFeedUpdatedEvent ->
-                    synchronized(callbackCallLock) {
-                        if (callbackCallMap[callback] == null) {
-                            callbackCallMap[callback] = true
-                            if (category == "all") {
-                                callback.reportResult(newsFeedUpdatedEvent.unreadCardCount)
-                            } else {
-                                callback.reportResult(newsFeedUpdatedEvent.getUnreadCardCount(cardCategory))
-                            }
-                        }
-                    }
-                    // Remove this listener from the feed subscriber map and from Braze
-                    braze.removeSingleSubscription(newsFeedSubscriberMap[callback], FeedUpdatedEvent::class.java)
-                    newsFeedSubscriberMap.remove(callback)
-                }
-                requestingNewsFeedUpdateFromCache = true
-            }
-        }
-        if (requestingNewsFeedUpdateFromCache && newsFeedUpdatedSubscriber != null) {
-            // Put the subscriber into a map so we can remove it later from future subscriptions
-            newsFeedSubscriberMap[callback] = newsFeedUpdatedSubscriber
-            braze.subscribeToFeedUpdates(newsFeedUpdatedSubscriber)
-            braze.requestFeedRefreshFromCache()
-        }
-    }
-
-    fun getCardCountForCategories(category: String, callback: Callback?) =
-        getCardCountForTag(category, callback, CARD_COUNT_TAG)
-
-    fun getUnreadCardCountForCategories(category: String, callback: Callback?) =
-        getCardCountForTag(category, callback, UNREAD_CARD_COUNT_TAG)
 
     fun wipeData() = Braze.wipeData(reactApplicationContext)
 
@@ -720,14 +580,17 @@ class BrazeReactBridgeImpl(
     fun setLastKnownLocation(
         latitude: Double,
         longitude: Double,
-        altitude: Double,
-        horizontalAccuracy: Double,
-        verticalAccuracy: Double
+        altitude: Double?,
+        horizontalAccuracy: Double?,
+        verticalAccuracy: Double?
     ) {
         runOnUser {
-            val sanitizedHorizontalAccuracy = horizontalAccuracy.takeUnless { accuracy -> accuracy < 0 }
-            val sanitizedVerticalAccuracy = verticalAccuracy.takeUnless { accuracy -> accuracy < 0 }
-            val sanitizedAltitude = altitude.takeUnless { sanitizedVerticalAccuracy == null }
+            val sanitizedHorizontalAccuracy = horizontalAccuracy
+                .takeUnless { it != null && it < 0 }
+            val sanitizedVerticalAccuracy = verticalAccuracy
+                .takeUnless { it != null && it < 0 }
+            val sanitizedAltitude = altitude
+                .takeUnless { sanitizedVerticalAccuracy == null }
             it.setLastKnownLocation(
                 latitude,
                 longitude,
@@ -780,7 +643,7 @@ class BrazeReactBridgeImpl(
             }
             return
         }
-        executeInAppMessageAction(actionData, inAppMessage, activity)
+        executeInAppMessageAction(actionData, inAppMessage)
     }
 
     private fun getInAppMessageActionData(
@@ -813,23 +676,13 @@ class BrazeReactBridgeImpl(
 
     private fun executeInAppMessageAction(
         actionData: InAppMessageActionData,
-        inAppMessage: IInAppMessage,
-        activity: Activity
+        inAppMessage: IInAppMessage
     ) {
         brazelog {
             "GOT ACTION: ${actionData.clickUri}, ${actionData.openUriInWebView}, ${actionData.clickAction}"
         }
 
         when (actionData.clickAction) {
-            ClickAction.NEWS_FEED -> {
-                val newsfeedAction = NewsfeedAction(
-                    inAppMessage.extras.toBundle(),
-                    Channel.INAPP_MESSAGE
-                )
-                BrazeDeeplinkHandler.getInstance()
-                    .gotoNewsFeed(activity, newsfeedAction)
-            }
-
             ClickAction.URI -> {
                 executeUriAction(actionData, inAppMessage)
             }
@@ -889,7 +742,15 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    fun getDeviceId(callback: Callback) = braze.getDeviceIdAsync { callback.reportResult(it) }
+    fun getDeviceId(callback: Callback) = braze.getDeviceIdAsync(object : IValueCallback<String> {
+        override fun onSuccess(value: String) {
+            callback.reportResult(value)
+        }
+
+        override fun onError() {
+            callback.reportResult(error = "Failed to retrieve the current device id.")
+        }
+    })
 
     private fun runOnUser(block: (user: BrazeUser) -> Unit) {
         braze.getCurrentUser {
@@ -931,20 +792,6 @@ class BrazeReactBridgeImpl(
         }
     }
 
-    /**
-     * Updates the last known Feed Card refresh data
-     */
-    private fun updateNewsFeedCardsIfNeeded(event: FeedUpdatedEvent) {
-        if (event.lastUpdatedInSecondsFromEpoch() > newsFeedCardsUpdatedAt) {
-            newsFeedCardsUpdatedAt = event.lastUpdatedInSecondsFromEpoch()
-            newsFeedCards.clear()
-            newsFeedCards.addAll(event.feedCards)
-        }
-    }
-
-    private fun getNewsFeedCardById(id: String): Card? =
-        newsFeedCards.firstOrNull { it.id == id }
-
     private fun getContentCardById(id: String): Card? =
         contentCardsLock.withLock {
             contentCards.firstOrNull { it.id == id }
@@ -976,35 +823,42 @@ class BrazeReactBridgeImpl(
         braze.logFeatureFlagImpression(id)
     }
 
+    @Deprecated("Use getBooleanProperty instead")
     fun getFeatureFlagBooleanProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getBooleanProperty(key))
     }
 
+    @Deprecated("Use getStringProperty instead")
     fun getFeatureFlagStringProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getStringProperty(key))
     }
 
+    @Deprecated("Use getNumberProperty instead")
     fun getFeatureFlagNumberProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
     }
 
+    @Deprecated("Use getTimestampProperty instead")
     fun getFeatureFlagTimestampProperty(id: String, key: String, promise: Promise) {
         // Convert timestamp to double because the React Native translation layer doesn't support `long`
         val convertedTimestamp = braze.getFeatureFlag(id)?.getTimestampProperty(key)?.toDouble()
         promise.resolve(convertedTimestamp)
     }
 
+    @Deprecated("Use getJSONProperty instead")
     fun getFeatureFlagJSONProperty(id: String, key: String, promise: Promise) {
         val jsonMap = braze.getFeatureFlag(id)?.getJSONProperty(key)?.let { jsonToNativeMap(it) }
         promise.resolve(jsonMap)
     }
 
+    @Deprecated("Use getImageProperty instead")
     fun getFeatureFlagImageProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getImageProperty(key))
     }
 
-    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String) {
-        braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled)
+    fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String?) {
+        val advertisingId = googleAdvertisingId ?: ""
+        braze.setGoogleAdvertisingId(advertisingId, adTrackingEnabled)
     }
 
     private fun setDefaultInAppMessageListener() {
@@ -1034,12 +888,9 @@ class BrazeReactBridgeImpl(
 
     companion object {
         const val NAME = "BrazeReactBridge"
-        private const val CARD_COUNT_TAG = "card count"
-        private const val UNREAD_CARD_COUNT_TAG = "unread card count"
         private const val CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated"
         private const val BANNER_CARDS_UPDATED_EVENT_NAME = "bannerCardsUpdated"
         private const val FEATURE_FLAGS_UPDATED_EVENT_NAME = "featureFlagsUpdated"
-        private const val NEWS_FEED_CARDS_UPDATED_EVENT_NAME = "newsFeedCardsUpdated"
         private const val SDK_AUTH_ERROR_EVENT_NAME = "sdkAuthenticationError"
         private const val IN_APP_MESSAGE_RECEIVED_EVENT_NAME = "inAppMessageReceived"
         private const val PUSH_NOTIFICATION_EVENT_NAME = "pushNotificationEvent"
@@ -1060,47 +911,6 @@ class BrazeReactBridgeImpl(
             } else {
                 brazelog(W) { "Warning: BrazeReactBridge callback was null." }
             }
-        }
-
-        /**
-         * Parses a `JSONObject` to a React Native map object.
-         * The cases for each type follows all supported types of the `ReadableMap` class.
-         */
-        private fun jsonToNativeMap(jsonObject: JSONObject): ReadableMap {
-            val nativeMap = WritableNativeMap()
-            jsonObject.keys().forEach { key ->
-                when (val value = jsonObject.get(key)) {
-                    is JSONObject -> nativeMap.putMap(key, jsonToNativeMap(value))
-                    is JSONArray -> nativeMap.putArray(key, jsonToNativeArray(value))
-                    is Boolean -> nativeMap.putBoolean(key, value)
-                    is Int -> nativeMap.putInt(key, value)
-                    is Double -> nativeMap.putDouble(key, value)
-                    is String -> nativeMap.putString(key, value)
-                    JSONObject.NULL -> nativeMap.putNull(key)
-                }
-            }
-            return nativeMap
-        }
-
-        /**
-         * Parses a `JSONArray` to a React Native array object.
-         * The cases for each type follows all supported types of the `ReadableArray` class.
-         */
-        private fun jsonToNativeArray(jsonArray: JSONArray): ReadableArray {
-            val nativeArray = WritableNativeArray()
-            for (i in 0 until jsonArray.length()) {
-                when (val value = jsonArray.opt(i)) {
-                    is JSONObject -> nativeArray.pushMap(jsonToNativeMap(value))
-                    is JSONArray -> nativeArray.pushArray(jsonToNativeArray(value))
-                    is Boolean -> nativeArray.pushBoolean(value)
-                    is Int -> nativeArray.pushInt(value)
-                    is Double -> nativeArray.pushDouble(value)
-                    is String -> nativeArray.pushString(value)
-                    JSONObject.NULL -> nativeArray.pushNull()
-                    else -> nativeArray.pushString(value.toString())
-                }
-            }
-            return nativeArray
         }
 
         private fun populateEventPropertiesFromReadableMap(eventProperties: ReadableMap?): BrazeProperties? {
@@ -1193,10 +1003,5 @@ class BrazeReactBridgeImpl(
 
                 else -> null
             }
-
-        private fun getCardCategoryFromString(categoryString: String?): CardCategory? {
-            val categoryName = categoryString?.uppercase(Locale.getDefault()) ?: return null
-            return CardCategory.values().firstOrNull { it.name == categoryName }
-        }
     }
 }

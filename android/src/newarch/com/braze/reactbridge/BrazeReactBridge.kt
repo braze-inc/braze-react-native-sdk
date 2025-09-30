@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "UnusedParameter")
 class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReactModuleSpec(reactContext) {
     val brazeImpl = BrazeReactBridgeImpl(reactContext, reactContext.currentActivity)
 
@@ -187,23 +187,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
         brazeImpl.setAttributionData(network, campaign, adGroup, creative)
     }
 
-    override fun launchNewsFeed() {
-        brazeImpl.launchNewsFeed()
-    }
-
-    override fun logNewsFeedCardClicked(cardId: String) {
-        brazeImpl.logNewsFeedCardClicked(cardId)
-    }
-
-    override fun logNewsFeedCardImpression(cardId: String) {
-        brazeImpl.logNewsFeedCardImpression(cardId)
-    }
-
-    override fun getNewsFeedCards(promise: Promise) {
-        brazeImpl.getNewsFeedCards(promise)
-    }
-
-    override fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean) {
+    override fun launchContentCards(dismissAutomaticallyOnCardClick: Boolean?) {
         brazeImpl.launchContentCards(dismissAutomaticallyOnCardClick)
     }
 
@@ -233,18 +217,6 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
 
     override fun getCachedContentCards(promise: Promise) {
         brazeImpl.getCachedContentCards(promise)
-    }
-
-    override fun getCardCountForCategories(category: String, callback: Callback?) {
-        brazeImpl.getCardCountForCategories(category, callback)
-    }
-
-    override fun getUnreadCardCountForCategories(category: String, callback: Callback?) {
-        brazeImpl.getUnreadCardCountForCategories(category, callback)
-    }
-
-    override fun requestFeedRefresh() {
-        brazeImpl.requestFeedRefresh()
     }
 
     override fun getBanner(placementId: String, promise: Promise) {
@@ -291,9 +263,9 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
     override fun setLastKnownLocation(
         latitude: Double,
         longitude: Double,
-        altitude: Double,
-        horizontalAccuracy: Double,
-        verticalAccuracy: Double
+        altitude: Double?,
+        horizontalAccuracy: Double?,
+        verticalAccuracy: Double?
     ) {
         brazeImpl.setLastKnownLocation(latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy)
     }
@@ -334,26 +306,32 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
         brazeImpl.getFeatureFlag(flagId, promise)
     }
 
+    @Deprecated("Use getBooleanProperty instead")
     override fun getFeatureFlagBooleanProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagBooleanProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getStringProperty instead")
     override fun getFeatureFlagStringProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagStringProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getNumberProperty instead")
     override fun getFeatureFlagNumberProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagNumberProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getTimestampProperty instead")
     override fun getFeatureFlagTimestampProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagTimestampProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getJSONProperty instead")
     override fun getFeatureFlagJSONProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagJSONProperty(flagId, key, promise)
     }
 
+    @Deprecated("Use getImageProperty instead")
     override fun getFeatureFlagImageProperty(flagId: String, key: String, promise: Promise) {
         brazeImpl.getFeatureFlagImageProperty(flagId, key, promise)
     }
@@ -366,7 +344,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
         brazeImpl.logFeatureFlagImpression(id)
     }
 
-    override fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String) {
+    override fun setAdTrackingEnabled(adTrackingEnabled: Boolean, googleAdvertisingId: String?) {
         brazeImpl.setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId)
     }
 

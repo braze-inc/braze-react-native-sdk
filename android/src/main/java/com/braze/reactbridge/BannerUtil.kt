@@ -23,6 +23,10 @@ fun mapBanner(banner: Banner): WritableMap {
     // Convert to Double when passing to JS layer since timestamp can't fit in a 32-bit
     // int and WriteableNativeMap doesn't support longs because of language limitations
     mappedBanner.putDouble("expiresAt", banner.expirationTimestampSeconds.toDouble())
+    // Only call jsonToNativeMap if properties is not null, otherwise pass null
+    banner.properties?.let {
+        mappedBanner.putMap("properties", jsonToNativeMap(it))
+    } ?: mappedBanner.putNull("properties")
 
     return mappedBanner
 }

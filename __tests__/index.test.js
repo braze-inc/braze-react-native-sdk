@@ -1,5 +1,8 @@
 const NativeEventEmitter = require('react-native').NativeEventEmitter;
 const NativeBrazeReactModule = require('../src/specs/NativeBrazeReactModule').default;
+const { CampaignProperties } = require('../src/models/campaign-properties');
+const { FeatureFlag } = require('../src/models/feature-flag');
+const { Banner } = require('../src/models/banner'); 
 
 import Braze from '../src/index';
 import { Platform } from 'react-native';
@@ -29,6 +32,30 @@ const testPushPayloadJson = {
   "body": "Hello World",
   "timestamp": 1728060077,
   "url": "www.braze.com"
+};
+
+const testPropertyJson = {
+  string_key: { type: 'string', value: 'test_string' },
+  boolean_key: { type: 'boolean', value: true },
+  number_key: { type: 'number', value: 123.45 },
+  timestamp_key: { type: 'datetime', value: 1672531200000 },
+  json_key: { type: 'jsonobject', value: { key1: 'value1', key2: 42 } },
+  image_key: { type: 'image', value: 'https://example.com/image.png' },
+  mismatched_key: { type: 'string', value: 123 },
+};
+
+const testFeatureFlagJson = {
+  id: 'test_flag_id',
+  enabled: true,
+  properties: {
+    string_prop: { type: 'string', value: 'test_string' },
+    bool_prop: { type: 'boolean', value: false },
+    number_prop: { type: 'number', value: 123.45 },
+    timestamp_prop: { type: 'datetime', value: 1672531200000 },
+    json_prop: { type: 'jsonobject', value: { key1: 'value1', key2: 42 } },
+    image_prop: { type: 'image', value: 'https://example.com/image.png' },
+    mismatched_prop: { type: 'string', value: 123 },
+  },
 };
 
 afterEach(() => {
@@ -168,11 +195,6 @@ test('it calls BrazeReactBrige.setPhoneNumberWithNull', () => {
   expect(NativeBrazeReactModule.setPhoneNumber).toBeCalledWith(null);
 });
 
-test('it calls BrazeReactBridge.requestFeedRefresh', () => {
-  Braze.requestFeedRefresh();
-  expect(NativeBrazeReactModule.requestFeedRefresh).toBeCalled();
-});
-
 test('it calls BrazeReactBridge.getBanner', () => {
   Braze.getBanner("some_banner_id");
   expect(NativeBrazeReactModule.getBanner).toBeCalledWith("some_banner_id");
@@ -181,28 +203,6 @@ test('it calls BrazeReactBridge.getBanner', () => {
 test('it calls BrazeReactBridge.requestBannersRefresh', () => {
   Braze.requestBannersRefresh(["sdk-test-1", "sdk-test-2"]);
   expect(NativeBrazeReactModule.requestBannersRefresh).toBeCalledWith(["sdk-test-1", "sdk-test-2"]);
-});
-
-test('it calls BrazeReactBridge.launchNewsFeed', () => {
-  Braze.launchNewsFeed();
-  expect(NativeBrazeReactModule.launchNewsFeed).toBeCalled();
-});
-
-test('it calls BrazeReactBridge.getNewsFeedCards', () => {
-  Braze.getNewsFeedCards();
-  expect(NativeBrazeReactModule.getNewsFeedCards).toBeCalled();
-});
-
-test('it calls BrazeReactBridge.logNewsFeedCardClicked', () => {
-  const id = "1234";
-  Braze.logNewsFeedCardClicked(id);
-  expect(NativeBrazeReactModule.logNewsFeedCardClicked).toBeCalledWith(id);
-});
-
-test('it calls BrazeReactBridge.logNewsFeedCardImpression', () => {
-  const id = "1234";
-  Braze.logNewsFeedCardImpression(id);
-  expect(NativeBrazeReactModule.logNewsFeedCardImpression).toBeCalledWith(id);
 });
 
 test('it calls BrazeReactBridge.launchContentCards without parameters', () => {
@@ -540,18 +540,6 @@ test('it calls BrazeReactBridge.unsetCustomUserAttribute', () => {
   expect(NativeBrazeReactModule.unsetCustomUserAttribute).toBeCalledWith(key, testCallback);
 });
 
-test('it calls BrazeReactBridge.getCardCountForCategories', () => {
-  const category = "some_category";
-  Braze.getCardCountForCategories(category, testCallback);
-  expect(NativeBrazeReactModule.getCardCountForCategories).toBeCalledWith(category, testCallback);
-});
-
-test('it calls BrazeReactBridge.getUnreadCardCountForCategories', () => {
-  const category = "some_category";
-  Braze.getUnreadCardCountForCategories(category, testCallback);
-  expect(NativeBrazeReactModule.getUnreadCardCountForCategories).toBeCalledWith(category, testCallback);
-});
-
 test('it calls BrazeReactBridge.getInitialURL if defined', () => {
   NativeBrazeReactModule.getInitialURL.mockImplementation((callback) => {
     callback(null, testPushPayloadJson["url"]);
@@ -837,4 +825,283 @@ test('it calls BrazeReactBridge.updateTrackingPropertyAllowList', () => {
   };
   Braze.updateTrackingPropertyAllowList(allowList);
   expect(NativeBrazeReactModule.updateTrackingPropertyAllowList).toBeCalledWith(allowList);
+});
+
+// Tests for CampaignProperties class
+
+describe('CampaignProperties', () => {
+  let campaignProperties;
+
+  beforeEach(() => {
+    campaignProperties = new CampaignProperties(testPropertyJson);
+  });
+
+  test('constructor correctly assigns properties', () => {
+    expect(campaignProperties.properties).toEqual(testPropertyJson);
+  });
+
+  // - Test cases for getStringProperty
+  test('getStringProperty returns the correct value for a valid key', () => {
+    const value = campaignProperties.getStringProperty('string_key');
+    expect(value).toBe('test_string');
+  });
+
+  test('getStringProperty returns null for a mismatched type', () => {
+    const value = campaignProperties.getStringProperty('boolean_key');
+    expect(value).toBeNull();
+  });
+
+  test('getStringProperty returns null for a non-existent key', () => {
+    const value = campaignProperties.getStringProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getBooleanProperty
+  test('getBooleanProperty returns the correct value for a valid key', () => {
+    const value = campaignProperties.getBooleanProperty('boolean_key');
+    expect(value).toBe(true);
+  });
+
+  test('getBooleanProperty returns null for a mismatched type', () => {
+    const value = campaignProperties.getBooleanProperty('string_key');
+    expect(value).toBeNull();
+  });
+
+  test('getBooleanProperty returns null for a non-existent key', () => {
+    const value = campaignProperties.getBooleanProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getNumberProperty
+  test('getNumberProperty returns the correct value for a valid key', () => {
+    const value = campaignProperties.getNumberProperty('number_key');
+    expect(value).toBe(123.45);
+  });
+
+  test('getNumberProperty returns null for a mismatched type', () => {
+    const value = campaignProperties.getNumberProperty('string_key');
+    expect(value).toBeNull();
+  });
+
+  test('getNumberProperty returns null for a non-existent key', () => {
+    const value = campaignProperties.getNumberProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getTimestampProperty
+  test('getTimestampProperty returns the correct value for a valid key', () => {
+    const value = campaignProperties.getTimestampProperty('timestamp_key');
+    expect(value).toBe(1672531200000);
+  });
+
+  test('getTimestampProperty returns null for a mismatched type', () => {
+    const value = campaignProperties.getTimestampProperty('string_key');
+    expect(value).toBeNull();
+  });
+
+  test('getTimestampProperty returns null for a non-existent key', () => {
+    const value = campaignProperties.getTimestampProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getJSONProperty
+  test('getJSONProperty returns the correct value for a valid key', () => {
+    const value = campaignProperties.getJSONProperty('json_key');
+    expect(value).toEqual({ key1: 'value1', key2: 42 });
+  });
+
+  test('getJSONProperty returns null for a mismatched type', () => {
+    const value = campaignProperties.getJSONProperty('string_key');
+    expect(value).toBeNull();
+  });
+
+  test('getJSONProperty returns null for a non-existent key', () => {
+    const value = campaignProperties.getJSONProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getImageProperty
+  test('getImageProperty returns the correct value for a valid key', () => {
+    const value = campaignProperties.getImageProperty('image_key');
+    expect(value).toBe('https://example.com/image.png');
+  });
+
+  test('getImageProperty returns null for a mismatched type', () => {
+    const value = campaignProperties.getImageProperty('string_key');
+    expect(value).toBeNull();
+  });
+
+  test('getImageProperty returns null for a non-existent key', () => {
+    const value = campaignProperties.getImageProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+});
+
+// Tests for FeatureFlag class
+
+describe('FeatureFlag', () => {
+  let featureFlagInstance;
+
+  beforeEach(() => {
+    featureFlagInstance = new FeatureFlag(testFeatureFlagJson);
+  });
+
+  // - Test the constructor to ensure properties are assigned correctly
+  test('constructor correctly assigns id, enabled, and properties', () => {
+    expect(featureFlagInstance.id).toBe('test_flag_id');
+    expect(featureFlagInstance.enabled).toBe(true);
+    expect(featureFlagInstance.properties).toBeInstanceOf(CampaignProperties);
+  });
+
+  // - Test cases for getBooleanProperty
+  test('getBooleanProperty correctly delegates to CampaignProperties', () => {
+    const value = featureFlagInstance.getBooleanProperty('bool_prop');
+    expect(value).toBe(false);
+  });
+
+  test('getBooleanProperty returns null for a non-existent key', () => {
+    const value = featureFlagInstance.getBooleanProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  test('getBooleanProperty returns null for a mismatched type', () => {
+    const value = featureFlagInstance.getBooleanProperty('string_prop');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getStringProperty
+  test('getStringProperty correctly delegates to CampaignProperties', () => {
+    const value = featureFlagInstance.getStringProperty('string_prop');
+    expect(value).toBe('test_string');
+  });
+
+  test('getStringProperty returns null for a non-existent key', () => {
+    const value = featureFlagInstance.getStringProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  test('getStringProperty returns null for a mismatched type', () => {
+    const value = featureFlagInstance.getStringProperty('bool_prop');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getNumberProperty
+  test('getNumberProperty correctly delegates to CampaignProperties', () => {
+    const value = featureFlagInstance.getNumberProperty('number_prop');
+    expect(value).toBe(123.45);
+  });
+
+  test('getNumberProperty returns null for a non-existent key', () => {
+    const value = featureFlagInstance.getNumberProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  test('getNumberProperty returns null for a mismatched type', () => {
+    const value = featureFlagInstance.getNumberProperty('string_prop');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getTimestampProperty
+  test('getTimestampProperty correctly delegates to CampaignProperties', () => {
+    const value = featureFlagInstance.getTimestampProperty('timestamp_prop');
+    expect(value).toBe(1672531200000);
+  });
+
+  test('getTimestampProperty returns null for a non-existent key', () => {
+    const value = featureFlagInstance.getTimestampProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  test('getTimestampProperty returns null for a mismatched type', () => {
+    const value = featureFlagInstance.getTimestampProperty('string_prop');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getJSONProperty
+  test('getJSONProperty correctly delegates to CampaignProperties', () => {
+    const value = featureFlagInstance.getJSONProperty('json_prop');
+    expect(value).toEqual({ key1: 'value1', key2: 42 });
+  });
+
+  test('getJSONProperty returns null for a non-existent key', () => {
+    const value = featureFlagInstance.getJSONProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  test('getJSONProperty returns null for a mismatched type', () => {
+    const value = featureFlagInstance.getJSONProperty('string_prop');
+    expect(value).toBeNull();
+  });
+
+  // - Test cases for getImageProperty
+  test('getImageProperty correctly delegates to CampaignProperties', () => {
+    const value = featureFlagInstance.getImageProperty('image_prop');
+    expect(value).toBe('https://example.com/image.png');
+  });
+
+  test('getImageProperty returns null for a non-existent key', () => {
+    const value = featureFlagInstance.getImageProperty('non_existent_key');
+    expect(value).toBeNull();
+  });
+
+  test('getImageProperty returns null for a mismatched type', () => {
+    const value = featureFlagInstance.getImageProperty('string_prop');
+    expect(value).toBeNull();
+  });
+});
+
+// Test Braze.getBanner
+
+jest.mock('../src/models/banner', () => {
+    return {
+        Banner: jest.fn().mockImplementation((data) => ({
+            id: data ? data.id : null,
+        })),
+    };
+});
+
+describe('Braze.getBanner', () => {
+    const testPlacementId = 'sdk-test-banner';
+    const mockRawBannerData = {
+        id: 'banner_id_123',
+        placementId: testPlacementId,
+        html: 'test html',
+        expiresAt: 1672531200,
+        properties: {}
+    };
+
+    // - Test successful retrieval and correct instance creation
+    test('it resolves with a Banner instance on success', async () => {
+        NativeBrazeReactModule.getBanner.mockResolvedValue(mockRawBannerData);
+        const banner = await Braze.getBanner(testPlacementId);
+
+        expect(NativeBrazeReactModule.getBanner).toBeCalledWith(testPlacementId);
+        expect(Banner).toHaveBeenCalledWith(mockRawBannerData);
+        expect(banner.id).toBe(mockRawBannerData.id);
+    });
+
+    // - Test no banner found on the native side
+    test('it resolves with null if the native bridge returns null', async () => {
+        NativeBrazeReactModule.getBanner.mockResolvedValue(null);
+        const banner = await Braze.getBanner(testPlacementId);
+
+        expect(NativeBrazeReactModule.getBanner).toBeCalledWith(testPlacementId);
+        expect(banner).toBeNull();        
+        expect(Banner).not.toHaveBeenCalled();
+    });
+
+    // - Test native bridge throws an error
+    test('it resolves with null and logs an error if the bridge call fails', async () => {
+        const originalError = console.error;
+        console.error = jest.fn();
+        const mockError = new Error('Native bridge timeout');
+        NativeBrazeReactModule.getBanner.mockRejectedValue(mockError);
+        const banner = await Braze.getBanner(testPlacementId);
+
+        expect(NativeBrazeReactModule.getBanner).toBeCalledWith(testPlacementId);
+        expect(console.error).toHaveBeenCalledWith("Error fetching banner:", mockError);
+        expect(banner).toBeNull();
+
+        console.error = originalError;
+    });
 });

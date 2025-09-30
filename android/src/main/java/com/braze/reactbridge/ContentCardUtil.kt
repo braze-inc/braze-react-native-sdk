@@ -83,7 +83,6 @@ fun imageOnlyCardToWritableMap(card: ImageOnlyCard): WritableMap {
     val mappedCard = Arguments.createMap()
     mappedCard.putString("image", card.imageUrl)
     mappedCard.putDouble("imageAspectRatio", card.aspectRatio.toDouble())
-    mappedCard.putString("domain", card.domain)
     mappedCard.putString("type", "ImageOnly")
     return mappedCard
 }

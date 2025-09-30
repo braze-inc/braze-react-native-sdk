@@ -13,7 +13,6 @@
 
 static NSString *const kContentCardsUpdatedEvent = @"contentCardsUpdated";
 static NSString *const kBannerCardsUpdatedEvent = @"bannerCardsUpdated";
-static NSString *const kNewsFeedCardsUpdatedEvent = @"newsFeedCardsUpdated";
 static NSString *const kFeatureFlagsUpdatedEvent = @"featureFlagsUpdated";
 static NSString *const kSdkAuthenticationErrorEvent = @"sdkAuthenticationError";
 static NSString *const kInAppMessageReceivedEvent = @"inAppMessageReceived";
@@ -24,7 +23,6 @@ static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 @property (strong, nonatomic) BRZCancellable *contentCardsSubscription;
 @property (strong, nonatomic) BRZCancellable *bannersSubscription;
 @property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
-@property (strong, nonatomic) BRZCancellable *newsFeedSubscription;
 @property (strong, nonatomic) BRZCancellable *notificationSubscription;
 
 @end
@@ -85,10 +83,6 @@ RCT_EXPORT_MODULE()
     RCTLogInfo(@"Received Feature Flags array via subscription of length: %lu", [featureFlags count]);
     [self sendEventWithName:kFeatureFlagsUpdatedEvent body:RCTFormatFeatureFlags(featureFlags)];
   }];
-  self.newsFeedSubscription = [braze.newsFeed subscribeToUpdates:^(NSArray<BRZNewsFeedCard *> * _Nonnull cards) {
-    RCTLogInfo(@"Received News Feed cards via subscription of length: %lu", [cards count]);
-    [self sendEventWithName:kNewsFeedCardsUpdatedEvent body:nil];
-  }];
 
   self.notificationSubscription = [braze.notifications subscribeToUpdates:^(BRZNotificationsPayload * _Nonnull payload) {
     RCTLogInfo(@"Received push notification via subscription");
@@ -108,7 +102,6 @@ RCT_EXPORT_MODULE()
   [brazeUIHandler deinitPresenterDelegate:braze];
   self.contentCardsSubscription = nil;
   self.bannersSubscription = nil;
-  self.newsFeedSubscription = nil;
   self.featureFlagsSubscription = nil;
   self.notificationSubscription = nil;
 }
@@ -117,7 +110,6 @@ RCT_EXPORT_MODULE()
   return @[
     kContentCardsUpdatedEvent,
     kBannerCardsUpdatedEvent,
-    kNewsFeedCardsUpdatedEvent,
     kFeatureFlagsUpdatedEvent,
     kSdkAuthenticationErrorEvent,
     kInAppMessageReceivedEvent,
@@ -570,98 +562,6 @@ RCT_EXPORT_METHOD(setLastKnownLocation:(double)latitude
   }
 }
 
-#pragma mark - News Feed
-
-RCT_EXPORT_METHOD(launchNewsFeed) {
-  RCTLogInfo(@"News Feed UI not supported on iOS");
-}
-
-RCT_EXPORT_METHOD(requestFeedRefresh) {
-  [braze.newsFeed requestRefresh];
-}
-
-RCT_EXPORT_METHOD(getNewsFeedCards:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getNewsFeedCards called");
-  [self requestFeedRefresh];
-  resolve([self getMappedNewsFeedCards]);
-}
-
-RCT_EXPORT_METHOD(logNewsFeedCardClicked:(NSString *)idString) {
-  BRZNewsFeedCard *cardToClick = [self getNewsFeedCardById:idString];
-  if (cardToClick) {
-    RCTLogInfo(@"logNewsFeedCardClicked with id %@", idString);
-    [cardToClick logClickUsing:braze];
-  }
-}
-
-RCT_EXPORT_METHOD(logNewsFeedCardImpression:(NSString *)idString) {
-  BRZNewsFeedCard *cardToClick = [self getNewsFeedCardById:idString];
-  if (cardToClick) {
-    RCTLogInfo(@"logNewsFeedCardImpression with id %@", idString);
-    [cardToClick logImpressionUsing:braze];
-  }
-}
-
-- (NSArray *)getMappedNewsFeedCards {
-  NSArray<BRZNewsFeedCard *> *newsFeedCards = braze.newsFeed.cards;
-  NSMutableArray *mappedNewsFeedCards = [NSMutableArray arrayWithCapacity:[newsFeedCards count]];
-  [newsFeedCards enumerateObjectsUsingBlock:^(id card, NSUInteger idx, BOOL *stop) {
-    [mappedNewsFeedCards addObject:RCTFormatNewsFeedCard(card)];
-  }];
-  return mappedNewsFeedCards;
-}
-
-- (nullable BRZNewsFeedCard *)getNewsFeedCardById:(NSString *)idString {
-  NSArray<BRZNewsFeedCard *> *cards = braze.newsFeed.cards;
-  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@", idString];
-  NSArray *filteredArray = [cards filteredArrayUsingPredicate:predicate];
-
-  if ([filteredArray count]) {
-    return filteredArray[0];
-  }
-  return nil;
-}
-
-/// Custom decoding function to match the News Feed Card format expected by the JS layer.
-/// - Note: The output intentionally differs from the native `[card json]` method.
-static NSDictionary *RCTFormatNewsFeedCard(BRZNewsFeedCard *card) {
-  NSMutableDictionary *newsFeedCardData = [NSMutableDictionary dictionary];
-  newsFeedCardData[@"id"] = card.identifier;
-  newsFeedCardData[@"created"] = @(card.created);
-  newsFeedCardData[@"expiresAt"] = @(card.expires);
-  newsFeedCardData[@"viewed"] = @(card.viewed);
-  newsFeedCardData[@"url"] = RCTNullIfNil(card.url ? card.url.absoluteString : nil);
-  newsFeedCardData[@"openURLInWebView"] = @(card.useWebView);
-  newsFeedCardData[@"extras"] = card.extras ? RCTJSONClean(card.extras) : @{};
-
-  switch (card.type) {
-    case BRZNewsFeedCardTypeBanner:
-      newsFeedCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
-      newsFeedCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      newsFeedCardData[@"domain"] = RCTNullIfNil(card.domain);
-      newsFeedCardData[@"type"] = @"Banner";
-    case BRZNewsFeedCardTypeCaptionedImage:
-      newsFeedCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
-      newsFeedCardData[@"imageAspectRatio"] = @(card.imageAspectRatio);
-      newsFeedCardData[@"title"] = card.title;
-      newsFeedCardData[@"cardDescription"] = card.cardDescription;
-      newsFeedCardData[@"domain"] = RCTNullIfNil(card.domain);
-      newsFeedCardData[@"type"] = @"Captioned";
-    case BRZNewsFeedCardTypeClassic:
-      newsFeedCardData[@"image"] = RCTNullIfNil(card.image ? card.image.absoluteString : nil);
-      newsFeedCardData[@"cardDescription"] = card.cardDescription;
-      newsFeedCardData[@"title"] = card.title;
-      newsFeedCardData[@"domain"] = card.domain;
-      newsFeedCardData[@"type"] = @"Classic";
-    case BRZNewsFeedCardTypeTextAnnouncement:
-      newsFeedCardData[@"title"] = card.title;
-      newsFeedCardData[@"cardDescription"] = card.cardDescription;
-      newsFeedCardData[@"domain"] = RCTNullIfNil(card.domain);
-      newsFeedCardData[@"type"] = @"TextAnnouncement";
-  }
-  return newsFeedCardData;
-}
-
 #pragma mark - Content Cards
 
 /// Returns the content card for the associated id, or nil if not found.
@@ -842,6 +742,7 @@ static NSDictionary *RCTFormatBanner(BRZBanner *banner) {
   formattedBannerData[@"isControl"] = @(banner.isControl);
   formattedBannerData[@"html"] = banner.html;
   formattedBannerData[@"expiresAt"] = @(banner.expiresAt);
+  formattedBannerData[@"properties"] = banner.properties ? banner.properties : @{};
 
   return formattedBannerData;
 }
@@ -867,20 +768,6 @@ RCT_EXPORT_METHOD(requestLocationInitialization) {
 RCT_EXPORT_METHOD(requestGeofences:(double)latitude longitude:(double)longitude) {
   RCTLogInfo(@"braze requestGeofencesWithLongitude:latitude: with latitude %g and longitude %g", latitude, longitude);
   [braze requestGeofencesWithLatitude:latitude longitude:longitude];
-}
-
-RCT_EXPORT_METHOD(getCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
-  RCTLogInfo(@"News Feed helper methods not supported on iOS");
-  [self reportResultWithCallback:callback
-                        andError:nil
-                       andResult:@(0)];
-}
-
-RCT_EXPORT_METHOD(getUnreadCardCountForCategories:(NSString *)category callback:(RCTResponseSenderBlock)callback) {
-  RCTLogInfo(@"News Feed helper methods not supported on iOS");
-  [self reportResultWithCallback:callback
-                        andError:nil
-                       andResult:@(0)];
 }
 
 RCT_EXPORT_METHOD(requestImmediateDataFlush) {
@@ -1078,7 +965,7 @@ RCT_EXPORT_METHOD(getFeatureFlagBooleanProperty:(NSString *)flagId
                   key:(NSString *)key
               resolve:(RCTPromiseResolveBlock)resolve
                reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagBooleanProperty called for key %@", key);
+  RCTLogWarn(@"`getFeatureFlagBooleanProperty` is deprecated. Use `getBooleanProperty(key)` instead.");
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSNumber *boolProperty = [featureFlag boolPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
@@ -1089,7 +976,7 @@ RCT_EXPORT_METHOD(getFeatureFlagStringProperty:(NSString *)flagId
                  key:(NSString *)key
              resolve:(RCTPromiseResolveBlock)resolve
               reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagStringProperty called for key %@", key);
+  RCTLogWarn(@"`getFeatureFlagStringProperty` is deprecated. Use `getStringProperty(key)` instead.");
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSString *stringProperty = [featureFlag stringPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
@@ -1100,7 +987,7 @@ RCT_EXPORT_METHOD(getFeatureFlagNumberProperty:(NSString *)flagId
                   key:(NSString *)key
               resolve:(RCTPromiseResolveBlock)resolve
                reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagNumberProperty called for key %@", key);
+  RCTLogWarn(@"`getFeatureFlagNumberProperty` is deprecated. Use `getNumberProperty(key)` instead.");
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSNumber *numberProperty = [featureFlag numberPropertyForKey:key];
   // Return an explicit `NSNull` to avoid returning `undefined` in the JS layer.
@@ -1111,7 +998,7 @@ RCT_EXPORT_METHOD(getFeatureFlagJSONProperty:(NSString *)flagId
                                key:(NSString *)key
                            resolve:(RCTPromiseResolveBlock)resolve
                             reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagJSONProperty called for key %@", key);
+  RCTLogWarn(@"`getFeatureFlagJSONProperty` is deprecated. Use `getJSONProperty(key)` instead.");
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSDictionary *jsonProperty = RCTJSONClean([featureFlag jsonPropertyForKey:key]);
   resolve(jsonProperty ? jsonProperty : [NSNull null]);
@@ -1121,7 +1008,7 @@ RCT_EXPORT_METHOD(getFeatureFlagTimestampProperty:(NSString *)flagId
                                key:(NSString *)key
                            resolve:(RCTPromiseResolveBlock)resolve
                             reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagTimestampProperty called for key %@", key);
+  RCTLogWarn(@"`getFeatureFlagTimestampProperty` is deprecated. Use `getTimestampProperty(key)` instead.");
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSNumber *timestampProperty = [featureFlag timestampPropertyForKey:key];
   resolve(timestampProperty ? timestampProperty : [NSNull null]);
@@ -1131,7 +1018,7 @@ RCT_EXPORT_METHOD(getFeatureFlagImageProperty:(NSString *)flagId
                                key:(NSString *)key
                            resolve:(RCTPromiseResolveBlock)resolve
                             reject:(RCTPromiseRejectBlock)reject) {
-  RCTLogInfo(@"getFeatureFlagImageProperty called for key %@", key);
+  RCTLogWarn(@"`getFeatureFlagImageProperty` is deprecated. Use `getImageProperty(key)` instead.");
   BRZFeatureFlag *featureFlag = [braze.featureFlags featureFlagWithId:flagId];
   NSString *imageProperty = [featureFlag imagePropertyForKey:key];
   resolve(imageProperty ? imageProperty : [NSNull null]);

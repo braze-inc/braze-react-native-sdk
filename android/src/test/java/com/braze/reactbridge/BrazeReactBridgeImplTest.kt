@@ -33,6 +33,8 @@ import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.mockStatic
+import org.mockito.Mockito.times
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
@@ -43,8 +45,6 @@ import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
 import java.math.BigDecimal
 import kotlin.random.Random
-import org.mockito.Mockito.mockStatic
-import org.mockito.Mockito.times
 
 @RunWith(RobolectricTestRunner::class)
 @Suppress("LargeClass")
@@ -87,9 +87,14 @@ class BrazeReactBridgeImplTest {
         val testUserId = Random.nextInt().toString()
         brazeReactBridgeImpl.changeUser(testUserId, null)
 
-        val callback = createTestCallback<String>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<String, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.getUserId(callback)
@@ -180,9 +185,14 @@ class BrazeReactBridgeImplTest {
         }
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setStringCustomUserAttribute(testKey, testValue, callback)
@@ -214,9 +224,14 @@ class BrazeReactBridgeImplTest {
         }
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setBoolCustomUserAttribute(testKey, testValue, callback)
@@ -248,9 +263,14 @@ class BrazeReactBridgeImplTest {
         }
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setIntCustomUserAttribute(testKey, testValue, callback)
@@ -282,9 +302,14 @@ class BrazeReactBridgeImplTest {
         }
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setDoubleCustomUserAttribute(testKey, testValue, callback)
@@ -306,7 +331,12 @@ class BrazeReactBridgeImplTest {
         val expectedResult = true
 
         val brazeUserMock = mock<BrazeUser> {
-            on { setCustomUserAttributeToSecondsFromEpoch(testKey, testValue.toLong()) } doReturn expectedResult
+            on {
+                setCustomUserAttributeToSecondsFromEpoch(
+                    testKey,
+                    testValue.toLong()
+                )
+            } doReturn expectedResult
         }
         val brazeMock = mock<Braze> {
             on { currentUser } doReturn brazeUserMock
@@ -316,9 +346,14 @@ class BrazeReactBridgeImplTest {
         }
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setDateCustomUserAttribute(testKey, testValue, callback)
@@ -350,9 +385,14 @@ class BrazeReactBridgeImplTest {
         }
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.incrementCustomUserAttribute(testKey, testIncrementValue, callback)
@@ -378,9 +418,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.unsetCustomUserAttribute(testKey, callback)
@@ -412,9 +457,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setCustomUserAttributeObjectArray(testKey, testReadableArray, callback)
@@ -444,14 +494,24 @@ class BrazeReactBridgeImplTest {
         }
 
         val brazeUserMock = mock<BrazeUser> {
-            on { setCustomAttributeArray(eq(testKey), any<Array<String?>>()) } doReturn expectedResult
+            on {
+                setCustomAttributeArray(
+                    eq(testKey),
+                    any<Array<String?>>()
+                )
+            } doReturn expectedResult
         }
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setCustomUserAttributeArray(testKey, testReadableArray, callback)
@@ -486,17 +546,33 @@ class BrazeReactBridgeImplTest {
         }
 
         val brazeUserMock = mock<BrazeUser> {
-            on { setCustomAttribute(eq(testKey), any<JSONObject>(), eq(testMerge)) } doReturn expectedResult
+            on {
+                setCustomAttribute(
+                    eq(testKey),
+                    any<JSONObject>(),
+                    eq(testMerge)
+                )
+            } doReturn expectedResult
         }
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
-        brazeReactBridgeImpl.setCustomUserAttributeObject(testKey, testReadableMap, testMerge, callback)
+        brazeReactBridgeImpl.setCustomUserAttributeObject(
+            testKey,
+            testReadableMap,
+            testMerge,
+            callback
+        )
         blockUntil { callbackInvoked }
 
         verify(brazeUserMock).setCustomAttribute(eq(testKey), any<JSONObject>(), eq(testMerge))
@@ -520,9 +596,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.addToCustomAttributeArray(testKey, testValue, callback)
@@ -549,9 +630,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.removeFromCustomAttributeArray(testKey, testValue, callback)
@@ -607,9 +693,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setGender(testGender, callback)
@@ -690,9 +781,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.addToSubscriptionGroup(testGroupId, callback)
@@ -718,9 +814,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.removeFromSubscriptionGroup(testGroupId, callback)
@@ -747,9 +848,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setPushNotificationSubscriptionType(testSubscriptionType, callback)
@@ -776,9 +882,14 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.setEmailNotificationSubscriptionType(testSubscriptionType, callback)
@@ -992,12 +1103,22 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        val callback = createTestCallback<Boolean>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
-        brazeReactBridgeImpl.setLocationCustomAttribute(testKey, testLatitude, testLongitude, callback)
+        brazeReactBridgeImpl.setLocationCustomAttribute(
+            testKey,
+            testLatitude,
+            testLongitude,
+            callback
+        )
         blockUntil { callbackInvoked }
 
         verify(brazeUserMock).setLocationCustomAttribute(testKey, testLatitude, testLongitude)
@@ -1100,7 +1221,12 @@ class BrazeReactBridgeImplTest {
         val brazeMock = getBrazeMock(brazeUserMock)
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-        brazeReactBridgeImpl.setAttributionData(testNetwork, testCampaign, testAdGroup, testCreative)
+        brazeReactBridgeImpl.setAttributionData(
+            testNetwork,
+            testCampaign,
+            testAdGroup,
+            testCreative
+        )
 
         verify(brazeUserMock).setAttributionData(any<AttributionData>())
     }
@@ -1110,9 +1236,14 @@ class BrazeReactBridgeImplTest {
         var callbackResult: String? = null
         var callbackInvoked = false
 
-        val callback = createTestCallback<String>(
-            callbackInvokedRef = { callbackInvoked = true },
-            callbackResultRef = { callbackResult = it }
+        val callback = createTestCallback<String, Unit>(
+            onSuccess = { arg ->
+                callbackResult = arg
+            },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = {
+                callbackInvoked = true
+            }
         )
 
         brazeReactBridgeImpl.getDeviceId(callback)
@@ -1124,6 +1255,25 @@ class BrazeReactBridgeImplTest {
         // We can't test the actual device ID because it can't be set manually so we just
         // test that it's not blank
         assertTrue(result.isNotBlank())
+    }
+
+    @Test
+    fun whenBridgeGetDeviceIdIsCalledWithDisabledSDK_callbackReceivesDeviceId() {
+        var callbackErrorMessage: String? = null
+        var callbackInvoked = false
+
+        val callback = createTestCallback<Unit, String>(
+            onCompletion = { callbackInvoked = true },
+            onSuccess = { _ -> fail("Should not have any success result with disabled SDK") },
+            onFail = { e -> callbackErrorMessage = e },
+        )
+
+        brazeReactBridgeImpl.disableSDK()
+        brazeReactBridgeImpl.getDeviceId(callback)
+        blockUntil { callbackInvoked }
+
+        assertTrue(callbackInvoked)
+        assertEquals("Failed to retrieve the current device id.", callbackErrorMessage)
     }
 
     @Test
@@ -1289,7 +1439,11 @@ class BrazeReactBridgeImplTest {
         brazeReactBridgeImpl.brazeTestingMock = brazeMock
         val mockPromise = mock<Promise>()
 
-        brazeReactBridgeImpl.getFeatureFlagTimestampProperty(testFlagId, testPropertyKey, mockPromise)
+        brazeReactBridgeImpl.getFeatureFlagTimestampProperty(
+            testFlagId,
+            testPropertyKey,
+            mockPromise
+        )
 
         verify(brazeMock).getFeatureFlag(testFlagId)
         verify(mockFeatureFlag).getTimestampProperty(testPropertyKey)
@@ -1320,6 +1474,39 @@ class BrazeReactBridgeImplTest {
     }
 
     @Test
+    fun whenGetFeatureFlagJSONPropertyIsCalled_brazeGetFeatureFlagAndGetJSONPropertyGetsCalled() {
+        val testFlagId = "test_flag"
+        val testPropertyKey = "test_key"
+        val expectedValue = JSONObject()
+
+        val mockFeatureFlag = mock<FeatureFlag> {
+            on { getJSONProperty(testPropertyKey) } doReturn expectedValue
+        }
+
+        val brazeMock = mock<Braze> {
+            on { getFeatureFlag(testFlagId) } doReturn mockFeatureFlag
+        }
+
+        val brazeReactBridgeImplMock = mock<BrazeReactBridgeImpl> {
+            on { getFeatureFlagJSONProperty(eq(testFlagId), eq(testPropertyKey), any()) } doAnswer { invocation ->
+                val featureFlag = brazeMock.getFeatureFlag(testFlagId)
+                val jsonProperty = featureFlag?.getJSONProperty(testPropertyKey)
+                val promise = invocation.getArgument<Promise>(2)
+                promise.resolve(jsonProperty)
+            }
+        }
+
+        val mockPromise = mock<Promise>()
+
+        brazeReactBridgeImplMock.getFeatureFlagJSONProperty(testFlagId, testPropertyKey, mockPromise)
+
+        verify(brazeReactBridgeImplMock).getFeatureFlagJSONProperty(testFlagId, testPropertyKey, mockPromise)
+        verify(brazeMock).getFeatureFlag(testFlagId)
+        verify(mockFeatureFlag).getJSONProperty(testPropertyKey)
+        verify(mockPromise).resolve(expectedValue)
+    }
+
+    @Test
     fun whenBridgeSetAdTrackingEnabledIsCalled_brazeSetGoogleAdvertisingIdGetsCalled() {
         val adTrackingEnabled = Random.nextBoolean()
         val googleAdId = Random.nextInt().toString()
@@ -1329,19 +1516,45 @@ class BrazeReactBridgeImplTest {
         verify(brazeMock).setGoogleAdvertisingId(googleAdId, adTrackingEnabled)
     }
 
-    private fun <T> createTestCallback(
-        callbackInvokedRef: () -> Unit,
-        callbackResultRef: (T?) -> Unit
+    @Test
+    fun whenBridgeSetAdTrackingEnabledIsCalledWithNullGoogleAdId_brazeMethodGetsCalledWithExpectedParameter() {
+        val adTrackingEnabled = Random.nextBoolean()
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+        brazeReactBridgeImpl.setAdTrackingEnabled(adTrackingEnabled, null)
+        verify(brazeMock).setGoogleAdvertisingId("", adTrackingEnabled)
+    }
+
+    /**
+     * Creates a test [Callback] for React Native bridging that handles success, failure, and completion.
+     *
+     * Calls [onCompletion] every time it's invoked.
+     * - If two or more arguments are received, treats the second as the result and calls [onSuccess].
+     * - If one argument is received, treats it as an error and calls [onFail].
+     *
+     * @param onSuccess Invoked with the result value.
+     * @param onFail Invoked with the error value.
+     * @param onCompletion Invoked on every callback.
+     * @return A [Callback] instance for testing.
+     *
+     * @param T The type of the success result.
+     * @param E The type of the error.
+     */
+    private fun <T, E> createTestCallback(
+        onSuccess: (T?) -> Unit,
+        onFail: (E?) -> Unit,
+        onCompletion: () -> Unit
     ): Callback {
         return Callback { args ->
-            callbackInvokedRef()
+            onCompletion()
             if (args.size >= 2) {
                 // First argument in the RN Callback is always an error (null means no error)
                 // Second argument is the result that we actually want to read
                 @Suppress("UNCHECKED_CAST")
-                callbackResultRef(args[1] as T?)
+                onSuccess(args[1] as T?)
             } else if (args.size == 1) {
-                fail("Callback did not return any data.")
+                @Suppress("UNCHECKED_CAST")
+                onFail(args[0] as E?)
             }
         }
     }

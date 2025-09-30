@@ -1,6 +1,7 @@
+
 import type { TurboModule } from 'react-native/Libraries/TurboModule/RCTExport';
 import { TurboModuleRegistry } from 'react-native';
-import type { FeatureFlag, NewsFeedCard, ContentCard, Banner } from '../index';
+import type { FeatureFlag, ContentCard, Banner } from '../index';
 
 export interface Spec extends TurboModule {
   getInitialURL(callback: (deepLink: string) => void): void;
@@ -127,11 +128,7 @@ export interface Spec extends TurboModule {
     adGroup: string,
     creative: string
   ): void;
-  launchNewsFeed(): void;
-  logNewsFeedCardClicked(cardId: string): void;
-  logNewsFeedCardImpression(cardId: string): void;
-  getNewsFeedCards(): Promise<NewsFeedCard[]>;
-  launchContentCards(dismissAutomaticallyOnCardClick: boolean): void;
+  launchContentCards(dismissAutomaticallyOnCardClick?: boolean): void;
   requestContentCardsRefresh(): void;
   logContentCardClicked(cardId: string): void;
   logContentCardDismissed(cardId: string): void;
@@ -139,15 +136,6 @@ export interface Spec extends TurboModule {
   processContentCardClickAction(cardId: string): void;
   getContentCards(): Promise<ContentCard[]>;
   getCachedContentCards(): Promise<ContentCard[]>;
-  getCardCountForCategories(
-    category: string,
-    callback: ((error?: Object, result?: number) => void) | null
-  ): void;
-  getUnreadCardCountForCategories(
-    category: string,
-    callback: ((error?: Object, result?: number) => void) | null
-  ): void;
-  requestFeedRefresh(): void;
   getBanner(placementId: string): Promise<Banner | null>;
   requestBannersRefresh(placementIds: string[]): void;
   requestImmediateDataFlush(): void;
@@ -159,9 +147,9 @@ export interface Spec extends TurboModule {
   setLastKnownLocation(
     latitude: number,
     longitude: number,
-    altitude: number,
-    horizontalAccuracy: number,
-    verticalAccuracy: number
+    altitude?: number | null,
+    horizontalAccuracy?: number | null,
+    verticalAccuracy?: number | null
   ): void;
   setLocationCustomAttribute(
     key: string,
@@ -199,7 +187,7 @@ export interface Spec extends TurboModule {
   getFeatureFlagImageProperty(flagId: string, key: string): Promise<string | null>;
   refreshFeatureFlags(): void;
   logFeatureFlagImpression(flagId: string): void;
-  setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId: string): void;
+  setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId?: string): void;
   setIdentifierForAdvertiser(identifierForAdvertiser: string): void;
   setIdentifierForVendor(identifierForVendor: string): void;
   updateTrackingPropertyAllowList(allowList: Object): void;

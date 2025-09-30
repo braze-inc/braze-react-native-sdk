@@ -6,6 +6,8 @@ import {
 
 import { Button } from './models/button';
 import { InAppMessage } from './models/in-app-message';
+import { FeatureFlag } from './models/feature-flag';
+import { Banner } from './models/banner';
 import {
   CardCategory,
   NotificationSubscriptionTypes,
@@ -25,6 +27,8 @@ export class Braze {
   static BrazeButton = Button;
   static BrazeInAppMessage = InAppMessage;
   static BrazeBannerView = BannerView;
+  static FeatureFlag = FeatureFlag;
+  static Banner = Banner;
 
   static CardCategory = CardCategory;
   static NotificationSubscriptionTypes = NotificationSubscriptionTypes;
@@ -581,39 +585,6 @@ export class Braze {
     );
   }
 
-  // News Feed
-  /**
-   * Launches the News Feed UI element.
-   */
-  static launchNewsFeed() {
-    this.bridge.launchNewsFeed();
-  }
-
-  /**
-   * Returns an array of News Feed cards.
-   * @returns {Promise<NewsFeedCard[]>}
-   */
-  static getNewsFeedCards() {
-    return this.bridge.getNewsFeedCards();
-  }
-
-  /**
-   * Manually log a click to Braze for a particular News Feed card.
-   * The SDK will only log a card click when the card has the url property with a valid value.
-   * @param {string} id
-   */
-  static logNewsFeedCardClicked(id) {
-    this.bridge.logNewsFeedCardClicked(id);
-  }
-
-  /**
-   * Manually log an impression to Braze for a particular News Feed card.
-   * @param {string} id
-   */
-  static logNewsFeedCardImpression(id) {
-    this.bridge.logNewsFeedCardImpression(id);
-  }
-
   // Content Cards
   /**
    * Launches the Content Cards UI element.
@@ -676,46 +647,23 @@ export class Braze {
     this.bridge.processContentCardClickAction(id);
   }
 
+  // Banners
   /**
-   * Requests a News Feed refresh.
+   * Returns a Banner for the given placement ID.
+   * @param {string} placementId - The placement ID for the banner.
+   * @returns {Promise<Banner|null>} - A promise that resolves to a Banner instance if found, or null if not found or on error.
    */
-  static requestFeedRefresh() {
-    this.bridge.requestFeedRefresh();
-  }
-
-  /**
-   * Returns the current number of News Feed cards for the given category.
-   * @param {CardCategory} category - Card category. Use Braze.CardCategory.ALL to get the total card count.
-   * @param {function(error, result)} callback - A callback that receives the function call result.
-   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
-   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
-   */
-  static getCardCountForCategories(category, callback) {
-    callFunctionWithCallback(
-      this.bridge.getCardCountForCategories,
-      [category],
-      callback
-    );
-  }
-
-  /**
-   * Returns the number of unread News Feed cards for the given category.
-   * @param {CardCategory} category - Card category. Use Braze.CardCategory.ALL to get the total unread card count.
-   * @param {function(error, result)} callback - A callback that receives the function call result.
-   * Note that for Android, a successful result relies on a FeedUpdatedEvent being posted at least once. There is also a slight
-   * race condition around calling changeUser, which requests a feed refresh, so the counts may not always be accurate.
-   */
-  static getUnreadCardCountForCategories(category, callback) {
-    callFunctionWithCallback(
-      this.bridge.getUnreadCardCountForCategories,
-      [category],
-      callback
-    );
-  }
-
-  // Banner Cards
-  static getBanner(placementId) {
-    return this.bridge.getBanner(placementId);
+  static async getBanner(placementId) {
+    try {
+        // Fetch raw banner data from the bridge and create a Banner instance
+        const rawData = await this.bridge.getBanner(placementId);
+        if (rawData) {
+          return new Banner(rawData);
+        }
+      } catch (error) {
+        console.error("Error fetching banner:", error);
+      }
+      return null;
   }
 
   static requestBannersRefresh(placementIds) {
@@ -732,7 +680,9 @@ export class Braze {
 
   // Data Controls
   /**
-   * Wipes Data on the Braze SDK. On iOS, the SDK will be disabled for the rest of the app run.
+   * Deletes all locally stored Braze SDK data and disables the SDK.
+   *
+   * After this operation, Braze functionality will not work until `enableSDK` is called.
    */
   static wipeData() {
     this.bridge.wipeData();
@@ -826,6 +776,7 @@ export class Braze {
    *
    * @param {boolean} useBrazeUI - Whether to use the default Braze UI for in-app messages.
    * @param {function(event)} subscriber - The method to call when an in-app message is received.
+   * @returns {EmitterSubscription | undefined}
    */
   static subscribeToInAppMessage(useBrazeUI, subscriber) {
     let withBrazeUI = false;
@@ -891,11 +842,12 @@ export class Braze {
   /**
    * Perform the action of an in-app message
    * @param {InAppMessage} inAppMessage
+   * @param {number} buttonId
    */
-  static performInAppMessageAction(inAppMessage) {
+  static performInAppMessageAction(inAppMessage, buttonId) {
     console.log('Processing In-App Message Action: ', inAppMessage);
     const inAppMessageString = inAppMessage.toString();
-    this.bridge.performInAppMessageAction(inAppMessageString, -1);
+    this.bridge.performInAppMessageAction(inAppMessageString, buttonId);
   }
 
   /**
@@ -927,8 +879,17 @@ export class Braze {
    * Returns feature flag
    * @returns {Promise<FeatureFlag|null>}
    */
-  static getFeatureFlag(id) {
-    return this.bridge.getFeatureFlag(id);
+  static async getFeatureFlag(id) {
+      try {
+        // Fetch raw feature flag data from the bridge and create a FeatureFlag instance
+        const rawData = await this.bridge.getFeatureFlag(id);
+        if (rawData) {
+          return new FeatureFlag(rawData);
+        }
+      } catch (error) {
+        console.error("Error fetching feature flag:", error);
+      }
+      return null;
   }
 
   /**
@@ -946,6 +907,8 @@ export class Braze {
   }
 
   /**
+   * @deprecated This method is deprecated. Use `flag.getBooleanProperty` instead.
+   * 
    * Returns the boolean property for the given feature flag ID.
    * @returns {Promise<boolean|null>}
    */
@@ -954,6 +917,8 @@ export class Braze {
   }
 
   /**
+   * @deprecated This method is deprecated. Use `flag.getStringProperty` instead.
+   * 
    * Returns the string property for the given feature flag ID.
    * @returns {Promise<string|null>}
    */
@@ -962,6 +927,8 @@ export class Braze {
   }
 
   /**
+   * @deprecated This method is deprecated. Use `flag.getNumberProperty` instead.
+   * 
    * Returns the number property for the given feature flag ID.
    * @returns {Promise<number|null>}
    */
@@ -970,6 +937,8 @@ export class Braze {
   }
 
   /**
+   * @deprecated This method is deprecated. Use `flag.getTimestampProperty` instead.
+   * 
    * Returns the timestamp property for the given feature flag ID.
    * @returns {Promise<number|null>}
    */
@@ -978,6 +947,8 @@ export class Braze {
   }
 
   /**
+   * @deprecated This method is deprecated. Use `flag.getJSONProperty` instead.
+   * 
    * Returns the JSON property for the given feature flag ID.
    * @returns {Promise<object|null>}
    */
@@ -986,6 +957,8 @@ export class Braze {
   }
 
   /**
+   * @deprecated This method is deprecated. Use `flag.getImageProperty` instead.
+   * 
    * Returns the image property for the given feature flag ID.
    * @returns {Promise<string|null>}
    */
@@ -1065,13 +1038,14 @@ export class Braze {
   }
 
   // Events
-  
+
   /**
    * Subscribes to the specific SDK event.
    * When you want to stop listening, call `.remove()` on the returned
    * subscription.
    * @param {Events} event
    * @param {function} subscriber
+   * @returns {EmitterSubscription}
    */
   static addListener(event, subscriber) {
     if (Platform.OS === 'android') {

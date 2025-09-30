@@ -1,14 +1,54 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
-## 16.1.0
+## 17.0.0
+
+##### Breaking
+- Updates the native Android SDK version bindings [from Braze Android SDK 37.0.0 to 39.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v37.0.0...v39.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- Removes support for News Feed. The following APIs have been removed:
+  - `launchNewsFeed`
+  - `requestFeedRefresh`
+  - `getNewsFeedCards`
+  - `logNewsFeedCardClicked`
+  - `logNewsFeedCardImpression`
+  - `getCardCountForCategories`
+  - `getUnreadCardCountForCategories`
+  - `Braze.Events.NEWS_FEED_CARDS_UPDATED`
+  - `Braze.CardCategory`
+
+##### Fixed
+- Fixes an issue where `getDeviceID()` did not return when an error occurred.
+- Fixes the Android implementation of the `FeatureFlag` object to return the correct values for timestamp, image, and JSON objects. Prior to this change, the following APIs would return `undefined` on Android:
+  - `Braze.getFeatureFlagTimestampProperty(id)`
+  - `Braze.getFeatureFlagJSONProperty(id)`
+  - `Braze.getFeatureFlagImageProperty(id)`
+- Fixes the `FeatureFlagTimestampProperty` object type to be `datetime` instead of `timestamp`.
+- Fixes an issue where passing a null value for `googleAdvertisingId` to `setAdTrackingEnabled()` could cause a crash on Android.
 
 ##### Added
-- Updates the native Swift SDK version bindings [from Braze Swift SDK 13.0.0 to 13.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/13.0.0...13.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-  - This includes Xcode 26 support.
+- Adds support for Banner properties via new public methods for `Banner`:
+  - `banner.getStringProperty(key:)` for accessing `String` properties.
+  - `banner.getNumberProperty(key:)` for accessing `num` properties.
+  - `banner.getTimestampProperty(key:)` for accessing `int` Unix UTC millisecond timestamp  properties.
+  - `banner.getBooleanProperty(key:)` for accessing `bool` properties.
+  - `banner.getImageProperty(key:)` for accessing image URL properties as `String`s.
+  - `banner.getJSONProperty(key:)` for accessing JSON properties as `Map<String, dynamic>`.
+- Deprecates the following static methods in favor of new `FeatureFlag` instance methods:
+  - `Braze.getFeatureFlagStringProperty(flagId, propertyKey)`, instead use `flag.getStringProperty(key)`
+  - `Braze.getFeatureFlagBooleanProperty(flagId, propertyKey)`, instead use `flag.getBooleanProperty(key)`
+  - `Braze.getFeatureFlagNumberProperty(flagId, propertyKey)`, instead use `flag.getNumberProperty(key)`
+  - `Braze.getFeatureFlagTimestampProperty(flagId, propertyKey)`, instead use `flag.getTimestampProperty(key)`
+  - `Braze.getFeatureFlagJSONProperty(flagId, propertyKey)`, instead use `flag.getJSONProperty(key)`
+  - `Braze.getFeatureFlagImageProperty(flagId, propertyKey)`, instead use `flag.getImageProperty(key)`
+
+## 16.1.0
 
 ##### Fixed
 - Fixes a missing symbol error when compiling for Android on the React Native legacy bridge architecture on `0.81`.
   - This change is backwards compatible with prior versions of React Native.
+
+##### Added
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 13.0.0 to 13.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/13.0.0...13.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - This includes Xcode 26 support.
 
 ## 16.0.0
 
@@ -17,13 +57,13 @@
 - Updates the native Swift SDK version bindings [from Braze Swift SDK 12.0.0 to 13.0.0](https://github.com/braze-inc/braze-swift-sdk/compare/12.0.0...13.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
   - The `"sdkAuthenticationError"` event will now trigger for both "Required" __and "Optional"__ authentication errors.
 
-##### Added
-- Updates the Braze sample app to use React Native version [`0.80.0`](https://reactnative.dev/blog/2025/06/12/react-native-0.80). This change validates SDK compatibility with the latest version of React Native.
-- Adds ability to unset user first name, last name, phone number, email, gender, language, home city, and country by setting these values to `null`.
-
 ##### Fixed
 - Fixes the iOS implementation of `setDateOfBirth` to correctly report dates using the Gregorian calendar instead of the user's device calendar.
   - Previously, the SDK would re-format the input date components with the device's calendar settings if they were non-Gregorian.
+
+##### Added
+- Updates the Braze sample app to use React Native version [`0.80.0`](https://reactnative.dev/blog/2025/06/12/react-native-0.80). This change validates SDK compatibility with the latest version of React Native.
+- Adds ability to unset user first name, last name, phone number, email, gender, language, home city, and country by setting these values to `null`.
 
 ## 15.0.1
 
@@ -45,9 +85,6 @@
 
 ## 14.1.0
 
-##### Added
-- Updates the native iOS version bindings [from Braze Swift SDK 11.7.0 to 11.9.0](https://github.com/braze-inc/braze-swift-sdk/compare/11.7.0...11.9.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-
 ##### Fixed
 - Updates the internal implementations of the following methods to use non-deprecated methods from the native Swift SDK:
   - `getUserId` now uses `braze.user.identifier` instead of `[braze.user idWithCompletion:]`, which was deprecated in Swift SDK [11.5.0](https://github.com/braze-inc/braze-swift-sdk/releases/tag/11.5.0).
@@ -56,6 +93,9 @@
 - Fixes the callback signature of `getInitialPushPayload` to indicate that `null` can be returned when there is no payload object available.
 - Fixes the relative path reference to various Braze data models in the `NativeBrazeReactModuleSpec`.
 - Resolves a build failure in the `BrazeBannerView` class introduced in `14.0.0`, which would occur under certain iOS project configurations.
+
+##### Added
+- Updates the native iOS version bindings [from Braze Swift SDK 11.7.0 to 11.9.0](https://github.com/braze-inc/braze-swift-sdk/compare/11.7.0...11.9.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
 ## 14.0.0
 
@@ -158,22 +198,22 @@
 
 ## 9.2.0
 
-##### Added
-- Updates the native iOS version bindings [from Braze Swift SDK 8.2.1 to 8.4.0](https://github.com/braze-inc/braze-swift-sdk/compare/8.2.1...8.4.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-
 ##### Fixed
 - Fixes the Android implementation of `Braze.setCustomUserAttribute()` to correctly handle null values.
   - Thanks @owonie for your contribution!
 
+##### Added
+- Updates the native iOS version bindings [from Braze Swift SDK 8.2.1 to 8.4.0](https://github.com/braze-inc/braze-swift-sdk/compare/8.2.1...8.4.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
 ## 9.1.0
+
+##### Fixed
+- Fixes the iOS implementation of `Braze.registerPushToken()` to correctly pass the device token to the native SDK.
 
 ##### Added
 - Adds the `BrazeInAppMessage.isTestSend` property, which indicates whether an in-app message was triggered as part of a test send.
 - Updates the native iOS version bindings [from Braze Swift SDK 8.1.0 to 8.2.1](https://github.com/braze-inc/braze-swift-sdk/compare/8.1.0...8.2.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 - Updates the native Android version bindings [from Braze Android SDK 30.1.1 to 30.3.0](https://github.com/braze-inc/braze-android-sdk/compare/v30.1.1...v30.3.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-
-##### Fixed
-- Fixes the iOS implementation of `Braze.registerPushToken()` to correctly pass the device token to the native SDK.
 
 ## 9.0.0
 
@@ -186,6 +226,10 @@
 
 ## 8.4.0
 
+##### Fixed
+- Fixes the `hasListeners` property in the iOS native layer to prevent duplicate symbol errors with other libraries.
+- Addresses redefinition build errors when using the iOS Turbo Module with statically linked frameworks.
+
 ##### Added
 - Adds support to modify the allow list for Braze tracking properties via the following TypeScript properties and methods:
   - `TrackingProperty` string enum
@@ -196,10 +240,6 @@
   - This new method will now set `adTrackingEnabled` flag on iOS and both the `adTrackingEnabled` flag and the Google Advertising ID on Android.
 - Exposes the `ContentCardTypes` enum through the public TypeScript interface in `index.d.ts`.
 - Updates the native iOS bridge [from Braze Swift SDK 7.5.0 to 7.7.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.5.0...7.7.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-
-##### Fixed
-- Fixes the `hasListeners` property in the iOS native layer to prevent duplicate symbol errors with other libraries.
-- Addresses redefinition build errors when using the iOS Turbo Module with statically linked frameworks.
 
 ## 8.3.0
 
@@ -212,14 +252,19 @@
 
 ## 8.2.0
 
+##### Fixed
+- Adds a missing update [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed) in the `8.1.0` release.
+
 ##### Added
 - Updates the native iOS bridge [from Braze Swift SDK 7.1.0 to 7.3.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.1.0...7.3.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
   - This release includes compatibility with Expo Notifications. Refer to the [push notification setup documentation](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/push_notifications/) for more details.
 
-##### Fixed
-- Adds a missing update [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed) in the `8.1.0` release.
-
 ## 8.1.0
+
+##### Fixed
+- Fixes the `setLastKnownLocation` method to sanitize null inputs before calling the native layer.
+  - This previously caused an issue when calling this method on the legacy React Native architecture.
+- Updates the native Android bridge [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
 ##### Added
 - Push notification objects are now accessible in the JavaScript layer via new fields on the `PushNotificationEvent` interface.
@@ -237,11 +282,6 @@
   - `Braze.performInAppMessageAction(inAppMessage)`
   - `Braze.processContentCardClickAction(id)`
 - Updates the native iOS bridge [from Braze Swift SDK 7.0.0 to 7.1.0](https://github.com/braze-inc/braze-swift-sdk/compare/7.0.0...7.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
-
-##### Fixed
-- Fixes the `setLastKnownLocation` method to sanitize null inputs before calling the native layer.
-  - This previously caused an issue when calling this method on the legacy React Native architecture.
-- Updates the native Android bridge [from Braze Android SDK 29.0.0 to 29.0.1](https://github.com/braze-inc/braze-android-sdk/compare/v29.0.0...v29.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
 ## 8.0.0
 
@@ -612,11 +652,11 @@
 - Updated the native iOS bridge to [Braze iOS SDK 4.0.2](https://github.com/braze-inc/braze-ios-sdk/blob/master/CHANGELOG.md#402).
 - Updated the native Android bridge to [Braze Android SDK 13.1.2](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#1312), which contains support for Android 12.
 
-##### Added
-- Added support for `ReactAppboy.setGoogleAdvertisingId()` to set the Google Advertising ID and associated ad-tracking enabled field for Android devices. This is a no-op on iOS.
-
 ##### Fixed
 - Fixed an issue where calling `getInstallTrackingId()` while the SDK was disabled would cause a crash on iOS.
+
+##### Added
+- Added support for `ReactAppboy.setGoogleAdvertisingId()` to set the Google Advertising ID and associated ad-tracking enabled field for Android devices. This is a no-op on iOS.
 
 ## 1.27.0
 
@@ -852,14 +892,14 @@ with
 - Updated the native Android bridge to [Braze Android SDK 3.0.1](https://github.com/braze-inc/braze-android-sdk/blob/master/CHANGELOG.md#301).
 - Updated the Android wrapper to use `api` and `implementation` syntax in it's `build.gradle` instead of `compile`. As part of this work, the Android Gradle plugin version was updated to `3.2.1`.
 
+##### Fixed
+- Fixed an issue where the Android wrapper would include an older version of React Native in test APK builds.
+
 ##### Added
 - Added `setUserAttributionData()` to the `Appboy` interface to allow setting the attribution data for the current user.
 - Added `getInstallTrackingId()` to the `Appboy` interface to allow getting the install tracking id. This method is equivalent to calling `Appboy.getInstallTrackingId()` on Android and returns the IDFV on iOS.
 - Added `setLanguage()` to the `Appboy` interface to allow setting a language for the current user.
 - Added `hideCurrentInAppMessage()` to the `Appboy` interface to allow hiding of the currently displayed in-app message.
-
-##### Fixed
-- Fixed an issue where the Android wrapper would include an older version of React Native in test APK builds.
 
 ##### Changed
 - Updated our sample projects to use React Native `0.56`.

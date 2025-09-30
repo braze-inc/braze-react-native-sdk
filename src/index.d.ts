@@ -1,5 +1,9 @@
 import { ComponentType } from 'react';
 import { EmitterSubscription, StyleProp, ViewStyle } from 'react-native';
+import NativeBrazeReactModule from './specs/NativeBrazeReactModule';
+import { CampaignProperties } from './models/campaign-properties';
+import { FeatureFlag } from './models/feature-flag';
+import { Banner } from './models/banner';
 
 /**
  * @deprecated This method is deprecated in favor of `getInitialPushPayload`.
@@ -66,10 +70,10 @@ export function getDeviceId(callback: Callback<string>): void;
  *    to target while logged out and switching back to that user ID as part of your app's logout process.
  *
  * @param {string} userId - A unique identifier for this user.
- * @param {string} signature - An encrypted signature to add to network requests to authenticate the current user. You can update the signature
+ * @param {string | null} signature - An encrypted signature to add to network requests to authenticate the current user. You can update the signature
  *   using the `setSdkAuthenticationSignature` method. This signature will only have an effect if SDK Authentication is enabled.
  */
-export function changeUser(userId: string, signature?: string): void;
+export function changeUser(userId: string, signature?: string | null): void;
 
 /**
  * Returns a unique ID stored for the user.
@@ -287,7 +291,7 @@ export function setEmailNotificationSubscriptionType(
  */
 export function logCustomEvent(
   eventName: string,
-  eventProperties?: object
+  eventProperties?: object | null
 ): void;
 
 /**
@@ -309,7 +313,7 @@ export function logPurchase(
   price: string,
   currencyCode: string,
   quantity: number,
-  purchaseProperties?: object
+  purchaseProperties?: object | null
 ): void;
 
 /**
@@ -417,109 +421,6 @@ export function setAttributionData(
   adGroup: string,
   creative: string
 ): void;
-
-/**
- * Launches the News Feed UI element.
- */
-export function launchNewsFeed(): void;
-
-/**
- * [Braze News Feed](https://www.braze.com/docs/user_guide/engagement_tools/news_feed)
- */
-export interface NewsFeedCardBase {
-  /** The card identifier. */
-  id: string;
-
-  /** The card creation timestamp. */
-  created: number;
-
-  /** The card last update timestamp. */
-  updated: number;
-
-  /** The card viewed state. */
-  viewed: boolean;
-
-  /** The card image URL. */
-  url?: string;
-
-  /** The card extras dictionary (default: `[:]`) */
-  extras: { [key: string]: string };
-}
-
-/**
- * The Banner News Feed Card, extending NewsFeedCardBase.
- */
-export interface BannerNewsFeedCard extends NewsFeedCardBase {
-  /** The News Feed Card type. */
-  type: 'Banner';
-
-  /** The card image URL. */
-  image: string;
-
-  /** The card image aspect ratio */
-  imageAspectRatio: number;
-}
-
-/**
- * The Captioned News Feed Card, extending NewsFeedCardBase.
- */
-export interface CaptionedNewsFeedCard extends NewsFeedCardBase {
-  /** The News Feed Card type. */
-  type: 'Captioned';
-
-  /** The card image URL. */
-  image: string;
-
-  /** The card title. */
-  title: string;
-
-  /** The card description. */
-  cardDescription: string;
-
-  /** (Optional) The card domain. */
-  domain?: string;
-}
-
-/**
- * The Text Announcement News Feed Card, extending NewsFeedCardBase.
- */
-export interface TextAnnouncementNewsFeedCard extends NewsFeedCardBase {
-  /** The News Feed Card type. */
-  type: 'TextAnnouncement';
-
-  /** The card title. */
-  title: string;
-
-  /** The card description. */
-  cardDescription: string;
-
-  /** (Optional) The card domain. */
-  domain?: string;
-}
-
-export type NewsFeedCard =
-  | BannerNewsFeedCard
-  | CaptionedNewsFeedCard
-  | TextAnnouncementNewsFeedCard;
-
-/**
- * Manually log a click to Braze for a particular news feed card.
- * The SDK will only log a card click when the card has the url property with a valid value.
- * @param {string} id
- */
-export function logNewsFeedCardClicked(id: string): void;
-
-/**
- * Manually log an impression to Braze for a particular news feed card.
- * @param {string} id
- */
-export function logNewsFeedCardImpression(id: string): void;
-
-/**
- * Returns an array of news feed cards.
- * @returns {Promise<NewsFeedCard[]>}
- */
-export function getNewsFeedCards(): Promise<NewsFeedCard[]>;
 
 // Content Cards
 
@@ -695,28 +596,12 @@ export function getContentCards(): Promise<ContentCard[]>;
  */
 export function getCachedContentCards(): Promise<ContentCard[]>;
 
-/**
- * @deprecated This method is a no-op on iOS.
- */
-export function getCardCountForCategories(
-  category: BrazeCardCategory[keyof BrazeCardCategory],
-  callback: Callback<number>
-): void;
-
-/**
- * @deprecated This method is a no-op on iOS.
- */
-export function getUnreadCardCountForCategories(
-  category: BrazeCardCategory[keyof BrazeCardCategory],
-  callback: Callback<number>
-): void;
-
 // Banners
 
 /**
- * Braze Banners
+ * [Braze Banners](https://braze.com/docs/developer_guide/banners)
  */
-export interface Banner {
+export class Banner {
   /** The campaign and message variation IDs. */
   trackingId: string;
 
@@ -734,6 +619,21 @@ export interface Banner {
 
   /** A Unix timestamp of the expiration date and time. A value of -1 means the banner never expires. */
   expiresAt: number;
+
+  /** Properties of this banner, listed as key-value pairs. */
+  properties: Partial<Record<string, StringProperty | NumberProperty | BooleanProperty | TimestampProperty | JSONProperty | ImageProperty>>;
+
+  getBooleanProperty(key: string): boolean | null;
+
+  getStringProperty(key: string): string | null;
+
+  getNumberProperty(key: string): number | null;
+
+  getTimestampProperty(key: string): number | null;
+
+  getJSONProperty(key: string): object | null;
+
+  getImageProperty(key: string): string | null;
 }
 
 /**
@@ -783,17 +683,14 @@ export interface BrazeBannerViewProps {
 export const BrazeBannerView: ComponentType<BrazeBannerViewProps>;
 
 /**
- * Requests a News Feed refresh.
- */
-export function requestFeedRefresh(): void;
-
-/**
  * Requests an immediate flush of any data waiting to be sent to Braze's servers.
  */
 export function requestImmediateDataFlush(): void;
 
 /**
- * Wipes Data on the Braze SDK. On iOS, the SDK will be disabled for the rest of the app run.
+ * Deletes all locally stored Braze SDK data and disables the SDK.
+ *
+ * After this operation, Braze functionality will not work until `enableSDK` is called.
  */
 export function wipeData(): void;
 
@@ -869,7 +766,7 @@ export function setLocationCustomAttribute(
  */
 export function subscribeToInAppMessage(
   useBrazeUI: boolean,
-  callback?: (event: {inAppMessage: BrazeInAppMessage}) => void
+  callback?: (event: {inAppMessage: BrazeInAppMessage}) => void | null
 ): EmitterSubscription | undefined;
 
 /**
@@ -914,9 +811,11 @@ export function performInAppMessageButtonAction(
 /**
  * Performs the action for an in-app message
  * @param {BrazeInAppMessage} inAppMessage
+ * @param {number} buttonId
  */
 export function performInAppMessageAction(
-  inAppMessage: BrazeInAppMessage
+  inAppMessage: BrazeInAppMessage,
+  buttonId: number
 ): void;
 
 type PermissionOptions = 'alert' | 'badge' | 'sound' | 'provisional';
@@ -927,7 +826,7 @@ type PermissionOptions = 'alert' | 'badge' | 'sound' | 'provisional';
  *   all permission options except provisional are set to true.
  */
 export function requestPushPermission(
-  permissionOptions?: Record<PermissionOptions, boolean>
+  permissionOptions?: Record<PermissionOptions, boolean> | null
 ): void;
 
 /**
@@ -939,10 +838,10 @@ export function addListener(
 ): void;
 
 /** 
- * A Feature Flag property of type String. 
+ * A property of type String.
  */
-export interface FeatureFlagStringProperty {
-  /** The type of Feature Flag property. */
+export interface StringProperty {
+  /** The type of property. */
   type: "string";
 
   /** The value of the property. */
@@ -950,10 +849,10 @@ export interface FeatureFlagStringProperty {
 }
 
 /** 
- * A Feature Flag property of type Number. 
+ * A property of type Number.
  */
-export interface FeatureFlagNumberProperty {
-  /** The type of Feature Flag property. */
+export interface NumberProperty {
+  /** The type of property. */
   type: "number";
 
   /** The value of the property. */
@@ -961,10 +860,10 @@ export interface FeatureFlagNumberProperty {
 }
 
 /** 
- * A Feature Flag property of type Boolean. 
+ * A property of type Boolean.
  */
-export interface FeatureFlagBooleanProperty {
-  /** The type of Feature Flag property. */
+export interface BooleanProperty {
+  /** The type of property. */
   type: "boolean";
 
   /** The value of the property. */
@@ -972,21 +871,21 @@ export interface FeatureFlagBooleanProperty {
 }
 
 /**
- * A Feature Flag timestamp property of type Number.
+ * A timestamp property of type Number.
  */
-export interface FeatureFlagTimestampProperty {
-  /** The type of Feature Flag property. */
-  type: "timestamp";
+export interface TimestampProperty {
+  /** The type of property. */
+  type: "datetime";
 
   /** The value of the property. */
   value: number;
 }
 
 /**
- * A Feature Flag JSON property of type Object.
+ * A JSON property of type Object.
  */
-export interface FeatureFlagJSONProperty {
-  /** The type of Feature Flag property. */
+export interface JSONProperty {
+  /** The type of property. */
   type: "jsonobject";
 
   /** The value of the property. */
@@ -994,10 +893,10 @@ export interface FeatureFlagJSONProperty {
 }
 
 /**
- * A Feature Flag image property of type String.
+ * An image property of type String.
  */
-export interface FeatureFlagImageProperty {
-  /** The type of Feature Flag property. */
+export interface ImageProperty {
+  /** The type of property. */
   type: "image";
 
   /** The value of the property. */
@@ -1011,11 +910,23 @@ export class FeatureFlag {
   /** Indicates whether or not this feature flag is enabled. */
   enabled: boolean;
 
-  /** Properties of this feature flag, listed as key-value pairs. */
-  properties: Partial<Record<string, FeatureFlagStringProperty | FeatureFlagNumberProperty | FeatureFlagBooleanProperty | FeatureFlagTimestampProperty | FeatureFlagJSONProperty | FeatureFlagImageProperty>>;
-
   /** The ID for this feature flag. */
   id: string;
+
+  /** Properties of this feature flag, listed as key-value pairs. */
+  properties: Partial<Record<string, StringProperty | NumberProperty | BooleanProperty | TimestampProperty | JSONProperty | ImageProperty>>;
+
+  getBooleanProperty(key: string): boolean | null;
+
+  getStringProperty(key: string): string | null;
+
+  getNumberProperty(key: string): number | null;
+
+  getTimestampProperty(key: string): number | null;
+
+  getJSONProperty(key: string): object | null;
+
+  getImageProperty(key: string): string | null;
 }
 
 /**
@@ -1034,74 +945,32 @@ export function getAllFeatureFlags(): Promise<FeatureFlag[]>;
 export function getFeatureFlag(id: string): Promise<FeatureFlag | null>;
 
 /**
- * Get value of a feature flag property of type boolean.
- * 
- * @param id - The ID of the feature flag.
- * @param key - The key of the property.
- *
- * @returns A promise containing the value of the property if the key is found and is of type boolean.
- *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
- *    this method will return a null.
+ * @deprecated This method is deprecated in favor of `featureFlag.getBooleanProperty(key)`
  */
 export function getFeatureFlagBooleanProperty(id: string, key: string): Promise<boolean | null>;
 
 /**
- * Get value of a feature flag property of type string.
- *
- * @param id - The ID of the feature flag.
- * @param key - The key of the property.
- *
- * @returns A promise containing the value of the property if the key is found and is of type string.
- *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
- *    this method will return a null.
+ * @deprecated This method is deprecated in favor of `featureFlag.getStringProperty(key)`
  */
 export function getFeatureFlagStringProperty(id: string, key: string): Promise<string | null>;
 
 /**
- * Get value of a feature flag property of type number.
- *
- * @param id - The ID of the feature flag.
- * @param key - The key of the property.
- *
- * @returns A promise containing the value of the property if the key is found and is of type number.
- *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
- *    this method will return a null.
+ * @deprecated This method is deprecated in favor of `featureFlag.getNumberProperty(key)`
  */
 export function getFeatureFlagNumberProperty(id: string, key: string): Promise<number | null>;
 
 /**
- * Get value of a feature flag timestamp property of type number.
- *
- * @param id - The ID of the feature flag.
- * @param key - The key of the property.
- *
- * @returns A promise containing the value of the property if the key is found and is of type number.
- *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
- *    this method will return a null.
+ * @deprecated This method is deprecated in favor of `featureFlag.getTimestampProperty(key)`
  */
 export function getFeatureFlagTimestampProperty(id: string, key: string): Promise<number | null>;
 
 /**
- * Get value of a feature flag JSON object property of type string.
- *
- * @param id - The ID of the feature flag.
- * @param key - The key of the property.
- *
- * @returns A promise containing the value of the property if the key is found and is of type number.
- *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
- *    this method will return a null.
+ * @deprecated This method is deprecated in favor of `featureFlag.getJSONProperty(key)`
  */
-export function getFeatureFlagJSONProperty(id: string, key: string): Promise<string | null>;
+export function getFeatureFlagJSONProperty(id: string, key: string): Promise<object | null>;
 
 /**
- * Get value of a feature flag image property of type string.
- *
- * @param id - The ID of the feature flag.
- * @param key - The key of the property.
- *
- * @returns A promise containing the value of the property if the key is found and is of type number.
- *    If the key is not found, if there is a type mismatch, or if there is no feature flag for that ID,
- *    this method will return a null.
+ * @deprecated This method is deprecated in favor of `featureFlag.getImageProperty(key)`
  */
 export function getFeatureFlagImageProperty(id: string, key: string): Promise<string | null>;
 
@@ -1198,7 +1067,7 @@ type MonthsAsNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
  * The click action type of the In-App Message.
  */
 interface BrazeClickAction {
-  /** Opens the NewsFeed on click. */
+  /** This is a no-op since News Feed is not supported. */
   NEWS_FEED: 'news_feed';
 
   /** Opens the URI on click, optionally using a web view. */
@@ -1253,30 +1122,6 @@ interface BrazeContentCardType {
   CAPTIONED: 'Captioned';
 }
 export const ContentCardTypes: BrazeContentCardType;
-
-/**
- * The NewsFeed Card categories supported by the SDK.
- */
-interface BrazeCardCategory {
-  /** The advertising category. */
-  ADVERTISING: 'advertising';
-
-  /** The announcements category. */
-  ANNOUNCEMENTS: 'announcements';
-
-  /** The news category. */
-  NEWS: 'news';
-
-  /** The social category. */
-  SOCIAL: 'social';
-
-  /** No specific category. */
-  NO_CATEGORY: 'no_category';
-
-  /** All categories. */
-  ALL: 'all';
-}
-export const CardCategory: BrazeCardCategory;
 
 /**
  * The gender values supported by the Braze SDK.

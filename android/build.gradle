@@ -59,15 +59,16 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   testImplementation 'androidx.test:core-ktx:1.6.1'
   testImplementation "junit:junit:4.13.2"
-  testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
+  testImplementation "org.mockito.kotlin:mockito-kotlin:6.0.0"
   testImplementation "org.robolectric:robolectric:4.15.1"
   testImplementation "org.mockito:mockito-inline:5.2.0"
+  testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 
-  debugImplementation 'androidx.test:core-ktx:1.6.1'
+  debugImplementation 'androidx.test:core-ktx:1.7.0'
   debugImplementation "junit:junit:4.13.2"
   debugImplementation "org.robolectric:robolectric:4.15.1"
 
-  def wrapper_braze_sdk_version = "37.0.0"
+  def wrapper_braze_sdk_version = "39.0.0"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
 
   if (shouldImportBrazeLocationLibrary()) {
