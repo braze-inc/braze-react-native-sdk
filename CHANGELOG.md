@@ -1,5 +1,12 @@
 ⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
 
+## 17.0.1
+
+##### Fixed
+- Fixes an iOS issue where existing Banner views would fail to re-display after navigating away and returning.
+- Fixes an incompatibility with React Native `0.80+` where iOS Banner views would not be generated as Fabric components but as legacy `RCTView`s.
+  - This issue has no known impacts that are visible to the end user.
+
 ## 17.0.0
 
 ##### Breaking

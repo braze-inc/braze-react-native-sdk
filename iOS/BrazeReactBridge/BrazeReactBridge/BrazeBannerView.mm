@@ -61,6 +61,11 @@ using namespace facebook::react;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
+- (void)prepareForRecycle {
+  [super prepareForRecycle];
+  _uiHelper.onHeightChanged = nil;
+}
+
 /// This method is the Fabric equivalent of the setter methods above.
 /// Instead of automatically invoking those methods, React Native passes properties to the Fabric view via this method.
 - (void)updateProps:(Props::Shared const &)props
@@ -93,6 +98,11 @@ using namespace facebook::react;
 - (const BrazeBannerViewEventEmitter &)eventEmitter
 {
   return static_cast<const BrazeBannerViewEventEmitter &>(*_eventEmitter);
+}
+
+- (void)updateEventEmitter:(const facebook::react::EventEmitter::Shared &)eventEmitter {
+  [super updateEventEmitter:eventEmitter];
+  [_uiHelper triggerHeightUpdate];
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider

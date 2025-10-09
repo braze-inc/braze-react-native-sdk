@@ -4,7 +4,9 @@
 
 @import BrazeUI;
 
-@implementation BrazeBannerUIHelper
+@implementation BrazeBannerUIHelper {
+  double _lastHeight;
+}
 
 - (void)insertPlacement:(NSString *)placementID
                intoView:(UIView *)hostView {
@@ -38,19 +40,21 @@
 }
 
 - (void)resizeView:(UIView *)view withHeight:(NSNumber *)height {
-  // Constrain native host view to HTML content height.
+  // Update native host view to HTML content height.
   CGFloat heightAsFloat = [height doubleValue];
-  [NSLayoutConstraint activateConstraints:@[
-    [view.heightAnchor constraintEqualToConstant:heightAsFloat]
-  ]];
-
-  // Notify the React Native view of the updated content size.
   CGRect frame = view.frame;
   frame.size.width = view.superview.frame.size.width;
   frame.size.height = heightAsFloat;
 
+  // Record the height value for future updates.
+  _lastHeight = heightAsFloat;
+
+  [self triggerHeightUpdate];
+}
+
+- (void)triggerHeightUpdate {
   if (_onHeightChanged) {
-    _onHeightChanged(heightAsFloat);
+    _onHeightChanged(_lastHeight);
   }
 }
 

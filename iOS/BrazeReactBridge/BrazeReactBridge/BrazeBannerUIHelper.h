@@ -14,5 +14,6 @@
 - (void)insertPlacement:(NSString *_Nonnull)placementID
                intoView:(UIView *_Nonnull)hostView;
 - (void)resizeView:(UIView *_Nonnull)view withHeight:(NSNumber *_Nonnull)height;
+- (void)triggerHeightUpdate;
 
 @end

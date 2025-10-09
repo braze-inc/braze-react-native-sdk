@@ -6,7 +6,7 @@
 # Braze React Native SDK [![latest](https://img.shields.io/github/v/tag/braze-inc/braze-react-native-sdk?label=latest%20release&color=300266)](https://github.com/braze-inc/braze-react-native-sdk/releases) 
 
 - [Braze User Guide](https://www.braze.com/docs/user_guide/introduction/ "Braze User Guide")
-- [Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=swift "Braze Developer Guide")
+- [Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=react%20native "Braze Developer Guide")
 
 ## Quickstart
 
@@ -51,7 +51,7 @@ cd ios && pod install
 ``` swift
 // AppDelegate.swift
 import BrazeKit
-import braze_plugin
+import braze_react_native_sdk
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
   static var braze: Braze? = nil

@@ -1,6 +1,6 @@
 PODS:
   - boost (1.84.0)
-  - braze-react-native-sdk (17.0.0):
+  - braze-react-native-sdk (17.0.1):
     - boost
     - BrazeKit (~> 13.2.0)
     - BrazeLocation (~> 13.2.0)
@@ -2408,7 +2408,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  braze-react-native-sdk: 25193ced9d4f10e48d9a3a5205619650f9b56ff7
+  braze-react-native-sdk: d8bf9274d08f6a6e7409b943a76c3a6f2421559e
   BrazeKit: 6c9464e6131f01aa2a5436603dc71c4e533d1485
   BrazeLocation: 1ebe9bbd109400c20bdec621647dc650530189cd
   BrazeNotificationService: 3e496f17f6bb2f8704fdcc640163ebaf2b4715c9
@@ -2420,7 +2420,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 7068e976238b29e97b3bafd09a994542af7d5c0b
-  RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
+  RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
   RCTDeprecation: ff787f6c860a1b97dd1bc27264b61d23ad1994da
   RCTRequired: 664eb8399ed8a83e26ab65af7c2ad390f7e61696
   RCTTypeSafety: a5cf7a7e80baf972e331dc028e5d5c19bb2535a4

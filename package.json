@@ -1,6 +1,6 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "17.0.0",
+  "version": "17.0.1",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -63,6 +63,11 @@
     "jsSrcsDir": "src/specs",
     "android": {
       "javaPackageName": "com.braze.reactbridge"
+    },
+    "ios": {
+      "componentProvider": {
+        "BrazeBannerView": "BrazeBannerView"
+      }
     }
   }
 }
