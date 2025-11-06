@@ -92,17 +92,6 @@ export class Braze {
   }
 
   /**
-   * @deprecated This method is deprecated in favor of `getDeviceId`.
-   */
-  static getInstallTrackingId(callback) {
-    callFunctionWithCallback(
-      this.bridge.getDeviceId,
-      [],
-      callback
-    );
-  }
-
-  /**
    * Returns a unique ID stored on the device. 
    * 
    * On Android, a randomly generated, app specific ID that is stored on the device. A new ID will be generated if the user 
@@ -203,36 +192,11 @@ export class Braze {
   }
 
   /**
-   * @deprecated This method is deprecated in favor of `registerPushToken`.
-   */
-  static registerAndroidPushToken(token) {
-    if (Platform.OS === 'android') {
-      this.bridge.registerPushToken(token);
-    }
-  }
-
-  /**
   * This method posts a token to Braze's servers to associate the token with the current device.
   * @param {string} token - The device's push token.
   */
   static registerPushToken(token) {
     this.bridge.registerPushToken(token);
-  }
-
-  /**
-   * This method sets the Google Advertising ID and associated ad-tracking enabled field for this device. Note that the
-   * SDK does not automatically collect this data.
-   *
-   * No-op on iOS.
-   *
-   * @param {string} googleAdvertisingId - The Google Advertising ID
-   * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled for the Google Advertising ID
-   */
-  static setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled) {
-    this.bridge.setAdTrackingEnabled(
-      adTrackingEnabled,
-      googleAdvertisingId
-    );
   }
 
   /**
@@ -802,7 +766,7 @@ export class Braze {
    * @param {InAppMessage} inAppMessage
    */
   static logInAppMessageClicked(inAppMessage) {
-    const inAppMessageString = inAppMessage.toString();
+    const inAppMessageString = inAppMessage.inAppMessageJsonString;
     this.bridge.logInAppMessageClicked(inAppMessageString);
   }
 
@@ -811,7 +775,7 @@ export class Braze {
    * @param {InAppMessage} inAppMessage
    */
   static logInAppMessageImpression(inAppMessage) {
-    const inAppMessageString = inAppMessage.toString();
+    const inAppMessageString = inAppMessage.inAppMessageJsonString;
     this.bridge.logInAppMessageImpression(inAppMessageString);
   }
 
@@ -821,7 +785,7 @@ export class Braze {
    * @param {number} buttonId
    */
   static logInAppMessageButtonClicked(inAppMessage, buttonId) {
-    const inAppMessageString = inAppMessage.toString();
+    const inAppMessageString = inAppMessage.inAppMessageJsonString;
     this.bridge.logInAppMessageButtonClicked(
       inAppMessageString,
       buttonId
@@ -835,7 +799,7 @@ export class Braze {
    */
   static performInAppMessageButtonAction(inAppMessage, buttonId) {
     console.log('Processing In-App Message Button Action: ', inAppMessage, ' ', buttonId);
-    const inAppMessageString = inAppMessage.toString();
+    const inAppMessageString = inAppMessage.inAppMessageJsonString;
     this.bridge.performInAppMessageAction(inAppMessageString, buttonId);
   }
 
@@ -846,7 +810,7 @@ export class Braze {
    */
   static performInAppMessageAction(inAppMessage, buttonId) {
     console.log('Processing In-App Message Action: ', inAppMessage);
-    const inAppMessageString = inAppMessage.toString();
+    const inAppMessageString = inAppMessage.inAppMessageJsonString;
     this.bridge.performInAppMessageAction(inAppMessageString, buttonId);
   }
 

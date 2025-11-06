@@ -1,4 +1,5 @@
 #import "BrazeReactBridge.h"
+#import "BrazeReactDataTranslator.h"
 #import <React/RCTLog.h>
 #import <React/RCTConvert.h>
 #import <React/RCTBundleURLProvider.h>
@@ -86,7 +87,7 @@ RCT_EXPORT_MODULE()
 
   self.notificationSubscription = [braze.notifications subscribeToUpdates:^(BRZNotificationsPayload * _Nonnull payload) {
     RCTLogInfo(@"Received push notification via subscription");
-    NSDictionary *eventData = [[BrazeReactUtils sharedInstance] formatPushPayload:payload withLaunchOptions:nil];
+    NSDictionary *eventData = [BrazeReactDataTranslator formatPushPayload:payload withLaunchOptions:nil];
     [self sendEventWithName:kPushNotificationEvent body:eventData];
   }];
 

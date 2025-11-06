@@ -1,4 +1,6 @@
 #import "BrazeUIHandler.h"
+#import "BrazeReactUtils.h"
+#import "BrazeReactDataTranslator.h"
 
 @import BrazeKit;
 @import BrazeUI;
@@ -66,14 +68,13 @@
 
 - (enum BRZInAppMessageUIDisplayChoice)inAppMessage:(BrazeInAppMessageUI *)ui
                             displayChoiceForMessage:(BRZInAppMessageRaw *)message {
-  NSData *inAppMessageData = [message json];
-  NSString *inAppMessageString = [[NSString alloc] initWithData:inAppMessageData encoding:NSUTF8StringEncoding];
-  NSDictionary *arguments = @{
-    @"inAppMessage" : inAppMessageString
-  };
-  
-  // Send to JavaScript
-  [self.eventEmitter sendEventWithName:@"inAppMessageReceived" body:arguments];
+  NSDictionary* eventData = [BrazeReactDataTranslator formatInAppMessage:message];
+  if (!eventData || [eventData count] == 0) {
+    NSLog(@"Received malformed in-app message in iOS layer. Not sending to JS layer.");
+  }
+
+  // Send to JavaScript layer
+  [self.eventEmitter sendEventWithName:@"inAppMessageReceived" body:eventData];
   
   if (self.showInAppMessagesAutomaticallyInDefaultDelegate) {
     return BRZInAppMessageUIDisplayChoiceNow;

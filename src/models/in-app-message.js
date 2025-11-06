@@ -3,8 +3,8 @@ import { ClickAction, DismissType, MessageType } from './enums';
 
 export class InAppMessage {
   constructor(data) {
+    let inAppMessageJson = JSON.parse(data);
     this.inAppMessageJsonString = data;
-    let inAppMessageJson = JSON.parse(this.inAppMessageJsonString);
 
     let messageJson = inAppMessageJson['message'];
     this.message = typeof messageJson === 'string' ? messageJson : '';
@@ -28,6 +28,20 @@ export class InAppMessage {
 
     let durationJson = inAppMessageJson['duration'];
     this.duration = typeof durationJson === 'number' ? durationJson : 5;
+
+    const isTestSendJson = inAppMessageJson['is_test_send'];
+    this.isTestSend =
+      typeof isTestSendJson === 'boolean' ? isTestSendJson : false;
+
+    const imageAltTextJson = inAppMessageJson['image_alt'];
+    if (typeof imageAltTextJson === 'string') {
+      this.imageAltText = imageAltTextJson;
+    }
+
+    const languageJson = inAppMessageJson['language'];
+    if (typeof languageJson === 'string') {
+      this.language = languageJson;
+    }
 
     let clickActionJson = inAppMessageJson['click_action'];
     this.clickAction = ClickAction['NONE'];
@@ -76,13 +90,26 @@ export class InAppMessage {
         this.buttons.push(new Button(buttonJson));
       });
     }
-
-    const isTestSendJson = inAppMessageJson['is_test_send'];
-    this.isTestSend =
-      typeof isTestSendJson === 'boolean' ? isTestSendJson : false;
   }
 
   toString() {
-    return this.inAppMessageJsonString;
+    return (
+      `BrazeInAppMessage:` +
+      `\n  message: ${this.message}` +
+      `\n  header: ${this.header}` +
+      `\n  uri: ${this.uri}` +
+      `\n  imageUrl: ${this.imageUrl}` +
+      `\n  imageAltText: ${this.imageAltText}` +
+      `\n  language: ${this.language}` +
+      `\n  zippedAssetsUrl: ${this.zippedAssetsUrl}` +
+      `\n  useWebView: ${this.useWebView}` +
+      `\n  duration: ${this.duration}` +
+      `\n  clickAction: ${this.clickAction}` +
+      `\n  dismissType: ${this.dismissType}` +
+      `\n  messageType: ${this.messageType}` +
+      `\n  extras: ${JSON.stringify(this.extras)}` +
+      `\n  buttons: [${this.buttons.map((b) => b.toString()).join(', ')}]` +
+      `\n  isTestSend: ${this.isTestSend}`
+    );
   }
 }

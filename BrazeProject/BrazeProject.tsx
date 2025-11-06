@@ -201,7 +201,7 @@ export const BrazeProject = (): ReactElement => {
       }
     });
 
-    Braze.subscribeToInAppMessage(true, event => {
+    const inAppMessageSubscription = Braze.subscribeToInAppMessage(true, (event: Braze.InAppMessageEvent) => {
       if (automaticallyInteract) {
         console.log(
           'Automatically logging IAM click, button click `0`, and impression.',
@@ -210,21 +210,22 @@ export const BrazeProject = (): ReactElement => {
         Braze.logInAppMessageImpression(event.inAppMessage);
         Braze.logInAppMessageButtonClicked(event.inAppMessage, 0);
       }
-      showToast('inAppMessage received in the React layer');
-      console.log(event.inAppMessage);
+      showToast('inAppMessage received via subscribeToInAppMessage');
     });
 
-    const inAppMessageSubscription = Braze.addListener(
+    const inAppMessageListener = Braze.addListener(
       Braze.Events.IN_APP_MESSAGE_RECEIVED,
-      inAppMessage => {
-        console.log('In-App Message Received: ', inAppMessage);
+      (event: Braze.InAppMessageEvent) => {
+        console.log('In-App Message Received:');
+        console.log(' - header: ', event.inAppMessage.header);
+        console.log(' - message: ', event.inAppMessage.message);
       },
     );
 
     const contentCardsSubscription = Braze.addListener(
       Braze.Events.CONTENT_CARDS_UPDATED,
-      data => {
-        const cards = data.cards;
+      (event: Braze.ContentCardsUpdatedEvent) => {
+        const cards = event.cards;
         console.log(
           `Received ${cards.length} Content Cards with IDs:`,
           cards.map(card => card.id),
@@ -234,8 +235,8 @@ export const BrazeProject = (): ReactElement => {
 
     const bannerCardsSubscription = Braze.addListener(
       Braze.Events.BANNER_CARDS_UPDATED,
-      data => {
-        const banners = data.banners;
+      (event: Braze.BannerCardsUpdatedEvent) => {
+        const banners = event.banners;
         console.log(
           `Received ${banners.length} Banner Cards with placement IDs:`,
           banners.map(banner => banner.placementId),
@@ -267,12 +268,13 @@ export const BrazeProject = (): ReactElement => {
 
     const pushEventSubscription = Braze.addListener(
       Braze.Events.PUSH_NOTIFICATION_EVENT,
-      data => handlePushPayload(data),
+      (event: Braze.PushNotificationEvent) => handlePushPayload(event),
     );
 
     return () => {
       listener.remove();
-      inAppMessageSubscription.remove();
+      inAppMessageSubscription?.remove();
+      inAppMessageListener.remove();
       contentCardsSubscription.remove();
       bannerCardsSubscription.remove();
       featureFlagsSubscription.remove();
@@ -532,10 +534,6 @@ export const BrazeProject = (): ReactElement => {
     const testAdvertisingID = 'some_idfa_123';
     Braze.setAdTrackingEnabled(true, testAdvertisingID);
     Braze.setIdentifierForAdvertiser(testAdvertisingID);
-
-    // Testing for backwards compatibility.
-    Braze.setGoogleAdvertisingId(testAdvertisingID, true);
-
     showToast(`Ad tracking enabled with ID: ${testAdvertisingID}`);
   };
 

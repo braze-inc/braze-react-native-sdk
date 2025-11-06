@@ -17,7 +17,6 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
 
         // Mocks the Turbo Module spec with Jest method stubs.
         NativeBrazeReactModule = {
-          registerAndroidPushToken: jest.fn(),
           registerPushToken: jest.fn(),
           setFirstName: jest.fn(),
           setLastName: jest.fn(),

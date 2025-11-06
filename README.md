@@ -3,7 +3,7 @@
   <img width="480" alt="Braze Logo" src=".github/assets/logo-dark.png#gh-dark-mode-only" />
 </p>
 
-# Braze React Native SDK [![latest](https://img.shields.io/github/v/tag/braze-inc/braze-react-native-sdk?label=latest%20release&color=300266)](https://github.com/braze-inc/braze-react-native-sdk/releases) 
+# Braze React Native SDK [![latest](https://img.shields.io/github/v/tag/braze-inc/braze-react-native-sdk?label=latest%20release&color=300266)](https://github.com/braze-inc/braze-react-native-sdk/releases)
 
 - [Braze User Guide](https://www.braze.com/docs/user_guide/introduction/ "Braze User Guide")
 - [Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=react%20native "Braze Developer Guide")
@@ -23,7 +23,7 @@ npm install @braze/react-native-sdk
     dependencies {
         ...
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
-    } 
+    }
 // ...
 ```
 
@@ -92,7 +92,7 @@ See [the Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_i
 ## Version Support
 
 > [!NOTE]
-> This SDK has been tested with React Native version **0.80.0**.
+> This SDK has been tested with React Native version **0.82.0**.
 
 | Braze Plugin | React Native | Supports New Architecture? |
 | ------------ | ------------ | -------------------------- |
@@ -112,7 +112,7 @@ If you're using Expo, you can install our plugin to integrate the React Native S
 ## Running the Sample App
 
 - `BrazeProject` - Contains the BrazeProject sample app with integration examples for the React Native bridge. This sample app integrates the iOS bridge via manual linking, and the iOS SDK via Cocoapods. It can
-also optionally integrate the iOS bridge using Cocoapods via a local Podspec.
+also optionally integrate the iOS bridge using CocoaPods via a local Podspec.
 
 The following commands apply to both sample projects and use the `BrazeProject` directory as an example.
 
@@ -126,13 +126,13 @@ npx react-native start
 ```
 
 ### iOS
-Our sample app integrates the native Braze iOS SDK through [Cocoapods](https://guides.cocoapods.org/using/getting-started.html).
+Our sample app integrates the native Braze iOS SDK through [CocoaPods](https://guides.cocoapods.org/using/getting-started.html).
 
 From the `BrazeProject` directory:
 ```zsh
 sudo gem install cocoapods
 cd ios/
-pod install # If you are using the New Architecture, you need to run `RCT_NEW_ARCH_ENABLED=1 pod install` instead.
+pod install # If you are using the legacy bridge architecture, you need to run `RCT_NEW_ARCH_ENABLED=0 pod install` instead.
 cd ../
 npx react-native run-ios
 ```
@@ -145,10 +145,10 @@ npx react-native run-android
 
 ## Style
 - Generally we try to mimic the Braze Web SDK's Javascript interface where appropriate.
-- We use [eslint](http://eslint.org/) as our linter. From the root directory, run `npm run lint` to list errors or `npm run lint-fix` to automatically fix errors. To override the rules in the [`standard-react`](https://github.com/feross/eslint-config-standard-react) config, add `"rules"` in `.eslintrc.json`.
+- We use [ESLint](http://eslint.org/) as our linter. From the root directory, run `npm run lint` to list errors or `npm run lint-fix` to automatically fix errors. To override the rules in the [`standard-react`](https://github.com/feross/eslint-config-standard-react) config, add `"rules"` in `.eslintrc.json`.
 
 ## Testing
-- We use [jest](https://facebook.github.io/jest/) for testing the React Native SDK.
+- We use [Jest](https://facebook.github.io/jest/) for testing the React Native SDK.
 - Run the tests and code coverage report using `npm test`
 
 ## Contact

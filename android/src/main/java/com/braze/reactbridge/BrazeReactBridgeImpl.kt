@@ -30,7 +30,6 @@ import com.braze.ui.activities.ContentCardsActivity
 import com.braze.ui.inappmessage.BrazeInAppMessageManager
 import com.braze.ui.inappmessage.InAppMessageOperation
 import com.braze.ui.inappmessage.listeners.DefaultInAppMessageManagerListener
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableArray
@@ -39,6 +38,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
+import com.braze.reactbridge.util.getMutableArray
+import com.braze.reactbridge.util.getMutableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.json.JSONArray
 import org.json.JSONObject
@@ -351,7 +352,7 @@ class BrazeReactBridgeImpl(
             )
         }
         contentCardsUpdatedSubscriber = IEventSubscriber { event ->
-            val eventData = Arguments.createMap()
+            val eventData = getMutableMap()
             eventData.putArray("cards", mapContentCards(event.allCards))
             if (reactApplicationContext.hasActiveReactInstance()) {
                 reactApplicationContext
@@ -372,7 +373,7 @@ class BrazeReactBridgeImpl(
             )
         }
         bannersUpdatedSubscriber = IEventSubscriber { event ->
-            val eventData = Arguments.createMap()
+            val eventData = getMutableMap()
             eventData.putArray("banners", mapBanners(event.banners))
             if (reactApplicationContext.hasActiveReactInstance()) {
                 reactApplicationContext
@@ -392,7 +393,7 @@ class BrazeReactBridgeImpl(
             )
         }
         featureFlagsUpdatedSubscriber = IEventSubscriber { event ->
-            val data = Arguments.createArray()
+            val data = getMutableArray()
             event.featureFlags.forEach {
                 data.pushMap(convertFeatureFlag(it))
             }
@@ -495,12 +496,6 @@ class BrazeReactBridgeImpl(
             )
             putString("image_url", eventData.bigImageUrl)
             putMap("android", convertToMap(eventData.notificationExtras))
-
-            // Deprecated legacy fields
-            putString("push_event_type", pushType)
-            putString("deeplink", eventData.deeplink)
-            putString("content_text", eventData.contentText)
-            putString("raw_android_push_data", eventData.notificationExtras.toString())
         }
     }
 
@@ -508,19 +503,11 @@ class BrazeReactBridgeImpl(
         data: WritableNativeMap,
         eventData: BrazeNotificationPayload
     ) {
-        // WritableNativeMap can only be consumed once and will be erased from memory after reading from it.
-        // Need to create two distinct maps to avoid errors after consuming the first one.
-        val returnedKvpMap = convertToMap(
-            eventData.brazeExtras,
-            setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY)
-        )
         val brazePropertiesMap = convertToMap(
             eventData.brazeExtras,
             setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY)
         )
         data.putMap("braze_properties", brazePropertiesMap)
-        // Deprecated legacy field
-        data.putMap("kvp_data", returnedKvpMap)
     }
 
     fun logContentCardDismissed(id: String) {
@@ -798,20 +785,19 @@ class BrazeReactBridgeImpl(
         }
 
     fun getAllFeatureFlags(promise: Promise) {
-        val ffs = braze.getAllFeatureFlags()
-        val data = Arguments.createArray()
-        ffs.forEach {
+        val data = getMutableArray()
+        braze.getAllFeatureFlags().forEach {
             data.pushMap(convertFeatureFlag(it))
         }
         promise.resolve(data)
     }
 
     fun getFeatureFlag(id: String, promise: Promise) {
-        val ff = braze.getFeatureFlag(id)
-        if (ff == null) {
+        val featureFlag = braze.getFeatureFlag(id)
+        if (featureFlag == null) {
             promise.resolve(null)
         } else {
-            promise.resolve(convertFeatureFlag(ff))
+            promise.resolve(convertFeatureFlag(featureFlag))
         }
     }
 
@@ -823,35 +809,29 @@ class BrazeReactBridgeImpl(
         braze.logFeatureFlagImpression(id)
     }
 
-    @Deprecated("Use getBooleanProperty instead")
     fun getFeatureFlagBooleanProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getBooleanProperty(key))
     }
 
-    @Deprecated("Use getStringProperty instead")
     fun getFeatureFlagStringProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getStringProperty(key))
     }
 
-    @Deprecated("Use getNumberProperty instead")
     fun getFeatureFlagNumberProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getNumberProperty(key))
     }
 
-    @Deprecated("Use getTimestampProperty instead")
     fun getFeatureFlagTimestampProperty(id: String, key: String, promise: Promise) {
         // Convert timestamp to double because the React Native translation layer doesn't support `long`
         val convertedTimestamp = braze.getFeatureFlag(id)?.getTimestampProperty(key)?.toDouble()
         promise.resolve(convertedTimestamp)
     }
 
-    @Deprecated("Use getJSONProperty instead")
     fun getFeatureFlagJSONProperty(id: String, key: String, promise: Promise) {
-        val jsonMap = braze.getFeatureFlag(id)?.getJSONProperty(key)?.let { jsonToNativeMap(it) }
+        val jsonMap = braze.getFeatureFlag(id)?.getJSONProperty(key)?.let { it.toNativeMap() }
         promise.resolve(jsonMap)
     }
 
-    @Deprecated("Use getImageProperty instead")
     fun getFeatureFlagImageProperty(id: String, key: String, promise: Promise) {
         promise.resolve(braze.getFeatureFlag(id)?.getImageProperty(key))
     }
@@ -867,7 +847,10 @@ class BrazeReactBridgeImpl(
                 object : DefaultInAppMessageManagerListener() {
                     override fun beforeInAppMessageDisplayed(inAppMessage: IInAppMessage): InAppMessageOperation {
                         val parameters: WritableMap = WritableNativeMap()
-                        parameters.putString("inAppMessage", inAppMessage.forJsonPut().toString())
+                        val inAppMessageJSON = mapInAppMessage(inAppMessage)
+                        parameters.putMap("inAppMessage", inAppMessageJSON)
+
+                        // Send to Javascript layer
                         reactApplicationContext
                             .getJSModule(RCTDeviceEventEmitter::class.java)
                             .emit(IN_APP_MESSAGE_RECEIVED_EVENT_NAME, parameters)

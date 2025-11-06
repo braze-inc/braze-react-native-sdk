@@ -40,7 +40,6 @@ class MainActivity : ReactActivity() {
             activity = this,
             mainComponentName = mainComponentName,
             fabricEnabled = fabricEnabled,
-            concurrentReactEnabled = concurrentReactEnabled
         )
     }
 

@@ -1,0 +1,35 @@
+{
+  "message": "This is a test modal in-app message",
+  "duration": 5000,
+  "slide_from": "bottom",
+  "extras": {
+    "one": "1",
+    "two": "2",
+    "three": "3"
+  },
+  "click_action": "uri",
+  "message_close": "swipe",
+  "uri": "http://www.sports.yahoo.com/",
+  "bg_color": 4294901760,
+  "icon_color": 4294967295,
+  "icon_bg_color": 4278190335,
+  "text_color": 4278190335,
+  "header": "I'm a header",
+  "header_text_color": 4278190335,
+  "close_btn_color": 4278190332,
+  "orientation": "PORTRAIT",
+  "type": "MODAL",
+  "icon": "\uffff",
+  "image_url": "https://s3.amazonaws.com/appboy-staging-test/android-sdk-image-push-integration-test1.png/",
+  "btns": [
+    {
+      "text": "button one",
+      "bg_color": 4294901760,
+      "text_color": 4278190335,
+      "id": 0,
+      "use_webview": true,
+      "click_action": "none"
+    }
+  ]
+}
+

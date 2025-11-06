@@ -18,7 +18,7 @@ def shouldImportBrazeLocationLibrary() {
 }
 
 android {
-  compileSdk safeExtGet('compileSdkVersion', 33)
+  compileSdk safeExtGet('compileSdkVersion', 36)
   def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
   if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
     namespace "com.braze.reactbridge"
@@ -29,7 +29,7 @@ android {
 
   defaultConfig {
     minSdkVersion safeExtGet('minSdkVersion', 21)
-    targetSdkVersion safeExtGet('targetSdkVersion', 33)
+    targetSdkVersion safeExtGet('targetSdkVersion', 36)
     buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
     versionCode 1
     versionName '1.0'
@@ -53,22 +53,27 @@ android {
   kotlinOptions {
     freeCompilerArgs = ['-Xjvm-default=all']
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+    unitTests.includeAndroidResources = true
+  }
 }
 
 dependencies {
   api 'com.facebook.react:react-native:+'
-  testImplementation 'androidx.test:core-ktx:1.6.1'
+  testImplementation 'androidx.test:core-ktx:1.7.0'
   testImplementation "junit:junit:4.13.2"
-  testImplementation "org.mockito.kotlin:mockito-kotlin:6.0.0"
-  testImplementation "org.robolectric:robolectric:4.15.1"
+  testImplementation "org.mockito.kotlin:mockito-kotlin:6.1.0"
+  testImplementation "org.robolectric:robolectric:4.16"
   testImplementation "org.mockito:mockito-inline:5.2.0"
   testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 
   debugImplementation 'androidx.test:core-ktx:1.7.0'
   debugImplementation "junit:junit:4.13.2"
-  debugImplementation "org.robolectric:robolectric:4.15.1"
+  debugImplementation "org.robolectric:robolectric:4.16"
 
-  def wrapper_braze_sdk_version = "39.0.0"
+  def wrapper_braze_sdk_version = "40.0.2"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
 
   if (shouldImportBrazeLocationLibrary()) {

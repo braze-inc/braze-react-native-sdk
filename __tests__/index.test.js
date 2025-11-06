@@ -62,24 +62,6 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('it calls BrazeReactBridge.registerAndroidPushToken on Android', () => {
-  const platform = Platform.OS;
-  Platform.OS = 'android';
-  const token = "some_token";
-  Braze.registerAndroidPushToken(token);
-  expect(NativeBrazeReactModule.registerPushToken).toBeCalledWith(token);
-  Platform.OS = platform;
-});
-
-test('it calls BrazeReactBridge.registerAndroidPushToken on iOS', () => {
-  const platform = Platform.OS;
-  Platform.OS = 'ios';
-  const token = "some_token";
-  Braze.registerAndroidPushToken(token);
-  expect(NativeBrazeReactModule.registerPushToken).not.toBeCalledWith(token);
-  Platform.OS = platform;
-});
-
 test('it calls BrazeReactBridge.registerPushToken', () => {
   const token = "some_token";
   Braze.registerPushToken(token);
@@ -90,13 +72,6 @@ test('it calls BrazeReactBridge.registerPushToken with null', () => {
   const token = null;
   Braze.registerPushToken(token);
   expect(NativeBrazeReactModule.registerPushToken).toBeCalledWith(token);
-});
-
-test('it calls BrazeReactBridge.setGoogleAdvertisingId', () => {
-  const googleAdvertisingId = "some_ga_id";
-  const adTrackingEnabled = true;
-  Braze.setGoogleAdvertisingId(googleAdvertisingId, adTrackingEnabled);
-  expect(NativeBrazeReactModule.setAdTrackingEnabled).toBeCalledWith(adTrackingEnabled, googleAdvertisingId);
 });
 
 test('it calls BrazeReactBridge.setAdTrackingEnabled', () => {
@@ -643,9 +618,11 @@ it('instantiates a BrazeInAppMessage object', () => {
   const testButtonString = `[${testButton0}, ${testButton1}]`;
   const testButtons = [];
   const testIsTestSend = true;
+  const testImageAltText = "hola me llamo braze";
+  const testLanguage = "es";
   testButtons.push(new Braze.BrazeButton(JSON.parse(testButton0)));
   testButtons.push(new Braze.BrazeButton(JSON.parse(testButton1)));
-  const testJson = `{\"message\":\"${testMessageBody}\",\"type\":\"${testMessageType}\",\"text_align_message\":\"CENTER\",\"click_action\":\"${testClickAction}\",\"message_close\":\"SWIPE\",\"extras\":${testExtras},\"header\":\"${testHeader}\",\"text_align_header\":\"CENTER\",\"image_url\":\"${testImageUrl}\",\"image_style\":\"TOP\",\"btns\":${testButtonString},\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\",\"uri\":\"${testUri}\",\"zipped_assets_url\":\"${testZippedAssetsUrl}\",\"duration\":${testDuration},\"message_close\":\"${testDismissType}\",\"use_webview\":${testUseWebView}, \"is_test_send\":${testIsTestSend}}`
+  const testJson = `{\"message\":\"${testMessageBody}\",\"type\":\"${testMessageType}\",\"text_align_message\":\"CENTER\",\"click_action\":\"${testClickAction}\",\"message_close\":\"SWIPE\",\"extras\":${testExtras},\"header\":\"${testHeader}\",\"text_align_header\":\"CENTER\",\"image_url\":\"${testImageUrl}\",\"image_style\":\"TOP\",\"btns\":${testButtonString},\"close_btn_color\":4291085508,\"bg_color\":4294243575,\"frame_color\":3207803699,\"text_color\":4280624421,\"header_text_color\":4280624421,\"trigger_id\":\"NWJhNTMxOThiZjVjZWE0NDZiMTUzYjZiXyRfbXY9NWJhNTMxOThiZjVjZWE0NDZiMTUzYjc1JnBpPWNtcA==\",\"uri\":\"${testUri}\",\"zipped_assets_url\":\"${testZippedAssetsUrl}\",\"duration\":${testDuration},\"message_close\":\"${testDismissType}\",\"use_webview\":${testUseWebView}, \"is_test_send\":${testIsTestSend}, \"image_alt\":\"${testImageAltText}\", \"language\":\"${testLanguage}\"}`
   const inAppMessage = new Braze.BrazeInAppMessage(testJson);
   expect(inAppMessage.message).toBe(testMessageBody);
   expect(inAppMessage.messageType).toBe(testMessageType.toLowerCase());
@@ -661,6 +638,8 @@ it('instantiates a BrazeInAppMessage object', () => {
   expect(inAppMessage.inAppMessageJsonString).toBe(testJson);
   expect(inAppMessage.buttons).toEqual(testButtons);
   expect(inAppMessage.isTestSend).toEqual(testIsTestSend);
+  expect(inAppMessage.imageAltText).toEqual(testImageAltText);
+  expect(inAppMessage.language).toEqual(testLanguage);
 });
 
 it('instantiates a BrazeInAppMessage object with the desired defaults', () => {
@@ -695,9 +674,30 @@ it('instantiates a BrazeInAppMessage object with the desired defaults', () => {
   expect(inAppMessage.isTestSend).toEqual(defaultIsTestSend);
 });
 
-it('returns the original JSON when calling BrazeInAppMessage.toString()', () => {
+it('returns the original JSON when calling BrazeInAppMessage.inAppMessageJsonString', () => {
   const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
-  expect(inAppMessage.toString()).toBe(testInAppMessageJson);
+  expect(inAppMessage.inAppMessageJsonString).toBe(testInAppMessageJson);
+});
+
+it('returns formatted string when calling BrazeInAppMessage.toString()', () => {
+  const inAppMessage = new Braze.BrazeInAppMessage(testInAppMessageJson);
+  const expectedToString = "BrazeInAppMessage:" +
+    "\n  message: " + inAppMessage.message +
+    "\n  header: " + inAppMessage.header +
+    "\n  uri: " + inAppMessage.uri +
+    "\n  imageUrl: " + inAppMessage.imageUrl +
+    "\n  imageAltText: " + inAppMessage.imageAltText +
+    "\n  language: " + inAppMessage.language +
+    "\n  zippedAssetsUrl: " + inAppMessage.zippedAssetsUrl +
+    "\n  useWebView: " + inAppMessage.useWebView +
+    "\n  duration: " + inAppMessage.duration +
+    "\n  clickAction: " + inAppMessage.clickAction +
+    "\n  dismissType: " + inAppMessage.dismissType +
+    "\n  messageType: " + inAppMessage.messageType +
+    "\n  extras: " + JSON.stringify(inAppMessage.extras) +
+    "\n  buttons: [" + inAppMessage.buttons.map((b) => b.toString()).join(', ') + "]" +
+    "\n  isTestSend: " + inAppMessage.isTestSend;
+  expect(inAppMessage.toString()).toBe(expectedToString);
 });
 
 test('it calls BrazeReactBridge.logInAppMessageClicked', () => {
@@ -745,8 +745,12 @@ it('instantiates a BrazeButton object', () => {
   expect(button.text).toBe(testText);
   expect(button.uri).toBe(JSON.parse(`"${testUri}"`));
   expect(button.useWebView).toBe(testUseWebView);
-  expect(button.toString()).toBe("BrazeButton text:" + button.text + " uri:" + button.uri + " clickAction:"
-    + button.clickAction.toString() + " useWebView:" + button.useWebView.toString());
+  expect(button.toString()).toBe("BrazeButton:" +
+    "\n  id: " + button.id +
+    "\n  text: " + button.text +
+    "\n  uri: " + button.uri +
+    "\n  useWebView: " + button.useWebView +
+    "\n  clickAction: " + button.clickAction);
 });
 
 it('instantiates a BrazeButton object with the desired defaults', () => {

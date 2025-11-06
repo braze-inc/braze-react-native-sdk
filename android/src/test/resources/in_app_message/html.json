@@ -1,0 +1,22 @@
+{
+  "type": "HTML",
+  "message": "<div>hello! i am a rich html message!</div>",
+  "animate_in": false,
+  "animate_out": false,
+  "duration": 5000,
+  "message_close": "SWIPE",
+  "message_fields": {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": {
+      "hello": "there"
+    }
+  },
+  "asset_urls": [
+    "https://cdn-staging.braze.com/appboy/communication/assets/image_assets/images/60c82de467360e39d4ac9c4b/original.jpeg?1623731684",
+    "https://cdn-staging.braze.com/appboy/communication/assets/image_assets/images/60c82de467360e2ab3ac9cf0/original.jpeg?1623731684",
+    "https://cdn-staging.braze.com/appboy/communication/assets/image_assets/images/60c82de4ad561022b6418bd8/original.jpeg?1623731684"
+  ],
+  "is_control": false,
+  "trigger_id": "NTc3MWE3NWNmYmU3NmEzMjc0ZGQ0OWU0XzU3NzFhNzVjZmJlNzZhMzI3NGRkNDlkNl9jbXA="
+}

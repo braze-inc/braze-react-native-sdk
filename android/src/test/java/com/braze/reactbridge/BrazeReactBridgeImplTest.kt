@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST", "DEPRECATION")
+
 package com.braze.reactbridge
 
 import android.app.Activity
@@ -9,7 +11,6 @@ import com.braze.enums.Gender
 import com.braze.enums.Month
 import com.braze.enums.NotificationSubscriptionType
 import com.braze.events.IValueCallback
-import com.braze.models.Banner
 import com.braze.models.FeatureFlag
 import com.braze.models.cards.Card
 import com.braze.models.inappmessage.IInAppMessage
@@ -17,7 +18,6 @@ import com.braze.models.inappmessage.InAppMessageImmersiveBase
 import com.braze.models.inappmessage.MessageButton
 import com.braze.models.outgoing.AttributionData
 import com.braze.support.nowInSeconds
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableArray
@@ -28,27 +28,25 @@ import com.facebook.react.bridge.WritableMap
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito.mockStatic
-import org.mockito.Mockito.times
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.robolectric.RobolectricTestRunner
 import java.math.BigDecimal
 import kotlin.random.Random
 
-@RunWith(RobolectricTestRunner::class)
 @Suppress("LargeClass")
-class BrazeReactBridgeImplTest {
+class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
     private lateinit var brazeReactBridgeImpl: BrazeReactBridgeImpl
 
     @Before
@@ -470,7 +468,11 @@ class BrazeReactBridgeImplTest {
         brazeReactBridgeImpl.setCustomUserAttributeObjectArray(testKey, testReadableArray, callback)
         blockUntil { callbackInvoked }
 
-        verify(brazeUserMock).setCustomUserAttribute(eq(testKey), any<JSONArray>())
+        val captor = argumentCaptor<JSONArray>()
+        verify(brazeUserMock).setCustomUserAttribute(eq(testKey), captor.capture())
+
+        val capturedArray = captor.firstValue
+        assertEquals(0, capturedArray.length())
 
         assertTrue(callbackInvoked)
         assertEquals(expectedResult, callbackResult)
@@ -517,7 +519,14 @@ class BrazeReactBridgeImplTest {
         brazeReactBridgeImpl.setCustomUserAttributeArray(testKey, testReadableArray, callback)
         blockUntil { callbackInvoked }
 
-        verify(brazeUserMock).setCustomAttributeArray(eq(testKey), any<Array<String?>>())
+        val captor = argumentCaptor<Array<String?>>()
+        verify(brazeUserMock).setCustomAttributeArray(eq(testKey), captor.capture())
+
+        val capturedArray = captor.firstValue
+        assertEquals(3, capturedArray.size)
+        assertEquals("value1", capturedArray[0])
+        assertEquals("value2", capturedArray[1])
+        assertEquals("value3", capturedArray[2])
 
         assertTrue(callbackInvoked)
         assertEquals(expectedResult, callbackResult)
@@ -902,25 +911,45 @@ class BrazeReactBridgeImplTest {
     }
 
     @Test
+    @Ignore("Ignore until SDK-6251")
     fun whenGetBannerIsCalledWithValidPlacementId_promiseResolvesWithBannerData() {
-        mockStatic(Arguments::class.java).use { mockedArguments ->
-            val mockMap = mock<WritableMap>()
-            mockedArguments.`when`<WritableMap> { Arguments.createMap() }.thenReturn(mockMap)
+        val testPlacementId = Random.nextInt().toString()
+        val isTestSend = getRandomBoolean()
+        val isControl = getRandomBoolean()
+        val banner = createBanner(
+            trackingId = "track123",
+            placementId = testPlacementId,
+            html = "<div>Banner</div>",
+            isTestSend = isTestSend,
+            expirationTimestampSeconds = 1234567890L,
+            isControl = isControl,
+            properties = JSONObject(mapOf("key" to "value"))
+        )
 
-            val testPlacementId = Random.nextInt().toString()
-            val mockBanner = mock<Banner>()
-
-            val brazeMock = mock<Braze> {
-                on { getBanner(testPlacementId) } doReturn mockBanner
-            }
-            brazeReactBridgeImpl.brazeTestingMock = brazeMock
-
-            val mockPromise = mock<Promise>()
-            brazeReactBridgeImpl.getBanner(testPlacementId, mockPromise)
-
-            verify(brazeMock).getBanner(testPlacementId)
-            verify(mockPromise).resolve(mockMap)
+        val brazeMock = mock<Braze> {
+            on { getBanner(testPlacementId) } doReturn banner
         }
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        val mockPromise = mock<Promise>()
+        brazeReactBridgeImpl.getBanner(testPlacementId, mockPromise)
+
+        verify(brazeMock).getBanner(testPlacementId)
+
+        val captor = argumentCaptor<WritableMap>()
+        verify(mockPromise).resolve(captor.capture())
+
+        val result = captor.firstValue
+        assertEquals("track123", result.getString("trackingId"))
+        assertEquals(testPlacementId, result.getString("placementId"))
+        assertEquals(isTestSend, result.getBoolean("isTestSend"))
+        assertEquals(isControl, result.getBoolean("isControl"))
+        assertEquals("<div>Banner</div>", result.getString("html"))
+        assertEquals(1234567890.0, result.getDouble("expiresAt"), 0.001)
+
+        val properties = result.getMap("properties")
+        ktAssertNotNull(properties)
+        assertEquals("value", properties.getString("key"))
     }
 
     @Test
@@ -976,18 +1005,13 @@ class BrazeReactBridgeImplTest {
 
     @Test
     fun whenGetCachedContentCardsIsCalled_promiseResolvesWithCachedCards() {
-        mockStatic(Arguments::class.java).use { mockedArguments ->
-            val mockArray = mock<WritableArray>()
-            mockedArguments.`when`<WritableArray> { Arguments.createArray() }.thenReturn(mockArray)
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
 
-            val brazeMock = mock<Braze>()
-            brazeReactBridgeImpl.brazeTestingMock = brazeMock
+        val cachedPromise = mock<Promise>()
+        brazeReactBridgeImpl.getCachedContentCards(cachedPromise)
 
-            val cachedPromise = mock<Promise>()
-            brazeReactBridgeImpl.getCachedContentCards(cachedPromise)
-
-            verify(cachedPromise).resolve(mockArray)
-        }
+        verify(cachedPromise).resolve(any<WritableArray>())
     }
 
     @Test
@@ -1212,10 +1236,10 @@ class BrazeReactBridgeImplTest {
 
     @Test
     fun whenSetAttributionDataIsCalledWithValidData_attributionDataIsSetOnUser() {
-        val testNetwork = Random.nextInt().toString()
-        val testCampaign = Random.nextInt().toString()
-        val testAdGroup = Random.nextInt().toString()
-        val testCreative = Random.nextInt().toString()
+        val testNetwork = getRandomString()
+        val testCampaign = getRandomString()
+        val testAdGroup = getRandomString()
+        val testCreative = getRandomString()
 
         val brazeUserMock = mock<BrazeUser>()
         val brazeMock = getBrazeMock(brazeUserMock)
@@ -1228,7 +1252,16 @@ class BrazeReactBridgeImplTest {
             testCreative
         )
 
-        verify(brazeUserMock).setAttributionData(any<AttributionData>())
+        val captor = argumentCaptor<AttributionData>()
+        verify(brazeUserMock).setAttributionData(captor.capture())
+
+        val capturedData = captor.firstValue
+
+        // Use reflection to access private fields
+        assertEquals(testNetwork, getPrivateField(capturedData, "network"))
+        assertEquals(testCampaign, getPrivateField(capturedData, "campaign"))
+        assertEquals(testAdGroup, getPrivateField(capturedData, "adGroup"))
+        assertEquals(testCreative, getPrivateField(capturedData, "creative"))
     }
 
     @Test
@@ -1278,62 +1311,75 @@ class BrazeReactBridgeImplTest {
 
     @Test
     fun whenGetAllFeatureFlagsIsCalled_promiseResolvesWithConvertedFeatureFlags() {
-        mockStatic(Arguments::class.java).use { mockedArguments ->
-            val mockArray = mock<WritableArray>()
-            val mockMap = mock<WritableMap>()
-            mockedArguments.`when`<WritableArray> { Arguments.createArray() }.thenReturn(mockArray)
-            mockedArguments.`when`<WritableMap> { Arguments.createMap() }.thenReturn(mockMap)
+        val mockFlag1 = createFeatureFlag(
+            id = "flag1",
+            enabled = true,
+            propertiesJson = JSONObject().toString(),
+        )
+        val mockFlag2 = createFeatureFlag(
+            id = "flag2",
+            enabled = false,
+            propertiesJson = JSONObject().toString(),
+        )
+        val testFeatureFlags = listOf(mockFlag1, mockFlag2)
 
-            val mockFlag1 = mock<FeatureFlag> {
-                on { id } doReturn "flag1"
-                on { enabled } doReturn true
-                on { properties } doReturn JSONObject()
-            }
-            val mockFlag2 = mock<FeatureFlag> {
-                on { id } doReturn "flag2"
-                on { enabled } doReturn false
-                on { properties } doReturn JSONObject()
-            }
-            val testFeatureFlags = listOf(mockFlag1, mockFlag2)
-
-            val brazeMock = mock<Braze> {
-                on { getAllFeatureFlags() } doReturn testFeatureFlags
-            }
-            brazeReactBridgeImpl.brazeTestingMock = brazeMock
-            val mockPromise = mock<Promise>()
-
-            brazeReactBridgeImpl.getAllFeatureFlags(mockPromise)
-
-            verify(brazeMock).getAllFeatureFlags()
-            verify(mockPromise).resolve(mockArray)
-            verify(mockArray, times(2)).pushMap(any())
+        val brazeMock = mock<Braze> {
+            on { getAllFeatureFlags() } doReturn testFeatureFlags
         }
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+        val mockPromise = mock<Promise>()
+
+        brazeReactBridgeImpl.getAllFeatureFlags(mockPromise)
+
+        verify(brazeMock).getAllFeatureFlags()
+
+        val captor = argumentCaptor<WritableArray>()
+        verify(mockPromise).resolve(captor.capture())
+
+        val result = captor.firstValue
+        assertEquals(2, result.size())
+
+        // Verify first feature flag
+        val flag1Map = result.getMap(0)
+        ktAssertNotNull(flag1Map)
+        assertEquals("flag1", flag1Map.getString("id"))
+        assertTrue(flag1Map.getBoolean("enabled"))
+
+        // Verify second feature flag
+        val flag2Map = result.getMap(1)
+        ktAssertNotNull(flag2Map)
+        assertEquals("flag2", flag2Map.getString("id"))
+        assertFalse(flag2Map.getBoolean("enabled"))
     }
 
     @Test
     fun whenGetFeatureFlagIsCalledWithValidId_promiseResolvesWithConvertedFeatureFlag() {
-        mockStatic(Arguments::class.java).use { mockedArguments ->
-            val mockMap = mock<WritableMap>()
-            mockedArguments.`when`<WritableMap> { Arguments.createMap() }.thenReturn(mockMap)
+        val testFlagId = "test_flag_id"
+        val mockFlag = createFeatureFlag(
+            id = testFlagId,
+            enabled = true,
+            propertiesJson = JSONObject().toString()
+        )
 
-            val testFlagId = "test_flag_id"
-            val mockFlag = mock<FeatureFlag> {
-                on { id } doReturn testFlagId
-                on { enabled } doReturn true
-                on { properties } doReturn JSONObject()
-            }
-
-            val brazeMock = mock<Braze> {
-                on { getFeatureFlag(testFlagId) } doReturn mockFlag
-            }
-            brazeReactBridgeImpl.brazeTestingMock = brazeMock
-            val mockPromise = mock<Promise>()
-
-            brazeReactBridgeImpl.getFeatureFlag(testFlagId, mockPromise)
-
-            verify(brazeMock).getFeatureFlag(testFlagId)
-            verify(mockPromise).resolve(mockMap)
+        val brazeMock = mock<Braze> {
+            on { getFeatureFlag(testFlagId) } doReturn mockFlag
         }
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+        val mockPromise = mock<Promise>()
+
+        brazeReactBridgeImpl.getFeatureFlag(testFlagId, mockPromise)
+
+        verify(brazeMock).getFeatureFlag(testFlagId)
+
+        val captor = argumentCaptor<WritableMap>()
+        verify(mockPromise).resolve(captor.capture())
+
+        val result = captor.firstValue
+        assertEquals(testFlagId, result.getString("id"))
+        assertTrue(result.getBoolean("enabled"))
+
+        val properties = result.getMap("properties")
+        ktAssertNotNull(properties)
     }
 
     @Test

@@ -2,6 +2,8 @@
 #import <UIKit/UIKit.h>
 #import <BrazeKit/BrazeKit-Swift.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface BrazeReactUtils : NSObject
 
 + (BrazeReactUtils *)sharedInstance;
@@ -15,32 +17,29 @@
  *
  * @param launchOptions The launch options dictionary from application:didFinishLaunchingWithOptions:launchOptions.
  */
-- (BOOL)populateInitialPayloadFromLaunchOptions:(NSDictionary *)launchOptions;
+- (BOOL)populateInitialPayloadFromLaunchOptions:(nullable NSDictionary *)launchOptions;
 
 /**
  * (Deprecated) Use method `populateInitialPayloadFromLaunchOptions` instead.
  */
-- (BOOL)populateInitialUrlFromLaunchOptions:(NSDictionary *)launchOptions __deprecated_msg("use populateInitialPayloadFromLaunchOptions instead.");
+- (BOOL)populateInitialUrlFromLaunchOptions:(nullable NSDictionary *)launchOptions __deprecated_msg("use populateInitialPayloadFromLaunchOptions instead.");
 
 /**
  * (Deprecated) Use method `populateInitialPayloadFromLaunchOptions` instead.
  */
-- (BOOL)populateInitialUrlForCategories:(NSDictionary *)userInfo __deprecated_msg("use populateInitialPayloadFromLaunchOptions instead.");
-
-/**
- * Formats the push notification payload into a JavaScript-readable object.
- */
-- (NSDictionary *)formatPushPayload:(BRZNotificationsPayload *)payload withLaunchOptions:(NSDictionary *)launchOptions;
+- (BOOL)populateInitialUrlForCategories:(nullable NSDictionary *)userInfo __deprecated_msg("use populateInitialPayloadFromLaunchOptions instead.");
 
 /**
  * The Braze push from application:didFinishLaunchingWithOptions:launchOptions. If there is no Braze push, this will be nil.
  * This is a dictionary representation of the push notification opened by the user, which launched the application.
  */
-@property NSDictionary *initialPushPayload;
+@property (nullable, nonatomic, strong) NSDictionary *initialPushPayload;
 
 /**
  * (Deprecated) Use property `initialPushPayload` instead.
  */
-@property NSString *initialUrlString;
+@property (nullable, nonatomic, strong) NSString *initialUrlString;
 
 @end
+
+NS_ASSUME_NONNULL_END

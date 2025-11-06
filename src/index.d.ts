@@ -23,11 +23,6 @@ export function getInitialURL(callback: (deepLink: string) => void): void;
 export function getInitialPushPayload(callback: (pushPayload: PushNotificationEvent | null) => void): void;
 
 /**
- * @deprecated This method is deprecated in favor of `getDeviceId`.
- */
-export function getInstallTrackingId(callback: Callback<string>): void;
-
-/**
  * Returns a unique ID stored on the device. 
  * 
  * On Android, a randomly generated, app specific ID that is stored on the device. A new ID will be generated if the user 
@@ -175,31 +170,10 @@ export function setDateOfBirth(
 ): void;
 
 /**
- * @deprecated This method is deprecated in favor of `registerPushToken`.
- */
-export function registerAndroidPushToken(token: string): void;
-
-/**
  * This method posts a token to Braze's servers to associate the token with the current device.
  * @param {string} token - The device's push token.
  */
 export function registerPushToken(token: string): void;
-
-/**
- * @deprecated This method is deprecated in favor of `setAdTrackingEnabled`.
- *
- * This method sets the Google Advertising ID and associated ad-tracking enabled field for this device. Note that the
- * SDK does not automatically collect this data.
- *
- * No-op on iOS.
- *
- * @param {string} googleAdvertisingId - The Google Advertising ID
- * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled for the Google Advertising ID
- */
-export function setGoogleAdvertisingId(
-  googleAdvertisingId: string,
-  adTrackingEnabled: boolean
-): void;
 
 /**
  * This method informs Braze whether ad-tracking has been enabled for this device. Note that the SDK does not
@@ -766,7 +740,7 @@ export function setLocationCustomAttribute(
  */
 export function subscribeToInAppMessage(
   useBrazeUI: boolean,
-  callback?: (event: {inAppMessage: BrazeInAppMessage}) => void | null
+  callback?: (event: InAppMessageEvent) => void | null
 ): EmitterSubscription | undefined;
 
 /**
@@ -991,7 +965,7 @@ export function logFeatureFlagImpression(id: string): void;
  */
 export class BrazeInAppMessage {
   constructor(_data: string);
-  /** The message JSON representation. */
+  /** The message JSON representation as a string. */
   inAppMessageJsonString: string;
 
   /** The message text. */
@@ -1000,13 +974,13 @@ export class BrazeInAppMessage {
   /** The message header. */
   header: string;
 
-  /** The URI associated with the button click action. */
+  /** The URI associated with the click action in the message body. */
   uri: string;
 
   /** The message image URL. */
   imageUrl: string;
 
-  /** The zipped assets prepared to display HTML content. */
+  /** (Legacy) The zipped assets for legacy HTML IAM content. */
   zippedAssetsUrl: string;
 
   /** Indicates whether the button click action should redirect using a web view. */
@@ -1014,6 +988,15 @@ export class BrazeInAppMessage {
 
   /** The message display duration. */
   duration: number;
+
+  /** Specifies whether the message was delivered as a test send (default: `false`). */
+  isTestSend: boolean;
+
+  /** The alt text for the message image for accessibility. */
+  imageAltText: string;
+
+  /** The language of the message for accessibility. */
+  language: string;
 
   /** The button click action. */
   clickAction: BrazeClickAction[keyof BrazeClickAction];
@@ -1030,10 +1013,10 @@ export class BrazeInAppMessage {
   /** The list of buttons on the in-app message. */
   buttons: [BrazeButton];
 
-  /** Specifies whether the message was delivered as a test send (default: `false`). */
-  isTestSend: boolean;
-
-  /** The message as a String representation. */
+  /**
+   * The message as a human-readable string. Use `inAppMessageJsonString` to get the
+   * non-formatted JSON representation.
+   */
   toString(): string;
 }
 
@@ -1057,7 +1040,7 @@ export class BrazeButton {
   /** The button ID on the message. */
   id: number;
 
-  /** The button as a String representation. */
+  /** The button as a human-readable string. */
   toString(): string;
 }
 
@@ -1268,6 +1251,14 @@ export interface SDKAuthenticationErrorType {
   reason: string;
 }
 
+/**
+ * Received an in-app message from the Braze SDK.
+ */
+export interface InAppMessageEvent {
+  /** A Braze In-App Message. */
+  inAppMessage: BrazeInAppMessage;
+}
+
 export interface PushNotificationEvent {
   /** Notification payload type. */
   payload_type: string;
@@ -1320,31 +1311,6 @@ export interface PushNotificationEvent {
 
   /** Android-specific fields. */
   android: { [key: string]: any };
-
-  /**
-   * @deprecated This field is deprecated and will be removed in future versions. Use `payload_type` instead.
-   */
-  push_event_type: string;
-
-  /**
-   * @deprecated This field is deprecated and will be removed in future versions. Use `url` instead.
-   */
-  deeplink: string;
-
-  /**
-   * @deprecated This field is deprecated and will be removed in future versions. Use `body` instead.
-   */
-  content_text: string;
-
-  /**
-   * @deprecated This field is deprecated and will be removed in future versions. Use `android` instead.
-   */
-  raw_android_push_data: string;
-
-  /**
-   * @deprecated This field is deprecated and will be removed in future versions. Use `braze_properties` instead.
-   */
-  kvp_data: { [key: string]: any };
 }
 
 /**
@@ -1354,6 +1320,7 @@ export interface ContentCardsUpdatedEvent {
   /** A list of Content Cards in this update. */
   cards: ContentCard[];
 }
+
 /**
  * Received an updated list of Banners from the Braze SDK.
  */
@@ -1388,7 +1355,7 @@ export function addListener(event: "bannerCardsUpdated", callback: (update: Bann
 /** Callback passes an object containing "error_code", "user_id", "original_signature", and "reason". */
 export function addListener(event: "sdkAuthenticationError", callback: (sdkAuthenticationError: SDKAuthenticationErrorType) => void): EmitterSubscription;
 /** Callback passes the BrazeInAppMessage object. */
-export function addListener(event: "inAppMessageReceived", callback: (inAppMessage: BrazeInAppMessage) => void): EmitterSubscription;
+export function addListener(event: "inAppMessageReceived", callback: (inAppMessage: InAppMessageEvent) => void): EmitterSubscription;
 /** Callback passes the Feature Flags array. */
 export function addListener(event: "featureFlagsUpdated", callback: (flags: FeatureFlag[]) => void): EmitterSubscription;
 /** Only supported on Android. */

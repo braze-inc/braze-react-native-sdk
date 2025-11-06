@@ -1,4 +1,30 @@
-⚠️ In version 2.0.0, we changed the iOS bridge from AppboyKit, which is written in Objective-C, to the new [Swift SDK](https://github.com/braze-inc/braze-swift-sdk). If you are upgrading from a version below 2.0.0 to a version above 2.0.0, please read [the instructions](https://github.com/braze-inc/braze-react-native-sdk/blob/master/CHANGELOG.md#200) to ensure a smooth transition and backward compatibility.
+## 18.0.0
+
+##### Breaking
+- Fixes the Typescript type for the callback of `subscribeToInAppMessage` and `addListener` for `Braze.Events.IN_APP_MESSAGE_RECEIVED`.
+  - These listeners now properly return a callback with the new `InAppMessageEvent` type. Previously, the methods were annotated to return a `BrazeInAppMessage` type, but it was actually returning a `String`.
+  - If you are using either subscription API, ensure that the behavior of your in-app messages are unchanged after updating to this version. See our sample code in [`BrazeProject.tsx`](https://github.com/braze-inc/braze-react-native-sdk/blob/master/BrazeProject/BrazeProject.tsx).
+- The APIs `logInAppMessageClicked`, `logInAppMessageImpression`, and `logInAppMessageButtonClicked` now accept only a `BrazeInAppMessage` object to match its existing public interface.
+  - Previously, it would accept both a `BrazeInAppMessage` object as well as a `String`.
+- `BrazeInAppMessage.toString()` now returns a human-readable string instead of the JSON string representation.
+  - To get the JSON string representation of an in-app message, use `BrazeInAppMessage.inAppMessageJsonString`.
+- On iOS, `[[BrazeReactUtils sharedInstance] formatPushPayload:withLaunchOptions:]` has been moved to `[BrazeReactDataTranslator formatPushPayload:withLaunchOptions:]`.
+  - This new method is a now a class method instead of an instance method.
+- Adds nullability annotations to `BrazeReactUtils` methods.
+- Removes the following deprecated methods and properties from the API:
+  - `getInstallTrackingId(callback:)` in favor of `getDeviceId`.
+  - `registerAndroidPushToken(token:)` in favor of `registerPushToken`.
+  - `setGoogleAdvertisingId(googleAdvertisingId:adTrackingEnabled:)` in favor of `setAdTrackingEnabled`.
+  - `PushNotificationEvent.push_event_type` in favor of `payload_type`.
+  - `PushNotificationEvent.deeplink` in favor of `url`.
+  - `PushNotificationEvent.content_text` in favor of `body`.
+  - `PushNotificationEvent.raw_android_push_data` in favor of `android`.
+  - `PushNotificationEvent.kvp_data` in favor of `braze_properties`.
+- Updates the native Android SDK version bindings [from Braze Android SDK 39.0.0 to 40.0.2](https://github.com/braze-inc/braze-android-sdk/compare/v39.0.0...v40.0.2#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Added
+- Adds `imageAltText` and `language` fields to `BrazeInAppMessage` for accessibility features.
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 13.2.0 to 13.3.0](https://github.com/braze-inc/braze-swift-sdk/compare/13.2.0...13.3.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 
 ## 17.0.1
 
@@ -346,7 +372,7 @@
   - For an example, refer to the sample test setup [here](https://github.com/braze-inc/braze-react-native-sdk/tree/master/__tests__).
 - Updates the native Android bridge [from Braze Android SDK 25.0.0 to 26.3.1](https://github.com/braze-inc/braze-android-sdk/compare/v25.0.0...v26.3.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
 - Fixes the presentation of in-app messages to match the documented behavior.
-  - Calling `subscribeToInAppMessages` or `addListener` in the Javascript layer will no longer cause a custom `BrazeInAppMessageUIDelegate` implementation on iOS to be ignored.
+  - Calling `subscribeToInAppMessage` or `addListener` in the Javascript layer will no longer cause a custom `BrazeInAppMessageUIDelegate` implementation on iOS to be ignored.
   - Calling `Braze.addListener` for the `inAppMessageReceived` event will subscribe in both the Javascript and the native layers (iOS + Android). This means it is no longer required to call `Braze.subscribeToInAppMessage`.
     - Per the Braze documentation, you do not need to explicitly call `subscribeToInAppMessage` to use the default In-App Message UI.
   - See our documentation for more details around [Advanced customization](https://www.braze.com/docs/developer_guide/platform_integration_guides/react_native/inapp_messages/?tab=ios#advanced-customization).

@@ -3,40 +3,65 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "preinstall": "rm -f ./ios/.xcode.env.local",
     "android": "npx react-native run-android",
     "ios": "npx react-native run-ios",
     "lint": "eslint .",
-    "start": "npx react-native start",
-    "test": "jest"
+    "start": "npx react-native start --reset-cache",
+    "test": "jest",
+    "set-rn-version": "npx rnx-align-deps --set-version",
+    "fix-dependencies": "npx rnx-align-deps --write",
+    "postinstall": "rm -rf ./node_modules/@braze/react-native-sdk/node_modules"
   },
   "dependencies": {
     "@braze/react-native-sdk": "../",
-    "react": "19.1.0",
-    "react-native": "0.80.0",
-    "@react-native/codegen": "^0.81.1",
+    "react": "19.1.1",
+    "react-native": "^0.82.0",
     "react-native-radio-buttons-group": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.4",
-    "@babel/preset-env": "^7.28.3",
-    "@babel/runtime": "^7.28.4",
-    "@react-native-community/cli": "20.0.2",
-    "@react-native-community/cli-platform-android": "20.0.2",
-    "@react-native-community/cli-platform-ios": "20.0.2",
-    "@react-native/babel-preset": "0.81.1",
-    "@react-native/eslint-config": "0.81.1",
-    "@react-native/metro-config": "0.81.1",
-    "@react-native/typescript-config": "0.81.1",
-    "@types/jest": "^30.0.0",
-    "@types/react": "^19.2.2",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "^20.0.0",
+    "@react-native-community/cli-platform-android": "^20.0.0",
+    "@react-native-community/cli-platform-ios": "^20.0.0",
+    "@react-native/babel-preset": "^0.82.0",
+    "@react-native/eslint-config": "0.82.1",
+    "@react-native/metro-config": "^0.82.0",
+    "@react-native/typescript-config": "0.82.1",
+    "@rnx-kit/align-deps": "^3.3.2",
+    "@types/jest": "^29.5.13",
+    "@types/react": "^19.1.1",
     "@types/react-test-renderer": "^19.1.0",
     "eslint": "^8.19.0",
-    "jest": "^29.6.3",
-    "prettier": "3.6.2",
-    "react-test-renderer": "19.2.0",
-    "typescript": "5.9.3"
+    "jest": "^29.2.1",
+    "prettier": "2.8.8",
+    "react-test-renderer": "19.1.1",
+    "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
+  },
+  "rnx-kit": {
+    "kitType": "app",
+    "alignDeps": {
+      "requirements": [
+        "react-native@0.82"
+      ],
+      "capabilities": [
+        "babel-preset-react-native",
+        "community/cli",
+        "community/cli-android",
+        "community/cli-ios",
+        "core",
+        "core-android",
+        "core-ios",
+        "core/metro-config",
+        "jest",
+        "react",
+        "react-test-renderer"
+      ]
+    }
   }
 }

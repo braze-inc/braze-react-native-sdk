@@ -27,8 +27,13 @@ export class Button {
   }
 
   toString() {
-    return `BrazeButton text:${this.text} uri:${
-      this.uri
-    } clickAction:${this.clickAction.toString()} useWebView:${this.useWebView.toString()}`;
+    return (
+      `BrazeButton:` +
+      `\n  id: ${this.id}` +
+      `\n  text: ${this.text}` +
+      `\n  uri: ${this.uri}` +
+      `\n  useWebView: ${this.useWebView}` +
+      `\n  clickAction: ${this.clickAction}`
+    );
   }
 }
