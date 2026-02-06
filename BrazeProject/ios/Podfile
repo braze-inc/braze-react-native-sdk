@@ -41,9 +41,9 @@ target 'BrazeProject' do
 end
 
 target 'BrazeProjectRichPush' do
-  pod 'BrazeNotificationService', '~> 13.3.0'
+  pod 'BrazeNotificationService', '~> 14.0.1'
 end
 
 target 'BrazeProjectPushStory' do
-  pod 'BrazePushStory', '~> 13.3.0'
+  pod 'BrazePushStory', '~> 14.0.1'
 end

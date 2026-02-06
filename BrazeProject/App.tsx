@@ -1,12 +1,13 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { BrazeProject } from './BrazeProject';
+
 
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView>
+    <SafeAreaProvider>
       <BrazeProject />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

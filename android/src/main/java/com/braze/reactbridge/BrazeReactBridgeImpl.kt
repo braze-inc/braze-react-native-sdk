@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import com.braze.Braze
 import com.braze.BrazeUser
-import com.braze.Constants
 import com.braze.enums.BrazePushEventType
 import com.braze.events.BrazePushEvent
 import com.braze.events.BrazeSdkAuthenticationErrorEvent
@@ -53,7 +52,6 @@ import com.braze.support.toBundle
 import com.braze.enums.Channel
 import com.braze.events.BannersUpdatedEvent
 import com.braze.events.IValueCallback
-import com.braze.models.push.BrazeNotificationPayload
 import com.facebook.react.bridge.ReadableType
 
 @Suppress("TooManyFunctions", "LargeClass")
@@ -310,6 +308,14 @@ class BrazeReactBridgeImpl(
         braze.requestBannersRefresh(convertedPlacementIds)
     }
 
+    fun logBannerImpression(placementId: String) {
+        braze.logBannerImpression(placementId)
+    }
+
+    fun logBannerClick(placementId: String, buttonId: String?) {
+        braze.logBannerClick(placementId, buttonId)
+    }
+
     fun launchContentCards(@Suppress("UNUSED_PARAMETER") dismissAutomaticallyOnCardClick: Boolean?) {
         val intent = Intent(currentActivity, ContentCardsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
@@ -445,10 +451,11 @@ class BrazeReactBridgeImpl(
         }
 
         pushNotificationEventSubscriber = IEventSubscriber { event ->
-            val pushType = getPushEventType(event.eventType) ?: return@IEventSubscriber
-            val eventData = event.notificationPayload
-            val data = createPushNotificationData(eventData, pushType)
-            addBrazePropertiesToData(data, eventData)
+            val payloadType = getPushEventType(event.eventType) ?: return@IEventSubscriber
+            val data = PushPayloadMapper.createPushNotificationMap(
+                payload = event.notificationPayload,
+                payloadType = payloadType
+            )
 
             brazelog { "Sending push notification event with data $data" }
             reactApplicationContext.getJSModule(RCTDeviceEventEmitter::class.java)
@@ -464,50 +471,6 @@ class BrazeReactBridgeImpl(
             BrazePushEventType.NOTIFICATION_OPENED -> "push_opened"
             else -> null
         }
-    }
-
-    private fun createPushNotificationData(
-        eventData: BrazeNotificationPayload,
-        pushType: String
-    ): WritableNativeMap {
-        return WritableNativeMap().apply {
-            putString("payload_type", pushType)
-            putString("url", eventData.deeplink)
-            putString("title", eventData.titleText)
-            putString("body", eventData.contentText)
-            putString("summary_text", eventData.summaryText)
-            eventData.notificationBadgeNumber?.let { putInt("badge_count", it) }
-            eventData.notificationExtras.getLong(Constants.BRAZE_PUSH_RECEIVED_TIMESTAMP_MILLIS)
-                .takeUnless { it == 0L }?.let {
-                    // Convert to Double when passing to JS layer since timestamp can't fit in a 32-bit
-                    // int and WriteableNativeMap doesn't support longs bc of language limitations
-                    putDouble("timestamp", it.toDouble())
-                }
-            putBoolean(
-                "use_webview",
-                eventData.notificationExtras.getString(Constants.BRAZE_PUSH_OPEN_URI_IN_WEBVIEW_KEY) == "true"
-            )
-            putBoolean(
-                "is_silent", eventData.titleText == null && eventData.contentText == null
-            )
-            putBoolean(
-                "is_braze_internal",
-                eventData.isUninstallTrackingPush || eventData.shouldRefreshFeatureFlags
-            )
-            putString("image_url", eventData.bigImageUrl)
-            putMap("android", convertToMap(eventData.notificationExtras))
-        }
-    }
-
-    private fun addBrazePropertiesToData(
-        data: WritableNativeMap,
-        eventData: BrazeNotificationPayload
-    ) {
-        val brazePropertiesMap = convertToMap(
-            eventData.brazeExtras,
-            setOf(Constants.BRAZE_PUSH_BIG_IMAGE_URL_KEY)
-        )
-        data.putMap("braze_properties", brazePropertiesMap)
     }
 
     fun logContentCardDismissed(id: String) {
@@ -739,6 +702,26 @@ class BrazeReactBridgeImpl(
         }
     })
 
+    /**
+     * Returns the initial push notification payload if the app was launched
+     * from a push notification while in a terminated state.
+     *
+     * This requires the app to call BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
+     * in MainActivity.onCreate() to capture the payload before React Native initializes.
+     */
+    fun getInitialPushPayload(callback: Callback) {
+        val payload = BrazeReactUtils.getInitialPushPayload()
+        if (payload != null) {
+            brazelog { "getInitialPushPayload returning payload: $payload" }
+            callback.reportResult(payload)
+            // Clear after retrieval to prevent duplicate handling
+            BrazeReactUtils.clearInitialPushPayload()
+        } else {
+            brazelog { "getInitialPushPayload returning null - no initial payload available" }
+            callback.reportResult(result = null)
+        }
+    }
+
     private fun runOnUser(block: (user: BrazeUser) -> Unit) {
         braze.getCurrentUser {
             block(it)
@@ -858,15 +841,6 @@ class BrazeReactBridgeImpl(
                     }
                 }
             )
-    }
-
-    private fun convertToMap(bundle: Bundle, filteringKeys: Set<String> = emptySet()): ReadableMap {
-        val nativeMap = WritableNativeMap()
-        bundle.keySet()
-            .filter { !filteringKeys.contains(it) }
-            .associateWith { @Suppress("deprecation") bundle[it] }
-            .forEach { nativeMap.putString(it.key, it.value.toString()) }
-        return nativeMap
     }
 
     companion object {

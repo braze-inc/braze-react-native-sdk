@@ -724,6 +724,28 @@ RCT_EXPORT_METHOD(requestBannersRefresh:(NSArray *)placementIds) {
   }];
 }
 
+RCT_EXPORT_METHOD(logBannerImpression:(NSString *)placementId) {
+  [braze.banners getBannerFor:placementId completion:^(BRZBanner * _Nullable banner) {
+    if (banner) {
+      RCTLogInfo(@"logBannerImpression with placementId %@", placementId);
+      [banner logImpressionUsing:braze];
+    } else {
+      RCTLogInfo(@"logBannerImpression: No banner found for placementId %@", placementId);
+    }
+  }];
+}
+
+RCT_EXPORT_METHOD(logBannerClick:(NSString *)placementId buttonId:(NSString *)buttonId) {
+  [braze.banners getBannerFor:placementId completion:^(BRZBanner * _Nullable banner) {
+    if (banner) {
+      RCTLogInfo(@"logBannerClick with placementId %@, buttonId %@", placementId, buttonId);
+      [banner logClickWithButtonId:buttonId using:braze];
+    } else {
+      RCTLogInfo(@"logBannerClick: No banner found for placementId %@", placementId);
+    }
+  }];
+}
+
 static NSArray *RCTFormatBanners(NSDictionary<NSString *, BRZBanner *> *banners) {
   NSMutableArray *mappedBanners = [NSMutableArray arrayWithCapacity:[banners count]];
   [banners.allValues enumerateObjectsUsingBlock:^(BRZBanner *banner,

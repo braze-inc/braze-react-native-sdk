@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.braze.reactbridge.BrazeReactUtils
 import com.braze.support.BrazeLogger.getBrazeLogTag
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -14,6 +15,12 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 class MainActivity : ReactActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Capture push notification payload for cold start deep links.
+        // This must be called before React Native initializes to capture the initial Intent data.
+        // See Braze.getInitialPushPayload() in JavaScript.
+        BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
+
         intent.data?.let { data ->
             Toast.makeText(this, "Activity opened by deep link: $data", Toast.LENGTH_LONG).show()
             Log.i(TAG, "Deep link is $data")

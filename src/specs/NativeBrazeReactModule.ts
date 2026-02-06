@@ -138,6 +138,8 @@ export interface Spec extends TurboModule {
   getCachedContentCards(): Promise<ContentCard[]>;
   getBanner(placementId: string): Promise<Banner | null>;
   requestBannersRefresh(placementIds: string[]): void;
+  logBannerImpression(placementId: string): void;
+  logBannerClick(placementId: string, buttonId: string | null): void;
   requestImmediateDataFlush(): void;
   wipeData(): void;
   disableSDK(): void;

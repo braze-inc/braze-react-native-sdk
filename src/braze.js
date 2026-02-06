@@ -68,27 +68,31 @@ export class Braze {
   }
 
   /**
-   * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
+   * When launching an application that has previously been force closed, React Native's Linking API doesn't
    * support handling push notifications and deep links in the payload. This is due to a race condition on startup between
    * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
    * If an application is launched from a push notification click, we return the full push payload.
-   * @param {function(string)} callback - A callback that retuns the push notification as an Object. If there is no push payload,
+   *
+   * On iOS, this requires calling `[[BrazeReactUtils sharedInstance] populateInitialPayloadFromLaunchOptions:launchOptions]`
+   * in your AppDelegate's `application:didFinishLaunchingWithOptions:` method.
+   *
+   * On Android, this requires calling `BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)` in your
+   * MainActivity's `onCreate()` method.
+   *
+   * See the sample app for example implementations on both platforms.
+   *
+   * @param {function(string)} callback - A callback that returns the push notification as an Object. If there is no push payload,
    * returns null.
    */
   static getInitialPushPayload(callback) {
-    if (Platform.OS === 'ios') {
-      this.bridge.getInitialPushPayload((err, res) => {
-        if (err) {
-          console.log(err);
-          callback(null);
-        } else {
-          callback(res);
-        }
-      });
-    } else {
-      // BrazeReactBridge.getInitialPushPayload not implemented on Android
-      callback(null);
-    }
+    this.bridge.getInitialPushPayload((err, res) => {
+      if (err) {
+        console.log(err);
+        callback(null);
+      } else {
+        callback(res);
+      }
+    });
   }
 
   /**
@@ -632,6 +636,23 @@ export class Braze {
 
   static requestBannersRefresh(placementIds) {
     this.bridge.requestBannersRefresh(placementIds);
+  }
+
+  /**
+   * Logs an impression for the banner with the provided placement ID.
+   * @param {string} placementId - The placement ID of the banner.
+   */
+  static logBannerImpression(placementId) {
+    this.bridge.logBannerImpression(placementId);
+  }
+
+  /**
+   * Logs a click for the banner with the provided placement ID.
+   * @param {string} placementId - The placement ID of the banner.
+   * @param {string|null} buttonId - The button ID if the click was on a specific button, or null if not applicable.
+   */
+  static logBannerClick(placementId, buttonId) {
+    this.bridge.logBannerClick(placementId, buttonId);
   }
 
   // Flush Controls

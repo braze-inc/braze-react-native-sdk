@@ -1,6 +1,6 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "18.0.0",
+  "version": "19.0.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/braze-inc/braze-react-native-sdk#readme",
   "devDependencies": {
-    "eslint": "8.17.0",
+    "eslint": "9.26.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-config-standard-jsx": "^11.0.0",
     "eslint-config-standard-react": "^11.0.1",

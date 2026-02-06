@@ -16,8 +16,8 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
-    fun getInitialPushPayload(@Suppress("UNUSED_PARAMETER") callback: Callback) {
-        // iOS only
+    fun getInitialPushPayload(callback: Callback) {
+        brazeImpl.getInitialPushPayload(callback)
     }
 
     @ReactMethod
@@ -267,6 +267,16 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     @ReactMethod
     fun requestBannersRefresh(placementIds: ReadableArray) {
         brazeImpl.requestBannersRefresh(placementIds)
+    }
+
+    @ReactMethod
+    fun logBannerImpression(placementId: String) {
+        brazeImpl.logBannerImpression(placementId)
+    }
+
+    @ReactMethod
+    fun logBannerClick(placementId: String, buttonId: String?) {
+        brazeImpl.logBannerClick(placementId, buttonId)
     }
 
     @ReactMethod

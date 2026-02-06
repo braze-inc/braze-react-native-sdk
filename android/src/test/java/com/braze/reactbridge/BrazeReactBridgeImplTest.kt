@@ -973,6 +973,40 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
     }
 
     @Test
+    fun whenLogBannerImpressionIsCalled_brazeLogBannerImpressionGetsCalledWithPlacementId() {
+        val testPlacementId = "test-placement-id"
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        brazeReactBridgeImpl.logBannerImpression(testPlacementId)
+
+        verify(brazeMock).logBannerImpression(testPlacementId)
+    }
+
+    @Test
+    fun whenLogBannerClickIsCalled_brazeLogBannerClickGetsCalledWithPlacementIdAndNullButtonId() {
+        val testPlacementId = "test-placement-id"
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        brazeReactBridgeImpl.logBannerClick(testPlacementId, null)
+
+        verify(brazeMock).logBannerClick(testPlacementId, null)
+    }
+
+    @Test
+    fun whenLogBannerClickIsCalledWithButtonId_brazeLogBannerClickGetsCalledWithButtonId() {
+        val testPlacementId = "test-placement-id"
+        val testButtonId = "button-123"
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        brazeReactBridgeImpl.logBannerClick(testPlacementId, testButtonId)
+
+        verify(brazeMock).logBannerClick(testPlacementId, testButtonId)
+    }
+
+    @Test
     fun whenBridgeLaunchContentCardsIsCalled_contentCardsActivityIsStarted() {
         val mockActivity = mock<Activity>()
         val mockReactContext = mock<TestReactApplicationContext>()

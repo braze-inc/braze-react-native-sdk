@@ -19,7 +19,7 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
     }
 
     override fun getInitialPushPayload(callback: Callback) {
-        // iOS only
+        brazeImpl.getInitialPushPayload(callback)
     }
 
     override fun getDeviceId(callback: Callback) {
@@ -225,6 +225,14 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
 
     override fun requestBannersRefresh(placementIds: ReadableArray) {
         brazeImpl.requestBannersRefresh(placementIds)
+    }
+
+    override fun logBannerImpression(placementId: String) {
+        brazeImpl.logBannerImpression(placementId)
+    }
+
+    override fun logBannerClick(placementId: String, buttonId: String?) {
+        brazeImpl.logBannerClick(placementId, buttonId)
     }
 
     override fun requestImmediateDataFlush() {

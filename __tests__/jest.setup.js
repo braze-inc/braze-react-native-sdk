@@ -91,7 +91,9 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           setAdTrackingEnabled: jest.fn(),
           setIdentifierForAdvertiser: jest.fn(),
           setIdentifierForVendor: jest.fn(),
-          updateTrackingPropertyAllowList: jest.fn()
+          updateTrackingPropertyAllowList: jest.fn(),
+          logBannerImpression: jest.fn(),
+          logBannerClick: jest.fn()
         };
 
         return {
