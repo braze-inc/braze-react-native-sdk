@@ -1,7 +1,7 @@
 require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
-braze_swift_version = '13.3.0'
+braze_swift_version = '14.0.1'
 
 Pod::Spec.new do |s|
   s.name           = 'braze-react-native-sdk'

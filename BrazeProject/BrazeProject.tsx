@@ -186,7 +186,8 @@ export const BrazeProject = (): ReactElement => {
       })
       .catch(err => console.error('Error getting initial URL', err));
 
-    // Handles push notification payloads and deep links when an iOS app is launched from terminated state via push click.
+    // Handles push notification payloads and deep links when an app is launched from terminated state via push click.
+    // On Android, requires BrazeReactUtils.populateInitialPushPayloadFromIntent(intent) in MainActivity.onCreate().
     // For more detail, see `Braze.getInitialPushPayload`.
     Braze.getInitialPushPayload(pushPayload => {
       if (pushPayload) {
@@ -702,6 +703,24 @@ export const BrazeProject = (): ReactElement => {
     console.log(`Got Banner Card: ${JSON.stringify(banner, null, '\t')}`);
   };
 
+  const logBannerImpressionPress = () => {
+    if (!bannerPlacementId) {
+      showToast('No Banner placement ID entered');
+      return;
+    }
+    Braze.logBannerImpression(bannerPlacementId);
+    showToast(`Banner Impression logged for: ${bannerPlacementId}`);
+  };
+
+  const logBannerClickPress = () => {
+    if (!bannerPlacementId) {
+      showToast('No Banner placement ID entered');
+      return;
+    }
+    Braze.logBannerClick(bannerPlacementId, null);
+    showToast(`Banner Click logged for: ${bannerPlacementId}`);
+  };
+
   const getBannerPropertyPress = async () => {
     if (!bannerPlacementId) {
       console.log('No Banner Placement ID entered');
@@ -1063,6 +1082,12 @@ export const BrazeProject = (): ReactElement => {
           <Text>Get Banner Card by Placement ID</Text>
         </TouchableHighlight>
       </View>
+      <TouchableHighlight onPress={logBannerImpressionPress}>
+        <Text>Log Banner Impression</Text>
+      </TouchableHighlight>
+      <TouchableHighlight onPress={logBannerClickPress}>
+        <Text>Log Banner Click</Text>
+      </TouchableHighlight>
       <View style={styles.container}>
         <RadioGroup
           containerStyle={styles.radioGroup}

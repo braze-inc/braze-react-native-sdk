@@ -13,11 +13,20 @@ import { Banner } from './models/banner';
 export function getInitialURL(callback: (deepLink: string) => void): void;
 
 /**
- * When launching an iOS application that has previously been force closed, React Native's Linking API doesn't
+ * When launching an application that has previously been force closed, React Native's Linking API doesn't
  * support handling push notifications and deep links in the payload. This is due to a race condition on startup between
- * the call to `addListener` and React's loading of its JavaScript. This function provides a workaround:
+ * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
  * If an application is launched from a push notification click, we return the full push payload.
- * @param {function(PushNotificationEvent | null)} callback - A callback that returns the formatted Braze push notification as a PushNotificationEvent.
+ *
+ * On iOS, this requires calling `[[BrazeReactUtils sharedInstance] populateInitialPayloadFromLaunchOptions:launchOptions]`
+ * in your AppDelegate's `application:didFinishLaunchingWithOptions:` method.
+ *
+ * On Android, this requires calling `BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)` in your
+ * MainActivity's `onCreate()` method.
+ *
+ * See the sample app for example implementations on both platforms.
+ *
+ * @param callback - A callback that returns the formatted Braze push notification as a PushNotificationEvent.
  * If there is no push payload, returns null.
  */
 export function getInitialPushPayload(callback: (pushPayload: PushNotificationEvent | null) => void): void;
@@ -627,6 +636,21 @@ export function getBanner(placementId: string): Promise<Banner | null>;
  * @param placementIds -  The list of placement IDs requested.
  */
 export function requestBannersRefresh(placementIds: string[]): void;
+
+/**
+ * Logs an impression for the banner with the provided placement ID.
+ *
+ * @param placementId - The placement ID of the banner.
+ */
+export function logBannerImpression(placementId: string): void;
+
+/**
+ * Logs a click for the banner with the provided placement ID.
+ *
+ * @param placementId - The placement ID of the banner.
+ * @param buttonId - The button ID if the click was on a specific button, or null if not applicable.
+ */
+export function logBannerClick(placementId: string, buttonId: string | null): void;
 
 /**
  * The configuration properties associated with the Banner view.

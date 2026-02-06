@@ -92,7 +92,7 @@ See [the Braze Developer Guide](https://www.braze.com/docs/developer_guide/sdk_i
 ## Version Support
 
 > [!NOTE]
-> This SDK has been tested with React Native version **0.82.0**.
+> This SDK has been tested with React Native version **0.83.0**.
 
 | Braze Plugin | React Native | Supports New Architecture? |
 | ------------ | ------------ | -------------------------- |

@@ -180,6 +180,25 @@ test('it calls BrazeReactBridge.requestBannersRefresh', () => {
   expect(NativeBrazeReactModule.requestBannersRefresh).toBeCalledWith(["sdk-test-1", "sdk-test-2"]);
 });
 
+test('it calls BrazeReactBridge.logBannerImpression', () => {
+  const placementId = "test_placement";
+  Braze.logBannerImpression(placementId);
+  expect(NativeBrazeReactModule.logBannerImpression).toBeCalledWith(placementId);
+});
+
+test('it calls BrazeReactBridge.logBannerClick with null buttonId', () => {
+  const placementId = "test_placement";
+  Braze.logBannerClick(placementId, null);
+  expect(NativeBrazeReactModule.logBannerClick).toBeCalledWith(placementId, null);
+});
+
+test('it calls BrazeReactBridge.logBannerClick with buttonId', () => {
+  const placementId = "test_placement";
+  const buttonId = "button_123";
+  Braze.logBannerClick(placementId, buttonId);
+  expect(NativeBrazeReactModule.logBannerClick).toBeCalledWith(placementId, buttonId);
+});
+
 test('it calls BrazeReactBridge.launchContentCards without parameters', () => {
   Braze.launchContentCards();
   expect(NativeBrazeReactModule.launchContentCards).toBeCalledWith(false);
@@ -570,11 +589,15 @@ test('it calls the callback with null if BrazeReactBridge.getInitialUrl is runni
   Platform.OS = platform;
 });
 
-test('it calls the callback with null if BrazeReactBridge.getInitialPushPayload is running on Android', () => {
+test('it calls BrazeReactBridge.getInitialPushPayload on Android', () => {
   const platform = Platform.OS;
   Platform.OS = 'android';
+  NativeBrazeReactModule.getInitialPushPayload.mockImplementation((callback) => {
+    callback(null, testPushPayloadJson);
+  });
   Braze.getInitialPushPayload(testCallback);
-  expect(testCallback).toBeCalledWith(null);
+  expect(NativeBrazeReactModule.getInitialPushPayload).toBeCalled();
+  expect(testCallback).toBeCalledWith(testPushPayloadJson);
   Platform.OS = platform;
 });
 
