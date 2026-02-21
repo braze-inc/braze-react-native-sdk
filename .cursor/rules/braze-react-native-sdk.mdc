@@ -1,0 +1,394 @@
+---
+description: Apply Braze React Native SDK patterns when writing integration code, native setup, or feature implementations involving @braze/react-native-sdk to ensure correct initialization, API usage, and cross-platform behavior
+globs: **/*.{ts,tsx,js,jsx,swift,kt,xml}
+alwaysApply: false
+---
+
+# Braze React Native SDK
+
+## Context
+
+This rule applies when working with the Braze React Native SDK (`@braze/react-native-sdk`, v19.0.0). The SDK is a native bridge wrapping BrazeKit (iOS, v14.0.1) and the Braze Android SDK (v41.0.0). All SDK methods are static on a `Braze` class — the class is never instantiated.
+
+## Critical Requirements
+
+- The SDK **must** be initialized in native code (AppDelegate.swift / MainApplication.kt), never in JavaScript. There is no `Braze.initialize()` call.
+- Always import as `import Braze from "@braze/react-native-sdk"` — it is a default export of a static class.
+- Always clean up event subscriptions in `useEffect` return functions by calling `.remove()`.
+- Pass `null` (not empty string) to unset user attributes.
+- The `pushNotificationEvent` listener only works on Android.
+- `logPurchase` takes price as a **string**, not a number.
+- Use `getInitialPushPayload()` for cold-start deep links, not the deprecated `getInitialURL()`.
+- Use `FeatureFlag` instance methods (`flag.getStringProperty()`) instead of deprecated static methods.
+
+## iOS Native Initialization
+
+Initialize Braze in `AppDelegate.swift` using `BrazeReactBridge.initBraze(_:)`. This must happen in `application(_:didFinishLaunchingWithOptions:)` before React Native loads. The `populateInitialPayload` call captures push data from cold starts — without it, `getInitialPushPayload()` always returns null in JavaScript.
+
+<example>
+```swift
+import BrazeKit
+import braze_react_native_sdk
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+  static var braze: Braze? = nil
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    let configuration = Braze.Configuration(
+      apiKey: "<BRAZE_API_KEY>",
+      endpoint: "<BRAZE_ENDPOINT>"
+    )
+    configuration.logger.level = .info
+    configuration.push.automation = true
+
+    let braze = BrazeReactBridge.perform(
+      #selector(BrazeReactBridge.initBraze(_:)),
+      with: configuration
+    ).takeUnretainedValue() as! Braze
+    AppDelegate.braze = braze
+
+    if let launchOptions {
+      BrazeReactUtils.sharedInstance().populateInitialPayload(
+        fromLaunchOptions: launchOptions
+      )
+    }
+    return true
+  }
+}
+```
+</example>
+
+<example type="invalid">
+Initializing Braze in JavaScript — this does not work because the SDK has no JS-side initialization API:
+
+```typescript
+// WRONG — there is no initialize() method
+Braze.initialize("<API_KEY>", { endpoint: "<ENDPOINT>" });
+```
+</example>
+
+## Android Native Initialization
+
+Android uses XML-based configuration and lifecycle callbacks. Place credentials in `res/values/braze.xml`, register `BrazeActivityLifecycleCallbackListener` in `MainApplication.kt` for session tracking, and call `populateInitialPushPayloadFromIntent` in `MainActivity.kt` for cold-start push handling.
+
+<example>
+```xml
+<!-- res/values/braze.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string translatable="false" name="com_braze_api_key">YOUR_API_KEY</string>
+  <string translatable="false" name="com_braze_custom_endpoint">YOUR_ENDPOINT</string>
+</resources>
+```
+
+```kotlin
+// MainApplication.kt — session tracking
+import com.braze.BrazeActivityLifecycleCallbackListener
+
+class MainApplication : Application(), ReactApplication {
+    override fun onCreate() {
+        super.onCreate()
+        registerActivityLifecycleCallbacks(BrazeActivityLifecycleCallbackListener())
+    }
+}
+```
+
+```kotlin
+// MainActivity.kt — cold-start push payload capture
+import com.braze.reactbridge.BrazeReactUtils
+
+class MainActivity : ReactActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
+    }
+}
+```
+</example>
+
+## User Identity
+
+Call `changeUser()` after login to associate all events and attributes with a user. Do not call it on logout — that orphans user data. Use `addAlias()` to link third-party identifiers.
+
+<example>
+```typescript
+// After the user authenticates
+Braze.changeUser("user-123");
+
+// With SDK Authentication (JWT signature verified server-side)
+Braze.changeUser("user-123", "jwt-signature");
+
+// Get current user ID (null for anonymous users)
+Braze.getUserId((err, userId) => console.log("User:", userId));
+
+// Link a third-party analytics ID
+Braze.addAlias("amplitude-id-456", "amplitude_id");
+```
+</example>
+
+<example type="invalid">
+Calling changeUser on logout creates orphaned data:
+
+```typescript
+// WRONG — do not call changeUser with empty/null to "log out"
+Braze.changeUser("");
+```
+</example>
+
+## Custom Events and Purchases
+
+Event names are limited to 255 characters and cannot start with `$`. Property values support strings, numbers, booleans, Dates, nested objects, and arrays. `Date` objects are automatically converted to UNIX timestamps. Purchase `price` is a string, not a number.
+
+<example>
+```typescript
+// Event with nested properties — dates auto-convert
+Braze.logCustomEvent("checkout_completed", {
+  total: 44.97,
+  items: [{ name: "Widget", qty: 2 }],
+  completed_at: new Date()
+});
+
+// Purchase — price is a STRING, currency is ISO 4217
+Braze.logPurchase("premium-plan", "9.99", "USD", 1, {
+  coupon: "SAVE20"
+});
+```
+</example>
+
+<example type="invalid">
+Passing price as a number:
+
+```typescript
+// WRONG — price must be a string
+Braze.logPurchase("item", 9.99, "USD", 1);
+```
+</example>
+
+## User Attributes
+
+Standard profile setters accept `null` to unset. Custom attributes auto-detect the value type. Pass `true` as the third argument to merge object attributes (only updates specified keys, preserves others).
+
+<example>
+```typescript
+// Standard attributes — pass null to unset
+Braze.setEmail("jane@example.com");
+Braze.setEmail(null);  // Removes email from profile
+
+// Custom attributes — type is auto-detected
+Braze.setCustomUserAttribute("tier", "premium");
+Braze.setCustomUserAttribute("score", 42);
+Braze.setCustomUserAttribute("signup_date", new Date());
+
+// Object merge — only updates "city", preserves "street"
+Braze.setCustomUserAttribute("address", { city: "Boston" }, true);
+
+// Increment numeric attribute (negative to decrement)
+Braze.incrementCustomUserAttribute("login_count", 1);
+```
+</example>
+
+<example type="invalid">
+Using empty string to unset — this sets the attribute to "", not null:
+
+```typescript
+// WRONG — sets email to empty string instead of unsetting
+Braze.setEmail("");
+```
+</example>
+
+## Push Notifications
+
+`requestPushPermission()` triggers the OS permission dialog. On Android 12 and below it's a no-op. For cold-start deep links, use `getInitialPushPayload()` — this requires native setup on both platforms (see native initialization sections). The `PUSH_NOTIFICATION_EVENT` listener only fires on Android.
+
+<example>
+```typescript
+// Request permission with options
+Braze.requestPushPermission({
+  alert: true,
+  badge: true,
+  sound: true,
+  provisional: false  // iOS: quiet authorization
+});
+
+// Handle cold-start push payload (requires native setup)
+Braze.getInitialPushPayload((payload) => {
+  if (payload?.url) {
+    navigateToDeepLink(payload.url);
+  }
+});
+
+// Real-time push listener (Android only)
+const sub = Braze.addListener(
+  Braze.Events.PUSH_NOTIFICATION_EVENT,
+  (event) => console.log("Push:", event.title)
+);
+```
+</example>
+
+## In-App Messages
+
+`subscribeToInAppMessage()` takes two arguments: a boolean for using Braze's built-in UI, and a callback. When the first argument is `true`, Braze renders the message natively and your callback receives it for logging. When `false`, you must render it yourself.
+
+<example>
+```typescript
+// Let Braze display the message, listen for analytics
+const sub = Braze.subscribeToInAppMessage(true, (event) => {
+  const iam = event.inAppMessage;
+  console.log("IAM:", iam.messageType, iam.message);
+  Braze.logInAppMessageImpression(iam);
+});
+
+// Programmatic button interaction
+Braze.logInAppMessageButtonClicked(inAppMessage, 0);
+Braze.performInAppMessageButtonAction(inAppMessage, 0);
+
+// Dismiss the current message
+Braze.hideCurrentInAppMessage();
+
+// Cleanup
+sub?.remove();
+```
+</example>
+
+## Content Cards
+
+Content cards persist in a feed until they expire or are dismissed. Three types: `Classic`, `ImageOnly`, `Captioned`. When building custom UIs, you must manually log impressions, clicks, and dismissals — the SDK does not auto-track these.
+
+<example>
+```typescript
+// Launch built-in feed UI
+Braze.launchContentCards(true);
+
+// Fetch cards for custom UI
+const cards = await Braze.getContentCards();
+for (const card of cards) {
+  if (card.isControl) continue;  // Don't render control cards
+  
+  // Log analytics manually
+  Braze.logContentCardImpression(card.id);
+  Braze.logContentCardClicked(card.id);
+}
+
+// Listen for updates
+const sub = Braze.addListener(
+  Braze.Events.CONTENT_CARDS_UPDATED,
+  (event) => console.log(`${event.cards.length} cards`)
+);
+```
+</example>
+
+## Banners
+
+Banners are HTML content tied to named placements. The `BrazeBannerView` component auto-sizes height. Banners must be refreshed from the server before they're available. When using programmatic access, manually log impressions and clicks.
+
+<example>
+```tsx
+// Simplest integration — auto-sizing
+<Braze.BrazeBannerView placementID="homepage-banner" />
+
+// Refresh banners from server (call early in app lifecycle)
+Braze.requestBannersRefresh(["homepage-banner", "profile-banner"]);
+
+// Programmatic access with typed property getters
+const banner = await Braze.getBanner("homepage-banner");
+if (banner) {
+  const title = banner.getStringProperty("title");
+  Braze.logBannerImpression("homepage-banner");
+}
+```
+</example>
+
+## Feature Flags
+
+Feature flags have an `id`, `enabled` boolean, and typed properties. Use instance methods on the `FeatureFlag` object — the static methods are deprecated. Property getters return `null` if the key doesn't exist or the type doesn't match.
+
+<example>
+```typescript
+const flag = await Braze.getFeatureFlag("new-checkout");
+if (flag?.enabled) {
+  const variant = flag.getStringProperty("variant");
+  const maxItems = flag.getNumberProperty("max_items");
+  const config = flag.getJSONProperty("layout_config");
+  Braze.logFeatureFlagImpression("new-checkout");
+}
+```
+</example>
+
+<example type="invalid">
+Using deprecated static methods:
+
+```typescript
+// DEPRECATED — use flag.getBooleanProperty() instead
+const val = await Braze.getFeatureFlagBooleanProperty("flag-id", "key");
+```
+</example>
+
+## Event Listener Cleanup
+
+All `addListener` and `subscribeToInAppMessage` calls return a subscription with a `.remove()` method. Always clean up in `useEffect` return functions. Set up all listeners in a single `useEffect` block for organization.
+
+<example>
+```typescript
+useEffect(() => {
+  const iamSub = Braze.subscribeToInAppMessage(true, handleIAM);
+  const ccSub = Braze.addListener(Braze.Events.CONTENT_CARDS_UPDATED, handleCards);
+  const ffSub = Braze.addListener(Braze.Events.FEATURE_FLAGS_UPDATED, handleFlags);
+  const authSub = Braze.addListener(Braze.Events.SDK_AUTHENTICATION_ERROR, handleAuth);
+
+  Braze.requestBannersRefresh(["banner-1"]);
+
+  return () => {
+    iamSub?.remove();
+    ccSub.remove();
+    ffSub.remove();
+    authSub.remove();
+  };
+}, []);
+```
+</example>
+
+<example type="invalid">
+Forgetting cleanup leads to memory leaks and duplicate handlers:
+
+```typescript
+// WRONG — no cleanup, subscriptions accumulate on re-renders
+useEffect(() => {
+  Braze.addListener(Braze.Events.CONTENT_CARDS_UPDATED, handleCards);
+}, []);
+```
+</example>
+
+## SDK Controls
+
+Use data flush sparingly — the SDK batches automatically. `wipeData()` is destructive and disables the SDK until `enableSDK()` is called. Use it for GDPR "right to be forgotten" requests.
+
+<example>
+```typescript
+Braze.requestImmediateDataFlush();  // Force flush queued data
+Braze.wipeData();                    // Delete all local data, disable SDK
+Braze.disableSDK();                  // Stop all tracking
+Braze.enableSDK();                   // Re-enable after disable
+Braze.getDeviceId((err, id) => console.log("Device:", id));
+```
+</example>
+
+## Context7 MCP Integration
+
+For AI-assisted development, connect to the Braze Docs MCP server via Context7. Add this to your IDE's MCP configuration and include `use context7` in prompts:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    }
+  }
+}
+```
+
+Plain text Braze docs for LLMs: [llms.txt](https://www.braze.com/docs/llms.txt) and [llms-full.txt](https://www.braze.com/docs/llms-full.txt).
