@@ -1,6 +1,7 @@
 package com.braze.reactbridge
 
 import android.content.Intent
+import android.os.Bundle
 import com.braze.models.push.BrazeNotificationPayload
 import com.braze.push.BrazeNotificationUtils.isBrazePushMessage
 import com.braze.support.BrazeLogger.brazelog
@@ -14,6 +15,7 @@ import com.facebook.react.bridge.WritableMap
  * This mirrors the functionality of BrazeReactUtils on iOS.
  */
 object BrazeReactUtils {
+    private const val PUSH_OPENED_PAYLOAD_TYPE = "push_opened"
     private var initialPushPayload: WritableMap? = null
 
     /**
@@ -42,25 +44,53 @@ object BrazeReactUtils {
         }
 
         val extras = intent.extras
-        if (extras == null || !intent.isBrazePushMessage()) {
-            brazelog { "Intent does not contain Braze push data, not setting initial push payload" }
-            initialPushPayload = null
-            return
+        val payload = BrazeNotificationPayload(extras ?: Bundle())
+        val isBrazeRouted = extras?.getString("source") == "braze"
+        val deepLink = intent.data?.toString() ?: payload.deeplink
+        val isLauncherIntent = intent.action == Intent.ACTION_MAIN
+            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+
+        when {
+            // Primary path: full Braze push intent with all notification data
+            extras != null && intent.isBrazePushMessage() -> {
+                initialPushPayload = PushPayloadMapper.createPushNotificationMap(
+                    payload = payload,
+                    payloadType = PUSH_OPENED_PAYLOAD_TYPE,
+                    deepLinkOverride = intent.data?.toString(),
+                    rawExtras = extras
+                )
+                brazelog { "Initial Android push payload set from Braze push intent: $initialPushPayload" }
+            }
+
+            // Fallback path: ACTION_VIEW intent from routeUserWithNotificationOpenedIntent -> gotoUri.
+            // The full notification extras are lost, but the deep link URL and source marker survive.
+            isBrazeRouted && deepLink != null -> {
+                initialPushPayload = PushPayloadMapper.createPushNotificationMap(
+                    payload = payload,
+                    payloadType = PUSH_OPENED_PAYLOAD_TYPE,
+                    deepLinkOverride = deepLink,
+                    rawExtras = extras ?: Bundle()
+                )
+                brazelog { "Initial Android push payload set from Braze-routed deep link intent: $initialPushPayload" }
+            }
+
+            // Clear on standard launcher intents (user opened app normally, not from push).
+            // getInitialPushPayload() also auto-clears on the JS side after reading,
+            // but this acts as a safety net for stale data.
+            isLauncherIntent -> {
+                brazelog { "Launcher intent detected, clearing initial push payload" }
+                initialPushPayload = null
+            }
+
+            // For all other intents (Activity recreation, config change, etc.),
+            // leave the existing payload untouched.
+            else -> {
+                brazelog {
+                    "Intent does not contain Braze push data, leaving initial push payload unchanged." +
+                        " Intent: action=${intent.action}, data=${intent.data}, extras=${intent.extras}"
+                }
+            }
         }
-
-        // Create BrazeNotificationPayload from the Intent extras
-        val payload = BrazeNotificationPayload(extras)
-
-        // Use Intent.data as the deep link if available (takes priority over extras)
-        val deepLinkOverride = intent.data?.toString()
-
-        initialPushPayload = PushPayloadMapper.createPushNotificationMap(
-            payload = payload,
-            payloadType = "push_opened",
-            deepLinkOverride = deepLinkOverride,
-            rawExtras = extras
-        )
-        brazelog { "Initial Android push payload set: $initialPushPayload" }
     }
 
     /**

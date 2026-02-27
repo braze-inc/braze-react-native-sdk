@@ -1,8 +1,31 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+pluginManagement {
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
     id("com.facebook.react.settings")
+    id "com.github.burrunan.s3-build-cache" version "${S3_BUILD_CACHE_PLUGIN_VERSION}"
 }
+
+buildCache {
+    local {
+        enabled = true
+    }
+    remote(com.github.burrunan.s3cache.AwsS3BuildCache) {
+        region = System.getenv("AWS_REGION") ?: "us-east-1"
+        bucket = System.getenv("S3_BUILD_CACHE_BUCKET") ?: "braze-buildkite-caches"
+        prefix = System.getenv("S3_BUILD_CACHE_PREFIX") ?: "react-native-sdk/gradle-build-cache/"
+        lookupDefaultAwsCredentials = true
+        enabled = System.getenv("BUILDKITE") != null || System.getenv("S3_BUILD_CACHE_ENABLED") == "true"
+        push = System.getenv("BUILDKITE") != null
+    }
+}
+
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
 rootProject.name = 'BrazeProject'
 include ':app'

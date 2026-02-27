@@ -1,3 +1,11 @@
+## 19.1.0
+
+##### Added
+- Updates the native Android SDK version bindings [from Braze Android SDK 41.0.0 to 41.1.1](https://github.com/braze-inc/braze-android-sdk/compare/v41.0.0...v41.1.1).
+
+##### Fixed
+- Fixes an Android [issue](https://github.com/braze-inc/braze-react-native-sdk/issues/301) where `getInitialPushPayload()` would not return the push payload when the app was cold-started via a deep link routed through `ACTION_VIEW` instead of the direct Braze push intent.
+
 ## 19.0.0
 
 ##### Breaking
