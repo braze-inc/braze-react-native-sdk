@@ -1,5 +1,5 @@
 PODS:
-  - braze-react-native-sdk (18.0.1):
+  - braze-react-native-sdk (19.0.0):
     - BrazeKit (~> 14.0.1)
     - BrazeLocation (~> 14.0.1)
     - BrazeUI (~> 14.0.1)
@@ -1881,9 +1881,56 @@ PODS:
     - React-utils (= 0.83.1)
     - ReactNativeDependencies
   - ReactNativeDependencies (0.83.1)
-  - SDWebImage (5.21.5):
-    - SDWebImage/Core (= 5.21.5)
-  - SDWebImage/Core (5.21.5)
+  - RNScreens (4.20.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-RCTImage
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - RNScreens/common (= 4.20.0)
+    - Yoga
+  - RNScreens/common (4.20.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-RCTImage
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - SDWebImage (5.21.6):
+    - SDWebImage/Core (= 5.21.6)
+  - SDWebImage/Core (5.21.6)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1964,6 +2011,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios/ReactCodegen`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - SDWebImage
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2126,11 +2174,13 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeDependencies:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  braze-react-native-sdk: f157394b4f9d35f3ef24e5099cd93e4f9e460b77
+  braze-react-native-sdk: c375bb8f7b51e6cd992f401bddf0f49b9bd1c582
   BrazeKit: 0605a4475203bdf08a8852f8c0628053b64686bd
   BrazeLocation: 7af464e7d825246c522cebac0b39a562924b18b4
   BrazeNotificationService: 3ce86d1457a09eb8033610dd44f31ac0275ad043
@@ -2209,7 +2259,8 @@ SPEC CHECKSUMS:
   ReactCodegen: 38cd0fe47932043959e72519ec1cce6c1f147c0e
   ReactCommon: 0084791d25c4deae3d8b77efd4440fb2d5c38746
   ReactNativeDependencies: 50cf202ae370e9de262d7b9dcaf8408ccba0776f
-  SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
+  RNScreens: dea74a9106daf3cbed39de1f5ce7ff4f96c5c722
+  SDWebImage: 1bb6a1b84b6fe87b972a102bdc77dd589df33477
   Yoga: 35d573dff66536d48493acb65a519482f8219fe8
 
 PODFILE CHECKSUM: 703d5d3f3c31c066a1bcc7438a7d36fbbfdcf82f

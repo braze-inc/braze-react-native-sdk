@@ -1,3 +1,11 @@
+## 19.1.0
+
+##### Added
+- Updates the native Android SDK version bindings [from Braze Android SDK 41.0.0 to 41.1.1](https://github.com/braze-inc/braze-android-sdk/compare/v41.0.0...v41.1.1).
+
+##### Fixed
+- Fixes an Android [issue](https://github.com/braze-inc/braze-react-native-sdk/issues/301) where `getInitialPushPayload()` would not return the push payload when the app was cold-started via a deep link routed through `ACTION_VIEW` instead of the direct Braze push intent.
+
 ## 19.0.0
 
 ##### Breaking
@@ -9,10 +17,6 @@
     - This resolves an [issue where deep links from push notifications were not handled on Android when the app was cold started](https://github.com/braze-inc/braze-react-native-sdk/issues/301).
     - To use this feature, call `BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)` in your `MainActivity.onCreate()` method before React Native initializes. See `BrazeProject.tsx` in the sample app for an example implementation.
     - This provides feature parity with the existing iOS implementation added in version `13.1.0`.
-
-## 18.1.0
-
-##### Added
 - Adds `logBannerImpression(placementId)` and `logBannerClick(placementId, buttonId?)` methods to manually log banner analytics for custom banner UI implementations.
 - Updates the Braze sample app to use React Native version [`0.83.0`](https://reactnative.dev/blog/2025/12/10/react-native-0.83). This change validates SDK compatibility with the latest version of React Native.
 

@@ -73,7 +73,7 @@ dependencies {
   debugImplementation "junit:junit:4.13.2"
   debugImplementation "org.robolectric:robolectric:4.16"
 
-  def wrapper_braze_sdk_version = "41.0.0"
+  def wrapper_braze_sdk_version = "41.1.1"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
 
   if (shouldImportBrazeLocationLibrary()) {
