@@ -29,6 +29,10 @@ target 'BrazeProject' do
   # For Swift compatibility, SDWebImage must be installed either with modular headers enabled or as a static framework.
   pod 'SDWebImage', :modular_headers => true
 
+  target 'BrazeProjectTests' do
+    inherit! :search_paths
+  end
+
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
@@ -41,9 +45,9 @@ target 'BrazeProject' do
 end
 
 target 'BrazeProjectRichPush' do
-  pod 'BrazeNotificationService', '~> 14.0.1'
+  pod 'BrazeNotificationService', '~> 14.0.4'
 end
 
 target 'BrazeProjectPushStory' do
-  pod 'BrazePushStory', '~> 14.0.1'
+  pod 'BrazePushStory', '~> 14.0.4'
 end

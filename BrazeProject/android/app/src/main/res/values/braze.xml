@@ -11,4 +11,7 @@
   <integer name="com_braze_trigger_action_minimum_time_interval_seconds">1</integer>
 
   <bool name="com_braze_handle_push_deep_links_automatically">true</bool>
+
+  <!-- Uncomment this configuration to enable delayed initialization -->
+  <!-- <bool name="com_braze_enable_delayed_initialization">true</bool> -->
 </resources>

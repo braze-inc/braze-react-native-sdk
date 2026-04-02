@@ -10,6 +10,7 @@ import { BannersScreen } from './screens/BannersScreen';
 import { FeatureFlagsScreen } from './screens/FeatureFlagsScreen';
 import { UserManagementScreen } from './screens/UserManagementScreen';
 import { Colors } from './constants/colors';
+import { defaultApiKey, defaultEndpoint } from './constants/brazeConfig';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -43,6 +44,8 @@ export const BrazeProject = (): ReactElement => {
   };
 
   useEffect(() => {
+    Braze.initialize(defaultApiKey, defaultEndpoint);
+
     // Listen to the `url` event to handle incoming deep links
     const listener = Linking.addEventListener('url', handleOpenUrl);
 

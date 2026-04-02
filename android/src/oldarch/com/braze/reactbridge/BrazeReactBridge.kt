@@ -11,6 +11,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     override fun getName() = BrazeReactBridgeImpl.NAME
 
     @ReactMethod
+    fun initialize(apiKey: String, endpoint: String) {
+        brazeImpl.initialize(apiKey, endpoint)
+    }
+
+    @ReactMethod
     fun getInitialURL(@Suppress("UNUSED_PARAMETER") callback: Callback) {
         // iOS only
     }

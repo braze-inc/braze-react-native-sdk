@@ -1,3 +1,15 @@
+## 19.2.0
+
+##### Added
+- Adds support for delayed SDK initialization via `Braze.initialize(apiKey, endpoint)` in JavaScript.
+  - On iOS, use `BrazeReactInitializer.configure(_:postInitialization:)` in your `AppDelegate` to register configuration and post-initialization closures before React Native starts, such as inside the `didFinishLaunching`. The closures are applied when `Braze.initialize()` is called from the JavaScript layer.
+  - On Android, set `com_braze_enable_delayed_initialization` to `true` in your `braze.xml` to prevent auto-initialization. SDK configuration values from `braze.xml` are applied automatically when `Braze.initialize()` is called.
+  - Deprecates `BrazeReactBridge.initBraze(_:)` on iOS. Use `BrazeReactInitializer.configure(_:postInitialization:)` in your `AppDelegate` and `Braze.initialize(apiKey, endpoint)` from JavaScript instead.
+- Adds `BrazeReactInitializer`, a Swift-first helper class for configuring delayed initialization on iOS. This resolves a Swift type-resolution issue where `Braze.Configuration` was not directly usable from Swift in the Objective-C bridge.
+
+##### Fixed
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 14.0.1 to 14.0.4](https://github.com/braze-inc/braze-swift-sdk/compare/14.0.1...14.0.4#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
 ## 19.1.0
 
 ##### Added

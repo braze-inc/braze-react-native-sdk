@@ -6,6 +6,19 @@ import { FeatureFlag } from './models/feature-flag';
 import { Banner } from './models/banner';
 
 /**
+ * Initializes the Braze SDK with the provided API key and endpoint.
+ *
+ * On first call, creates a Braze instance applying any native configuration.
+ *
+ * On subsequent calls, tears down the current instance and reinitializes
+ * with the same configuration, supporting mid-session API key changes.
+ *
+ * @param {string} apiKey - The Braze API key.
+ * @param {string} endpoint - The Braze SDK endpoint.
+ */
+export function initialize(apiKey: string, endpoint: string): void;
+
+/**
  * @deprecated This method is deprecated in favor of `getInitialPushPayload`.
  *
  * To get the initial URL, call `getInitialPushPayload` and get the `url` key from the payload object.

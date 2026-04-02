@@ -8,6 +8,12 @@
 #import "BrazeReactUtils.h"
 #import "BrazeUIHandler.h"
 
+#if __has_include(<braze_react_native_sdk/braze_react_native_sdk-Swift.h>)
+#import <braze_react_native_sdk/braze_react_native_sdk-Swift.h>
+#else
+#import "braze_react_native_sdk-Swift.h"
+#endif
+
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <BrazeReactModuleSpec/BrazeReactModuleSpec.h>
 #endif
@@ -37,7 +43,7 @@ static BrazeUIHandler *brazeUIHandler;
 
 #pragma mark - Setup
 
-+ (Braze *)initBraze:(BRZConfiguration *)configuration {
++ (Braze *)createBrazeInstance:(BRZConfiguration *)configuration {
   [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnative]];
   #ifdef RCT_NEW_ARCH_ENABLED
   [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnativenewarch]];
@@ -50,6 +56,13 @@ static BrazeUIHandler *brazeUIHandler;
   [BrazeReactUtils setBraze:braze];
   return instance;
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
++ (Braze *)initBraze:(BRZConfiguration *)configuration {
+  return [self createBrazeInstance:configuration];
+}
+#pragma clang diagnostic pop
 
 - (dispatch_queue_t)methodQueue
 {
@@ -65,6 +78,18 @@ RCT_EXPORT_MODULE()
 /// The `startObserving` method will be called as soon as the first `Braze.addListener` method is called.
 - (void)startObserving {
   hasListeners = YES;
+  [self subscribeToEvents];
+}
+
+// The `stopObserving` method will be called when the last listener is removed, or when the JS bridge is being torn down.
+- (void)stopObserving {
+  hasListeners = NO;
+  [self cancelSubscriptions];
+}
+
+/// Subscribes to Braze Content Cards, Banners, SDK Authentication Errors, Feature Flags,
+/// Push Notifications, and In-App Message events, forwarding them to the React Native layer.
+- (void)subscribeToEvents {
   braze.sdkAuthDelegate = self;
   brazeUIHandler.eventEmitter = self;
 
@@ -97,8 +122,8 @@ RCT_EXPORT_MODULE()
   }
 }
 
-- (void)stopObserving {
-  hasListeners = NO;
+/// Cancels all active event subscriptions and clears delegates.
+- (void)cancelSubscriptions {
   braze.sdkAuthDelegate = nil;
   [brazeUIHandler deinitPresenterDelegate:braze];
   self.contentCardsSubscription = nil;
@@ -152,6 +177,34 @@ RCT_EXPORT_MODULE()
 }
 
 #pragma mark - Bridge bindings
+
+RCT_EXPORT_METHOD(initialize:(NSString *)apiKey endpoint:(NSString *)endpoint) {
+  RCTLogInfo(@"Initializing the Braze React Native SDK with API key: %@ and endpoint: %@", apiKey, endpoint);
+
+  // Cancel existing subscriptions before tearing down the old instance.
+  [self cancelSubscriptions];
+
+  // Build configuration with the provided API key and endpoint.
+  BRZConfiguration *configuration = [[BRZConfiguration alloc] initWithApiKey:apiKey endpoint:endpoint];
+
+  // Apply the stored configuration closure from BrazeReactInitializer.configure(_:postInitialization:).
+  if (BrazeReactInitializer.configureClosure) {
+    BrazeReactInitializer.configureClosure(configuration);
+  }
+
+  // Create the new Braze instance (tears down and replaces the previous one).
+  Braze *instance = [BrazeReactBridge createBrazeInstance:configuration];
+
+  // Re-subscribe to events if JS listeners are active.
+  if (hasListeners) {
+    [self subscribeToEvents];
+  }
+
+  // Execute the post-initialization closure.
+  if (BrazeReactInitializer.postInitializationClosure) {
+    BrazeReactInitializer.postInitializationClosure(instance);
+  }
+}
 
 // (Deprecated) Returns push deep links from cold app starts.
 // For more context see getInitialURL() in index.js

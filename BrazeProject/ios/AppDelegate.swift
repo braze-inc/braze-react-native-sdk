@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   static let iOSPushAutoEnabledKey = "iOSPushAutoEnabled"
   
   static var braze: Braze? = nil
+  static var deviceToken: Data? = nil
   
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
@@ -31,13 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
     
-    // MARK: - Braze Initialization and Configuration
-    let configuration = Braze.Configuration(apiKey: Self.apiKey,
-                                            endpoint: Self.endpoint)
-    configuration.triggerMinimumTimeInterval = 1
-    configuration.logger.level = .info
-    configuration.push.appGroup = "group.com.braze.helloreact.PushStories"
-    
+    // MARK: - Braze Delayed Initialization Configuration
     // Default to automatically setting up push notifications
     var pushAutoEnabled = true
     if let key = UserDefaults.standard.object(
@@ -45,17 +40,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) as? Bool {
       pushAutoEnabled = key
     }
-    if pushAutoEnabled {
-      print("iOS Push Auto enabled.")
-      configuration.push.automation = true
-    }
 
-    let braze = BrazeReactBridge.perform(
-      #selector(BrazeReactBridge.initBraze(_:)),
-      with: configuration
-    ).takeUnretainedValue() as! Braze
-    braze.delegate = self
-    AppDelegate.braze = braze
+    BrazeReactInitializer.configure { configuration in
+      configuration.triggerMinimumTimeInterval = 1
+      configuration.logger.level = .info
+      configuration.push.appGroup = "group.com.braze.helloreact.PushStories"
+      if pushAutoEnabled {
+        print("iOS Push Automation enabled.")
+        configuration.push.automation = true
+      }
+    } postInitialization: { braze in
+      braze.delegate = self
+      AppDelegate.braze = braze
+      if let token = AppDelegate.deviceToken {
+        braze.notifications.register(deviceToken: token)
+      }
+    }
     
     // Use SDWebImage as the GIF provider.
     // GIFs are non-animating by default until overridden with a provider.
@@ -159,6 +159,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
+    AppDelegate.deviceToken = deviceToken
     AppDelegate.braze?.notifications.register(deviceToken: deviceToken)
   }
 }

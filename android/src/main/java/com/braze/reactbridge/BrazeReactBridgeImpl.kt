@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import com.braze.Braze
 import com.braze.BrazeUser
+import com.braze.configuration.BrazeConfig
 import com.braze.enums.BrazePushEventType
 import com.braze.events.BrazePushEvent
 import com.braze.events.BrazeSdkAuthenticationErrorEvent
@@ -70,16 +71,59 @@ class BrazeReactBridgeImpl(
     private lateinit var featureFlagsUpdatedSubscriber: IEventSubscriber<FeatureFlagsUpdatedEvent>
 
     init {
-        subscribeToContentCardsUpdatedEvent()
-        subscribeToBannersUpdatedEvent()
-        subscribeToSdkAuthenticationErrorEvents()
-        subscribeToFeatureFlagsUpdatedEvent()
+        subscribeToEvents()
     }
 
     @VisibleForTesting
     internal var brazeTestingMock: Braze? = null
     val braze: Braze
         get() = brazeTestingMock ?: Braze.getInstance(reactApplicationContext)
+
+    fun initialize(apiKey: String, endpoint: String) {
+        brazelog(V) { "Initializing the Braze React Native SDK with API key: $apiKey and endpoint: $endpoint" }
+
+        // First disable the SDK.
+        // This allows us to re-configure the SDK.
+        Braze.disableSdk(reactApplicationContext)
+
+        // Then re-configure with the new API keys.
+        val brazeConfig = BrazeConfig.Builder()
+            .setApiKey(apiKey)
+            .setCustomEndpoint(endpoint)
+            .build()
+        Braze.configure(reactApplicationContext, brazeConfig)
+
+        // Then disable delayed init (if applicable).
+        if (Braze.isDelayedInitializationEnabled) {
+            brazelog(V) { "Disabling delayed initialization for Braze SDK." }
+            Braze.disableDelayedInitialization(reactApplicationContext)
+        }
+
+        // Re-enable the SDK.
+        Braze.enableSdk(reactApplicationContext)
+
+        subscribeToEvents()
+    }
+
+    /**
+     * Subscribes to Braze Content Cards, Banners, SDK Authentication Errors, Feature Flags,
+     * and (if previously active) Push Notification and In-App Message events.
+     *
+     * Push and IAM subscriptions are established lazily via `addListener`, so they are only
+     * re-subscribed here when they were already active before a call to `initialize`.
+     */
+    private fun subscribeToEvents() {
+        subscribeToContentCardsUpdatedEvent()
+        subscribeToBannersUpdatedEvent()
+        subscribeToSdkAuthenticationErrorEvents()
+        subscribeToFeatureFlagsUpdatedEvent()
+        if (this::pushNotificationEventSubscriber.isInitialized) {
+            subscribeToPushNotificationEvents()
+        }
+        if (inAppMessageDisplayOperation != InAppMessageOperation.DISPLAY_NOW) {
+            setDefaultInAppMessageListener()
+        }
+    }
 
     fun requestImmediateDataFlush() = braze.requestImmediateDataFlush()
 

@@ -1605,6 +1605,39 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
         verify(brazeMock).setGoogleAdvertisingId("", adTrackingEnabled)
     }
 
+    @Test
+    fun whenInitializeIsCalled_sdkIsUsableAfterward() {
+        val testApiKey = "test-api-key-${Random.nextInt()}"
+        val testEndpoint = "test.endpoint.com"
+
+        brazeReactBridgeImpl.initialize(testApiKey, testEndpoint)
+
+        val deviceId = brazeReactBridgeImpl.braze.deviceId
+        assertTrue(deviceId.isNotBlank())
+    }
+
+    @Test
+    fun whenInitializeIsCalledMultipleTimes_sdkRemainsUsable() {
+        brazeReactBridgeImpl.initialize("api-key-1", "endpoint1.braze.com")
+        brazeReactBridgeImpl.initialize("api-key-2", "endpoint2.braze.com")
+
+        val deviceId = brazeReactBridgeImpl.braze.deviceId
+        assertTrue(deviceId.isNotBlank())
+    }
+
+    @Test
+    fun whenInitializeIsCalled_allEventSubscriptionsAreRegistered() {
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        brazeReactBridgeImpl.initialize("test-api-key", "test.endpoint.com")
+
+        verify(brazeMock).subscribeToContentCardsUpdates(any())
+        verify(brazeMock).subscribeToBannersUpdates(any())
+        verify(brazeMock).subscribeToSdkAuthenticationFailures(any())
+        verify(brazeMock).subscribeToFeatureFlagsUpdates(any())
+    }
+
     /**
      * Creates a test [Callback] for React Native bridging that handles success, failure, and completion.
      *

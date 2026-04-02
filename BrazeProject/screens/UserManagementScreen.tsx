@@ -4,11 +4,14 @@ import RadioGroup from 'react-native-radio-buttons-group';
 import Braze from '@braze/react-native-sdk';
 import { Button, Input, Card, ScreenLayout, useToast } from '../components';
 import { Colors } from '../constants/colors';
+import { defaultApiKey, defaultEndpoint } from '../constants/brazeConfig';
 
 const iOSPushAutoEnabledKey = 'iOSPushAutoEnabled';
 
 export const UserManagementScreen: React.FC = () => {
   const { toastVisible, message, showToast } = useToast();
+  const [initApiKey, setInitApiKey] = useState(defaultApiKey);
+  const [initEndpoint, setInitEndpoint] = useState(defaultEndpoint);
   const [userIdText, setUserIdText] = useState('');
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [signatureText, setSignatureText] = useState('');
@@ -56,6 +59,17 @@ export const UserManagementScreen: React.FC = () => {
     ],
     [],
   );
+
+  const initializeBrazePress = () => {
+    const apiKey = initApiKey.trim();
+    const endpoint = initEndpoint.trim();
+    if (!apiKey || !endpoint) {
+      showToast('API key and endpoint are required');
+      return;
+    }
+    Braze.initialize(apiKey, endpoint);
+    showToast(`Braze initialized with key: ${apiKey.substring(0, 8)}...`);
+  };
 
   // User Management
   const changeUserPress = () => {
@@ -425,6 +439,24 @@ export const UserManagementScreen: React.FC = () => {
       subtitle="Events, user attributes, SDK controls, and more"
       toastVisible={toastVisible}
       toastMessage={message}>
+      <Card title="SDK Initialization">
+        <Input
+          label="API Key"
+          placeholder="Enter API key"
+          onChangeText={setInitApiKey}
+          value={initApiKey}
+          autoCapitalize="none"
+        />
+        <Input
+          label="Endpoint"
+          placeholder="Enter endpoint"
+          onChangeText={setInitEndpoint}
+          value={initEndpoint}
+          autoCapitalize="none"
+        />
+        <Button title="Initialize Braze SDK" onPress={initializeBrazePress} />
+      </Card>
+
       <Card title="User Management">
         <Button title="Get Device ID" onPress={getDeviceId} />
         <Input

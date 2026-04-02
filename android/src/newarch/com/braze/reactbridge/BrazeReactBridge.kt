@@ -14,6 +14,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
         return BrazeReactBridgeImpl.NAME
     }
 
+    override fun initialize(apiKey: String, endpoint: String) {
+        brazeImpl.initialize(apiKey, endpoint)
+    }
+
     override fun getInitialURL(callback: Callback) {
         // iOS only
     }

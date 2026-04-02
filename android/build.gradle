@@ -45,9 +45,6 @@ android {
         res.srcDirs += ['src/oldarch/res']
       }
     }
-    test {
-      java.srcDirs += ['src/debug/kotlin']
-    }
   }
 
   kotlinOptions {
@@ -69,10 +66,6 @@ dependencies {
   testImplementation "org.mockito:mockito-inline:5.2.0"
   testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 
-  debugImplementation 'androidx.test:core-ktx:1.7.0'
-  debugImplementation "junit:junit:4.13.2"
-  debugImplementation "org.robolectric:robolectric:4.16"
-
   def wrapper_braze_sdk_version = "41.1.1"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
 
@@ -81,9 +74,3 @@ dependencies {
   }
 }
 
-configurations {
-  debugRuntimeClasspath {
-    exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
-    exclude group: 'org.jspecify', module: 'jspecify'
-  }
-}
