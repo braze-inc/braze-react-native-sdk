@@ -193,6 +193,7 @@ export interface Spec extends TurboModule {
   setIdentifierForAdvertiser(identifierForAdvertiser: string): void;
   setIdentifierForVendor(identifierForVendor: string): void;
   updateTrackingPropertyAllowList(allowList: Object): void;
+  initialize(apiKey: string, endpoint: string): void;
 
   // NativeEventEmitter methods for the New Architecture.
   // The implementations are handled implicitly by React Native.

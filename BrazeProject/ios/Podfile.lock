@@ -1,8 +1,8 @@
 PODS:
-  - braze-react-native-sdk (19.0.0):
-    - BrazeKit (~> 14.0.1)
-    - BrazeLocation (~> 14.0.1)
-    - BrazeUI (~> 14.0.1)
+  - braze-react-native-sdk (19.2.0):
+    - BrazeKit (~> 14.0.4)
+    - BrazeLocation (~> 14.0.4)
+    - BrazeUI (~> 14.0.4)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -24,13 +24,13 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - BrazeKit (14.0.1)
-  - BrazeLocation (14.0.1):
-    - BrazeKit (= 14.0.1)
-  - BrazeNotificationService (14.0.1)
-  - BrazePushStory (14.0.1)
-  - BrazeUI (14.0.1):
-    - BrazeKit (= 14.0.1)
+  - BrazeKit (14.0.4)
+  - BrazeLocation (14.0.4):
+    - BrazeKit (= 14.0.4)
+  - BrazeNotificationService (14.0.4)
+  - BrazePushStory (14.0.4)
+  - BrazeUI (14.0.4):
+    - BrazeKit (= 14.0.4)
   - FBLazyVector (0.83.1)
   - hermes-engine (0.14.0):
     - hermes-engine/Pre-built (= 0.14.0)
@@ -1428,7 +1428,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-  - react-native-safe-area-context (5.6.2):
+  - react-native-safe-area-context (5.7.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1440,8 +1440,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.6.2)
-    - react-native-safe-area-context/fabric (= 5.6.2)
+    - react-native-safe-area-context/common (= 5.7.0)
+    - react-native-safe-area-context/fabric (= 5.7.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1452,7 +1452,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/common (5.6.2):
+  - react-native-safe-area-context/common (5.7.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1474,7 +1474,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/fabric (5.6.2):
+  - react-native-safe-area-context/fabric (5.7.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1881,7 +1881,7 @@ PODS:
     - React-utils (= 0.83.1)
     - ReactNativeDependencies
   - ReactNativeDependencies (0.83.1)
-  - RNScreens (4.20.0):
+  - RNScreens (4.24.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1903,9 +1903,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNScreens/common (= 4.20.0)
+    - RNScreens/common (= 4.24.0)
     - Yoga
-  - RNScreens/common (4.20.0):
+  - RNScreens/common (4.24.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1928,15 +1928,15 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - SDWebImage (5.21.6):
-    - SDWebImage/Core (= 5.21.6)
-  - SDWebImage/Core (5.21.6)
+  - SDWebImage (5.21.7):
+    - SDWebImage/Core (= 5.21.7)
+  - SDWebImage/Core (5.21.7)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
   - "braze-react-native-sdk (from `../node_modules/@braze/react-native-sdk`)"
-  - BrazeNotificationService (~> 14.0.1)
-  - BrazePushStory (~> 14.0.1)
+  - BrazeNotificationService (~> 14.0.4)
+  - BrazePushStory (~> 14.0.4)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2180,14 +2180,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  braze-react-native-sdk: c375bb8f7b51e6cd992f401bddf0f49b9bd1c582
-  BrazeKit: 0605a4475203bdf08a8852f8c0628053b64686bd
-  BrazeLocation: 7af464e7d825246c522cebac0b39a562924b18b4
-  BrazeNotificationService: 3ce86d1457a09eb8033610dd44f31ac0275ad043
-  BrazePushStory: d7935a0e3341063d3707965f50ec3bef1804f547
-  BrazeUI: 409599b081fab8df8d2b7088e4faf3d234eab9da
+  braze-react-native-sdk: 95fbb98c4cf1766097cea84b0db20af4db61ee36
+  BrazeKit: ba951d2299c1d16b541cf35cdd7250d03e28a0fb
+  BrazeLocation: d6938a737f123bb9e6632246d1abea40eeb12768
+  BrazeNotificationService: 9b481c8da56c6f4df3d887e72249477a18523666
+  BrazePushStory: 896e8b32494cc1ee72341d86f9185d7fa132ed19
+  BrazeUI: 1d733e1dea4d81f95f261b52cc6e4b91a0eccca8
   FBLazyVector: 3a7ea85f6009224ad89f7daeda516f189e6b5759
-  hermes-engine: 106d679b6cac7c2755680354dc2520038df67a83
+  hermes-engine: 1f57a4c1d5a4220ce3c883f41057e5d0db63bbd8
   RCTDeprecation: a93fe21ed2fd99e13bf3b011390d1e9769c83d23
   RCTRequired: 176145d35686c966863f268c0f938f58ae23dc78
   RCTSwiftUI: a6c7271c39098bf00dbdad8f8ed997a59bbfbe44
@@ -2196,7 +2196,7 @@ SPEC CHECKSUMS:
   React: 4bc1f928568ad4bcfd147260f907b4ea5873a03b
   React-callinvoker: 8dd44c31888a314694efd0ef5f19ab7e0e855ef8
   React-Core: 0c1f3042e1204c0512b2e4263062c66550d7e6a3
-  React-Core-prebuilt: 33f9be8ee5b3e3a8cd4edf7aab303c6173f6b42c
+  React-Core-prebuilt: 0b0dfd559d802e8c908e375d2d2fd815cdca7258
   React-CoreModules: f6a626221d52f21b5eb8df2d79780b96f20240e5
   React-cxxreact: 2e3990595049d43dd1d59ccd6cb35545f0dc6f03
   React-debug: 60be0767f5672afc81bfd6a50d996507430f7906
@@ -2224,7 +2224,7 @@ SPEC CHECKSUMS:
   React-logger: 4462302b7135d3972e6d229d4b188caa4ffa0f2e
   React-Mapbuffer: 773eea58ff04e5fc8d525c5216957d6a82a6c84c
   React-microtasksnativemodule: 0294038bd92e2eb132975258e6ddc0a578a880ca
-  react-native-safe-area-context: 53f796cb6c814661bbe99fbdfd0585d07b996cdd
+  react-native-safe-area-context: 29044d05d61f2c60d0828c373bd0ebe17eed58d0
   React-NativeModulesApple: 2097e50465c1e5521d2cc2547e78da227930cf7a
   React-networking: 25c132be194542cbe1b215963643a0049f2c068a
   React-oscompat: 759780c1327bb5e50f8e18f41ce40d5ed920abb3
@@ -2258,11 +2258,11 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: bfb12ead469222b022a2024f32aba47ce50de512
   ReactCodegen: 38cd0fe47932043959e72519ec1cce6c1f147c0e
   ReactCommon: 0084791d25c4deae3d8b77efd4440fb2d5c38746
-  ReactNativeDependencies: 50cf202ae370e9de262d7b9dcaf8408ccba0776f
-  RNScreens: dea74a9106daf3cbed39de1f5ce7ff4f96c5c722
-  SDWebImage: 1bb6a1b84b6fe87b972a102bdc77dd589df33477
+  ReactNativeDependencies: acfaccc99e29943ec7dd89e234ef06fb0d2a834c
+  RNScreens: 088d923c4327c63c9f8c942cae17a9d038f47d97
+  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   Yoga: 35d573dff66536d48493acb65a519482f8219fe8
 
-PODFILE CHECKSUM: 703d5d3f3c31c066a1bcc7438a7d36fbbfdcf82f
+PODFILE CHECKSUM: a306af49d113e3ac363152306306944525c27dd4
 
 COCOAPODS: 1.16.2

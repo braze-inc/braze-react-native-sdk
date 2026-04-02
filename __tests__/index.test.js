@@ -1077,6 +1077,13 @@ describe('FeatureFlag', () => {
   });
 });
 
+test('it calls BrazeReactBridge.initialize with apiKey and endpoint', () => {
+  const apiKey = 'test-api-key';
+  const endpoint = 'test.endpoint.com';
+  Braze.initialize(apiKey, endpoint);
+  expect(NativeBrazeReactModule.initialize).toBeCalledWith(apiKey, endpoint);
+});
+
 // Test Braze.getBanner
 
 jest.mock('../src/models/banner', () => {

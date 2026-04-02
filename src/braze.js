@@ -46,6 +46,21 @@ export class Braze {
     android: DeviceEventEmitter
   });
 
+  /**
+   * Initializes the Braze SDK with the provided API key and endpoint.
+   *
+   * On first call, creates a Braze instance applying any native configuration.
+   *
+   * On subsequent calls, tears down the current instance and reinitializes
+   * with the same configuration, supporting mid-session API key changes.
+   *
+   * @param {string} apiKey - The Braze API key.
+   * @param {string} endpoint - The Braze SDK endpoint.
+   */
+  static initialize(apiKey, endpoint) {
+    this.bridge.initialize(apiKey, endpoint);
+  }
+
 /**
  * @deprecated This method is deprecated in favor of `getInitialPushPayload`.
  *
