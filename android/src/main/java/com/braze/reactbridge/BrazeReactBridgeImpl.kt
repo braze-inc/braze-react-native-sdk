@@ -373,10 +373,18 @@ class BrazeReactBridgeImpl(
     }
 
     fun getContentCards(promise: Promise) {
-        braze.subscribeToContentCardsUpdates(IEventSubscriber { message ->
-            promise.resolve(mapContentCards(message.allCards))
+        var subscriber = IEventSubscriber<ContentCardsUpdatedEvent>? = null
+        subscriber = IEventSubscriber { message ->
+            subscriber?.let {
+                braze.removeSingleSubscription(it, ContentCardsUpdatedEvent::class.java)
+            }
+            subscriber = null
             updateContentCardsIfNeeded(message)
-        })
+            if (reactApplicationContext.hasActiveReactInstance()) {
+                promise.resolve(mapContentCards(message.allCards))
+            }
+        }
+        braze.subscribeToContentCardsUpdates(subscriber!!)
         braze.requestContentCardsRefresh()
     }
 
