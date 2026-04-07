@@ -373,7 +373,7 @@ class BrazeReactBridgeImpl(
     }
 
     fun getContentCards(promise: Promise) {
-        var subscriber = IEventSubscriber<ContentCardsUpdatedEvent>? = null
+        var subscriber: IEventSubscriber<ContentCardsUpdatedEvent>? = null
         subscriber = IEventSubscriber { message ->
             subscriber?.let {
                 braze.removeSingleSubscription(it, ContentCardsUpdatedEvent::class.java)
