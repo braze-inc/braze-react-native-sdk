@@ -16,6 +16,7 @@ import com.braze.enums.Month.Companion.getMonth
 import com.braze.enums.NotificationSubscriptionType
 import com.braze.events.ContentCardsUpdatedEvent
 import com.braze.events.FeatureFlagsUpdatedEvent
+import com.braze.events.IFireOnceEventSubscriber
 import com.braze.events.IEventSubscriber
 import com.braze.models.cards.Card
 import com.braze.models.inappmessage.IInAppMessage
@@ -372,11 +373,32 @@ class BrazeReactBridgeImpl(
         braze.requestContentCardsRefresh()
     }
 
+    /**
+     * Triggers a content cards refresh and resolves [promise] when Braze delivers a
+     * [ContentCardsUpdatedEvent] with the latest cards (mapped for the JS layer).
+     *
+     * Guarantees that the promise is not double-settled when content cards update repeatedly
+     * (React Native aborts on a second settlement).
+     *
+     * If [reactApplicationContext] has no active React instance, rejects with
+     * [NO_ACTIVE_REACT_INSTANCE_PROMISE_CODE] instead of resolving.
+     *
+     * @param promise Fulfilled with the card list, or rejected when React is not active.
+     */
     fun getContentCards(promise: Promise) {
-        braze.subscribeToContentCardsUpdates(IEventSubscriber { message ->
-            promise.resolve(mapContentCards(message.allCards))
-            updateContentCardsIfNeeded(message)
-        })
+        braze.subscribeToContentCardsUpdates(
+            IFireOnceEventSubscriber { message ->
+                updateContentCardsIfNeeded(message)
+                if (reactApplicationContext.hasActiveReactInstance()) {
+                    promise.resolve(mapContentCards(message.allCards))
+                } else {
+                    promise.reject(
+                        NO_ACTIVE_REACT_INSTANCE_PROMISE_CODE,
+                        "Cannot deliver getContentCards result because the React instance is not active."
+                    )
+                }
+            }
+        )
         braze.requestContentCardsRefresh()
     }
 
@@ -889,6 +911,10 @@ class BrazeReactBridgeImpl(
 
     companion object {
         const val NAME = "BrazeReactBridge"
+
+        /** Promise `code` passed to [Promise.reject] when [getContentCards] runs after React is torn down. */
+        const val NO_ACTIVE_REACT_INSTANCE_PROMISE_CODE = "no_active_react_instance"
+
         private const val CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated"
         private const val BANNER_CARDS_UPDATED_EVENT_NAME = "bannerCardsUpdated"
         private const val FEATURE_FLAGS_UPDATED_EVENT_NAME = "featureFlagsUpdated"

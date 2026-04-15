@@ -1,5 +1,5 @@
 PODS:
-  - braze-react-native-sdk (19.2.0):
+  - braze-react-native-sdk (20.0.0):
     - BrazeKit (~> 14.0.4)
     - BrazeLocation (~> 14.0.4)
     - BrazeUI (~> 14.0.4)

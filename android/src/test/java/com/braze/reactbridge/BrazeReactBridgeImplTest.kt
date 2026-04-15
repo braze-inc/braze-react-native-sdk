@@ -10,6 +10,9 @@ import com.braze.enums.BrazePushEventType
 import com.braze.enums.Gender
 import com.braze.enums.Month
 import com.braze.enums.NotificationSubscriptionType
+import com.braze.events.ContentCardsUpdatedEvent
+import com.braze.events.IFireOnceEventSubscriber
+import com.braze.events.IEventSubscriber
 import com.braze.events.IValueCallback
 import com.braze.models.FeatureFlag
 import com.braze.models.cards.Card
@@ -1035,6 +1038,41 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
 
         verify(brazeMock).subscribeToContentCardsUpdates(any())
         verify(brazeMock).requestContentCardsRefresh()
+    }
+
+    /**
+     * `getContentCards` must register [IFireOnceEventSubscriber]: Braze's event messenger only dispatches
+     * once and then unsubscribes (see Braze Android SDK `EventMessengerTest`). We assert that contract
+     * and that a single `trigger` resolves the promise; the bridge does not call `removeSingleSubscription`
+     * itself.
+     */
+    @Test
+    fun whenGetContentCardsIsCalled_registersFireOnceSubscriberThatResolvesOnce() {
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+        val mockPromise = mock<Promise>()
+        val subscriberCaptor = argumentCaptor<IEventSubscriber<ContentCardsUpdatedEvent>>()
+
+        brazeReactBridgeImpl.getContentCards(mockPromise)
+
+        // Capture the subscriber the bridge registers with Braze (must be fire-once).
+        verify(brazeMock).subscribeToContentCardsUpdates(subscriberCaptor.capture())
+        val subscriber = subscriberCaptor.firstValue
+        assertTrue(
+            "getContentCards should use IFireOnceEventSubscriber",
+            subscriber is IFireOnceEventSubscriber<*>
+        )
+        val event = mock<ContentCardsUpdatedEvent> {
+            on { allCards } doReturn mutableListOf<Card>()
+        }
+        // Simulate the messenger delivering one ContentCardsUpdatedEvent (production does not call trigger twice).
+        subscriber.trigger(event)
+        verify(mockPromise).resolve(any())
+        // Unsubscribe is handled inside Braze's event layer for IFireOnceEventSubscriber, not in the bridge.
+        verify(brazeMock, never()).removeSingleSubscription(
+            any<IEventSubscriber<ContentCardsUpdatedEvent>>(),
+            eq(ContentCardsUpdatedEvent::class.java)
+        )
     }
 
     @Test
