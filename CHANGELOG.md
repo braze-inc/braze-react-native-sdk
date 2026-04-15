@@ -1,3 +1,11 @@
+## 20.0.0
+
+##### Breaking
+- Updates the native Android SDK version bindings [from Braze Android SDK 41.1.1 to 42.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v41.1.1...v42.0.0).
+
+##### Fixed
+- Fixes an Android [issue](https://github.com/braze-inc/braze-react-native-sdk/pull/320) where `getContentCards()` could crash natively if its `Promise` was settled more than once. Also, the promise may now be rejected with `no_active_react_instance` when React is inactive.
+
 ## 19.2.0
 
 ##### Added
