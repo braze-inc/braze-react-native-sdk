@@ -66,7 +66,7 @@ dependencies {
   testImplementation "org.mockito:mockito-inline:5.2.0"
   testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 
-  def wrapper_braze_sdk_version = "42.0.0"
+  def wrapper_braze_sdk_version = "42.2.0"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"
 
   if (shouldImportBrazeLocationLibrary()) {

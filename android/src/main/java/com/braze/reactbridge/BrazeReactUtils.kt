@@ -2,6 +2,7 @@ package com.braze.reactbridge
 
 import android.content.Intent
 import android.os.Bundle
+import com.braze.Constants
 import com.braze.models.push.BrazeNotificationPayload
 import com.braze.push.BrazeNotificationUtils.isBrazePushMessage
 import com.braze.support.BrazeLogger.brazelog
@@ -45,7 +46,7 @@ object BrazeReactUtils {
 
         val extras = intent.extras
         val payload = BrazeNotificationPayload(extras ?: Bundle())
-        val isBrazeRouted = extras?.getString("source") == "braze"
+        val isBrazeRouted = extras?.getString("source") == Constants.BRAZE_INTENT_SOURCE
         val deepLink = intent.data?.toString() ?: payload.deeplink
         val isLauncherIntent = intent.action == Intent.ACTION_MAIN
             && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
