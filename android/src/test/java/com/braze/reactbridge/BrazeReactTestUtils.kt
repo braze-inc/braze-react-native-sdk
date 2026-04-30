@@ -61,6 +61,7 @@ fun getPrivateField(obj: Any, fieldName: String): Any? {
  * @param isTestSend - Whether the banner is a test send
  * @param expirationTimestampSeconds - The expiration timestamp of the banner
  * @param isControl - Whether the banner is a control banner
+ * @param stableKey - Optional stable key from the server (matches [com.braze.models.Banner])
  * @param properties - The properties of the banner
  * @return The created banner
  */
@@ -72,6 +73,7 @@ fun createBanner(
     isTestSend: Boolean,
     expirationTimestampSeconds: Long,
     isControl: Boolean,
+    stableKey: String? = null,
     properties: JSONObject
 ): Banner = bannerConstructor.newInstance(
     trackingId,
@@ -80,6 +82,7 @@ fun createBanner(
     isControl,
     expirationTimestampSeconds,
     isTestSend,
+    stableKey,
     properties
 )
 
@@ -108,8 +111,9 @@ private val bannerConstructor: Constructor<Banner> = Banner::class.java.getDecla
     String::class.java,
     String::class.java,
     Boolean::class.javaPrimitiveType,
-    Long::class.java,
+    Long::class.javaPrimitiveType,
     Boolean::class.javaPrimitiveType,
+    String::class.java,
     JSONObject::class.java
 ).apply {
     isAccessible = true

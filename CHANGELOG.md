@@ -1,3 +1,11 @@
+## 20.1.0
+
+##### Added
+- Updates the native Android SDK version bindings [from Braze Android SDK 42.0.0 to 42.2.0](https://github.com/braze-inc/braze-android-sdk/compare/v42.0.0...v42.2.0).
+
+##### Fixed
+- Fixes an Android issue introduced in version `19.1.0` where a push notification containing a deep link would not navigate to the intended screen when the app was launched from a terminated state.
+
 ## 20.0.0
 
 ##### Breaking

@@ -151,7 +151,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
         val intent = Intent().apply {
             data = Uri.parse("myapp://test")
             putExtra(Constants.BRAZE_PUSH_BRAZE_KEY, "true")
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
         }
 
         BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
@@ -235,7 +235,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
     @Test
     fun whenCalledWithBrazeRoutedActionViewIntent_populateInitialPushPayloadFromIntent_setsPayloadFromDeepLink() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("myapp://deep/link")).apply {
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
         }
 
         BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
@@ -249,7 +249,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
     @Test
     fun whenCalledWithBrazeRoutedIntentWithDeepLinkInExtras_populateInitialPushPayloadFromIntent_setsPayload() {
         val intent = Intent().apply {
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
             putExtra(Constants.BRAZE_PUSH_DEEP_LINK_KEY, "myapp://extras/link")
         }
 
@@ -263,7 +263,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
     @Test
     fun whenCalledWithBrazeRoutedIntentWithBothDataAndExtras_populateInitialPushPayloadFromIntent_prefersIntentData() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("myapp://from/data")).apply {
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
             putExtra(Constants.BRAZE_PUSH_DEEP_LINK_KEY, "myapp://from/extras")
         }
 
@@ -277,7 +277,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
     @Test
     fun whenCalledWithBrazeSourceButNoDeepLink_populateInitialPushPayloadFromIntent_doesNotSetPayload() {
         val intent = Intent().apply {
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
         }
 
         BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
@@ -345,7 +345,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
         assertNull(BrazeReactUtils.getInitialPushPayload())
 
         val brazeActionView = Intent(Intent.ACTION_VIEW, Uri.parse("myapp://push/link")).apply {
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
         }
         BrazeReactUtils.populateInitialPushPayloadFromIntent(brazeActionView)
 
@@ -357,7 +357,7 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
     @Test
     fun whenBrazeRoutedActionViewThenEmptyActionView_populateInitialPushPayload_preservesPayloadFromFirstIntent() {
         val brazeActionView = Intent(Intent.ACTION_VIEW, Uri.parse("myapp://push/link")).apply {
-            putExtra("source", "braze")
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
         }
         BrazeReactUtils.populateInitialPushPayloadFromIntent(brazeActionView)
 
