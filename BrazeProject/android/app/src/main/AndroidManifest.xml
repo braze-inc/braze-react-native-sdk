@@ -30,16 +30,29 @@
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
         <intent-filter>
-          <action android:name="android.intent.action.MAIN" />
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.LAUNCHER" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <data android:scheme="helloreact"/>
-        </intent-filter>
-        <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+      <!--
+        Deep-link-only sample screen (no LAUNCHER): opened when a URL matches the <data> below.
+        Intended for manual testing, e.g. adb:
+          adb shell am start -a android.intent.action.VIEW \
+            -d 'helloreact://example.com/path?label=test' com.brazeproject
+        Pattern: helloreact://example.com/path… ?label=<value>
+      -->
+      <activity
+        android:name=".DeepLinkLabelActivity"
+        android:exported="true"
+        android:theme="@style/AppTheme">
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data
+            android:scheme="helloreact"
+            android:host="example.com"
+            android:pathPrefix="/path" />
         </intent-filter>
       </activity>
     </application>

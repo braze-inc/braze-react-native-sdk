@@ -83,6 +83,9 @@ class BrazeReactBridgeImpl(
     fun initialize(apiKey: String, endpoint: String) {
         brazelog(V) { "Initializing the Braze React Native SDK with API key: $apiKey and endpoint: $endpoint" }
 
+        // Capture before configure/disableSdk — configure must not erase this decision.
+        val hadDelayedInitialization = Braze.isDelayedInitializationEnabled
+
         // First disable the SDK.
         // This allows us to re-configure the SDK.
         Braze.disableSdk(reactApplicationContext)
@@ -95,13 +98,26 @@ class BrazeReactBridgeImpl(
         Braze.configure(reactApplicationContext, brazeConfig)
 
         // Then disable delayed init (if applicable).
-        if (Braze.isDelayedInitializationEnabled) {
+        if (hadDelayedInitialization) {
             brazelog(V) { "Disabling delayed initialization for Braze SDK." }
             Braze.disableDelayedInitialization(reactApplicationContext)
         }
 
         // Re-enable the SDK.
         Braze.enableSdk(reactApplicationContext)
+
+        // Runtime init (Expo plugin 5.x): onActivityStarted may have run while delayed init was on,
+        // so openSession was skipped. Replay session + IAM registration for the current activity.
+        if (hadDelayedInitialization) {
+            currentActivity?.let { activity ->
+                brazelog(V) {
+                    "Opening session and registering in-app messages for current activity " +
+                        "after runtime initialization: ${activity.javaClass}"
+                }
+                Braze.getInstance(reactApplicationContext).openSession(activity)
+                BrazeInAppMessageManager.getInstance().registerInAppMessageManager(activity)
+            }
+        }
 
         subscribeToEvents()
     }

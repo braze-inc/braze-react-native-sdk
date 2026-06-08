@@ -1,6 +1,6 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "20.1.0",
+  "version": "21.0.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/braze-inc/braze-react-native-sdk#readme",
   "devDependencies": {
-    "eslint": "9.26.0",
+    "eslint": "9.39.4",
     "eslint-config-standard": "^17.0.0",
     "eslint-config-standard-jsx": "^11.0.0",
     "eslint-config-standard-react": "^11.0.1",
@@ -43,7 +43,7 @@
     "jest": "^29.2.1",
     "react": "^17.0.2",
     "react-native": "^0.71.0",
-    "metro-babel-register": "^0.71.1"
+    "metro-babel-register": "^0.84.0"
   },
   "jest": {
     "modulePathIgnorePatterns": [

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BrazeProject</string>
+    <string name="deep_link_label_activity_title">Deep link inspector</string>
 </resources>
