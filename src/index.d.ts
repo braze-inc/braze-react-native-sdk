@@ -1,6 +1,5 @@
 import { ComponentType } from 'react';
 import { EmitterSubscription, StyleProp, ViewStyle } from 'react-native';
-import NativeBrazeReactModule from './specs/NativeBrazeReactModule';
 import { CampaignProperties } from './models/campaign-properties';
 import { FeatureFlag } from './models/feature-flag';
 import { Banner } from './models/banner';
@@ -111,6 +110,7 @@ export function setSdkAuthenticationSignature(signature: string): void;
 /**
  * An alias serves as an alternative unique user identifier. Use aliases to identify users along different
  *    dimensions than your core user ID:
+ *       * Set a consistent identifier for analytics that will follow a given user both before and after they have
  *         logged in to a mobile app or website.
  *       * Add the identifiers used by a third party vendor to your Braze users in order to more easily reconcile
  *         your data externally.
@@ -201,7 +201,7 @@ export function registerPushToken(token: string): void;
  * This method informs Braze whether ad-tracking has been enabled for this device. Note that the SDK does not
  * automatically collect this data.
  *
- * @param {string} adTrackingEnabled - Whether ad-tracking is enabled.
+ * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled.
  * @param {string} googleAdvertisingId - The Google Advertising ID. (Android only)
  */
 export function setAdTrackingEnabled(adTrackingEnabled: boolean, googleAdvertisingId?: string): void;
@@ -349,7 +349,7 @@ export function setCustomUserAttribute(
 ): void;
 
 /**
- * Adds a string to a custom atttribute string array, or creates that array if one doesn't exist.
+ * Adds a string to a custom attribute string array, or creates that array if one doesn't exist.
  * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin
  *    with a $, and can only contain alphanumeric characters and punctuation.
  * @param {string} value - The string to be added to the array. Strings are limited to 255 characters in length,
@@ -366,7 +366,7 @@ export function addToCustomUserAttributeArray(
  * Removes a string from a custom attribute string array.
  * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin
  *    with a $, and can only contain alphanumeric characters and punctuation.
- * @param {string} value - The string to be added to the array. Strings are limited to 255 characters in length,
+ * @param {string} value - The string to be removed from the array. Strings are limited to 255 characters in length,
  *    cannot begin with a $, and can only contain alphanumeric characters and punctuation.
  * @param {function(error, result)} callback - A callback that receives the export function call result.
  */
@@ -557,7 +557,7 @@ export function requestContentCardsRefresh(): void;
 
 /**
  * Manually log a click to Braze for a particular card.
- * The SDK will only log a card click when the card has the url property with a valid value.
+ * Forwards the click and its validation to the native iOS and Android SDKs.
  * @param {string} id
  */
 export function logContentCardClicked(id: string): void;
@@ -1044,7 +1044,7 @@ export class BrazeInAppMessage {
   /** The in-app message type supported by the SDK. */
   messageType: BrazeMessageType[keyof BrazeMessageType];
 
-  /** The message extras dictionary (default: `[:]`) */
+  /** The message extras dictionary (default: `{}`) */
   extras: { [key: string]: string };
 
   /** The list of buttons on the in-app message. */

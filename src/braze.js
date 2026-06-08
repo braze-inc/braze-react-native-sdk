@@ -280,8 +280,8 @@ export class Braze {
    *    user.
    * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
    *    a $, and can only contain alphanumeric characters and punctuation.
-   * @param value - Can be numeric, boolean, a Date object, a string, or an array of strings. Strings are limited to
-   *    255 characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
+   * @param value - Can be numeric, boolean, a Date object, a string, an array of strings, an object, or an array of objects.
+   *    Strings are limited to 255 characters in length, cannot begin with a $, and can only contain alphanumeric characters and punctuation.
    *    Passing a null value will remove this custom attribute from the user.
    * @param {function(error, result)} callback - A callback that receives the function call result.
    */
@@ -506,7 +506,7 @@ export class Braze {
   }
 
   /**
-   * Adds a string to a custom atttribute string array, or creates that array if one doesn't exist.
+   * Adds a string to a custom attribute string array, or creates that array if one doesn't exist.
    * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
    *    a $, and can only contain alphanumeric characters and punctuation.
    * @param {string} value - The string to be added to the array. Strings are limited to 255 characters in length, cannot
@@ -526,7 +526,7 @@ export class Braze {
    * @param {string} key - The identifier of the custom attribute. Limited to 255 characters in length, cannot begin with
    *    a $, and can only contain alphanumeric characters and punctuation.
    * @param {string} value - The string to be removed from the array. Strings are limited to 255 characters in length,
-   *    cannot beging with a $, and can only contain alphanumeric characters and punctuation.
+   *    cannot begin with a $, and can only contain alphanumeric characters and punctuation.
    * @param {function(error, result)} callback - A callback that receives the function call result.
    */
   static removeFromCustomUserAttributeArray(key, value, callback) {
@@ -599,7 +599,7 @@ export class Braze {
 
   /**
    * Manually log a click to Braze for a particular card.
-   * The SDK will only log a card click when the card has the url property with a valid value.
+   * Forwards the click and its validation to the native iOS and Android SDKs.
    * @param {string} id
    */
   static logContentCardClicked(id) {
@@ -831,7 +831,7 @@ export class Braze {
   /**
    * Perform the action of an in-app message button
    * @param {InAppMessage} inAppMessage
-   * @param {number} ID of the button.
+   * @param {number} buttonId - ID of the button.
    */
   static performInAppMessageButtonAction(inAppMessage, buttonId) {
     console.log('Processing In-App Message Button Action: ', inAppMessage, ' ', buttonId);
@@ -970,7 +970,7 @@ export class Braze {
    * This method informs Braze whether ad-tracking has been enabled for this device. Note that the SDK does not
    * automatically collect this data.
    *
-   * @param {string} adTrackingEnabled - Whether ad-tracking is enabled.
+   * @param {boolean} adTrackingEnabled - Whether ad-tracking is enabled.
    * @param {string} googleAdvertisingId - The Google Advertising ID. (Android only)
    */
   static setAdTrackingEnabled(adTrackingEnabled, googleAdvertisingId) {

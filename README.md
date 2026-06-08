@@ -5,8 +5,10 @@
 
 # Braze React Native SDK [![latest](https://img.shields.io/github/v/tag/braze-inc/braze-react-native-sdk?label=latest%20release&color=300266)](https://github.com/braze-inc/braze-react-native-sdk/releases) [![npm](https://img.shields.io/npm/v/@braze/react-native-sdk?label=npm&color=300266)](https://www.npmjs.com/package/@braze/react-native-sdk)
 
-- [Braze User Guide](https://www.braze.com/docs/user_guide/introduction/)
-- [Braze Developer Guide — React Native](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=react%20native)
+To learn more about the React Native SDK, see the following resources:
+
+- [Braze Developer Guide — React Native](https://www.braze.com/docs/developer_guide/sdk_integration/?sdktab=react%20native): Learn how to integrate the React Native SDK.
+- [Braze User Guide](https://www.braze.com/docs/user_guide/introduction/): Learn how to use Braze to build mobile experiences for your users.
 
 ## About the Braze React Native SDK
 
@@ -72,6 +74,8 @@ npm install @braze/react-native-sdk
 ---
 
 ## Quick start
+
+This section shows the minimum setup required to initialize the Braze React Native SDK.
 
 1. Install the npm package (above).
 2. Complete **native setup** for Android and iOS (configuration, permissions, push if needed).
@@ -182,7 +186,7 @@ Commonly used entries:
 | `com_braze_firebase_cloud_messaging_sender_id` | `string` | FCM sender ID when automatic registration is enabled. |
 | `com_braze_handle_push_deep_links_automatically` | `bool` | Let Braze open push deep links automatically. |
 | `com_braze_trigger_action_minimum_time_interval_seconds` | `integer` | Minimum seconds between in-app message trigger actions. |
-| **Other** | *various* | Additional keys not show here (session timeout, geofences, location, notification defaults, device allowlists, delayed initialization, SDK Authentication, etc…). See [`BrazeConfigurationProvider`](https://braze-inc.github.io/braze-android-sdk/kdoc/braze-android-sdk/com.braze.configuration/-braze-configuration-provider/index.html) and the [Android SDK integration guide](https://www.braze.com/docs/developer_guide/platforms/android/sdk_integration/). |
+| **Other** | *various* | Additional keys not shown here (session timeout, geofences, location, notification defaults, device allowlists, delayed initialization, SDK Authentication, and more). See [`BrazeConfigurationProvider`](https://braze-inc.github.io/braze-android-sdk/kdoc/braze-android-sdk/com.braze.configuration/-braze-configuration-provider/index.html) and the [Android SDK integration guide](https://www.braze.com/docs/developer_guide/platforms/android/sdk_integration/). |
 
 ### iOS (`Braze.Configuration`)
 
@@ -229,7 +233,7 @@ Optional **SDK Authentication**: pass a signature as the second argument to `cha
 
 ### In-app messages
 
-- With the **default Braze UI**, follow the [in-app message documentation](hhttps://www.braze.com/docs/developer_guide/in_app_messages?sdktab=react%20native); you typically do **not** need to call `subscribeToInAppMessage` only to show default UI.
+- With the **default Braze UI**, follow the [in-app message documentation](https://www.braze.com/docs/developer_guide/in_app_messages?sdktab=react%20native); you typically do **not** need to call `subscribeToInAppMessage` only to show default UI.
 - For **custom** handling, subscribe with `useBrazeUI: false`, then log impressions/clicks as needed:
 
 ```typescript
@@ -375,7 +379,9 @@ useEffect(() => {
 ## Version support
 
 > [!NOTE]
-> This SDK has been tested with React Native version **0.83.0**.
+> This SDK has been tested with React Native version **0.85.3**.
+
+The following table lists supported React Native versions by Braze plugin release.
 
 | Braze plugin | React Native | New Architecture |
 |--------------|--------------|------------------|
@@ -444,4 +450,4 @@ For deeper troubleshooting (network, session, or campaign behavior), see the [Br
 
 ## Contact
 
-If you have questions, please contact [support@braze.com](mailto:support@braze.com).
+For questions, contact [support@braze.com](mailto:support@braze.com).

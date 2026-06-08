@@ -1,3 +1,17 @@
+## 21.0.0
+
+##### Breaking
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 14.0.4 to 15.0.1](https://github.com/braze-inc/braze-swift-sdk/compare/14.0.4...15.0.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - Raises the Xcode version to 26.0 (17A324).
+
+##### Added
+- Updates the Braze sample app to use React Native version [`0.85.3`](https://reactnative.dev/blog/2026/04/07/react-native-0.85). This change validates SDK compatibility with the latest version of React Native.
+
+##### Fixed
+- Updates the native Android SDK version bindings [from Braze Android SDK 42.3.0 to 42.3.1](https://github.com/braze-inc/braze-android-sdk/compare/v42.3.0...v42.3.1).
+- Corrects misleading JSDoc on `logContentCardClicked`. The method forwards the click and its validation to the native iOS and Android SDKs.
+- Fixes an Android issue where in-app messages tied to session start could fail to appear on first launch when using runtime `Braze.initialize()` with the Expo plugin.
+
 ## 20.1.0
 
 ##### Added
