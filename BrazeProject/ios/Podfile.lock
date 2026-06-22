@@ -27,8 +27,8 @@ PODS:
   - BrazeKit (15.0.1)
   - BrazeLocation (15.0.1):
     - BrazeKit (= 15.0.1)
-  - BrazeNotificationService (15.0.1)
-  - BrazePushStory (15.0.1)
+  - BrazeNotificationService (15.1.0)
+  - BrazePushStory (15.1.0)
   - BrazeUI (15.0.1):
     - BrazeKit (= 15.0.1)
   - FBLazyVector (0.85.3)
@@ -1942,8 +1942,8 @@ PODS:
 
 DEPENDENCIES:
   - "braze-react-native-sdk (from `../node_modules/@braze/react-native-sdk`)"
-  - BrazeNotificationService (~> 15.0.1)
-  - BrazePushStory (~> 15.0.1)
+  - BrazeNotificationService (~> 15.1.0)
+  - BrazePushStory (~> 15.1.0)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2190,11 +2190,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  braze-react-native-sdk: f85ac0003de2eac4baca65da497e522464e4276f
+  braze-react-native-sdk: 139b6530b7d47c3b4dc04be34f56470418d9f92b
   BrazeKit: fbd41b7d310070915a59e2ac0df4a4d41671eac1
   BrazeLocation: 53c1221f26eda0c53bbc1e415443550fde1a8864
-  BrazeNotificationService: a6ce8d5aae0bcb8a8877988fbcd67f45284bfed8
-  BrazePushStory: 62a8abd77c4d0373f70532c2c50a99385dcd07cb
+  BrazeNotificationService: 70dd00bd1beca3b419fdcc063124b00295311fed
+  BrazePushStory: 6fe81d164fc9d3bdf2cb8ce2b1dc507c295b3dc3
   BrazeUI: 0608384033b0a1060a66d9a9cc82cd1563a1bc6b
   FBLazyVector: 24e62c765683b8d89006a88a2c8f5cf019f0074d
   hermes-engine: 4d96e903cdf89ff5b497c5c597232ad23425d36e
@@ -2274,6 +2274,6 @@ SPEC CHECKSUMS:
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   Yoga: 77dfa8673de2874e1855002ae59c68b8be9b007b
 
-PODFILE CHECKSUM: a306af49d113e3ac363152306306944525c27dd4
+PODFILE CHECKSUM: 04926d497e90816411d9df76d38ed114e801024d
 
 COCOAPODS: 1.16.2

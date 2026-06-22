@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! Please consider contacting support@braze.com for faster integration troubleshooting and to avoid leaking private information to our public Github issues.
+        Thanks for taking the time to fill out this bug report! Please consider contacting Braze Technical Support for assistance for faster integration troubleshooting and to avoid leaking private information to our public Github issues.
   - type: dropdown
     id: platform
     attributes:

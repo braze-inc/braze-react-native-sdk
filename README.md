@@ -450,4 +450,4 @@ For deeper troubleshooting (network, session, or campaign behavior), see the [Br
 
 ## Contact
 
-For questions, contact [support@braze.com](mailto:support@braze.com).
+For questions, contact Braze Technical Support for assistance.

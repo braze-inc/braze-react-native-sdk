@@ -8,8 +8,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BrazeReactUtils *)sharedInstance;
 
-+ (Braze *)braze;
-+ (void)setBraze:(Braze *)braze;
++ (Braze * _Nullable)braze;
++ (void)setBraze:(Braze * _Nullable)braze;
 
 /**
  * This method should be called in the app delegate's `application:didFinishLaunchingWithOptions:` method.

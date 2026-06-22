@@ -160,6 +160,21 @@ class PushPayloadMapperTest : BrazeRobolectricTestBase() {
     }
 
     @Test
+    fun whenUseWebviewStoredAsBoolean_createPushNotificationMap_setsUseWebviewCorrectly() {
+        val bundle = Bundle().apply {
+            putBoolean(Constants.BRAZE_PUSH_OPEN_URI_IN_WEBVIEW_KEY, true)
+        }
+        val payload = BrazeNotificationPayload(bundle)
+
+        val result = PushPayloadMapper.createPushNotificationMap(
+            payload = payload,
+            payloadType = "push_opened"
+        )
+
+        assertTrue(result.getBoolean("use_webview"))
+    }
+
+    @Test
     fun whenUseWebviewNotSet_createPushNotificationMap_setsUseWebviewFalse() {
         val bundle = Bundle()
         val payload = BrazeNotificationPayload(bundle)

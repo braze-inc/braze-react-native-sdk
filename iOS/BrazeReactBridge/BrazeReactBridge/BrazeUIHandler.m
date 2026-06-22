@@ -47,8 +47,20 @@
 }
 
 - (void)launchContentCards:(Braze *)braze dismissAutomatically:(BOOL)dismissAutomatically {
-  UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-  UIViewController *mainViewController = keyWindow.rootViewController;
+  UIWindow * _Nullable keyWindow = [[UIApplication sharedApplication] keyWindow];
+
+  // Fallback for iOS 13+ where keyWindow is deprecated
+  if (keyWindow == nil && [[UIApplication sharedApplication] respondsToSelector:@selector(connectedScenes)]) {
+    UIWindowScene *scene = (UIWindowScene *)[[UIApplication sharedApplication].connectedScenes anyObject];
+    keyWindow = scene.windows.firstObject;
+  }
+
+  UIViewController * _Nullable mainViewController = keyWindow.rootViewController;
+  if (mainViewController == nil) {
+    NSLog(@"Unable to find root view controller for content cards");
+    return;
+  }
+
   self.dismissFeedOnContentCardClick = dismissAutomatically;
 
   if (![mainViewController.presentedViewController isKindOfClass:[BRZContentCardUIModalViewController class]]) {
@@ -68,19 +80,17 @@
 
 - (enum BRZInAppMessageUIDisplayChoice)inAppMessage:(BrazeInAppMessageUI *)ui
                             displayChoiceForMessage:(BRZInAppMessageRaw *)message {
-  NSDictionary* eventData = [BrazeReactDataTranslator formatInAppMessage:message];
-  if (!eventData || [eventData count] == 0) {
+  NSDictionary * _Nullable eventData = [BrazeReactDataTranslator formatInAppMessage:message];
+  if (eventData == nil || [eventData count] == 0) {
     NSLog(@"Received malformed in-app message in iOS layer. Not sending to JS layer.");
+  } else {
+    // Send valid message to JavaScript layer
+    [self.eventEmitter sendEventWithName:@"inAppMessageReceived" body:eventData];
   }
 
-  // Send to JavaScript layer
-  [self.eventEmitter sendEventWithName:@"inAppMessageReceived" body:eventData];
-  
-  if (self.showInAppMessagesAutomaticallyInDefaultDelegate) {
-    return BRZInAppMessageUIDisplayChoiceNow;
-  } else {
-    return BRZInAppMessageUIDisplayChoiceDiscard;
-  }
+  return self.showInAppMessagesAutomaticallyInDefaultDelegate
+    ? BRZInAppMessageUIDisplayChoiceNow
+    : BRZInAppMessageUIDisplayChoiceDiscard;
 }
 
 #pragma mark - `BrazeContentCardUIViewControllerDelegate`

@@ -247,6 +247,22 @@ class BrazeReactUtilsTest : BrazeRobolectricTestBase() {
     }
 
     @Test
+    fun whenBrazeRoutedActionViewWithBooleanUseWebview_populateInitialPushPayloadFromIntent_setsPayload() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("myapp://test")).apply {
+            putExtra("source", Constants.BRAZE_INTENT_SOURCE)
+            putExtra(Constants.BRAZE_PUSH_OPEN_URI_IN_WEBVIEW_KEY, true)
+        }
+
+        BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)
+
+        val payload = BrazeReactUtils.getInitialPushPayload()
+        ktAssertNotNull(payload)
+        assertEquals("myapp://test", payload.getString("url"))
+        assertEquals("push_opened", payload.getString("payload_type"))
+        assertEquals(true, payload.getBoolean("use_webview"))
+    }
+
+    @Test
     fun whenCalledWithBrazeRoutedIntentWithDeepLinkInExtras_populateInitialPushPayloadFromIntent_setsPayload() {
         val intent = Intent().apply {
             putExtra("source", Constants.BRAZE_INTENT_SOURCE)
