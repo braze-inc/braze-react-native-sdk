@@ -3,6 +3,7 @@ package com.braze.reactbridge
 import android.os.Bundle
 import com.braze.Constants
 import com.braze.models.push.BrazeNotificationPayload
+import com.braze.reactbridge.util.getBundleValueAsBoolean
 import com.braze.reactbridge.util.getMutableMap
 import com.facebook.react.bridge.WritableMap
 
@@ -46,7 +47,10 @@ object PushPayloadMapper {
 
             putBoolean(
                 "use_webview",
-                payload.notificationExtras.getString(Constants.BRAZE_PUSH_OPEN_URI_IN_WEBVIEW_KEY) == "true"
+                getBundleValueAsBoolean(
+                    payload.notificationExtras,
+                    Constants.BRAZE_PUSH_OPEN_URI_IN_WEBVIEW_KEY
+                )
             )
 
             putBoolean("is_silent", payload.titleText == null && payload.contentText == null)

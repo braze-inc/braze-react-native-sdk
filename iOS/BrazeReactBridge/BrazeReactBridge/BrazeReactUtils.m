@@ -4,8 +4,8 @@
 
 @implementation BrazeReactUtils
 
-static Braze *sharedBraze;
-static BrazeReactUtils *sharedInstance;
+static Braze * _Nullable sharedBraze;
+static BrazeReactUtils * _Nullable sharedInstance;
 
 - (instancetype)init {
   self = [super init];
@@ -15,17 +15,21 @@ static BrazeReactUtils *sharedInstance;
 }
 
 + (BrazeReactUtils *)sharedInstance {
-  if (!sharedInstance) {
+  // Ensure thread-safe initialization of the singleton.
+  // The block executes exactly once, even when called concurrently from multiple threads,
+  // preventing race conditions and duplicate allocations.
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
     sharedInstance = [[BrazeReactUtils alloc] init];
-  }
+  });
   return sharedInstance;
 }
 
-+ (void)setBraze:(Braze *)braze {
++ (void)setBraze:(Braze * _Nullable)braze {
   sharedBraze = braze;
 }
 
-+ (Braze *)braze {
++ (Braze * _Nullable)braze {
   return sharedBraze;
 }
 

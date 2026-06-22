@@ -1,3 +1,11 @@
+## 21.1.0
+
+##### Added
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 15.0.1 to 15.1.0](https://github.com/braze-inc/braze-swift-sdk/compare/15.0.1...15.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Fixed
+- Fixes an Android issue where `Braze.getInitialPushPayload()` returned `null` on cold start when `androidHandlePushDeepLinksAutomatically` was enabled, due to a `ClassCastException` when reading the `ab_use_webview` notification extra as a `String` instead of a `Boolean`.
+
 ## 21.0.0
 
 ##### Breaking
