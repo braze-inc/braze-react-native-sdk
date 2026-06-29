@@ -1,3 +1,22 @@
+## 22.0.0
+
+##### Breaking
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 15.1.0 to 16.0.0](https://github.com/braze-inc/braze-swift-sdk/compare/15.1.0...16.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - With this update, the underlying Content Cards list behind `getCachedContentCards` (including removed, viewed, and clicked states) is updated immediately when changes occur. This now matches the iOS behavior with Android.
+- Renames the `Braze.BrazeBannerView` `placementID` prop to `placementId` for consistency with other Banner APIs such as `Braze.getBanner(placementId)` and `Braze.logBannerImpression(placementId)`.
+  - Update any usages of `placementID={...}` to `placementId={...}`.
+  - The `onDismiss` callback event payload field `placementID` has been renamed to `placementId`.
+
+##### Added
+- Adds `Braze.dismissBanner(placementId)` to programmatically dismiss a Banner by placement ID.
+- Adds support for Banner dismissal events on `Braze.BrazeBannerView`.
+- Adds `onDismiss` to `Braze.BrazeBannerView` for integrators to run custom logic when a Banner is dismissed.
+
+##### Deprecated
+- Deprecates `getContentCards`, which performs a network request before returning Content Cards.
+  - This method will be removed in a future major version.
+  - Use `getCachedContentCards` instead to retrieve the most recently cached Content Cards state, and `requestContentCardsRefresh` to manually trigger a background refresh.
+
 ## 21.1.0
 
 ##### Added

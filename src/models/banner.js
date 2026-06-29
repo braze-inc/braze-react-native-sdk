@@ -10,12 +10,14 @@ import { CampaignProperties } from "./campaign-properties";
  * @property {number} expiresAt - The expiration timestamp of the banner.
  * @property {Object} properties - The properties associated with the banner.
  * @property {string} html - The HTML content of the banner.
+ * @property {string} stableKey - Stable identifier for this banner instance (e.g. for dismissal correlation).
  */
 export class Banner {
     constructor(data) {
         let bannerJson = data;
         this.trackingId = bannerJson['trackingId'] || '';
         this.placementId = bannerJson['placementId'] || '';
+        this.stableKey = bannerJson['stableKey'] || '';
         this.isTestSend = bannerJson['isTestSend'] || false;
         this.isControl = bannerJson['isControl'] || false;
         this.expiresAt = bannerJson['expiresAt'] || 0;

@@ -582,7 +582,9 @@ export class Braze {
   }
 
   /**
-   * Returns a content cards array after performing a refresh.
+   * Returns a content cards array after performing a network refresh.
+   * @deprecated Use {@link getCachedContentCards} to retrieve the most recently cached Content Cards
+   * state, and {@link requestContentCardsRefresh} to manually trigger a background refresh.
    * @returns {Promise<ContentCard[]>}
    */
   static getContentCards() {
@@ -668,6 +670,14 @@ export class Braze {
    */
   static logBannerClick(placementId, buttonId) {
     this.bridge.logBannerClick(placementId, buttonId);
+  }
+
+  /**
+   * Dismisses the banner with the provided placement ID.
+   * @param {string} placementId - The placement ID of the banner.
+   */
+  static dismissBanner(placementId) {
+    this.bridge.dismissBanner(placementId);
   }
 
   // Flush Controls

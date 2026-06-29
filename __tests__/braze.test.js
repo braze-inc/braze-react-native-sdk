@@ -455,6 +455,12 @@ describe('Braze - Banners', () => {
     expect(NativeBrazeReactModule.logBannerImpression).toBeCalledWith(placementId);
   });
 
+  test('it calls BrazeReactBridge.dismissBanner', () => {
+    const placementId = "test_placement";
+    Braze.dismissBanner(placementId);
+    expect(NativeBrazeReactModule.dismissBanner).toBeCalledWith(placementId);
+  });
+
   describe.each([
     ['null buttonId', null],
     ['valid buttonId', 'button_123'],

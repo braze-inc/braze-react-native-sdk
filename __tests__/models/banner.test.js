@@ -50,6 +50,35 @@ describe('Banner', () => {
     expect(minimalBanner.properties).toBeInstanceOf(CampaignProperties);
   });
 
+  test('maps stableKey from bridge payload', () => {
+    const banner = new Banner({
+      trackingId: 'tid',
+      placementId: 'pid',
+      stableKey: 'stable-xyz',
+      isTestSend: false,
+      isControl: false,
+      expiresAt: 2000,
+      html: '<div/>',
+      properties: {},
+    });
+    expect(banner.stableKey).toBe('stable-xyz');
+    expect(banner.placementId).toBe('pid');
+    expect(banner.trackingId).toBe('tid');
+  });
+
+  test('defaults stableKey to empty string when missing', () => {
+    const banner = new Banner({
+      trackingId: 'a',
+      placementId: 'b',
+      isTestSend: false,
+      isControl: false,
+      expiresAt: 0,
+      html: '',
+      properties: {},
+    });
+    expect(banner.stableKey).toBe('');
+  });
+
   describe.each([
     ['getBooleanProperty', 'bool_prop', true, 'string_prop'],
     ['getStringProperty', 'string_prop', 'test_string', 'bool_prop'],

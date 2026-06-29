@@ -2,17 +2,18 @@
 #import "BrazeReactUtils.h"
 #import <React/RCTUIManager.h>
 
+@import BrazeKit;
 @import BrazeUI;
 
 @implementation BrazeBannerUIHelper {
   double _lastHeight;
 }
 
-- (void)insertPlacement:(NSString *)placementID
+- (void)insertPlacement:(NSString *)placementId
                intoView:(UIView *)hostView {
   Braze *braze = [BrazeReactUtils braze];
   if (braze) {
-    BRZBannerUIView *bannerView = [[BRZBannerUIView alloc] initWithPlacementId:placementID
+    BRZBannerUIView *bannerView = [[BRZBannerUIView alloc] initWithPlacementId:placementId
                                                                          braze:braze
                                                          processContentUpdates:^(BrazeBannerUIContentUpdates * updates,
                                                                                  NSError * error) {
@@ -26,6 +27,16 @@
               withHeight:updates.height];
       }
     }];
+    __weak BrazeBannerUIHelper *weakHelper = self;
+    bannerView.onDismiss = ^(BRZBannerDismissalEvent *event) {
+      BrazeBannerUIHelper *strongHelper = weakHelper;
+      if (strongHelper && strongHelper.onDismiss) {
+        NSString *placement = event.placementId ?: @"";
+        NSString *stableKey = event.stableKey ?: @"";
+        NSString *trackingId = event.trackingId ?: @"";
+        strongHelper.onDismiss(placement, stableKey, trackingId);
+      }
+    };
     [hostView addSubview:bannerView];
 
     // Constrain banner view to the edges of the host component `UIView`.

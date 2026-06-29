@@ -140,6 +140,7 @@ export interface Spec extends TurboModule {
   requestBannersRefresh(placementIds: string[]): void;
   logBannerImpression(placementId: string): void;
   logBannerClick(placementId: string, buttonId: string | null): void;
+  dismissBanner(placementId: string): void;
   requestImmediateDataFlush(): void;
   wipeData(): void;
   disableSDK(): void;

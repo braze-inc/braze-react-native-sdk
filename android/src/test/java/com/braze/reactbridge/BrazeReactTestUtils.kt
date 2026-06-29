@@ -73,7 +73,7 @@ fun createBanner(
     isTestSend: Boolean,
     expirationTimestampSeconds: Long,
     isControl: Boolean,
-    stableKey: String? = null,
+    stableKey: String = "",
     properties: JSONObject
 ): Banner = bannerConstructor.newInstance(
     trackingId,

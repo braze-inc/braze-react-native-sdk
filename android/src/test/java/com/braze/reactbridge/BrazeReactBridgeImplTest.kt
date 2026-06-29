@@ -926,6 +926,7 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
             isTestSend = isTestSend,
             expirationTimestampSeconds = 1234567890L,
             isControl = isControl,
+            stableKey = "banner-stable-1",
             properties = JSONObject(mapOf("key" to "value"))
         )
 
@@ -945,6 +946,7 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
         val result = captor.firstValue
         assertEquals("track123", result.getString("trackingId"))
         assertEquals(testPlacementId, result.getString("placementId"))
+        assertEquals("banner-stable-1", result.getString("stableKey"))
         assertEquals(isTestSend, result.getBoolean("isTestSend"))
         assertEquals(isControl, result.getBoolean("isControl"))
         assertEquals("<div>Banner</div>", result.getString("html"))
@@ -984,6 +986,17 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
         brazeReactBridgeImpl.logBannerImpression(testPlacementId)
 
         verify(brazeMock).logBannerImpression(testPlacementId)
+    }
+
+    @Test
+    fun whenDismissBannerIsCalled_brazeDismissBannerGetsCalledWithPlacementId() {
+        val testPlacementId = "test-placement-id"
+        val brazeMock = mock<Braze>()
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        brazeReactBridgeImpl.dismissBanner(testPlacementId)
+
+        verify(brazeMock).dismissBanner(testPlacementId)
     }
 
     @Test
