@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 const isFabricEnabled = global.nativeFabricUIManager != null;
 const NativeBannerView = isFabricEnabled ? require('../specs/BrazeBannerViewNativeComponent').default : requireNativeComponent('BrazeBannerView');
 
-const BannerView = ({ onHeightChanged, style, placementID, ...props }) => {
+const BannerView = ({ onHeightChanged, onDismiss, style, placementId, ...props }) => {
   const [height, setHeight] = useState(0);
 
   const handleHeightChanged = (event) => {
@@ -12,6 +12,12 @@ const BannerView = ({ onHeightChanged, style, placementID, ...props }) => {
     setHeight(newHeight);
     if (onHeightChanged) {
       onHeightChanged(newHeight);
+    }
+  };
+
+  const handleDismiss = (event) => {
+    if (onDismiss) {
+      onDismiss(event.nativeEvent);
     }
   };
 
@@ -27,8 +33,9 @@ const BannerView = ({ onHeightChanged, style, placementID, ...props }) => {
     <NativeBannerView
       {...props}
       style={combinedStyle}
-      placementID={placementID}
+      placementId={placementId}
       onHeightChanged={handleHeightChanged}
+      onBannerDismiss={handleDismiss}
     />
   );
 };

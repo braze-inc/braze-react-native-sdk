@@ -247,7 +247,7 @@ Braze.subscribeToInAppMessage(false, (event) => {
 ### Content Cards
 
 ```typescript
-const cards = await Braze.getContentCards();
+const cards = await Braze.getCachedContentCards();
 Braze.requestContentCardsRefresh();
 Braze.launchContentCards(); // default Braze UI
 
@@ -266,7 +266,7 @@ Braze.requestBannersRefresh(["homepage_banner"]);
 const banner = await Braze.getBanner("homepage_banner");
 
 // Or use the native Banner view:
-// <Braze.BrazeBannerView placementID="homepage_banner" />
+// <Braze.BrazeBannerView placementId="homepage_banner" />
 ```
 
 ### Push notifications

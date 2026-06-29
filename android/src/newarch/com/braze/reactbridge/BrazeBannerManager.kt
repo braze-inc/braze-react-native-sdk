@@ -24,9 +24,9 @@ class BrazeBannerManager(context: ReactApplicationContext) :
     override fun createViewInstance(context: ThemedReactContext): BannerContainer =
         BrazeBannerManagerImpl.createViewInstance(context)
 
-    @ReactProp(name = "placementID")
-    override fun setPlacementID(view: BannerContainer, placementID: String?) {
-        BrazeBannerManagerImpl.setPlacementID(view, placementID)
+    @ReactProp(name = "placementId")
+    override fun setPlacementId(view: BannerContainer, placementId: String?) {
+        BrazeBannerManagerImpl.setPlacementId(view, placementId)
     }
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String?, Any?>? =

@@ -94,6 +94,7 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
           updateTrackingPropertyAllowList: jest.fn(),
           logBannerImpression: jest.fn(),
           logBannerClick: jest.fn(),
+          dismissBanner: jest.fn(),
           initialize: jest.fn()
         };
 

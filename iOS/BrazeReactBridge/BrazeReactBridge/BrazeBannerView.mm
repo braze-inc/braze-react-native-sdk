@@ -19,6 +19,10 @@ using namespace facebook::react;
   BrazeBannerUIHelper *_uiHelper;
 }
 
+static BOOL RCTShouldSendBannerDismissEvent(NSString *placementId, NSString *stableKey, NSString *trackingId) {
+  return placementId.length > 0 && stableKey.length > 0 && trackingId.length > 0;
+}
+
 /// Default initializer triggered by the `RCTComponentViewFactory` when used as a Fabric Component.
 - (instancetype)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
@@ -37,7 +41,7 @@ using namespace facebook::react;
 #pragma mark - RCT Property Lifecycle Methods
 // These methods are automatically interpreted and called by React Native when the properties are set from JavaScript.
 
-- (void)setPlacementID:(NSString *)placementId {
+- (void)setPlacementId:(NSString *)placementId {
   __weak BrazeBannerView *weakSelf = self;
 
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -60,10 +64,25 @@ using namespace facebook::react;
   };
 }
 
+- (void)setOnBannerDismiss:(RCTBubblingEventBlock)onBannerDismiss {
+  _uiHelper.onDismiss = ^(NSString *placementId, NSString *stableKey, NSString *trackingId) {
+    if (!RCTShouldSendBannerDismissEvent(placementId, stableKey, trackingId)) {
+      return;
+    }
+
+    onBannerDismiss(@{
+      @"placementId": placementId ?: @"",
+      @"stableKey": stableKey ?: @"",
+      @"trackingId": trackingId ?: @""
+    });
+  };
+}
+
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)prepareForRecycle {
   [super prepareForRecycle];
   _uiHelper.onHeightChanged = nil;
+  _uiHelper.onDismiss = nil;
 }
 
 /// This method is the Fabric equivalent of the setter methods above.
@@ -73,10 +92,10 @@ using namespace facebook::react;
   const auto &oldViewProps = *std::static_pointer_cast<BrazeBannerViewProps const>(_props);
   const auto &newViewProps = *std::static_pointer_cast<BrazeBannerViewProps const>(props);
 
-  if (oldViewProps.placementID != newViewProps.placementID) {
-    NSString *placementIdString = [[NSString alloc] initWithCString:newViewProps.placementID.c_str()
+  if (oldViewProps.placementId != newViewProps.placementId) {
+    NSString *placementIdString = [[NSString alloc] initWithCString:newViewProps.placementId.c_str()
                                                            encoding:NSASCIIStringEncoding];
-    [self setPlacementID:placementIdString];
+    [self setPlacementId:placementIdString];
   }
 
   if (!_uiHelper.onHeightChanged) {
@@ -86,8 +105,27 @@ using namespace facebook::react;
       BrazeBannerViewEventEmitter::OnHeightChanged result = BrazeBannerViewEventEmitter::OnHeightChanged();
       result.height = height;
       __strong BrazeBannerView *strongSelf = weakSelf;
-      if (strongSelf->_eventEmitter) {
+      if (strongSelf && strongSelf->_eventEmitter) {
         strongSelf.eventEmitter.onHeightChanged(result);
+      }
+    };
+  }
+
+  if (!_uiHelper.onDismiss) {
+    __weak BrazeBannerView *weakSelf = self;
+
+    _uiHelper.onDismiss = ^(NSString *placementId, NSString *stableKey, NSString *trackingId) {
+      if (!RCTShouldSendBannerDismissEvent(placementId, stableKey, trackingId)) {
+        return;
+      }
+
+      BrazeBannerViewEventEmitter::OnBannerDismiss result = BrazeBannerViewEventEmitter::OnBannerDismiss();
+      result.placementId = placementId.length > 0 ? std::string([placementId UTF8String]) : std::string();
+      result.stableKey = stableKey.length > 0 ? std::string([stableKey UTF8String]) : std::string();
+      result.trackingId = trackingId.length > 0 ? std::string([trackingId UTF8String]) : std::string();
+      __strong BrazeBannerView *strongSelf = weakSelf;
+      if (strongSelf && strongSelf->_eventEmitter) {
+        strongSelf.eventEmitter.onBannerDismiss(result);
       }
     };
   }

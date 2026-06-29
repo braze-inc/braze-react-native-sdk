@@ -799,6 +799,19 @@ RCT_EXPORT_METHOD(logBannerClick:(NSString *)placementId buttonId:(NSString *)bu
   }];
 }
 
+RCT_EXPORT_METHOD(dismissBanner:(NSString *)placementId) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [braze.banners getBannerFor:placementId completion:^(BRZBanner * _Nullable banner) {
+      if (banner) {
+        RCTLogInfo(@"dismissBanner with placementId %@", placementId);
+        [banner dismissUsing:braze];
+      } else {
+        RCTLogInfo(@"dismissBanner: No banner found for placementId %@", placementId);
+      }
+    }];
+  });
+}
+
 static NSArray *RCTFormatBanners(NSDictionary<NSString *, BRZBanner *> *banners) {
   NSMutableArray *mappedBanners = [NSMutableArray arrayWithCapacity:[banners count]];
   [banners.allValues enumerateObjectsUsingBlock:^(BRZBanner *banner,
@@ -814,6 +827,7 @@ static NSDictionary *RCTFormatBanner(BRZBanner *banner) {
 
   formattedBannerData[@"trackingId"] = banner.trackingId;
   formattedBannerData[@"placementId"] = banner.placementId;
+  formattedBannerData[@"stableKey"] = banner.stableKey;
   formattedBannerData[@"isTestSend"] = @(banner.isTestSend);
   formattedBannerData[@"isControl"] = @(banner.isControl);
   formattedBannerData[@"html"] = banner.html;

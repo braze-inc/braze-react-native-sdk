@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, Platform, Settings } from 'react-native';
+import { Text, StyleSheet, Alert, Platform, Settings } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Braze from '@braze/react-native-sdk';
 import { Button, Input, Card, ScreenLayout, useToast } from '../components';

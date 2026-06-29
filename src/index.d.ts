@@ -581,7 +581,9 @@ export function logContentCardImpression(id: string): void;
 export function processContentCardClickAction(id: string): void;
 
 /**
- * Performs a refresh and then returns a content cards array.
+ * Performs a network refresh and then returns a content cards array.
+ * @deprecated Use {@link getCachedContentCards} to retrieve the most recently cached Content Cards
+ * state, and {@link requestContentCardsRefresh} to manually trigger a background refresh.
  * @returns {Promise<ContentCard[]>}
  */
 export function getContentCards(): Promise<ContentCard[]>;
@@ -603,6 +605,9 @@ export class Banner {
 
   /** The placement ID this banner is matched to. */
   placementId: string;
+
+  /** Stable identifier for this banner instance. */
+  stableKey: string;
 
   /** Whether the banner is from a test send. */
   isTestSend: boolean;
@@ -666,11 +671,18 @@ export function logBannerImpression(placementId: string): void;
 export function logBannerClick(placementId: string, buttonId: string | null): void;
 
 /**
+ * Dismisses the banner with the provided placement ID.
+ *
+ * @param placementId - The placement ID of the banner.
+ */
+export function dismissBanner(placementId: string): void;
+
+/**
  * The configuration properties associated with the Banner view.
  */
 export interface BrazeBannerViewProps {
   /** The placement ID for this Banner view. */
-  placementID: string;
+  placementId: string;
 
   /**
    * Optional custom styles to be applied to the Banner view.
@@ -686,6 +698,13 @@ export interface BrazeBannerViewProps {
    * @param height - The new height of the Banner in pixels.
    */
   onHeightChanged?: (height: number) => void;
+
+  /**
+   * Called when the user dismisses the banner via the native Braze banner UI (for example, a close action).
+   *
+   * @param event - `placementId` matches this view's placement; `stableKey` and `trackingId` identify the banner instance.
+   */
+  onDismiss?: (event: { placementId: string; stableKey: string; trackingId: string }) => void;
 }
 
 /**

@@ -12,6 +12,7 @@ import com.facebook.react.uimanager.events.Event
 object BrazeBannerManagerImpl {
     const val NAME = "BrazeBannerView"
     const val EVENT_HEIGHT_CHANGED = "onHeightChanged"
+    const val EVENT_ON_DISMISS = "onBannerDismiss"
     const val FIELD_HEIGHT = "height"
 
     class BannerDimensionsEvent(
@@ -20,6 +21,22 @@ object BrazeBannerManagerImpl {
         private val payload: WritableMap
     ) : Event<BannerDimensionsEvent>(surfaceId, viewId) {
         override fun getEventName(): String = EVENT_HEIGHT_CHANGED
+        override fun getEventData(): WritableMap? = payload
+    }
+
+    /**
+     * Event emitted to React Native when a banner is dismissed.
+     *
+     * @param surfaceId The React Native surface ID that owns the banner view.
+     * @param viewId The React tag for the banner view receiving the event.
+     * @param payload The dismiss event payload sent to React Native.
+     */
+    class BannerDismissEvent(
+        surfaceId: Int,
+        viewId: Int,
+        private val payload: WritableMap
+    ) : Event<BannerDismissEvent>(surfaceId, viewId) {
+        override fun getEventName(): String = EVENT_ON_DISMISS
         override fun getEventData(): WritableMap? = payload
     }
 
@@ -71,13 +88,30 @@ object BrazeBannerManagerImpl {
                 }
             }
         }
+        registerBannerDismissCallback(container, context)
         return container
     }
 
-    fun setPlacementID(view: BannerContainer, placementID: String?) {
+    internal fun registerBannerDismissCallback(
+        container: BannerContainer,
+        reactContext: ReactContext,
+    ) {
+        container.bannerView.onDismissCallback = { snapshot ->
+            if (canDispatchBannerDismissSnapshot(snapshot)) {
+                val surfaceId = UIManagerHelper.getSurfaceId(reactContext)
+                val payload = mapBannerDismissSnapshot(snapshot)
+                container.post {
+                    val event = BannerDismissEvent(surfaceId, container.id, payload)
+                    UIManagerHelper.getEventDispatcherForReactTag(reactContext, container.id)?.dispatchEvent(event)
+                }
+            }
+        }
+    }
+
+    fun setPlacementId(view: BannerContainer, placementId: String?) {
         // Reset the alpha of the container in case the previous placement was a control banner.
         view.alpha = 1.0f
-        view.bannerView.placementId = placementID
+        view.bannerView.placementId = placementId
     }
 
     fun getExportedCustomBubblingEventTypeConstants(): Map<String?, Any?>? =
@@ -86,6 +120,12 @@ object BrazeBannerManagerImpl {
                 "phasedRegistrationNames" to mapOf(
                     "bubbled" to EVENT_HEIGHT_CHANGED,
                     "captured" to EVENT_HEIGHT_CHANGED
+                )
+            ),
+            EVENT_ON_DISMISS to mapOf(
+                "phasedRegistrationNames" to mapOf(
+                    "bubbled" to EVENT_ON_DISMISS,
+                    "captured" to EVENT_ON_DISMISS
                 )
             )
         )

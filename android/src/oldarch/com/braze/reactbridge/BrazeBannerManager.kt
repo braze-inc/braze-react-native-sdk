@@ -13,9 +13,9 @@ class BrazeBannerManager(@Suppress("UNUSED_PARAMETER") private val callerContext
     override fun createViewInstance(context: ThemedReactContext): BannerContainer =
         BrazeBannerManagerImpl.createViewInstance(context)
 
-    @ReactProp(name = "placementID")
-    fun setPlacementID(view: BannerContainer, placementID: String?) {
-        BrazeBannerManagerImpl.setPlacementID(view, placementID)
+    @ReactProp(name = "placementId")
+    fun setPlacementId(view: BannerContainer, placementId: String?) {
+        BrazeBannerManagerImpl.setPlacementId(view, placementId)
     }
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String?, Any?>? =

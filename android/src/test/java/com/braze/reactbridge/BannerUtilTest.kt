@@ -1,8 +1,11 @@
 package com.braze.reactbridge
 
+import com.braze.ui.banners.BannerDismissSnapshot
 import com.facebook.react.bridge.WritableArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class BannerUtilTest : BrazeRobolectricTestBase() {
@@ -17,6 +20,7 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
             isTestSend = isTestSend,
             expirationTimestampSeconds = 1234567890L,
             isControl = isControl,
+            stableKey = "stable-abc",
             properties = JSONObject(mapOf("key" to "value"))
         )
 
@@ -24,6 +28,7 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
 
         assertEquals("track123", result.getString("trackingId"))
         assertEquals("place456", result.getString("placementId"))
+        assertEquals("stable-abc", result.getString("stableKey"))
         assertEquals(isTestSend, result.getBoolean("isTestSend"))
         assertEquals(isControl, result.getBoolean("isControl"))
         assertEquals("<div>Banner</div>", result.getString("html"))
@@ -46,6 +51,7 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
             isTestSend = isTestSend,
             expirationTimestampSeconds = 100L,
             isControl = isControl,
+            stableKey = "stable-A",
             properties = JSONObject(mapOf("key" to "value"))
         )
 
@@ -56,6 +62,7 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
             isTestSend = isTestSend,
             expirationTimestampSeconds = 200L,
             isControl = isControl,
+            stableKey = "stable-B",
             properties = JSONObject(mapOf("key" to "value"))
         )
 
@@ -66,6 +73,7 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
         ktAssertNotNull(map1)
         assertEquals("trackA", map1.getString("trackingId"))
         assertEquals("placeA", map1.getString("placementId"))
+        assertEquals("stable-A", map1.getString("stableKey"))
         assertEquals(isTestSend, map1.getBoolean("isTestSend"))
         assertEquals(isControl, map1.getBoolean("isControl"))
         assertEquals("<div>A</div>", map1.getString("html"))
@@ -80,6 +88,7 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
         ktAssertNotNull(map2)
         assertEquals("trackB", map2.getString("trackingId"))
         assertEquals("placeB", map2.getString("placementId"))
+        assertEquals("stable-B", map2.getString("stableKey"))
         assertEquals(isTestSend, map2.getBoolean("isTestSend"))
         assertEquals(isControl, map2.getBoolean("isControl"))
         assertEquals("<div>B</div>", map2.getString("html"))
@@ -88,5 +97,93 @@ class BannerUtilTest : BrazeRobolectricTestBase() {
         val kvp2 = map2.getMap("properties")
         ktAssertNotNull(kvp2)
         assertEquals("value", kvp2.getString("key"))
+    }
+
+    @Test
+    fun whenCalled_mapBannerDismissSnapshot_addsIdentityFieldsCorrectly() {
+        val snapshot = BannerDismissSnapshot(
+            placementId = "place456",
+            stableKey = "stable-abc",
+            trackingId = "track123"
+        )
+
+        val result = mapBannerDismissSnapshot(snapshot)
+
+        assertEquals("place456", result.getString("placementId"))
+        assertEquals("stable-abc", result.getString("stableKey"))
+        assertEquals("track123", result.getString("trackingId"))
+        assertTrue(canDispatchBannerDismissSnapshot(snapshot))
+    }
+
+    @Test
+    fun whenCalled_canDispatchBannerDismissSnapshotWithMissingIdentityField_returnsFalse() {
+        val missingPlacement = BannerDismissSnapshot(
+            placementId = "",
+            stableKey = "stable-abc",
+            trackingId = "track123"
+        )
+        val missingStableKey = BannerDismissSnapshot(
+            placementId = "place456",
+            stableKey = "",
+            trackingId = "track123"
+        )
+        val missingTrackingId = BannerDismissSnapshot(
+            placementId = "place456",
+            stableKey = "stable-abc",
+            trackingId = ""
+        )
+
+        assertFalse(canDispatchBannerDismissSnapshot(missingPlacement))
+        assertFalse(canDispatchBannerDismissSnapshot(missingStableKey))
+        assertFalse(canDispatchBannerDismissSnapshot(missingTrackingId))
+    }
+
+    @Test
+    fun whenCalled_canDispatchBannerDismissSnapshotWithBlankIdentityField_returnsFalse() {
+        val blankPlacement = BannerDismissSnapshot(
+            placementId = "   ",
+            stableKey = "stable-abc",
+            trackingId = "track123"
+        )
+        val blankStableKey = BannerDismissSnapshot(
+            placementId = "place456",
+            stableKey = "\t",
+            trackingId = "track123"
+        )
+        val blankTrackingId = BannerDismissSnapshot(
+            placementId = "place456",
+            stableKey = "stable-abc",
+            trackingId = " \n "
+        )
+
+        assertFalse(canDispatchBannerDismissSnapshot(blankPlacement))
+        assertFalse(canDispatchBannerDismissSnapshot(blankStableKey))
+        assertFalse(canDispatchBannerDismissSnapshot(blankTrackingId))
+    }
+
+    @Test
+    fun whenCalled_mapBannerDismissSnapshot_usesPlacementIdKeyExpectedByJavaScript() {
+        val snapshot = BannerDismissSnapshot(
+            placementId = "place456",
+            stableKey = "stable-abc",
+            trackingId = "track123"
+        )
+
+        val result = mapBannerDismissSnapshot(snapshot)
+
+        assertTrue(result.hasKey("placementId"))
+        assertFalse(result.hasKey("placementID"))
+    }
+
+    @Test
+    fun whenCalled_getExportedCustomBubblingEventTypeConstants_includesOnBannerDismissEvent() {
+        val constants = BrazeBannerManagerImpl.getExportedCustomBubblingEventTypeConstants()
+        ktAssertNotNull(constants)
+        assertTrue(constants.containsKey(BrazeBannerManagerImpl.EVENT_ON_DISMISS))
+
+        val dismissConfig = constants[BrazeBannerManagerImpl.EVENT_ON_DISMISS] as Map<*, *>
+        val registrationNames = dismissConfig["phasedRegistrationNames"] as Map<*, *>
+        assertEquals(BrazeBannerManagerImpl.EVENT_ON_DISMISS, registrationNames["bubbled"])
+        assertEquals(BrazeBannerManagerImpl.EVENT_ON_DISMISS, registrationNames["captured"])
     }
 }

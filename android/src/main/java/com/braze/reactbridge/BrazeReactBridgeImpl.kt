@@ -377,6 +377,10 @@ class BrazeReactBridgeImpl(
         braze.logBannerClick(placementId, buttonId)
     }
 
+    fun dismissBanner(placementId: String) {
+        braze.dismissBanner(placementId)
+    }
+
     fun launchContentCards(@Suppress("UNUSED_PARAMETER") dismissAutomaticallyOnCardClick: Boolean?) {
         val intent = Intent(currentActivity, ContentCardsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or

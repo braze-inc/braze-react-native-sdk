@@ -285,6 +285,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun dismissBanner(placementId: String) {
+        brazeImpl.dismissBanner(placementId)
+    }
+
+    @ReactMethod
     fun requestImmediateDataFlush() {
         brazeImpl.requestImmediateDataFlush()
     }

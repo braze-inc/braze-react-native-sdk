@@ -239,6 +239,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
         brazeImpl.logBannerClick(placementId, buttonId)
     }
 
+    override fun dismissBanner(placementId: String) {
+        brazeImpl.dismissBanner(placementId)
+    }
+
     override fun requestImmediateDataFlush() {
         brazeImpl.requestImmediateDataFlush()
     }
