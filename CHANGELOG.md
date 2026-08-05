@@ -1,3 +1,10 @@
+## Unreleased
+
+##### Fixed
+- Declares `static_framework = true` in the iOS podspec, allowing installation in apps using `use_frameworks! :linkage => :dynamic`.
+  - Previously, CocoaPods rejected the install because the pod would build as a dynamic framework while linking the static Braze Swift SDK binaries. The pod now always builds as a static framework when `use_frameworks!` is enabled, matching the approach used by Firebase and GoogleMaps.
+  - This has no effect on projects that don't use `use_frameworks!` or that use `use_frameworks! :linkage => :static`.
+
 ## 22.0.0
 
 ##### Breaking
