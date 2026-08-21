@@ -30,7 +30,18 @@ build/
 .gradle
 local.properties
 *.iml
+*.class
 android/bin/
+
+# Gradle user home (when GRADLE_USER_HOME is set inside public/android)
+android/caches/
+android/daemon/
+android/wrapper/
+android/native/
+android/.tmp/
+android/kotlin-profile/
+android/workers/
+android/android/
 .project
 .settings
 BrazeProject/android/app/bin/

@@ -1,6 +1,8 @@
 package com.braze.reactbridge
 
+import android.app.Activity
 import com.braze.Braze
+import com.braze.reactbridge.util.getMutableMap
 import com.braze.ui.banners.BannerDismissSnapshot
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -9,6 +11,7 @@ import org.junit.Test
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
 
 class BrazeBannerManagerImplTest : BrazeRobolectricTestBase() {
@@ -107,6 +110,28 @@ class BrazeBannerManagerImplTest : BrazeRobolectricTestBase() {
         assertEquals(placementId, receivedSnapshot?.placementId)
         assertNotNull(receivedSnapshot?.stableKey)
         assertNotNull(receivedSnapshot?.trackingId)
+    }
+
+    @Test
+    fun whenSetPlacementIdIsCalled_resetsContainerAlpha() {
+        val container = BannerContainer(Robolectric.buildActivity(Activity::class.java).get())
+        container.alpha = 0.0f
+
+        BrazeBannerManagerImpl.setPlacementId(container, "placement-1")
+
+        assertEquals(1.0f, container.alpha, 0.001f)
+    }
+
+    @Test
+    fun whenCreated_BannerDimensionsEvent_usesOnHeightChangedEventName() {
+        val payload = getMutableMap().apply {
+            putDouble(BrazeBannerManagerImpl.FIELD_HEIGHT, 50.0)
+        }
+        val event = BrazeBannerManagerImpl.BannerDimensionsEvent(1, 42, payload)
+
+        assertEquals(BrazeBannerManagerImpl.EVENT_HEIGHT_CHANGED, event.eventName)
+        assertEquals(1, event.surfaceId)
+        assertEquals(42, event.viewTag)
     }
 
     private fun createBannerContainerWithDismissCallback(): BannerContainer {

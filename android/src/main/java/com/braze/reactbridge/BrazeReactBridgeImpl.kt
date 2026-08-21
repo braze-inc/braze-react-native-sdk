@@ -38,7 +38,6 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
-import com.facebook.react.bridge.WritableNativeMap
 import com.braze.reactbridge.util.getMutableArray
 import com.braze.reactbridge.util.getMutableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
@@ -433,8 +432,12 @@ class BrazeReactBridgeImpl(
     }
 
     @Suppress("UnusedPrivateMember")
-    fun requestPushPermission(@Suppress("UNUSED_PARAMETER") options: ReadableMap?) =
-        currentActivity.requestPushPermissionPrompt()
+    fun requestPushPermission(@Suppress("UNUSED_PARAMETER") options: ReadableMap?) {
+        val activity = currentActivity ?: return
+        activity.runOnUiThread {
+            activity.requestPushPermissionPrompt()
+        }
+    }
 
     private fun subscribeToContentCardsUpdatedEvent() {
         if (this::contentCardsUpdatedSubscriber.isInitialized) {
@@ -511,7 +514,7 @@ class BrazeReactBridgeImpl(
             if (!reactApplicationContext.hasActiveReactInstance()) {
                 return@IEventSubscriber
             }
-            val data = WritableNativeMap()
+            val data = getMutableMap()
             data.putInt("error_code", errorEvent.errorCode)
             data.putString("user_id", errorEvent.userId)
             data.putString("original_signature", errorEvent.signature)
@@ -915,7 +918,7 @@ class BrazeReactBridgeImpl(
             .setCustomInAppMessageManagerListener(
                 object : DefaultInAppMessageManagerListener() {
                     override fun beforeInAppMessageDisplayed(inAppMessage: IInAppMessage): InAppMessageOperation {
-                        val parameters: WritableMap = WritableNativeMap()
+                        val parameters: WritableMap = getMutableMap()
                         val inAppMessageJSON = mapInAppMessage(inAppMessage)
                         parameters.putMap("inAppMessage", inAppMessageJSON)
 
