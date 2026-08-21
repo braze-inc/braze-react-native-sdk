@@ -8,6 +8,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 
 class PushPayloadMapperTest : BrazeRobolectricTestBase() {
 
@@ -360,5 +362,29 @@ class PushPayloadMapperTest : BrazeRobolectricTestBase() {
         assertTrue(result.getBoolean("is_silent"))
         assertFalse(result.getBoolean("use_webview"))
         assertFalse(result.getBoolean("is_braze_internal"))
+    }
+
+    @Test
+    fun whenBadgeNumberProvided_createPushNotificationMap_setsBadgeCount() {
+        val bundle = Bundle()
+        val payload = mock<BrazeNotificationPayload> {
+            on { notificationBadgeNumber } doReturn 7
+            on { notificationExtras } doReturn bundle
+            on { brazeExtras } doReturn Bundle()
+            on { titleText } doReturn "Title"
+            on { contentText } doReturn "Body"
+            on { summaryText } doReturn null
+            on { deeplink } doReturn null
+            on { bigImageUrl } doReturn null
+            on { isUninstallTrackingPush } doReturn false
+            on { shouldRefreshFeatureFlags } doReturn false
+        }
+
+        val result = PushPayloadMapper.createPushNotificationMap(
+            payload = payload,
+            payloadType = "push_opened"
+        )
+
+        assertEquals(7, result.getInt("badge_count"))
     }
 }

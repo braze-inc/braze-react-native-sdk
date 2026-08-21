@@ -35,7 +35,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -725,6 +724,28 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
     }
 
     @Test
+    fun whenSetGenderIsCalled_withInvalidGender_invokesSetGenderWithUnknown() {
+        var callbackInvoked = false
+        val brazeUserMock = mock<BrazeUser> {
+            on { setGender(any()) } doReturn true
+            on { setGender(null) } doReturn true
+        }
+        val brazeMock = getBrazeMock(brazeUserMock)
+        brazeReactBridgeImpl.brazeTestingMock = brazeMock
+
+        val callback = createTestCallback<Boolean, Unit>(
+            onSuccess = { },
+            onFail = { fail("Callback did not return any data.") },
+            onCompletion = { callbackInvoked = true }
+        )
+
+        brazeReactBridgeImpl.setGender("not_a_valid_gender", callback)
+        blockUntil { callbackInvoked }
+
+        verify(brazeUserMock, org.mockito.kotlin.atLeastOnce()).setGender(org.mockito.kotlin.anyOrNull())
+    }
+
+    @Test
     fun whenSetDateOfBirthIsCalled_setDateOfBirthGetsCalled() {
         val testYear = 1994
         val testMonth = 9
@@ -914,7 +935,6 @@ class BrazeReactBridgeImplTest : BrazeRobolectricTestBase() {
     }
 
     @Test
-    @Ignore("Ignore until SDK-6251")
     fun whenGetBannerIsCalledWithValidPlacementId_promiseResolvesWithBannerData() {
         val testPlacementId = Random.nextInt().toString()
         val isTestSend = getRandomBoolean()

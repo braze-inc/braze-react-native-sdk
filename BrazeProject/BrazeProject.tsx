@@ -68,19 +68,8 @@ export const BrazeProject = (): ReactElement => {
       }
     });
 
-    const inAppMessageSubscription = Braze.subscribeToInAppMessage(
-      true,
-      (event: Braze.InAppMessageEvent) => {
-        console.log(`In-app message received: ${JSON.stringify(event)}`);
-      },
-    );
-
-    const inAppMessageListener = Braze.addListener(
-      Braze.Events.IN_APP_MESSAGE_RECEIVED,
-      (event: Braze.InAppMessageEvent) => {
-        console.log(`In-app message received: ${JSON.stringify(event)}`);
-      },
-    );
+    // In-app message subscription (with its `useBrazeUI` configuration) is managed
+    // interactively from the "In-App Messages" section of the User Management screen.
 
     const contentCardsSubscription = Braze.addListener(
       Braze.Events.CONTENT_CARDS_UPDATED,
@@ -123,8 +112,6 @@ export const BrazeProject = (): ReactElement => {
 
     return () => {
       listener.remove();
-      inAppMessageSubscription?.remove();
-      inAppMessageListener.remove();
       contentCardsSubscription.remove();
       bannerCardsSubscription.remove();
       featureFlagsSubscription.remove();

@@ -20,11 +20,11 @@
   return self;
 }
 
-/// Returns NO if there is an `inAppMessagePresenter` that has a custom delegate already set. Otherwise, returns YES.
+/// Returns NO if there is an `inAppMessagePresenter` that has a custom (non-`self`) delegate already set. Otherwise, returns YES.
 - (BOOL)canSetDefaultInAppMessagePresenterDelegate:(Braze *)braze {
   BrazeInAppMessageUI *inAppMessageUI = (BrazeInAppMessageUI *)braze.inAppMessagePresenter;
   if ([inAppMessageUI respondsToSelector:@selector(delegate)]) {
-    return inAppMessageUI.delegate == nil;
+    return inAppMessageUI.delegate == nil || inAppMessageUI.delegate == self;
   } else {
     return NO;
   }

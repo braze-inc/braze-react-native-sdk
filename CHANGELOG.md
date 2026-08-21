@@ -1,3 +1,15 @@
+## 23.0.0
+
+##### Breaking
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 16.0.0 to 18.2.0](https://github.com/braze-inc/braze-swift-sdk/compare/16.0.0...18.2.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - Includes fixes for issues where native Swift calls to `Braze.init` and `Braze.changeUser` would block the calling thread. Refer to the linked release notes for further details.
+  - Includes fix for a bug that prevented geofences from being registered with `CLLocationManager` when `automaticLocationCollection` was disabled.
+- Updates the native Android SDK version bindings [from Braze Android SDK 42.3.1 to 43.1.1](https://github.com/braze-inc/braze-android-sdk/compare/v42.3.1...v43.1.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Fixed
+- Fixes an iOS issue where `Braze.subscribeToInAppMessage(false, callback)` would fail to disable the default in-app message UI if another React Native event listener was registered first.
+- Fixes an Android crash where `Braze.requestPushPermission()` could throw a `NullPointerException` while off the main thread.
+
 ## 22.0.0
 
 ##### Breaking

@@ -8,6 +8,7 @@ import com.braze.models.IPropertiesObject.Companion.PROPERTIES_TYPE_NUMBER
 import com.braze.models.IPropertiesObject.Companion.PROPERTIES_TYPE_STRING
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -121,5 +122,35 @@ class FeatureFlagUtilTest : BrazeRobolectricTestBase() {
         ktAssertNotNull(innerJsonMap)
         assertEquals(PROPERTIES_TYPE_JSON, jsonMap.getString("type"))
         assertEquals("nested_value", innerJsonMap.getString("nested_key"))
+    }
+
+    @Test
+    fun convertFeatureFlag_withDisabledFlag_mapsEnabledFalse() {
+        val ff = createFeatureFlag("disabled_ff", false, "{}")
+        val result = convertFeatureFlag(ff)
+
+        assertEquals("disabled_ff", result.getString("id"))
+        assertFalse(result.getBoolean("enabled"))
+    }
+
+    @Test
+    fun convertFeatureFlag_skipsMalformedProperties() {
+        val propertiesJson = JSONObject(
+            mapOf(
+                "valid_prop" to mapOf(
+                    "type" to PROPERTIES_TYPE_STRING,
+                    "value" to "ok"
+                ),
+                "invalid_prop" to "not_an_object"
+            )
+        ).toString()
+        val ff = createFeatureFlag("ff_malformed", true, propertiesJson)
+
+        val result = convertFeatureFlag(ff)
+        val resultProperties = result.getMap("properties")
+        ktAssertNotNull(resultProperties)
+
+        assertTrue(resultProperties.hasKey("valid_prop"))
+        assertFalse(resultProperties.hasKey("invalid_prop"))
     }
 }

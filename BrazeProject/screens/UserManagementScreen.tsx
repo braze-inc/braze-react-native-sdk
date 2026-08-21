@@ -2,7 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Text, StyleSheet, Alert, Platform, Settings } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Braze from '@braze/react-native-sdk';
-import { Button, Input, Card, ScreenLayout, useToast } from '../components';
+import {
+  Button,
+  Input,
+  Card,
+  ScreenLayout,
+  useToast,
+  InAppMessagesSection,
+} from '../components';
 import { Colors } from '../constants/colors';
 import { defaultApiKey, defaultEndpoint } from '../constants/brazeConfig';
 
@@ -400,11 +407,6 @@ export const UserManagementScreen: React.FC = () => {
     showToast('Attribution Data Set');
   };
 
-  const hideCurrentInAppMessage = () => {
-    Braze.hideCurrentInAppMessage();
-    showToast('Message dismissed');
-  };
-
   // Push
   const toggleiOSPushAutoEnabled = () => {
     if (Platform.OS === 'ios') {
@@ -498,12 +500,9 @@ export const UserManagementScreen: React.FC = () => {
           title="Log Purchase (with fixed values)"
           onPress={logPurchasePress}
         />
-        <Button
-          title="Dismiss In App Message"
-          onPress={hideCurrentInAppMessage}
-          variant="secondary"
-        />
       </Card>
+
+      <InAppMessagesSection showToast={showToast} />
 
         <Card title="Language & Subscription">
           <Input

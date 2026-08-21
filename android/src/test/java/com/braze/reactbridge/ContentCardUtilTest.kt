@@ -206,6 +206,31 @@ class ContentCardUtilTest : BrazeRobolectricTestBase() {
     }
 
     @Test
+    fun whenCalled_mapContentCard_withUnknownCardType_returnsBaseFieldsOnly() {
+        val mockCard = mock<Card> {
+            on { id } doReturn "unknown123"
+            on { created } doReturn 100L
+            on { expiresAt } doReturn 200L
+            on { viewed } doReturn false
+            on { isClicked } doReturn false
+            on { isPinned } doReturn false
+            on { isDismissed } doReturn false
+            on { isDismissibleByUser } doReturn true
+            on { url } doReturn null
+            on { openUriInWebView } doReturn true
+            on { isControl } doReturn false
+            on { cardType } doReturn CardType.DEFAULT
+            on { extras } doReturn emptyMap()
+        }
+
+        val result = mapContentCard(mockCard)
+
+        assertEquals("unknown123", result.getString("id"))
+        assertTrue(result.getBoolean("openURLInWebView"))
+        assertFalse(result.hasKey("type"))
+    }
+
+    @Test
     fun whenCalled_mapContentCardWithCaptionedImageCard_mergesCorrectly() {
         val mockCard = mock<CaptionedImageCard> {
             on { id } doReturn "captioned123"

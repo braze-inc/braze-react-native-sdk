@@ -6,3 +6,4 @@ export { ScreenLayout } from './ScreenLayout';
 export { PropertyTypeSelector, PropertyTypeOptions } from './PropertyTypeSelector';
 export { InfoBox, InfoText, CodeText } from './InfoBox';
 export { useToast } from './useToast';
+export { InAppMessagesSection } from './InAppMessagesSection';

@@ -1,8 +1,8 @@
 PODS:
-  - braze-react-native-sdk (22.0.0):
-    - BrazeKit (~> 15.1.0)
-    - BrazeLocation (~> 15.1.0)
-    - BrazeUI (~> 15.1.0)
+  - braze-react-native-sdk (23.0.0):
+    - BrazeKit (~> 18.2.0)
+    - BrazeLocation (~> 18.2.0)
+    - BrazeUI (~> 18.2.0)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -24,13 +24,13 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - BrazeKit (15.1.0)
-  - BrazeLocation (15.1.0):
-    - BrazeKit (= 15.1.0)
-  - BrazeNotificationService (16.0.0)
-  - BrazePushStory (16.0.0)
-  - BrazeUI (15.1.0):
-    - BrazeKit (= 15.1.0)
+  - BrazeKit (18.2.0)
+  - BrazeLocation (18.2.0):
+    - BrazeKit (= 18.2.0)
+  - BrazeNotificationService (18.2.0)
+  - BrazePushStory (18.2.0)
+  - BrazeUI (18.2.0):
+    - BrazeKit (= 18.2.0)
   - FBLazyVector (0.85.3)
   - hermes-engine (250829098.0.10):
     - hermes-engine/Pre-built (= 250829098.0.10)
@@ -1942,8 +1942,8 @@ PODS:
 
 DEPENDENCIES:
   - "braze-react-native-sdk (from `../node_modules/@braze/react-native-sdk`)"
-  - BrazeNotificationService (~> 16.0.0)
-  - BrazePushStory (~> 16.0.0)
+  - BrazeNotificationService (~> 18.2.0)
+  - BrazePushStory (~> 18.2.0)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2190,12 +2190,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  braze-react-native-sdk: 6d4550b34799d74e493f99fc428ca0bda5c38a5b
-  BrazeKit: f29bd7b6dd93ea9440a70593972fa32e725ed880
-  BrazeLocation: f2a8b2155ec6752d7f38ceb16a69f34a1926f59b
-  BrazeNotificationService: 3e009a8879049cf629d229569876776efabbd0b5
-  BrazePushStory: 2dd1cef9bdcab62b528028348456214395cec864
-  BrazeUI: 7c9df2144c2f39f2e92ecaafde13184358167c3e
+  braze-react-native-sdk: 068e1257f093bd17d450d3813233f923e9e91118
+  BrazeKit: 7096d0fedf79e7263bb055b986ade1cc52ad1897
+  BrazeLocation: 992159c8dc5d2a5f9e4a168d2e2780cf9c4aa6dd
+  BrazeNotificationService: e03f5afb91fcf675231ef4216f5ad718f7b5d4e1
+  BrazePushStory: 72c5d2123865a6316e2bf9bce6975dd923d2f00f
+  BrazeUI: 98385f0fde85fa70dafc27f893cb34d7abbf7d7b
   FBLazyVector: 24e62c765683b8d89006a88a2c8f5cf019f0074d
   hermes-engine: 4d96e903cdf89ff5b497c5c597232ad23425d36e
   RCTDeprecation: a4c521821fab57cbb125b36effe84d897d0dfa12
@@ -2274,6 +2274,6 @@ SPEC CHECKSUMS:
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   Yoga: 77dfa8673de2874e1855002ae59c68b8be9b007b
 
-PODFILE CHECKSUM: 6f018e5e4cd8832e74434591b43825ce08bdf35a
+PODFILE CHECKSUM: d1c0bf52364950c3e7e1d1e54a41baf2d224fb85
 
 COCOAPODS: 1.16.2
