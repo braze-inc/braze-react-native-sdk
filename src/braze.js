@@ -8,6 +8,7 @@ import { Button } from './models/button';
 import { InAppMessage } from './models/in-app-message';
 import { FeatureFlag } from './models/feature-flag';
 import { Banner } from './models/banner';
+import { BrazePushUnregistrationError } from './models/braze-push-unregistration-error';
 import {
   CardCategory,
   NotificationSubscriptionTypes,
@@ -29,6 +30,7 @@ export class Braze {
   static BrazeBannerView = BannerView;
   static FeatureFlag = FeatureFlag;
   static Banner = Banner;
+  static BrazePushUnregistrationError = BrazePushUnregistrationError;
 
   static CardCategory = CardCategory;
   static NotificationSubscriptionTypes = NotificationSubscriptionTypes;
@@ -216,6 +218,22 @@ export class Braze {
   */
   static registerPushToken(token) {
     this.bridge.registerPushToken(token);
+  }
+
+  /**
+   * Unregisters this device's push token from Braze for the current user.
+   *
+   * On success, the push token is unregistered from Braze and removed locally. To receive push
+   * notifications again, re-register via `registerPushToken` or the appropriate native system APIs.
+   *
+   * The SDK does not retry on its own. Inspect `BrazePushUnregistrationError.isRetriable` to decide
+   * whether calling again may succeed.
+   * @returns {Promise<void>} Resolves on success; rejects with a `BrazePushUnregistrationError` on failure.
+   */
+  static unregisterPush() {
+    return this.bridge.unregisterPush().catch((error) => {
+      throw BrazePushUnregistrationError.fromNativeError(error);
+    });
   }
 
   /**
@@ -696,6 +714,27 @@ export class Braze {
    */
   static wipeData() {
     this.bridge.wipeData();
+  }
+
+  /**
+   * Unregisters this device's push token and push-to-start tokens (iOS only) from Braze and, on
+   * success, performs cleanup.
+   *
+   * On success, the device's push token is unregistered, local data is wiped, and the SDK is
+   * disabled. To receive push notifications again, re-register via `registerPushToken` or the
+   * appropriate native system APIs. On failure, no data is wiped and the SDK stays enabled.
+   *
+   * Push-to-start tokens are only unregistered if the iOS host app has integrated Live Activities
+   * and registered them for push-to-start in native code. Otherwise, that step is skipped.
+   *
+   * The SDK does not retry on its own. Inspect `BrazePushUnregistrationError.isRetriable` to decide
+   * whether calling again may succeed.
+   * @returns {Promise<void>} Resolves on success; rejects with a `BrazePushUnregistrationError` on failure.
+   */
+  static logout() {
+    return this.bridge.logout().catch((error) => {
+      throw BrazePushUnregistrationError.fromNativeError(error);
+    });
   }
 
   /**

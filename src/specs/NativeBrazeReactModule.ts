@@ -28,6 +28,7 @@ export interface Spec extends TurboModule {
     day: number
   ): void;
   registerPushToken(token: string): void;
+  unregisterPush(): Promise<void>;
   addToSubscriptionGroup(
     groupId: string,
     callback?: ((error?: Object, result?: boolean) => void) | null
@@ -143,6 +144,7 @@ export interface Spec extends TurboModule {
   dismissBanner(placementId: string): void;
   requestImmediateDataFlush(): void;
   wipeData(): void;
+  logout(): Promise<void>;
   disableSDK(): void;
   enableSDK(): void;
   requestLocationInitialization(): void;

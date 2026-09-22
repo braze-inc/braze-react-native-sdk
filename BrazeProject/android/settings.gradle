@@ -1,8 +1,8 @@
 pluginManagement {
     includeBuild("../node_modules/@react-native/gradle-plugin")
     repositories {
+        maven { url = uri("https://artifactory.infra.braze.com/artifactory/braze-maven") }
         google()
-        mavenCentral()
         gradlePluginPortal()
     }
 }

@@ -1,13 +1,12 @@
 {
   "name": "@braze/react-native-sdk",
-  "version": "23.0.0",
+  "version": "23.1.0",
   "description": "Braze SDK for React Native.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {
     "lint": "./node_modules/.bin/eslint index.js */**.js",
-    "lint-fix": "./node_modules/.bin/eslint --fix index.js */**.js",
-    "test": "jest --coverage"
+    "lint-fix": "./node_modules/.bin/eslint --fix index.js */**.js"
   },
   "repository": {
     "type": "git",
@@ -40,23 +39,9 @@
     "eslint-config-standard-react": "^11.0.1",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.30.0",
-    "jest": "^29.2.1",
     "react": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
     "react-native": "^0.71.0",
     "metro-babel-register": "^0.84.0"
-  },
-  "jest": {
-    "modulePathIgnorePatterns": [
-      "<rootDir>/BrazeProject/"
-    ],
-    "setupFiles": [
-      "<rootDir>/__tests__/jest.setup.js"
-    ],
-    "testMatch": [
-      "<rootDir>/__tests__/**/*.test.js?(x)"
-    ],
-    "preset": "react-native"
   },
   "codegenConfig": {
     "name": "BrazeReactModuleSpec",

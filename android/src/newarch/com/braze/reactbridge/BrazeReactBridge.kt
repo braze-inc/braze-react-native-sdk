@@ -86,6 +86,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
         brazeImpl.registerPushToken(token)
     }
 
+    override fun unregisterPush(promise: Promise) {
+        brazeImpl.unregisterPush(promise)
+    }
+
     override fun addToSubscriptionGroup(groupId: String, callback: Callback?) {
         brazeImpl.addToSubscriptionGroup(groupId, callback)
     }
@@ -249,6 +253,10 @@ class BrazeReactBridge(reactContext: ReactApplicationContext) : NativeBrazeReact
 
     override fun wipeData() {
         brazeImpl.wipeData()
+    }
+
+    override fun logout(promise: Promise) {
+        brazeImpl.logout(promise)
     }
 
     override fun disableSDK() {

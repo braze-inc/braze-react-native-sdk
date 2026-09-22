@@ -101,6 +101,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     }
 
     @ReactMethod
+    fun unregisterPush(promise: Promise) {
+        brazeImpl.unregisterPush(promise)
+    }
+
+    @ReactMethod
     fun addToSubscriptionGroup(groupId: String, callback: Callback?) {
         brazeImpl.addToSubscriptionGroup(groupId, callback)
     }
@@ -297,6 +302,11 @@ class BrazeReactBridge(reactContext: ReactApplicationContext?) : ReactContextBas
     @ReactMethod
     fun wipeData() {
         brazeImpl.wipeData()
+    }
+
+    @ReactMethod
+    fun logout(promise: Promise) {
+        brazeImpl.logout(promise)
     }
 
     @ReactMethod

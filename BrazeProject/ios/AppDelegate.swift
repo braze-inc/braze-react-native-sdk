@@ -161,6 +161,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
   ) {
     AppDelegate.deviceToken = deviceToken
     AppDelegate.braze?.notifications.register(deviceToken: deviceToken)
+    let hexToken = deviceToken.map { String(format: "%02x", $0) }.joined()
+    print("Updated push token: \(hexToken)")
   }
 }
 

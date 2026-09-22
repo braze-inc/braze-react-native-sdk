@@ -901,6 +901,54 @@ RCT_EXPORT_METHOD(setSdkAuthenticationSignature:(NSString *)signature)
 
 #pragma mark - Push Notifications
 
+// Rejects a push-unregistration / logout promise. Swift mapping already puts `isRetriable` and
+// (when present) `httpStatusCode` in userInfo so the JS layer can build a
+// `BrazePushUnregistrationError`.
+static void RCTRejectPushUnregistration(RCTPromiseRejectBlock reject,
+                                        NSString *code,
+                                        NSError *error) {
+  // Fallbacks in case the error is nil
+  NSString *domain = error.domain ?: @"UnknownDomain";
+  NSInteger errorCode = error ? error.code : -1;
+  NSString *message = error.localizedDescription ?: @"An unknown error occurred during push unregistration.";
+
+  NSMutableDictionary *userInfo = [error.userInfo mutableCopy] ?: [NSMutableDictionary dictionary];
+  userInfo[@"isRetriable"] = error.userInfo[@"isRetriable"] ?: @NO;
+  NSNumber *httpStatusCode = error.userInfo[@"httpStatusCode"];
+  if (httpStatusCode != nil) {
+    userInfo[@"httpStatusCode"] = httpStatusCode;
+  }
+
+  NSError *jsError = [NSError errorWithDomain:domain code:errorCode userInfo:userInfo];
+  reject(code ?: domain, message, jsError);
+}
+
+RCT_EXPORT_METHOD(unregisterPush:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"unregisterPush called");
+  [BrazeReactPushLogout unregisterPush:braze
+                            completion:^(NSError * _Nullable error) {
+    if (error != nil) {
+      RCTRejectPushUnregistration(reject, error.domain, error);
+      return;
+    }
+    resolve(nil);
+  }];
+}
+
+RCT_EXPORT_METHOD(logout:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+  RCTLogInfo(@"logout called");
+  [BrazeReactPushLogout logout:braze
+                    completion:^(NSError * _Nullable error) {
+    if (error != nil) {
+      RCTRejectPushUnregistration(reject, error.domain, error);
+      return;
+    }
+    resolve(nil);
+  }];
+}
+
 RCT_EXPORT_METHOD(requestPushPermission:(NSDictionary *)permissions) {
   UNAuthorizationOptions options = UNAuthorizationOptionNone;
   if ([permissions[@"alert"] isEqual:@(YES)]) {

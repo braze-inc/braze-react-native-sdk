@@ -2,17 +2,24 @@
 #import <React/RCTLog.h>
 
 /* Special keys when formatting the payloads from the native SDK */
-static NSDictionary *const kInAppMessageSpecialCases = @{
-  @"url": @"uri",
-  @"use_webview": @"useWebView",
-  @"image_alt": @"imageAltText",
-  @"message_close": @"dismissType",
-  @"type": @"messageType",
-  @"btns": @"buttons",
-  @"bg_color": @"backgroundColor",
-  @"close_btn_color": @"closeButtonColor",
-  @"icon_bg_color": @"iconBackgroundColor"
-};
+static NSDictionary *InAppMessageSpecialCases(void) {
+  static NSDictionary *specialCases;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    specialCases = @{
+      @"url": @"uri",
+      @"use_webview": @"useWebView",
+      @"image_alt": @"imageAltText",
+      @"message_close": @"dismissType",
+      @"type": @"messageType",
+      @"btns": @"buttons",
+      @"bg_color": @"backgroundColor",
+      @"close_btn_color": @"closeButtonColor",
+      @"icon_bg_color": @"iconBackgroundColor"
+    };
+  });
+  return specialCases;
+}
 
 @implementation BrazeReactDataTranslator
 
@@ -46,7 +53,7 @@ static NSDictionary *const kInAppMessageSpecialCases = @{
   NSMutableDictionary *formattedMessageJSON =
       [[BrazeReactDataTranslator formatToCamelCase:messageJSON
                                     keysToPreserve:@[@"extras"]
-                                      specialCases:kInAppMessageSpecialCases] mutableCopy];
+                                      specialCases:InAppMessageSpecialCases()] mutableCopy];
 
   // Manually add for conversion back from JS -> iOS layer
   NSString *messageString = [[NSString alloc] initWithData:messageData
