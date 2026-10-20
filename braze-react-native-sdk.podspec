@@ -16,6 +16,11 @@ Pod::Spec.new do |s|
   s.requires_arc   = true
   s.platform       = :ios, '12.0'
 
+  # The Braze Swift SDK binaries (BrazeKit, BrazeLocation, BrazeUI) are statically linked.
+  # Always build this pod as a static framework so that dynamic `use_frameworks!` setups
+  # do not embed duplicate copies of the Braze SDK.
+  s.static_framework = true
+
   s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js'
   s.source_files   = 'iOS/**/*.{h,m,mm,swift}'
 
