@@ -5,8 +5,8 @@ import { Toast } from './Toast';
 import { Colors } from '../constants/colors';
 
 interface ScreenLayoutProps {
-  title: string;
-  subtitle: string;
+  title?: string;
+  subtitle?: string;
   children: React.ReactNode;
   toastVisible: boolean;
   toastMessage: string;
@@ -25,10 +25,12 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{subtitle}</Text>
-        </View>
+        {(title || subtitle) && (
+          <View style={styles.header}>
+            {title ? <Text style={styles.title}>{title}</Text> : null}
+            {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+          </View>
+        )}
         {children}
       </ScrollView>
     </SafeAreaProvider>

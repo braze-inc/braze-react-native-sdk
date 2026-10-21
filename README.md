@@ -373,13 +373,13 @@ useEffect(() => {
 - **Expo**: use the [Braze Expo plugin](https://github.com/braze-inc/braze-expo-plugin) to avoid manual native wiring where possible.
 - **New Architecture / Turbo Modules**: supported on recent plugin versions; follow the developer guide and sample `AppDelegate` / Gradle settings if you migrate.
 - **Privacy (iOS)**: methods such as `updateTrackingPropertyAllowList` support privacy manifest–related configuration; see [Swift privacy manifest](https://www.braze.com/docs/developer_guide/platform_integration_guides/swift/privacy_manifest/).
-- **Jest**: mock `react-native` native modules or the Braze Turbo module (see `__tests__/jest.setup.js` in this repo for patterns).
+- **Jest**: mock `react-native` native modules or the Braze Turbo module. Unit tests are not published in this repository.
 ---
 
 ## Version support
 
 > [!NOTE]
-> This SDK has been tested with React Native version **0.85.3**.
+> This SDK has been tested with React Native version **0.87.1**.
 
 The following table lists supported React Native versions by Braze plugin release.
 

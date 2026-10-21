@@ -23,6 +23,7 @@ import com.braze.models.inappmessage.IInAppMessage
 import com.braze.models.inappmessage.InAppMessageImmersiveBase
 import com.braze.models.outgoing.AttributionData
 import com.braze.models.outgoing.BrazeProperties
+import com.braze.push.BrazePushUnregistrationException
 import com.braze.support.BrazeLogger.Priority.V
 import com.braze.support.BrazeLogger.Priority.W
 import com.braze.support.BrazeLogger.brazelog
@@ -177,6 +178,13 @@ class BrazeReactBridgeImpl(
 
     fun registerPushToken(token: String) {
         braze.registeredPushToken = token
+    }
+
+    fun unregisterPush(promise: Promise) {
+        brazelog(V) { "Unregistering push." }
+        braze.unregisterPush { nativeResult ->
+            handleUnregistrationResult(promise, nativeResult, UNREGISTER_PUSH_ERROR, "unregisterPush")
+        }
     }
 
     fun logCustomEvent(eventName: String, eventProperties: ReadableMap?) =
@@ -599,6 +607,40 @@ class BrazeReactBridgeImpl(
 
     fun wipeData() = Braze.wipeData(reactApplicationContext)
 
+    fun logout(promise: Promise) {
+        brazelog(V) { "Logging out." }
+        braze.logout { nativeResult ->
+            handleUnregistrationResult(promise, nativeResult, LOGOUT_ERROR, "logout")
+        }
+    }
+
+    /**
+     * Resolves [promise] on success, or rejects it with `isRetriable` and (when present)
+     * `httpStatusCode` details so the JS layer can build a `BrazePushUnregistrationError`.
+     */
+    private fun handleUnregistrationResult(
+        promise: Promise,
+        nativeResult: Result<Unit>,
+        errorCode: String,
+        operation: String,
+    ) {
+        nativeResult.fold(
+            onSuccess = {
+                brazelog(V) { "`$operation` succeeded." }
+                promise.resolve(null)
+            },
+            onFailure = { error ->
+                val exception = error as? BrazePushUnregistrationException
+                val details = getMutableMap().apply {
+                    putBoolean("isRetriable", exception?.isRetriable ?: false)
+                    exception?.httpStatusCode?.let { putInt("httpStatusCode", it) }
+                }
+                brazelog(W) { "`$operation` failed: ${exception?.message ?: error.message}" }
+                promise.reject(errorCode, exception?.message ?: error.message, details)
+            }
+        )
+    }
+
     fun disableSDK() = Braze.disableSdk(reactApplicationContext)
 
     fun enableSDK() = Braze.enableSdk(reactApplicationContext)
@@ -937,6 +979,12 @@ class BrazeReactBridgeImpl(
 
         /** Promise `code` passed to [Promise.reject] when [getContentCards] runs after React is torn down. */
         const val NO_ACTIVE_REACT_INSTANCE_PROMISE_CODE = "no_active_react_instance"
+
+        /** Promise `code` passed to [Promise.reject] when [unregisterPush] fails. */
+        const val UNREGISTER_PUSH_ERROR = "UNREGISTER_PUSH_ERROR"
+
+        /** Promise `code` passed to [Promise.reject] when [logout] fails. */
+        const val LOGOUT_ERROR = "LOGOUT_ERROR"
 
         private const val CONTENT_CARDS_UPDATED_EVENT_NAME = "contentCardsUpdated"
         private const val BANNER_CARDS_UPDATED_EVENT_NAME = "bannerCardsUpdated"

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Text, StyleSheet, Alert, Platform, Settings } from 'react-native';
+import { Text, View, StyleSheet, Alert, Platform, Settings } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Braze from '@braze/react-native-sdk';
 import {
@@ -7,11 +7,13 @@ import {
   Input,
   Card,
   ScreenLayout,
+  StatusRow,
   useToast,
   InAppMessagesSection,
 } from '../components';
 import { Colors } from '../constants/colors';
 import { defaultApiKey, defaultEndpoint } from '../constants/brazeConfig';
+import { registerForRemoteNotifications } from '../native/BrazeSampleApp';
 
 const iOSPushAutoEnabledKey = 'iOSPushAutoEnabled';
 
@@ -27,6 +29,7 @@ export const UserManagementScreen: React.FC = () => {
   const [subscriptionState, setSubscriptionState] = useState<string>('s');
   const [gender, setGender] = useState<string>('m');
   const [pushToken, setPushToken] = useState('');
+  const [sdkEnabled, setSdkEnabled] = useState<boolean | null>(null);
 
   const [iOSPushAutoEnabled, setiOSPushAutoEnabled] = useState<boolean>(() => {
     if (Platform.OS === 'ios') {
@@ -37,12 +40,23 @@ export const UserManagementScreen: React.FC = () => {
     }
   });
 
-  useEffect(() => {
+  const refreshUserId = () => {
     Braze.getUserId((err, res) => {
-      if (!err && res) {
-        setCurrentUserId(res);
+      if (!err) {
+        setCurrentUserId(res || null);
       }
     });
+  };
+
+  const refreshSdkEnabled = () => {
+    Braze.getDeviceId((err, res) => {
+      setSdkEnabled(!err && !!res);
+    });
+  };
+
+  useEffect(() => {
+    refreshUserId();
+    refreshSdkEnabled();
   }, []);
 
   const subscriptionStateButtons = useMemo(
@@ -75,11 +89,17 @@ export const UserManagementScreen: React.FC = () => {
       return;
     }
     Braze.initialize(apiKey, endpoint);
+    refreshSdkEnabled();
+    refreshUserId();
     showToast(`Braze initialized with key: ${apiKey.substring(0, 8)}...`);
   };
 
   // User Management
   const changeUserPress = () => {
+    if (sdkEnabled !== true) {
+      Alert.alert('Error', 'SDK is disabled. Enable the SDK before setting a User ID.');
+      return;
+    }
     Braze.changeUser(userIdText);
     setCurrentUserId(userIdText);
     showToast(`User changed to: ${userIdText}`);
@@ -90,6 +110,7 @@ export const UserManagementScreen: React.FC = () => {
       if (err) {
         Alert.alert('Error', String(err));
       } else {
+        setCurrentUserId(res || null);
         Alert.alert('User ID', res || 'No user ID set');
       }
     });
@@ -340,6 +361,8 @@ export const UserManagementScreen: React.FC = () => {
         text: 'OK',
         onPress: () => {
           Braze.wipeData();
+          setSdkEnabled(false);
+          setCurrentUserId(null);
           showToast('Data wiped');
         },
       },
@@ -353,6 +376,7 @@ export const UserManagementScreen: React.FC = () => {
         text: 'OK',
         onPress: () => {
           Braze.disableSDK();
+          setSdkEnabled(false);
           showToast('SDK disabled');
         },
       },
@@ -361,11 +385,39 @@ export const UserManagementScreen: React.FC = () => {
 
   const enableSDK = () => {
     Braze.enableSDK();
+    setSdkEnabled(true);
     showToast('SDK enabled');
+  };
+
+  const logout = () => {
+    Alert.alert('Logout', 'Unregister push, wipe data, and disable the SDK?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'OK',
+        onPress: async () => {
+          try {
+            await Braze.logout();
+            setSdkEnabled(false);
+            setCurrentUserId(null);
+            showToast('Logged out');
+          } catch (error) {
+            if (error instanceof Braze.BrazePushUnregistrationError) {
+              showToast(
+                `Logout failed: ${error.message} (retriable: ${error.isRetriable}, status: ${error.httpStatusCode})`,
+              );
+            } else {
+              const message = error instanceof Error ? error.message : String(error);
+              showToast(`Logout failed: ${message}`);
+            }
+          }
+        },
+      },
+    ]);
   };
 
   const getDeviceId = () => {
     Braze.getDeviceId((err, res) => {
+      setSdkEnabled(!err && !!res);
       if (err) {
         Alert.alert('Error', String(err));
       } else {
@@ -435,29 +487,43 @@ export const UserManagementScreen: React.FC = () => {
     showToast('Push token registered');
   };
 
+  const registerForRemoteNotificationsPress = async () => {
+    try {
+      await registerForRemoteNotifications();
+      showToast('Registered for remote notifications');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      showToast(`Re-register failed: ${message}`);
+    }
+  };
+
+  const unregisterPushPress = async () => {
+    try {
+      await Braze.unregisterPush();
+      showToast('Push unregistered');
+    } catch (error) {
+      const e = error as Braze.BrazePushUnregistrationError;
+      showToast(
+        `Unregister push failed: ${e.message} (retriable: ${e.isRetriable}, status: ${e.httpStatusCode})`,
+      );
+    }
+  };
+
   return (
     <ScreenLayout
-      title="Other Features"
+      title="User Management"
       subtitle="Events, user attributes, SDK controls, and more"
       toastVisible={toastVisible}
       toastMessage={message}>
-      <Card title="SDK Initialization">
-        <Input
-          label="API Key"
-          placeholder="Enter API key"
-          onChangeText={setInitApiKey}
-          value={initApiKey}
-          autoCapitalize="none"
-        />
-        <Input
-          label="Endpoint"
-          placeholder="Enter endpoint"
-          onChangeText={setInitEndpoint}
-          value={initEndpoint}
-          autoCapitalize="none"
-        />
-        <Button title="Initialize Braze SDK" onPress={initializeBrazePress} />
-      </Card>
+      <View style={styles.statusContainer}>
+        {sdkEnabled !== null && (
+          <StatusRow
+            label="SDK Enabled"
+            value={sdkEnabled ? 'Enabled' : 'Disabled'}
+          />
+        )}
+        <StatusRow label="User ID" value={currentUserId || 'None'} />
+      </View>
 
       <Card title="User Management">
         <Button title="Get Device ID" onPress={getDeviceId} />
@@ -499,6 +565,11 @@ export const UserManagementScreen: React.FC = () => {
         <Button
           title="Log Purchase (with fixed values)"
           onPress={logPurchasePress}
+        />
+        <Button
+          title="Request Immediate Data Flush"
+          onPress={requestImmediateDataFlush}
+          variant="secondary"
         />
       </Card>
 
@@ -634,25 +705,46 @@ export const UserManagementScreen: React.FC = () => {
             title="Set Push Token"
             onPress={setPushTokenPress}
           />
+          <Button
+            title="Register for remote notifications"
+            onPress={registerForRemoteNotificationsPress}
+          />
+          <Button
+            title="Unregister Push"
+            onPress={unregisterPushPress}
+            variant="danger"
+          />
         </Card>
 
         <Card title="SDK Controls">
-          <Button
-            title="Request Immediate Data Flush"
-            onPress={requestImmediateDataFlush}
-          />
-          <Button title="Wipe Data" onPress={wipeData} variant="danger" />
-          <Button title="Disable SDK" onPress={disableSDK} variant="danger" />
-          <Button
-            title="Enable SDK"
-            onPress={enableSDK}
-          />
-        </Card>
+        <Input
+          label="API Key"
+          placeholder="Enter API key"
+          onChangeText={setInitApiKey}
+          value={initApiKey}
+          autoCapitalize="none"
+        />
+        <Input
+          label="Endpoint"
+          placeholder="Enter endpoint"
+          onChangeText={setInitEndpoint}
+          value={initEndpoint}
+          autoCapitalize="none"
+        />
+        <Button title="Initialize Braze SDK" onPress={initializeBrazePress} />
+        <Button title="Enable SDK" onPress={enableSDK} />
+        <Button title="Disable SDK" onPress={disableSDK} variant="danger" />
+        <Button title="Wipe Data" onPress={wipeData} variant="danger" />
+        <Button title="Logout" onPress={logout} variant="danger" />
+      </Card>
       </ScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
+  statusContainer: {
+    marginBottom: 16,
+  },
   sectionLabel: {
     fontSize: 16,
     fontWeight: '600',

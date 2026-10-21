@@ -1,3 +1,15 @@
+## 23.1.0
+
+##### Fixed
+- Fixes an Android [issue](https://github.com/braze-inc/braze-react-native-sdk/pull/333) where Gradle configuration failed on Android Gradle Plugin 9+ with built-in Kotlin enabled. AGP 8 and older are unchanged.
+- Updates the native Swift SDK version bindings [from Braze Swift SDK 18.2.0 to 18.2.1](https://github.com/braze-inc/braze-swift-sdk/compare/18.2.0...18.2.1#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+
+##### Added
+- Adds `Braze.unregisterPush()` to unregister the device's push token from the current user's profile.
+  - Returns a `Promise` that resolves on success or rejects with a `Braze.BrazePushUnregistrationError` on failure, so integrators can implement their own retry behavior.
+- Adds a `Braze.logout()` to unregister the device's push token _and_ push-to-start tokens (for iOS), if present. On success, it will wipe local data and disable the SDK.
+  - Returns a `Promise` that resolves on success or rejects with a `Braze.BrazePushUnregistrationError` on failure, so integrators can implement their own retry behavior. On failure, no data is wiped and the SDK stays enabled.
+
 ## 23.0.0
 
 ##### Breaking

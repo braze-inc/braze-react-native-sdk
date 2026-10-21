@@ -1,5 +1,25 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// Android Gradle Plugin 9 ships built-in Kotlin support and applies the Kotlin
+// plugin itself. Applying it a second time fails the configuration phase with
+// "Cannot add extension with name 'kotlin'". Apply it only when AGP is not
+// providing Kotlin: AGP 8 and older, or AGP 9 with android.builtInKotlin=false.
+def shouldApplyKotlinPlugin() {
+  def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+  if (agpMajor <= 8) {
+    return true
+  }
+  // AGP 10 removes the opt-out: built-in Kotlin is always active there.
+  if (agpMajor >= 10) {
+    return false
+  }
+  def propertyVal = providers.gradleProperty("android.builtInKotlin").orNull
+  def builtInKotlinEnabled = propertyVal != null ? propertyVal.toBoolean() : true
+  return !builtInKotlinEnabled
+}
+
+if (shouldApplyKotlinPlugin()) {
+  apply plugin: 'kotlin-android'
+}
 
 def safeExtGet(prop, fallback) {
   rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -38,33 +58,44 @@ android {
   sourceSets {
     main {
       if (isNewArchitectureEnabled()) {
-        java.srcDirs += ['src/newarch']
+        if (shouldApplyKotlinPlugin()) {
+          java.srcDirs += ['src/newarch']
+        } else {
+          // Built-in Kotlin does not compile .kt files added via java.srcDirs.
+          kotlin.srcDirs += ['src/newarch']
+        }
         res.srcDirs += ['src/newarch/res']
       } else {
-        java.srcDirs += ['src/oldarch']
+        if (shouldApplyKotlinPlugin()) {
+          java.srcDirs += ['src/oldarch']
+        } else {
+          kotlin.srcDirs += ['src/oldarch']
+        }
         res.srcDirs += ['src/oldarch/res']
       }
     }
   }
 
-  kotlinOptions {
-    freeCompilerArgs = ['-Xjvm-default=all']
+  // android.kotlinOptions is only available when kotlin-android is applied.
+  if (shouldApplyKotlinPlugin()) {
+    kotlinOptions {
+      freeCompilerArgs = ['-Xjvm-default=all']
+    }
   }
 
-  testOptions {
-    unitTests.returnDefaultValues = true
-    unitTests.includeAndroidResources = true
+}
+
+// AGP 9+ built-in Kotlin replaces android.kotlinOptions with this DSL.
+if (!shouldApplyKotlinPlugin()) {
+  kotlin {
+    compilerOptions {
+      freeCompilerArgs.add('-Xjvm-default=all')
+    }
   }
 }
 
 dependencies {
   api 'com.facebook.react:react-native:+'
-  testImplementation 'androidx.test:core-ktx:1.7.0'
-  testImplementation "junit:junit:4.13.2"
-  testImplementation "org.mockito.kotlin:mockito-kotlin:6.3.0"
-  testImplementation "org.robolectric:robolectric:4.16.1"
-  testImplementation "org.mockito:mockito-inline:5.2.0"
-  testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 
   def wrapper_braze_sdk_version = "43.1.1"
   api "com.braze:android-sdk-ui:${wrapper_braze_sdk_version}"

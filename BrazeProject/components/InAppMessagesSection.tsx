@@ -209,17 +209,14 @@ export const InAppMessagesSection: React.FC<InAppMessagesSectionProps> = ({
           <Button
             title="Log Impression"
             onPress={logInAppMessageImpressionPress}
-            variant="secondary"
           />
           <Button
             title="Log Click"
             onPress={logInAppMessageClickedPress}
-            variant="secondary"
           />
           <Button
             title="Perform Message Action"
             onPress={performInAppMessageActionPress}
-            variant="secondary"
           />
 
           {lastInAppMessage?.buttons.map((button, index) => (
