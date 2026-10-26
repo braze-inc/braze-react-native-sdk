@@ -18,6 +18,11 @@ class BrazeBannerManager(@Suppress("UNUSED_PARAMETER") private val callerContext
         BrazeBannerManagerImpl.setPlacementId(view, placementId)
     }
 
+    override fun onDropViewInstance(view: BannerContainer) {
+        super.onDropViewInstance(view)
+        view.bannerView.destroy()
+    }
+
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String?, Any?>? =
         BrazeBannerManagerImpl.getExportedCustomBubblingEventTypeConstants()
 }

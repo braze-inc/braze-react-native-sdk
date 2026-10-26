@@ -38,6 +38,13 @@ target 'BrazeProject' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < min_ios_version_supported.to_f
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
+        end
+      end
+    end
     # Sample-app unit tests `@testable import` internal Swift helpers in this pod.
     installer.pods_project.targets.each do |target|
       next unless target.name == 'braze-react-native-sdk'
@@ -49,9 +56,9 @@ target 'BrazeProject' do
 end
 
 target 'BrazeProjectRichPush' do
-  pod 'BrazeNotificationService', '~> 18.2.1'
+  pod 'BrazeNotificationService', '~> 19.1.0'
 end
 
 target 'BrazeProjectPushStory' do
-  pod 'BrazePushStory', '~> 18.2.1'
+  pod 'BrazePushStory', '~> 19.1.0'
 end
