@@ -281,7 +281,10 @@ Braze.requestPushPermission({
 Braze.registerPushToken(token);
 ```
 
-- **`getInitialPushPayload`**: use when the app opens from a notification to avoid RN `Linking` race conditions; requires native hooks (`BrazeReactUtils` on iOS, `BrazeReactUtils.populateInitialPushPayloadFromIntent` on Android) as described in the TypeScript doc comments and sample app.
+- **`getInitialPushPayload`**: use when the app opens from a notification to avoid RN `Linking` race conditions. It requires native setup on each platform.
+  - iOS, with the app delegate launch options: call `populateInitialPayloadFromLaunchOptions:` on `BrazeReactUtils` from `application:didFinishLaunchingWithOptions:`.
+  - iOS, with the scene life cycle: call `populateInitialPayloadFromNotificationResponse:` on `BrazeReactUtils` from `scene:willConnectToSession:options:`.
+  - Android: call `BrazeReactUtils.populateInitialPushPayloadFromIntent` from `MainActivity.onCreate()`.
 - **`Braze.addListener(Braze.Events.PUSH_NOTIFICATION_EVENT, ...)`** is **Android-only** per the public typings.
 
 ### Feature flags
@@ -379,7 +382,7 @@ useEffect(() => {
 ## Version support
 
 > [!NOTE]
-> This SDK has been tested with React Native version **0.87.1**.
+> This SDK has been tested with React Native version **0.88.0**.
 
 The following table lists supported React Native versions by Braze plugin release.
 

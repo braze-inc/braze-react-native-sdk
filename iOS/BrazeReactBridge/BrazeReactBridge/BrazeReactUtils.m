@@ -35,18 +35,36 @@ static BrazeReactUtils * _Nullable sharedInstance;
 
 - (BOOL)populateInitialPayloadFromLaunchOptions:(NSDictionary *)launchOptions {
   NSDictionary *pushDictionary = [launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+  if (!pushDictionary) {
+    pushDictionary = @{};
+  }
+  return [self populateInitialPayloadFromPushDictionary:pushDictionary];
+}
+
+- (BOOL)populateInitialPayloadFromNotificationResponse:(UNNotificationResponse *)response {
+  // Scene connections without a notification response must not overwrite a payload that was already captured.
+  // Action button launches never populate the launch options, so only the default action is stored.
+  if (!response || ![response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
+    RCTLogInfo(@"No default action notification response. Not changing initialPushPayload.");
+    return sharedInstance.initialPushPayload != nil;
+  }
+  return [self populateInitialPayloadFromPushDictionary:response.notification.request.content.userInfo];
+}
+
+- (BOOL)populateInitialPayloadFromPushDictionary:(NSDictionary *)pushDictionary {
   BRZNotificationsPayload *notificationPayload = [[BRZNotificationsPayload alloc] initWithUserInfo:pushDictionary
                                                                          type:BRZNotificationsPayloadTypeOpened
                                                                         silent:NO];
   if (notificationPayload) {
-    sharedInstance.initialPushPayload = [BrazeReactDataTranslator formatPushPayload:notificationPayload withLaunchOptions:launchOptions];
+    NSString *launchUrl = pushDictionary[@"aps"] ? pushDictionary[@"ab_uri"] : nil;
+    sharedInstance.initialPushPayload = [BrazeReactDataTranslator formatPushPayload:notificationPayload withUrlOverride:launchUrl];
     NSLog(@"Initial iOS push payload set to %@.", sharedInstance.initialPushPayload);
   } else {
     sharedInstance.initialPushPayload = nil;
-    RCTLogInfo(@"No push notification found in launchOptions. Not setting initialPushPayload.");
+    RCTLogInfo(@"No push notification found. Not setting initialPushPayload.");
   }
 
-  return sharedInstance.initialPushPayload;
+  return sharedInstance.initialPushPayload != nil;
 }
 
 - (BOOL)populateInitialUrlFromLaunchOptions:(NSDictionary *)launchOptions {

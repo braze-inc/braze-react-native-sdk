@@ -112,7 +112,7 @@ RCT_EXPORT_MODULE()
 
   self.notificationSubscription = [braze.notifications subscribeToUpdates:^(BRZNotificationsPayload * _Nonnull payload) {
     RCTLogInfo(@"Received push notification via subscription");
-    NSDictionary *eventData = [BrazeReactDataTranslator formatPushPayload:payload withLaunchOptions:nil];
+    NSDictionary *eventData = [BrazeReactDataTranslator formatPushPayload:payload withUrlOverride:nil];
     [self sendEventWithName:kPushNotificationEvent body:eventData];
   }];
 
@@ -223,7 +223,7 @@ RCT_EXPORT_METHOD(getInitialPushPayload:(RCTResponseSenderBlock)callback) {
     RCTLogInfo(@"getInitialPushPayload() called with initialPushPayload: %@", [BrazeReactUtils sharedInstance].initialPushPayload);
     [self reportResultWithCallback:callback andError:nil andResult:[BrazeReactUtils sharedInstance].initialPushPayload];
   } else {
-    RCTLogInfo(@"getInitialPushPayload() called but `initialPushPayload` is null. To fix this, use populateInitialPayloadFromLaunchOptions() to populate the initial payload value.");
+    RCTLogInfo(@"getInitialPushPayload() called but `initialPushPayload` is null. To fix this, use populateInitialPayloadFromLaunchOptions() or, with the scene life cycle, populateInitialPayloadFromNotificationResponse() to populate the initial payload value.");
     [self reportResultWithCallback:callback andError:nil andResult:nil];
   }
 }
@@ -961,9 +961,7 @@ RCT_EXPORT_METHOD(requestPushPermission:(NSDictionary *)permissions) {
     options |= UNAuthorizationOptionSound;
   }
   if ([permissions[@"provisional"] isEqual:@(YES)]) {
-    if (@available(iOS 12.0, *)) {
-      options |= UNAuthorizationOptionProvisional;
-    }
+    options |= UNAuthorizationOptionProvisional;
   }
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];

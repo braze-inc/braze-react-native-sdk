@@ -1,7 +1,7 @@
 require 'json'
 
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
-braze_swift_version = '18.2.1'
+braze_swift_version = '19.1.0'
 
 Pod::Spec.new do |s|
   s.name           = 'braze-react-native-sdk'
@@ -14,7 +14,9 @@ Pod::Spec.new do |s|
   s.source         = { :git => 'git+https://github.com/braze-inc/braze-react-native-sdk.git', :tag => s.version }
 
   s.requires_arc   = true
-  s.platform       = :ios, '12.0'
+  s.platform       = :ios, '15.0'
+
+  s.static_framework = true
 
   s.preserve_paths = 'LICENSE.md', 'README.md', 'package.json', 'index.js'
   s.source_files   = 'iOS/**/*.{h,m,mm,swift}'

@@ -30,8 +30,11 @@ export function getInitialURL(callback: (deepLink: string) => void): void;
  * the native call to RCTLinkingManager and React's loading of its JavaScript. This function provides a workaround:
  * If an application is launched from a push notification click, we return the full push payload.
  *
- * On iOS, this requires calling `[[BrazeReactUtils sharedInstance] populateInitialPayloadFromLaunchOptions:launchOptions]`
- * in your AppDelegate's `application:didFinishLaunchingWithOptions:` method.
+ * On iOS, this requires one of the following:
+ * - With the app delegate launch options, call `[[BrazeReactUtils sharedInstance] populateInitialPayloadFromLaunchOptions:launchOptions]`
+ *   in your AppDelegate's `application:didFinishLaunchingWithOptions:` method.
+ * - With the scene life cycle, call `[[BrazeReactUtils sharedInstance] populateInitialPayloadFromNotificationResponse:connectionOptions.notificationResponse]`
+ *   in your SceneDelegate's `scene:willConnectToSession:options:` method.
  *
  * On Android, this requires calling `BrazeReactUtils.populateInitialPushPayloadFromIntent(intent)` in your
  * MainActivity's `onCreate()` method.

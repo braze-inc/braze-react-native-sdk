@@ -15,11 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Formats the push notification payload into a JavaScript-readable object.
  * @param payload The push notification payload to format
- * @param launchOptions Optional launch options containing push notification info
+ * @param urlOverride Optional url to use instead of the payload's url context, such as the `ab_uri` of the push that launched the app.
  * @return A formatted dictionary with payload_type, url, title, body, and other fields
  */
 + (NSDictionary *)formatPushPayload:(BRZNotificationsPayload *)payload
-                     withLaunchOptions:(nullable NSDictionary *)launchOptions;
+                    withUrlOverride:(nullable NSString *)urlOverride;
 
 /**
  * Converts dictionary keys from snake_case to camelCase with optional special cases.

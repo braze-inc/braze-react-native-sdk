@@ -8,13 +8,26 @@ import BrazeKit
 @objcMembers
 public class BrazeReactInitializer: NSObject {
 
+  // The closures live in a private type so the module does not serialize them as public
+  // global variables.
+  private enum InitializationHandlers {
+    static var configureClosure: ((Braze.Configuration) -> Void)?
+    static var postInitializationClosure: ((Braze) -> Void)?
+  }
+
   /// Stored configuration closure, applied to the `Braze.Configuration`
   /// when the JS `initialize` method is called.
-  public static var configureClosure: ((Braze.Configuration) -> Void)?
+  public static var configureClosure: ((Braze.Configuration) -> Void)? {
+    get { InitializationHandlers.configureClosure }
+    set { InitializationHandlers.configureClosure = newValue }
+  }
 
   /// Stored post-initialization closure, called after the Braze instance
   /// is created.
-  public static var postInitializationClosure: ((Braze) -> Void)?
+  public static var postInitializationClosure: ((Braze) -> Void)? {
+    get { InitializationHandlers.postInitializationClosure }
+    set { InitializationHandlers.postInitializationClosure = newValue }
+  }
 
   /// Stores configuration closures for delayed initialization.
   ///

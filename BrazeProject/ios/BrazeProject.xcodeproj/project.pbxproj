@@ -25,6 +25,7 @@
 		ECAAF9982E00582E004CA7CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE69D482DEE41D000EBA5CB /* AppDelegate.swift */; };
 		F136D8AF96A2EF96313BFD02 /* libPods-BrazeProjectPushStory.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A3414E1BE009CD5E700E0A3 /* libPods-BrazeProjectPushStory.a */; };
 		SDK6995B12E6995A100000001 /* BrazeSampleAppModule.m in Sources */ = {isa = PBXBuildFile; fileRef = SDK6995A12E6995A100000001 /* BrazeSampleAppModule.m */; };
+		SDK8447A12E8447A100000001 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = SDK8447B12E8447A100000001 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F7D6AE08F392199F7EBA7275 /* Pods-BrazeProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.release.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.release.xcconfig"; sourceTree = "<group>"; };
 		SDK6995A12E6995A100000001 /* BrazeSampleAppModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeSampleAppModule.m; sourceTree = "<group>"; };
+		SDK8447B12E8447A100000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				ECE69D482DEE41D000EBA5CB /* AppDelegate.swift */,
+				SDK8447B12E8447A100000001 /* SceneDelegate.swift */,
 				SDK6995A12E6995A100000001 /* BrazeSampleAppModule.m */,
 				ECE69D4D2DEE458000EBA5CB /* BrazeReactGIFHelper.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -515,6 +518,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECAAF9982E00582E004CA7CB /* AppDelegate.swift in Sources */,
+				SDK8447A12E8447A100000001 /* SceneDelegate.swift in Sources */,
 				SDK6995B12E6995A100000001 /* BrazeSampleAppModule.m in Sources */,
 				EC8E928C2E009E4A00DB5583 /* BrazeReactGIFHelper.swift in Sources */,
 			);
@@ -808,7 +812,7 @@
 					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -900,7 +904,7 @@
 					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
 					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD = "";
 				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -956,7 +960,7 @@
 				INFOPLIST_FILE = BrazeProjectRichPush/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BrazeProjectRichPush;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -998,7 +1002,7 @@
 				INFOPLIST_FILE = BrazeProjectRichPush/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BrazeProjectRichPush;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1038,7 +1042,7 @@
 				INFOPLIST_FILE = BrazeProjectPushStory/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BrazeProjectPushStory;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1081,7 +1085,7 @@
 				INFOPLIST_FILE = BrazeProjectPushStory/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BrazeProjectPushStory;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

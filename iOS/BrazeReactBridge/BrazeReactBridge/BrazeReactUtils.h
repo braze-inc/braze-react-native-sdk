@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #import <BrazeKit/BrazeKit-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,6 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
  * @param launchOptions The launch options dictionary from application:didFinishLaunchingWithOptions:launchOptions.
  */
 - (BOOL)populateInitialPayloadFromLaunchOptions:(nullable NSDictionary *)launchOptions;
+
+/**
+ * Use this method with the scene life cycle, where the notification that launched the app is not in the launch options.
+ * Call it from `scene:willConnectToSession:options:` with `connectionOptions.notificationResponse`.
+ * Only the default action (a tap on the notification body) is stored, which matches the launch options behavior.
+ *
+ * @param response The notification response from the scene's connection options.
+ * A nil response or a non-default action leaves `initialPushPayload` unchanged.
+ *
+ * @return YES if `initialPushPayload` holds a Braze push after the call, otherwise NO.
+ */
+- (BOOL)populateInitialPayloadFromNotificationResponse:(nullable UNNotificationResponse *)response;
 
 /**
  * (Deprecated) Use method `populateInitialPayloadFromLaunchOptions` instead.

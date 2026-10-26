@@ -1,3 +1,30 @@
+## 24.0.0
+
+##### Breaking
+- Updates the native iOS bridge [from Braze Swift SDK 18.2.1 to 19.1.0](https://github.com/braze-inc/braze-swift-sdk/compare/18.2.1...19.1.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+  - Raises the minimum supported iOS version from 12.0 to 15.0, matching the requirements of Braze Swift SDK 19.0.0.
+  - Includes the Swift SDK change that persists the last known push token, so push unregistration succeeds after the app restarts.
+- Updates the native Android SDK version bindings [from Braze Android SDK 43.1.1 to 44.0.0](https://github.com/braze-inc/braze-android-sdk/compare/v43.1.1...v44.0.0#diff-06572a96a58dc510037d5efa622f9bec8519bc1beab13c9f251e97e657a9d4ed).
+- On iOS, replaces `[BrazeReactDataTranslator formatPushPayload:withLaunchOptions:]` with `[BrazeReactDataTranslator formatPushPayload:withUrlOverride:]`.
+
+##### Fixed
+- Fixes an Android issue where `Braze.BrazeBannerView` did not release its underlying WebView when unmounted, keeping it registered with the SDK and retaining its context.
+- Fixes an iOS issue where `pod install` failed in apps using `use_frameworks! :linkage => :dynamic`.
+  - The pod now always builds as a static framework when `use_frameworks!` is enabled. This resolves an error of the pod being linked twice (dynamically + statically).
+  - Apps without `use_frameworks!` or with static linkage are unchanged.
+  - Thanks @huextrat for your contribution!
+- Fixes an iOS issue where Release builds could fail with a Swift compiler crash on Xcode 26.6 (Swift 6.3.3) in apps that call `BrazeReactInitializer.configure`, including apps using the Braze Expo plugin.
+
+##### Added
+- Adds `[[BrazeReactUtils sharedInstance] populateInitialPayloadFromNotificationResponse:]`.
+  - Call this method from `scene:willConnectToSession:options:` with `connectionOptions.notificationResponse`.
+  - This method addresses an iOS [issue](https://github.com/braze-inc/braze-react-native-sdk/issues/334) where `Braze.getInitialPushPayload()` returned `null` on a cold start from a push tap when the app uses the UIKit scene life cycle.
+
+##### Changed
+- Updates the Braze sample app to use React Native version [`0.88.0`](https://reactnative.dev/blog/2026/10/14/react-native-0.88).
+  - This validates SDK compatibility with this version of React Native.
+  - The iOS sample app now uses the UIKit scene life cycle with a `SceneDelegate`, as recommended in the React Native 0.88 template.
+
 ## 23.1.0
 
 ##### Fixed

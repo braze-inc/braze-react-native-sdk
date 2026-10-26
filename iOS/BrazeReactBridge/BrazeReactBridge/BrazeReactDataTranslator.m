@@ -68,7 +68,7 @@ static NSDictionary *InAppMessageSpecialCases(void) {
 
 #pragma mark - Push notifications
 
-+ (NSDictionary *)formatPushPayload:(BRZNotificationsPayload *)payload withLaunchOptions:(NSDictionary *)launchOptions {
++ (NSDictionary *)formatPushPayload:(BRZNotificationsPayload *)payload withUrlOverride:(NSString *)urlOverride {
   NSMutableDictionary *eventData = [NSMutableDictionary dictionary];
 
   // Uses the `"push_` prefix for consistency with Android.
@@ -81,15 +81,8 @@ static NSDictionary *InAppMessageSpecialCases(void) {
       break;
   }
 
-  // If the push was received while the app was in a terminated state, get the initial URL and sets it as the notification url. Otherwise, use the `urlContext`.
-  if (launchOptions) {
-    NSDictionary *pushDictionary = [launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (pushDictionary && pushDictionary[@"aps"] && pushDictionary[@"ab_uri"]) {
-      eventData[@"url"] = pushDictionary[@"ab_uri"];
-    }
-  } else {
-    eventData[@"url"] = [payload.urlContext.url absoluteString];
-  }
+  // A push that launched the app from a terminated state supplies its own url. Otherwise, use the `urlContext`.
+  eventData[@"url"] = urlOverride ?: [payload.urlContext.url absoluteString];
 
   eventData[@"use_webview"] = [NSNumber numberWithBool:payload.urlContext.useWebView];
   eventData[@"title"] = payload.title;
