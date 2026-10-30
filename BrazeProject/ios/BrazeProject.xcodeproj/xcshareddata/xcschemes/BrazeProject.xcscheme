@@ -37,6 +37,16 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AA054DDD95A221CD9D1C8B52"
+               BuildableName = "BrazeReactBridgeTests.xctest"
+               BlueprintName = "BrazeReactBridgeTests"
+               ReferencedContainer = "container:BrazeProject.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

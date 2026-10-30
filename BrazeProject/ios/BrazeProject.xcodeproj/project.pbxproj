@@ -9,8 +9,11 @@
 /* Begin PBXBuildFile section */
 		0A2ED09B8EC83816E236AEE2 /* libPods-BrazeProjectRichPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A955CFC3B6732C982ABF0C46 /* libPods-BrazeProjectRichPush.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		4C5498662C0E5F3B9101ACD6 /* libPods-BrazeReactBridgeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4CDBEAFB6286B815C88794A /* libPods-BrazeReactBridgeTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8BF9BB69E3514B23F25E5E78 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04756A082980840D709C656E /* Foundation.framework */; };
 		AEB1564F56DA3E30747233A0 /* libPods-BrazeProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D13AEF6E2A626ADAD6908BF6 /* libPods-BrazeProject.a */; };
+		D7F66328E5018B063C1B8EFA /* BrazeReactBridgeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 54F896E77C16D122C47FF31A /* BrazeReactBridgeTests.mm */; };
 		D971B4B9DCDC97E7B7B30086 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */; };
 		EC8E928C2E009E4A00DB5583 /* BrazeReactGIFHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE69D4D2DEE458000EBA5CB /* BrazeReactGIFHelper.swift */; };
 		EC9B91F32B1F698600C6BD5D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B91F22B1F698600C6BD5D /* NotificationService.swift */; };
@@ -29,6 +32,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		522FA4075CE8F3B5EE01B524 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = BrazeProject;
+		};
 		EC9B91F52B1F698600C6BD5D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -61,6 +71,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04756A082980840D709C656E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		0850B22E719905EB0709C451 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = BrazeProject/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		0A3414E1BE009CD5E700E0A3 /* libPods-BrazeProjectPushStory.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectPushStory.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* BrazeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrazeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,11 +80,15 @@
 		1F22DC22CF717D83BF28A054 /* Pods-BrazeProjectPushStory.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectPushStory.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory.debug.xcconfig"; sourceTree = "<group>"; };
 		2F3D239866278BBC85D760FB /* Pods-BrazeProjectPushStory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectPushStory.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectPushStory/Pods-BrazeProjectPushStory.release.xcconfig"; sourceTree = "<group>"; };
 		32858F63E192C005D2BDD25A /* Pods-BrazeProjectRichPush.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.debug.xcconfig"; sourceTree = "<group>"; };
+		4E1AB72F86861280F80F6F31 /* Pods-BrazeReactBridgeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeReactBridgeTests.release.xcconfig"; path = "Target Support Files/Pods-BrazeReactBridgeTests/Pods-BrazeReactBridgeTests.release.xcconfig"; sourceTree = "<group>"; };
 		53329A8C7A3C4555BFD93ADA /* Pods-BrazeProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.debug.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.debug.xcconfig"; sourceTree = "<group>"; };
+		54F896E77C16D122C47FF31A /* BrazeReactBridgeTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = BrazeReactBridgeTests.mm; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BrazeProject/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A4CDBEAFB6286B815C88794A /* libPods-BrazeReactBridgeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeReactBridgeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A955CFC3B6732C982ABF0C46 /* libPods-BrazeProjectRichPush.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProjectRichPush.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3B6DD13143FCE646F789D12 /* Pods-BrazeProjectRichPush.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProjectRichPush.release.xcconfig"; path = "Target Support Files/Pods-BrazeProjectRichPush/Pods-BrazeProjectRichPush.release.xcconfig"; sourceTree = "<group>"; };
 		D13AEF6E2A626ADAD6908BF6 /* libPods-BrazeProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BrazeProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E70ECDB4C8EC5906C16166AE /* BrazeReactBridgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrazeReactBridgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9B91F02B1F698500C6BD5D /* BrazeProjectRichPush.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BrazeProjectRichPush.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9B91F22B1F698600C6BD5D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		EC9B91F42B1F698600C6BD5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,6 +105,7 @@
 		ECE69D4A2DEE41D700EBA5CB /* BrazeProject-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BrazeProject-Bridging-Header.h"; sourceTree = "<group>"; };
 		ECE69D4D2DEE458000EBA5CB /* BrazeReactGIFHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrazeReactGIFHelper.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EF715F5036E213620BD7B82C /* Pods-BrazeReactBridgeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeReactBridgeTests.debug.xcconfig"; path = "Target Support Files/Pods-BrazeReactBridgeTests/Pods-BrazeReactBridgeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F7D6AE08F392199F7EBA7275 /* Pods-BrazeProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BrazeProject.release.xcconfig"; path = "Target Support Files/Pods-BrazeProject/Pods-BrazeProject.release.xcconfig"; sourceTree = "<group>"; };
 		SDK6995A12E6995A100000001 /* BrazeSampleAppModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrazeSampleAppModule.m; sourceTree = "<group>"; };
 		SDK8447B12E8447A100000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +141,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F3D1CBC00BD3ACF779278FC1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BF9BB69E3514B23F25E5E78 /* Foundation.framework in Frameworks */,
+				4C5498662C0E5F3B9101ACD6 /* libPods-BrazeReactBridgeTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -156,8 +181,18 @@
 				D13AEF6E2A626ADAD6908BF6 /* libPods-BrazeProject.a */,
 				0A3414E1BE009CD5E700E0A3 /* libPods-BrazeProjectPushStory.a */,
 				A955CFC3B6732C982ABF0C46 /* libPods-BrazeProjectRichPush.a */,
+				4E606F59A73362B034594908 /* iOS */,
+				A4CDBEAFB6286B815C88794A /* libPods-BrazeReactBridgeTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4E606F59A73362B034594908 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				04756A082980840D709C656E /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -177,6 +212,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				B0E2491F8E88F19B4850C351 /* BrazeReactBridgeTests */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -189,8 +225,18 @@
 				13B07F961A680F5B00A75B9A /* BrazeProject.app */,
 				EC9B91F02B1F698500C6BD5D /* BrazeProjectRichPush.appex */,
 				EC9B920A2B1F762B00C6BD5D /* BrazeProjectPushStory.appex */,
+				E70ECDB4C8EC5906C16166AE /* BrazeReactBridgeTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B0E2491F8E88F19B4850C351 /* BrazeReactBridgeTests */ = {
+			isa = PBXGroup;
+			children = (
+				54F896E77C16D122C47FF31A /* BrazeReactBridgeTests.mm */,
+			);
+			name = BrazeReactBridgeTests;
+			path = BrazeReactBridgeTests;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -202,6 +248,8 @@
 				2F3D239866278BBC85D760FB /* Pods-BrazeProjectPushStory.release.xcconfig */,
 				32858F63E192C005D2BDD25A /* Pods-BrazeProjectRichPush.debug.xcconfig */,
 				C3B6DD13143FCE646F789D12 /* Pods-BrazeProjectRichPush.release.xcconfig */,
+				4E1AB72F86861280F80F6F31 /* Pods-BrazeReactBridgeTests.release.xcconfig */,
+				EF715F5036E213620BD7B82C /* Pods-BrazeReactBridgeTests.debug.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -252,6 +300,25 @@
 			productName = BrazeProject;
 			productReference = 13B07F961A680F5B00A75B9A /* BrazeProject.app */;
 			productType = "com.apple.product-type.application";
+		};
+		AA054DDD95A221CD9D1C8B52 /* BrazeReactBridgeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B4B36229ADCFE67CB344FB8D /* Build configuration list for PBXNativeTarget "BrazeReactBridgeTests" */;
+			buildPhases = (
+				46AFC75ED985B6EB8FAEA9C3 /* [CP] Check Pods Manifest.lock */,
+				CE0F9A6A09148341DF979086 /* Sources */,
+				F3D1CBC00BD3ACF779278FC1 /* Frameworks */,
+				5ABEE489C14CF6DD7F3B4889 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD7540E8D50223C9F2ADC440 /* PBXTargetDependency */,
+			);
+			name = BrazeReactBridgeTests;
+			productName = BrazeReactBridgeTests;
+			productReference = E70ECDB4C8EC5906C16166AE /* BrazeReactBridgeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		EC9B91EF2B1F698500C6BD5D /* BrazeProjectRichPush */ = {
 			isa = PBXNativeTarget;
@@ -326,6 +393,7 @@
 				13B07F861A680F5B00A75B9A /* BrazeProject */,
 				EC9B91EF2B1F698500C6BD5D /* BrazeProjectRichPush */,
 				EC9B92092B1F762B00C6BD5D /* BrazeProjectPushStory */,
+				AA054DDD95A221CD9D1C8B52 /* BrazeReactBridgeTests */,
 			);
 		};
 /* End PBXProject section */
@@ -338,6 +406,13 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				D971B4B9DCDC97E7B7B30086 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5ABEE489C14CF6DD7F3B4889 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +465,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-BrazeProjectRichPush-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		46AFC75ED985B6EB8FAEA9C3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BrazeReactBridgeTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -524,6 +621,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE0F9A6A09148341DF979086 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7F66328E5018B063C1B8EFA /* BrazeReactBridgeTests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EC9B91EC2B1F698500C6BD5D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -543,6 +648,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DD7540E8D50223C9F2ADC440 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BrazeProject;
+			target = 13B07F861A680F5B00A75B9A /* BrazeProject */;
+			targetProxy = 522FA4075CE8F3B5EE01B524 /* PBXContainerItemProxy */;
+		};
 		EC9B91F62B1F698600C6BD5D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EC9B91EF2B1F698500C6BD5D /* BrazeProjectRichPush */;
@@ -940,6 +1051,51 @@
 			};
 			name = Release;
 		};
+		9679E525B72CD955F52BA596 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4E1AB72F86861280F80F6F31 /* Pods-BrazeReactBridgeTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PODS_CONFIGURATION_BUILD_DIR)/BrazeUI/Swift Compatibility Header\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braze.reactbridge.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrazeProject.app/BrazeProject";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EB111B209031BB6B4206A527 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF715F5036E213620BD7B82C /* Pods-BrazeReactBridgeTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(PODS_CONFIGURATION_BUILD_DIR)/BrazeUI/Swift Compatibility Header\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.braze.reactbridge.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrazeProject.app/BrazeProject";
+			};
+			name = Debug;
+		};
 		EC9B91F92B1F698600C6BD5D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 32858F63E192C005D2BDD25A /* Pods-BrazeProjectRichPush.debug.xcconfig */;
@@ -1121,6 +1277,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B4B36229ADCFE67CB344FB8D /* Build configuration list for PBXNativeTarget "BrazeReactBridgeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9679E525B72CD955F52BA596 /* Release */,
+				EB111B209031BB6B4206A527 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

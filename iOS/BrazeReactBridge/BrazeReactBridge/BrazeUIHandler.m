@@ -8,6 +8,7 @@
 @interface BrazeUIHandler () <BrazeInAppMessageUIDelegate, BrazeContentCardUIViewControllerDelegate>
 
 @property (nonatomic) BOOL dismissFeedOnContentCardClick;
+@property (nonatomic, weak) BrazeInAppMessageUI *delegatedPresenter;
 
 @end
 
@@ -39,11 +40,19 @@
   if (!braze.inAppMessagePresenter) {
     [self setDefaultInAppMessagePresenter:braze];
   }
-  ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = self;
+  BrazeInAppMessageUI *presenter = (BrazeInAppMessageUI *)braze.inAppMessagePresenter;
+  if (self.delegatedPresenter != presenter) {
+    [self deinitPresenterDelegate:braze];
+  }
+  presenter.delegate = self;
+  self.delegatedPresenter = presenter;
 }
 
 - (void)deinitPresenterDelegate:(Braze *)braze {
-  ((BrazeInAppMessageUI *)braze.inAppMessagePresenter).delegate = nil;
+  if (self.delegatedPresenter.delegate == self) {
+    self.delegatedPresenter.delegate = nil;
+  }
+  self.delegatedPresenter = nil;
 }
 
 - (void)launchContentCards:(Braze *)braze dismissAutomatically:(BOOL)dismissAutomatically {
