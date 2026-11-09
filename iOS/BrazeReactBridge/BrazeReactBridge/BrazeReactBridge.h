@@ -11,6 +11,11 @@
 @interface BrazeReactBridge: RCTEventEmitter <RCTBridgeModule>
 #endif
 
+/// Uses an existing native-owned instance without changing its authentication delegate or IAM presenter/delegate.
+/// Call on the main thread. Active React Native event subscriptions move to this instance.
+/// JavaScript `initialize` calls are ignored while a native-owned instance is attached.
++ (void)useNativeBrazeInstance:(Braze * _Nonnull)instance;
+
 /// Intializes the Braze instance based on a configuration. This same instance is also used by the Braze bridge.
 /// - Parameters:
 ///   - configuration: The customizable configuration from the host app.

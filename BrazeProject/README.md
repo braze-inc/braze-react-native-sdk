@@ -82,6 +82,21 @@ adb shell am start -a android.intent.action.VIEW \
   -d 'helloreact://example.com/path?label=your_test_value' com.brazeproject
 ```
 
+## iOS bridge lifecycle tests
+
+After installing the sample app's dependencies and pods, run:
+
+```bash
+cd ios
+xcodebuild test -workspace BrazeProject.xcworkspace -scheme BrazeProject \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -only-testing:BrazeReactBridgeTests CODE_SIGNING_ALLOWED=NO
+```
+
+Choose an installed simulator for `-destination`. These tests exercise the native
+bridge with SDK doubles, covering instance adoption, listener replacement,
+delegate ownership, and the React Native defaults without SDK network requests.
+
 ## Scripts
 
 Run from this directory:

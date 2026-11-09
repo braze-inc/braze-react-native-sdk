@@ -164,6 +164,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 > **Note:** `BrazeReactInitializer.configure` is a Swift-first API that replaces the deprecated `BrazeReactBridge.initBraze(_:)`. It also resolves a Swift type-resolution issue with `Braze.Configuration` in the Objective-C bridge.
 
+#### Reusing a native-owned iOS instance
+
+If your native app already initializes Braze and embeds React Native, attach that
+instance on the main thread before calling Braze methods from JavaScript:
+
+```objc
+#import "BrazeReactBridge.h"
+
+[BrazeReactBridge useNativeBrazeInstance:existingBraze];
+```
+
+In Swift, call `BrazeReactBridge.useNativeBrazeInstance(existingBraze)` after
+importing `braze_react_native_sdk`.
+
+The bridge shares the instance with its native utilities and views. It preserves
+the native SDK authentication delegate, in-app message presenter, and presenter
+delegate, including when those delegates are unset. Content Card, Banner, Feature
+Flag, and push notification event subscriptions continue to work. The native app
+remains responsible for SDK authentication and in-app message handling;
+`sdkAuthenticationError` and `inAppMessageReceived` are not forwarded through the
+bridge, and `subscribeToInAppMessage` does not install a React Native delegate.
+
+Do not call `BrazeReactInitializer.configure` for this integration. Calling
+`Braze.initialize` from JavaScript after adoption is a no-op and does not run the
+configuration or post-initialization closures. To replace the shared instance,
+call `useNativeBrazeInstance` again on the main thread. Active listeners move to
+the replacement, and adopting the same instance again does not duplicate
+subscriptions. Removing listeners only cancels the bridge's subscriptions.
+
 ---
 
 ## Configuration reference

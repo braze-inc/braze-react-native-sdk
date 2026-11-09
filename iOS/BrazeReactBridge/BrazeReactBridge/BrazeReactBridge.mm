@@ -31,11 +31,15 @@ static NSString *const kPushNotificationEvent = @"pushNotificationEvent";
 @property (strong, nonatomic) BRZCancellable *bannersSubscription;
 @property (strong, nonatomic) BRZCancellable *featureFlagsSubscription;
 @property (strong, nonatomic) BRZCancellable *notificationSubscription;
+@property (strong, nonatomic) Braze *subscribedBraze;
+@property (nonatomic) BOOL ownsSDKAuthDelegate;
 
 @end
 
 static Braze *braze;
 static BrazeUIHandler *brazeUIHandler;
+static BOOL usesNativeBrazeInstance;
+static NSHashTable<BrazeReactBridge *> *observingBridges;
 
 @implementation BrazeReactBridge {
   bool hasListeners;
@@ -43,17 +47,46 @@ static BrazeUIHandler *brazeUIHandler;
 
 #pragma mark - Setup
 
++ (void)prepareForBrazeInstanceChange {
+  for (BrazeReactBridge *bridge in observingBridges.allObjects) {
+    [bridge cancelSubscriptions];
+  }
+  [brazeUIHandler deinitPresenterDelegate:braze];
+  brazeUIHandler.eventEmitter = nil;
+}
+
++ (void)setBrazeInstance:(Braze *)instance nativeOwned:(BOOL)nativeOwned {
+  braze = instance;
+  usesNativeBrazeInstance = nativeOwned;
+  brazeUIHandler = [[BrazeUIHandler alloc] init];
+  if (!nativeOwned) {
+    [brazeUIHandler setDefaultInAppMessagePresenter:instance];
+  }
+  [BrazeReactUtils setBraze:instance];
+  for (BrazeReactBridge *bridge in observingBridges.allObjects) {
+    [bridge subscribeToEvents];
+  }
+}
+
++ (void)useNativeBrazeInstance:(Braze *)instance {
+  NSParameterAssert(instance != nil);
+  NSAssert([NSThread isMainThread], @"Adopt a native Braze instance on the main thread.");
+  if (!instance || (usesNativeBrazeInstance && braze == instance)) {
+    return;
+  }
+  [self prepareForBrazeInstanceChange];
+  [self setBrazeInstance:instance nativeOwned:YES];
+}
+
 + (Braze *)createBrazeInstance:(BRZConfiguration *)configuration {
   [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnative]];
   #ifdef RCT_NEW_ARCH_ENABLED
   [configuration.api addSDKMetadata:@[BRZSDKMetadata.reactnativenewarch]];
   #endif
   configuration.api.sdkFlavor = BRZSDKFlavorReact;
+  [self prepareForBrazeInstanceChange];
   Braze *instance = [[Braze alloc] initWithConfiguration:configuration];
-  braze = instance;
-  brazeUIHandler = [[BrazeUIHandler alloc] init];
-  [brazeUIHandler setDefaultInAppMessagePresenter:braze];
-  [BrazeReactUtils setBraze:braze];
+  [self setBrazeInstance:instance nativeOwned:NO];
   return instance;
 }
 
@@ -78,19 +111,34 @@ RCT_EXPORT_MODULE()
 /// The `startObserving` method will be called as soon as the first `Braze.addListener` method is called.
 - (void)startObserving {
   hasListeners = YES;
+  if (!observingBridges) {
+    observingBridges = [NSHashTable weakObjectsHashTable];
+  }
+  [observingBridges addObject:self];
   [self subscribeToEvents];
 }
 
 // The `stopObserving` method will be called when the last listener is removed, or when the JS bridge is being torn down.
 - (void)stopObserving {
   hasListeners = NO;
+  [observingBridges removeObject:self];
   [self cancelSubscriptions];
 }
 
 /// Subscribes to Braze Content Cards, Banners, SDK Authentication Errors, Feature Flags,
 /// Push Notifications, and In-App Message events, forwarding them to the React Native layer.
 - (void)subscribeToEvents {
-  braze.sdkAuthDelegate = self;
+  if (!braze || self.subscribedBraze == braze) {
+    return;
+  }
+  [self cancelSubscriptions];
+  self.subscribedBraze = braze;
+  id sdkAuthDelegate = braze.sdkAuthDelegate;
+  if (!usesNativeBrazeInstance &&
+      (!sdkAuthDelegate || [sdkAuthDelegate isKindOfClass:[BrazeReactBridge class]])) {
+    braze.sdkAuthDelegate = self;
+    self.ownsSDKAuthDelegate = YES;
+  }
   brazeUIHandler.eventEmitter = self;
 
   self.contentCardsSubscription = [braze.contentCards subscribeToUpdates:^(NSArray<BRZContentCardRaw *> * _Nonnull cards) {
@@ -117,19 +165,31 @@ RCT_EXPORT_MODULE()
   }];
 
   // Assign a default IAM presenter delegate to publish IAM events to the JavaScript layer.
-  if ([brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
+  if (!usesNativeBrazeInstance && [brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
     [brazeUIHandler useDefaultPresenterDelegate:braze];
   }
 }
 
-/// Cancels all active event subscriptions and clears delegates.
+/// Cancels this bridge's subscriptions and clears only delegates it still owns.
 - (void)cancelSubscriptions {
-  braze.sdkAuthDelegate = nil;
-  [brazeUIHandler deinitPresenterDelegate:braze];
+  if (self.ownsSDKAuthDelegate && self.subscribedBraze.sdkAuthDelegate == self) {
+    self.subscribedBraze.sdkAuthDelegate = nil;
+  }
+  self.ownsSDKAuthDelegate = NO;
+  if (brazeUIHandler.eventEmitter == self) {
+    [brazeUIHandler deinitPresenterDelegate:braze];
+    brazeUIHandler.eventEmitter = nil;
+  }
+  // Cancel immediately, even if a cancellable is still retained by an autorelease pool.
+  [self.contentCardsSubscription cancel];
+  [self.bannersSubscription cancel];
+  [self.featureFlagsSubscription cancel];
+  [self.notificationSubscription cancel];
   self.contentCardsSubscription = nil;
   self.bannersSubscription = nil;
   self.featureFlagsSubscription = nil;
   self.notificationSubscription = nil;
+  self.subscribedBraze = nil;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -179,10 +239,11 @@ RCT_EXPORT_MODULE()
 #pragma mark - Bridge bindings
 
 RCT_EXPORT_METHOD(initialize:(NSString *)apiKey endpoint:(NSString *)endpoint) {
+  if (usesNativeBrazeInstance) {
+    RCTLogInfo(@"Braze.initialize ignored: the React Native bridge is using a native-owned Braze instance.");
+    return;
+  }
   RCTLogInfo(@"Initializing the Braze React Native SDK with API key: %@ and endpoint: %@", apiKey, endpoint);
-
-  // Cancel existing subscriptions before tearing down the old instance.
-  [self cancelSubscriptions];
 
   // Build configuration with the provided API key and endpoint.
   BRZConfiguration *configuration = [[BRZConfiguration alloc] initWithApiKey:apiKey endpoint:endpoint];
@@ -194,11 +255,6 @@ RCT_EXPORT_METHOD(initialize:(NSString *)apiKey endpoint:(NSString *)endpoint) {
 
   // Create the new Braze instance (tears down and replaces the previous one).
   Braze *instance = [BrazeReactBridge createBrazeInstance:configuration];
-
-  // Re-subscribe to events if JS listeners are active.
-  if (hasListeners) {
-    [self subscribeToEvents];
-  }
 
   // Execute the post-initialization closure.
   if (BrazeReactInitializer.postInitializationClosure) {
@@ -979,8 +1035,8 @@ RCT_EXPORT_METHOD(requestPushPermission:(NSDictionary *)permissions) {
 
 RCT_EXPORT_METHOD(subscribeToInAppMessage:(BOOL)useBrazeUI
                   callback:(RCTResponseSenderBlock)callback) {
-  if (![brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
-    // A custom delegate is being used. Do nothing.
+  if (usesNativeBrazeInstance || ![brazeUIHandler canSetDefaultInAppMessagePresenterDelegate:braze]) {
+    // The native integration owns IAM handling, or a custom delegate is being used.
     return;
   }
   brazeUIHandler.showInAppMessagesAutomaticallyInDefaultDelegate = useBrazeUI;
