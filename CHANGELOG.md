@@ -1,3 +1,10 @@
+## 24.0.1
+
+##### Fixed
+- Fixes an Android [issue](https://github.com/braze-inc/braze-react-native-sdk/issues/340) where calling `Braze.initialize()` with the API key and endpoint the SDK was already running with tore down the running SDK, which unregistered and deleted the app's geofences on every launch after the first.
+  - `Braze.initialize()` is now a no-op on Android when the SDK is already initialized with the same API key and endpoint.
+  - Calls that change the credentials, or that run while delayed initialization is still enabled, behave as before.
+
 ## 24.0.0
 
 ##### Breaking
