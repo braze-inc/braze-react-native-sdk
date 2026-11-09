@@ -8,6 +8,7 @@ import androidx.annotation.VisibleForTesting
 import com.braze.Braze
 import com.braze.BrazeUser
 import com.braze.configuration.BrazeConfig
+import com.braze.configuration.BrazeConfigurationProvider
 import com.braze.enums.BrazePushEventType
 import com.braze.events.BrazePushEvent
 import com.braze.events.BrazeSdkAuthenticationErrorEvent
@@ -24,6 +25,7 @@ import com.braze.models.inappmessage.InAppMessageImmersiveBase
 import com.braze.models.outgoing.AttributionData
 import com.braze.models.outgoing.BrazeProperties
 import com.braze.push.BrazePushUnregistrationException
+import com.braze.support.BrazeLogger.Priority.I
 import com.braze.support.BrazeLogger.Priority.V
 import com.braze.support.BrazeLogger.Priority.W
 import com.braze.support.BrazeLogger.brazelog
@@ -83,6 +85,18 @@ class BrazeReactBridgeImpl(
     fun initialize(apiKey: String, endpoint: String) {
         brazelog(V) { "Initializing the Braze React Native SDK with API key: $apiKey and endpoint: $endpoint" }
 
+        // Re-initializing a running SDK with the same credentials is a no-op. `Braze.disableSdk()` tears down
+        // geofences (unregisters them from Google Play services and deletes the stored geofences), so doing
+        // it on every launch would leave the app without geofences until the next geofence request.
+        if (isRunningWith(apiKey, endpoint)) {
+            brazelog(I) { "Braze is already running with this API key and endpoint. Skipping re-initialization." }
+            // The Braze instance may have been replaced since the listeners were attached (for example by
+            // `disableSDK()` followed by `enableSDK()`), so make sure they are attached to the current instance.
+            // Re-subscribing replaces the previous subscribers, so this is a no-op when nothing changed.
+            subscribeToEvents()
+            return
+        }
+
         // Capture before configure/disableSdk — configure must not erase this decision.
         val hadDelayedInitialization = Braze.isDelayedInitializationEnabled
 
@@ -120,6 +134,20 @@ class BrazeReactBridgeImpl(
         }
 
         subscribeToEvents()
+    }
+
+    /**
+     * Whether the Braze SDK is already enabled, fully initialized (not waiting on delayed initialization),
+     * and configured with the given [apiKey] and [endpoint].
+     */
+    @VisibleForTesting
+    internal fun isRunningWith(apiKey: String, endpoint: String): Boolean {
+        if (Braze.isDelayedInitializationEnabled || Braze.isDisabled) {
+            return false
+        }
+        val configurationProvider = BrazeConfigurationProvider(reactApplicationContext)
+        return Braze.getConfiguredApiKey(configurationProvider) == apiKey &&
+            configurationProvider.customEndpoint == endpoint
     }
 
     /**
