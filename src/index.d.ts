@@ -2,7 +2,6 @@ import { ComponentType } from 'react';
 import { EmitterSubscription, StyleProp, ViewStyle } from 'react-native';
 import { CampaignProperties } from './models/campaign-properties';
 import { FeatureFlag } from './models/feature-flag';
-import { Banner } from './models/banner';
 
 /**
  * Initializes the Braze SDK with the provided API key and endpoint.
